@@ -153,6 +153,10 @@ test('20 bots: every game once, per-game scores, chairs finale, winner by total'
           scoreboards.push(p.leaderboard);
           setTimeout(() => host.emit('host:next', {}, () => {}), 30);
         }
+        // Tutorials no longer auto-advance — the host starts each game.
+        if (p.name === 'tutorial') {
+          setTimeout(() => host.emit('host:next', {}, () => {}), 30);
+        }
         if (p.name === 'redemption') chairsSeen++;
         if (p.name === 'winner') { winnerPayload = p; resolve(p); }
       });
@@ -243,7 +247,9 @@ test('2-player game runs to a winner', async () => {
     });
     const winner = new Promise((resolve) => {
       host.on('phase', (p) => {
-        if (p.name === 'scores') setTimeout(() => host.emit('host:next', {}, () => {}), 30);
+        if (p.name === 'scores' || p.name === 'tutorial') {
+          setTimeout(() => host.emit('host:next', {}, () => {}), 30);
+        }
         if (p.name === 'winner') resolve(p);
       });
     });

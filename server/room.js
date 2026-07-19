@@ -432,14 +432,13 @@ export class Room {
   }
 
   // Animated how-to screen (what to do / what to avoid) shown before every
-  // game. The host's Next — or the solo player's Skip — jumps straight in.
+  // game. Never advances on its own: the host's Next — or the solo player's
+  // Play — starts the game. tutorialMs = 0 still disables tutorials entirely.
   startTutorial(info, fn) {
-    const ms = this.config.tutorialMs;
-    if (!ms) return fn();
+    if (!this.config.tutorialMs) return fn();
     this.afterTutorial = fn;
-    this.tutorial = { ...info, duration: ms, deadline: Date.now() + ms };
+    this.tutorial = { ...info };
     this.setPhase('tutorial', { ...this.tutorial });
-    this.setTimer('tutorial', () => this.endTutorial(), ms);
   }
 
   endTutorial() {

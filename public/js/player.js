@@ -228,7 +228,9 @@ function renderTutorial(p) {
   banner(p.chairs ? '🪑 GET READY' : p.gameNumber ? `GAME ${p.gameNumber}` : 'GET READY');
   content().append(
     el('h2', { class: 'center' }, `How to play: ${p.gameName}`),
-    el('p', { class: 'muted center' }, 'Watch the demo — the game starts in a moment.')
+    el('p', { class: 'muted center' }, state.solo
+      ? 'Watch the demo, then press Play.'
+      : 'Watch the demo — the host starts the game.')
   );
   activeTut = startTutorialAnim(content(), p.key);
   if (state.solo) {
@@ -236,7 +238,7 @@ function renderTutorial(p) {
       class: 'big',
       style: 'margin-top:12px',
       onclick: () => socket.emit('solo:skip', {}, () => {}),
-    }, 'Skip ▸'));
+    }, 'Play ▸'));
   }
 }
 

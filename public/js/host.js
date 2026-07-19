@@ -290,7 +290,7 @@ function renderTutorial(p) {
     el('h1', {}, `${p.chairs ? '🪑 ' : ''}Up next: ${p.gameName}`),
     el('p', { class: 'muted', style: 'font-size:20px' }, 'How to play — watch the demo'),
     demo,
-    el('p', { class: 'muted' }, 'Starting automatically… press Next ▸ to skip.')
+    el('p', { class: 'muted' }, 'Press Next ▸ to start the game.')
   );
   hostTut = startTutorialAnim(demo, p.key);
 }
