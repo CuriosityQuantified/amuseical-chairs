@@ -34,6 +34,19 @@ Banner, interstitial, and rewarded-video formats injected by a client-side
 tag between levels. This is precisely the interruption model the whole design
 rejects, and it violates constraints 2–4 outright. **Rejected.**
 
+### A2. Mobile-app ad networks — Google AdMob, Unity Ads, AppLovin, ironSource
+
+Frequently asked about, but categorically incompatible: these are **native
+mobile-app SDKs**. AdMob serves only inside Android/iOS apps (Google's web
+path for browser games is the Ad Placement API → AdSense, i.e. option A);
+Unity Ads additionally assumes the Unity engine and does not work on the web
+at all, even for Unity's own WebGL builds. Beyond compatibility, their
+formats (banners, interstitials, rewarded video), client SDKs, device-ID
+targeting, and volume CPM economics fail constraints 1–5 — at typical
+rewarded-video rates, a 20-player session's 3 slots earn on the order of a
+dollar, versus real money for one direct event sponsorship. Relevant only in
+a hypothetical native-app or Unity port, both out of scope. **Rejected.**
+
 ### B. Intrinsic in-game ad platforms — Anzu, Frameplay, AdInMo
 
 Philosophically closest to us ("ads that are part of the gameplay"), and Anzu
@@ -129,6 +142,7 @@ rounds) live server-side where a platform can't override them.
 - [Anzu — intrinsic in-game advertising](https://www.anzu.io/), [Anzu × Playgama web-games partnership](https://wiki.playgama.com/playgama/intrinsic-in-game-ads)
 - [Frameplay — intrinsic advertising for developers](https://frameplay.com/developers/)
 - [Broadstreet — ad manager for small/direct-sold publishers](https://broadstreetads.com/), [pricing](https://broadstreetads.com/pricing/)
-- [Google AdSense H5 Games Ads](https://support.google.com/adsense/answer/9959170?hl=en)
+- [Google AdSense H5 Games Ads](https://support.google.com/adsense/answer/9959170?hl=en), [Ad Placement API environments (browser vs. app → AdSense vs. AdMob)](https://developers.google.com/ad-placement/docs/example)
+- [Unity Ads has no HTML5/WebGL support (Unity forum)](https://forum.unity.com/threads/unity-ads-in-html5-webgl.538779/), [GameArter — mobile ad networks don't work on the web](https://www.gamearter.com/blog/ads-for-web-games)
 - [Publift — gaming ad networks overview](https://www.publift.com/blog/best-gaming-ad-networks), [MonetizeMore — gaming ad networks 2026](https://www.monetizemore.com/blog/top-ad-networks-gaming-vertical/), [DoonDookStudio — HTML5 game ad networks](https://doondook.studio/best-ad-networks-monetize-html5-games/)
 - [Kevel — what are in-game ads (2026 guide)](https://www.kevel.com/blog/what-are-ingame-ads)
