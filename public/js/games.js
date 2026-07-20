@@ -411,7 +411,10 @@ GameClients.dots = {
     const { canvas, ctx: g, w, hgt } = makeCanvas(root, 300);
     const input = h('input', { type: 'number', placeholder: 'How many dots?', min: 0, inputmode: 'numeric' });
     const btn = h('button', { class: 'big', onclick: confirm, disabled: true }, 'Guess');
-    root.append(note, input, h('div', { style: { marginTop: '8px' } }, btn));
+    // Sticky for the same reason as Trace's Done button: on short viewports
+    // the canvas's height floor can push these controls below the fold.
+    root.append(note, h('div', { style: { position: 'sticky', bottom: '10px' } },
+      input, h('div', { style: { marginTop: '8px' } }, btn)));
 
     // Pre-generate all dot positions from the shared seed so every player
     // sees the identical jars.
