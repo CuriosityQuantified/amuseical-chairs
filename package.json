@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "node server/index.js",
+    "check": "node scripts/check.mjs",
     "test": "node --test \"test/**/*.test.js\""
   },
   "dependencies": {
