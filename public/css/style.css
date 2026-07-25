@@ -393,3 +393,14 @@ canvas.game {
 .price-item { font-size: 20px; margin: 10px 0; }
 .price-item .emoji { font-size: 44px; }
 .answer-clusters { columns: 2; font-size: 15px; }
+
+/* pooled player-authored entries on the host screen (two-stage games) */
+.entry-pool { display: grid; gap: 8px; max-width: 900px; margin: 10px auto; text-align: left; }
+.pool-entry {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bg2); border: 1px solid var(--line); border-radius: 4px;
+  padding: 10px 12px;
+}
+.pool-text { flex: 1; font-size: 22px; overflow-wrap: anywhere; }
+.pool-hide { font-size: 10px; padding: 6px 10px; flex: 0 0 auto; }
+.pool-entry.hidden-entry .pool-text { color: var(--dim); font-style: italic; }

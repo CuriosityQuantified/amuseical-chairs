@@ -379,6 +379,41 @@ const TUTORIALS = {
       } },
   ],
 
+  caption: [
+    { ok: true, dur: 4600, label: 'Stage 1: answer the prompt · Stage 2: vote for the best ones',
+      draw(g, w, h, p) {
+        if (p < 0.5) {
+          text(g, 'STAGE 1', w / 2, 20, { size: 12, color: C.cyan, bold: true });
+          text(g, 'A terrible name for a team offsite:', w / 2, 44, { size: 14, color: C.ink });
+          const s = 'Mandatory Fun Island';
+          box(g, 30, 68, w - 60, 40, C.panel, C.good);
+          const n = Math.floor(seg(p, 0.06, 0.42) * s.length);
+          text(g, s.slice(0, n) + (Math.floor(p * 22) % 2 ? '|' : ''), w / 2, 88, { size: 15, color: C.good });
+          timerBar(g, 30, 132, w - 60, 1 - p * 2, C.cyan);
+        } else {
+          text(g, 'STAGE 2', w / 2, 20, { size: 12, color: C.cyan, bold: true });
+          text(g, 'everyone reads the pool — pick 3', w / 2, 42, { size: 13 });
+          const opts = ['Mandatory Fun Island', 'Trust Fall Springs', 'Q3 Vibes Retreat'];
+          opts.forEach((o, i) => {
+            const y = 62 + i * 34;
+            const on = p > 0.62 + i * 0.1;
+            box(g, 30, y, w - 60, 28, C.panel, on ? C.good : C.line);
+            text(g, o, w / 2, y + 14, { size: 13, color: on ? C.good : C.ink });
+          });
+          cursor(g, w / 2 + 90, 94, p > 0.62 && p < 0.72);
+        }
+      } },
+    { ok: false, dur: 3600, label: 'Your own answer can’t be voted for — and votes are the whole score',
+      draw(g, w, h, p) {
+        text(g, 'the pool is anonymous', w / 2, 26, { size: 13 });
+        box(g, 30, 46, w - 60, 30, C.panel, C.bad);
+        text(g, 'Mandatory Fun Island  (yours)', w / 2, 61, { size: 13, color: C.muted });
+        cursor(g, w / 2 + 90, 78, p > 0.2 && p < 0.45);
+        if (p > 0.45) text(g, 'self-votes are dropped by the server', w / 2, 104, { size: 14, color: C.bad, bold: true });
+        if (p > 0.7) text(g, 'write nothing → 0 votes → 0 points', w / 2, 134, { size: 14, color: C.bad });
+      } },
+  ],
+
   typing: [
     { ok: true, dur: 4200, label: 'Type the sentence exactly — accuracy earns the speed',
       draw(g, w, h, p) {

@@ -5,6 +5,7 @@
 
 import { randInt, shuffle, pick } from '../shared/rng.js';
 import { rgbToLab, ciede2000 } from '../shared/ciede2000.js';
+import { cleanEntryText, isUsableEntry, ENTRY_MAX_CHARS } from '../shared/textclean.js';
 
 const SENTENCES = [
   'The quick brown fox jumps over the lazy dog while the band plays on.',
@@ -122,6 +123,42 @@ const ROOM_QUESTIONS = [
   'Do you own a kitchen gadget you have used exactly once?',
 ];
 
+// Caption Battle stage-one prompts. Sentence-completions, not images: the
+// answers stay short, comparable, and readable on a projector, and nothing
+// here needs an asset pipeline. Work-meeting safe by construction.
+const CAPTION_PROMPTS = [
+  'The real reason this meeting exists:',
+  'A terrible name for a team offsite:',
+  'The email subject line nobody should ever send:',
+  'What the office printer is thinking right now:',
+  'The worst possible thing to say on a first day:',
+  'A rejected slogan for this company:',
+  'What the wifi password should actually be:',
+  'The one agenda item that would fix everything:',
+  'An honest job title for what you actually do:',
+  'The last thing you want to hear on a video call:',
+  'What the vending machine would say if it could talk:',
+  'A five-star review of this meeting:',
+  'The worst possible out-of-office message:',
+  'What your calendar is secretly trying to tell you:',
+  'A new rule that would improve every meeting:',
+  'The most suspicious thing to find in the office fridge:',
+  'What the mute button whispers when you forget it:',
+  'A terrible motivational poster caption:',
+  'The real translation of “let’s take this offline”:',
+  'What this quarter’s roadmap actually looks like:',
+  'A dreadful name for a productivity app:',
+  'The unwritten rule everyone in this room follows:',
+  'What the office plant has witnessed:',
+  'A warning label this laptop should come with:',
+  'The worst possible icebreaker question:',
+  'What “quick sync” really means:',
+  'A conspiracy theory about the coffee machine:',
+  'The most useless superpower for office life:',
+  'What the meeting room would name itself:',
+  'A headline about today that nobody expected:',
+];
+
 export const ROSTER = [
   { key: 'rgb', name: 'RGB Color Match', category: 'perceptual', type: 'error' },
   { key: 'oddoneout', name: 'Odd One Out', category: 'perceptual', type: 'score' },
@@ -131,13 +168,28 @@ export const ROSTER = [
   { key: 'stopclock', name: 'Stop the Clock', category: 'timing', type: 'error' },
   { key: 'gridflash', name: 'Grid Flash', category: 'memory', type: 'error' },
   { key: 'readroom', name: 'Read the Room', category: 'social', type: 'error' },
+  { key: 'caption', name: 'Caption Battle', category: 'social', type: 'score', stages: 2 },
   { key: 'typing', name: 'Typing Sprint', category: 'motor', type: 'score', keyboardOnly: true },
   { key: 'spacemash', name: 'Space Mash', category: 'motor', type: 'score' },
   { key: 'slingshot', name: 'Slingshot', category: 'motor', type: 'error' },
 ];
 
 export const ROSTER_BY_KEY = new Map(ROSTER.map((g) => [g.key, g]));
-export const NEEDS_AGGREGATION = new Set(['readroom']);
+export const NEEDS_AGGREGATION = new Set(['readroom', 'caption']);
+// Games whose second stage is built out of the first stage's submissions.
+// Both stages are still played by ALL players at once — this is not a
+// turn-based mechanic.
+export const TWO_STAGE = new Set(['caption']);
+
+// How many entries one player may vote for in a voting stage. Vote-based
+// scoring concentrates hard — a room of 20 puts its votes on 3–4 captions and
+// everyone else ties at the floor for a whole game. Multiple votes per player
+// (issue #12, option 1) flattens the distribution so mid-tier entries separate
+// from zero. Clamped down when the pool is too small to spend them on anyone
+// but yourself.
+const VOTES_PER_PLAYER = 3;
+export const votesForPool = (poolSize) =>
+  Math.max(1, Math.min(VOTES_PER_PLAYER, poolSize - 1));
 
 const num = (v) => (typeof v === 'number' && Number.isFinite(v) ? v : null);
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
@@ -210,6 +262,15 @@ export function buildGameData(key, ctx) {
       const idx = pickContent(rng, ROOM_QUESTIONS.length, usedSet('readroom'));
       return { clientData: { question: ROOM_QUESTIONS[idx] }, secret: {} };
     }
+    case 'caption': {
+      // Stage one only. Stage two's content is buildStageTwo's job — it is
+      // made out of what the room actually wrote.
+      const idx = pickContent(rng, CAPTION_PROMPTS.length, usedSet('caption'));
+      return {
+        clientData: { prompt: CAPTION_PROMPTS[idx], maxChars: ENTRY_MAX_CHARS },
+        secret: {},
+      };
+    }
     case 'typing': {
       const idx = pickContent(rng, SENTENCES.length, usedSet('typing'));
       return { clientData: { sentence: SENTENCES[idx] }, secret: { sentence: SENTENCES[idx] } };
@@ -227,6 +288,49 @@ export function buildGameData(key, ctx) {
     default:
       throw new Error(`unknown game key ${key}`);
   }
+}
+
+// Build stage two out of stage one's submissions.
+// entries: [{ playerId, payload }] — every stage-one submission received.
+// ctx: { rng, clientData, config } where clientData is STAGE ONE's data.
+// Returns { clientData, secret } for stage two, or null when there is not
+// enough material to run a second stage at all (the caller scores stage one
+// instead). Never throws on a degenerate pool — a room where nobody typed
+// anything still has to reach a scores screen.
+export function buildStageTwo(key, entries, ctx) {
+  const { rng, clientData } = ctx;
+  if (key === 'caption') {
+    // Moderation happens HERE, once, on the way into the pool: everything
+    // downstream (host projector, player screens, the reveal) reads these
+    // strings and nothing else.
+    const usable = entries
+      .map((e) => ({ playerId: e.playerId, text: cleanEntryText(e.payload?.text) }))
+      .filter((e) => isUsableEntry(e.text));
+    // 0 or 1 captions: there is nothing to choose between. Skip stage two.
+    if (usable.length < 2) return null;
+    // Shuffled so pool order leaks neither submission order nor authorship,
+    // and ids are positional in the shuffled pool for the same reason.
+    const shuffled = shuffle(rng, usable);
+    const owners = {};
+    const pool = shuffled.map((e, i) => {
+      const id = `e${i}`;
+      owners[id] = e.playerId;
+      return { id, text: e.text };
+    });
+    return {
+      clientData: {
+        prompt: clientData?.prompt ?? '',
+        entries: pool,
+        votesPerPlayer: votesForPool(pool.length),
+        hidden: [],          // entry ids the host has pulled off the screen
+      },
+      // Authorship stays server-side for the whole voting stage — the pool is
+      // anonymous, which is both safer and funnier, and it is what makes
+      // self-vote rejection a server-side check by playerId.
+      secret: { owners },
+    };
+  }
+  throw new Error(`game ${key} has no second stage`);
 }
 
 // Compute the raw metric for one player's submission. Returns null for
@@ -339,8 +443,11 @@ export function computeMetric(key, payload, secret, clientData, config) {
 }
 
 // Social games need every submission before anyone can be scored.
-// entries: [{ playerId, payload }]. Returns { metrics: Map, extra }.
-export function aggregateGame(key, entries) {
+// entries: [{ playerId, payload }] — the submissions of the stage that just
+// closed. ctx: { clientData, secret } of that same stage.
+// Returns { metrics: Map, extra }.
+export function aggregateGame(key, entries, ctx = {}) {
+  if (key === 'caption') return aggregateCaption(entries, ctx);
   if (key === 'readroom') {
     const valid = entries.filter((e) => e.payload && typeof e.payload.answer === 'boolean');
     const metrics = new Map();
@@ -357,9 +464,76 @@ export function aggregateGame(key, entries) {
   throw new Error(`game ${key} does not aggregate`);
 }
 
+// Caption Battle scoring. Metric = votes received, so a player's score comes
+// entirely from what the room picked. Two shapes arrive here:
+//
+//   - stage two closed (ctx.secret.owners present): `entries` are ballots.
+//   - stage two never ran, because fewer than two people wrote anything:
+//     `entries` are the stage-one captions and nobody voted on anything.
+//
+// Only players who put a caption in the pool are scored; a player who joined
+// between the stages and only voted is a non-submitter for this game and
+// scores 0, exactly like a missed submission anywhere else.
+function aggregateCaption(entries, ctx) {
+  const owners = ctx?.secret?.owners || null;
+  const prompt = ctx?.clientData?.prompt ?? null;
+
+  if (!owners) {
+    const metrics = new Map();
+    const board = [];
+    for (const e of entries) {
+      const text = cleanEntryText(e.payload?.text);
+      if (!isUsableEntry(text)) continue;
+      metrics.set(e.playerId, 0);
+      board.push({ entryId: null, playerId: e.playerId, text, votes: 0, hidden: false });
+    }
+    return { metrics, extra: { prompt, board, votesPerPlayer: 0, voters: 0, skipped: true } };
+  }
+
+  const pool = Array.isArray(ctx?.clientData?.entries) ? ctx.clientData.entries : [];
+  const hidden = new Set(ctx?.clientData?.hidden || []);
+  const perVoter = Math.max(1, Math.floor(Number(ctx?.clientData?.votesPerPlayer) || 1));
+  const tally = new Map(pool.map((e) => [e.id, 0]));
+
+  let voters = 0;
+  for (const e of entries) {
+    const ballot = Array.isArray(e.payload?.votes) ? e.payload.votes : [];
+    const used = new Set();
+    for (const raw of ballot) {
+      if (used.size >= perVoter) break;
+      const id = typeof raw === 'string' ? raw : null;
+      if (!id || used.has(id)) continue;              // padded or duplicated ballot
+      if (!tally.has(id) || hidden.has(id)) continue; // unknown or pulled entry
+      if (owners[id] === e.playerId) continue;        // self-vote — by playerId, server-side
+      used.add(id);
+      tally.set(id, tally.get(id) + 1);
+    }
+    if (used.size) voters++;
+  }
+
+  const metrics = new Map();
+  const board = [];
+  for (const entry of pool) {
+    const isHidden = hidden.has(entry.id);
+    const votes = isHidden ? 0 : (tally.get(entry.id) || 0);
+    const owner = owners[entry.id];
+    if (owner != null) metrics.set(owner, (metrics.get(owner) || 0) + votes);
+    board.push({ entryId: entry.id, playerId: owner ?? null, text: entry.text, votes, hidden: isHidden });
+  }
+  board.sort((a, b) => b.votes - a.votes);
+  return { metrics, extra: { prompt, board, votesPerPlayer: perVoter, voters, skipped: false } };
+}
+
 // Human-readable raw value for the reveal screens.
 export function formatRaw(key, metric, payload) {
-  if (metric == null) return 'no submission';
+  if (metric == null) {
+    // A player who joined between the stages voted but never wrote a caption:
+    // still a 0, but "no submission" would read as a bug to them.
+    if (key === 'caption' && Array.isArray(payload?.votes) && payload.votes.length) {
+      return 'voted — no caption';
+    }
+    return 'no submission';
+  }
   switch (key) {
     case 'rgb': return `ΔE ${metric.toFixed(1)}`;
     case 'oddoneout': return `${metric} tiles`;
@@ -369,6 +543,7 @@ export function formatRaw(key, metric, payload) {
     case 'stopclock': return `${Math.round(metric)} ms off`;
     case 'gridflash': return `${metric} cells off`;
     case 'readroom': return `${metric.toFixed(0)} pts off`;
+    case 'caption': return `${metric} vote${metric === 1 ? '' : 's'}`;
     case 'typing': return `${Math.round(metric)} net cpm`;
     case 'spacemash': return `${metric} presses${payload?.flagged ? ' ⚠' : ''}`;
     case 'slingshot': return `${metric.toFixed(1)} ft`;

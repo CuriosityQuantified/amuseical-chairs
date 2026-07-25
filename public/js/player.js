@@ -246,9 +246,13 @@ function startMinigame(payload) {
   clearAll();
   const client = GameClients[payload.key];
   if (!client) return renderWaiting(`Unknown game ${payload.key}`);
+  const stage = payload.stage || 1;
+  const totalStages = payload.totalStages || 1;
+  const intro = typeof client.intro === 'function' ? client.intro(stage) : client.intro;
   content().append(
-    el('h2', {}, (payload.practice ? '🧪 PRACTICE — ' : payload.test ? '🔧 TEST — ' : '') + payload.gameName),
-    el('p', { class: 'muted' }, client.intro || '')
+    el('h2', {}, (payload.practice ? '🧪 PRACTICE — ' : payload.test ? '🔧 TEST — ' : '') + payload.gameName
+      + (totalStages > 1 ? ` — stage ${stage} of ${totalStages}` : '')),
+    el('p', { class: 'muted' }, intro || '')
   );
   // Convert the server deadline to local time via the sync offset, then run
   // the countdown off performance.now().
@@ -269,14 +273,19 @@ function startMinigame(payload) {
       el('p', { class: 'muted', id: 'spec-progress' }, '')
     );
   };
-  const handle = client.start(gameRoot(), {
+  const gameCtx = {
     data: payload.clientData,
     duration: payload.duration,
     deadline: perfDeadline,
     submit,
     rng: null,
-  });
-  state.game = { key: payload.key, submitted: () => submitted };
+    stage,
+    totalStages,
+  };
+  const handle = client.startStage
+    ? client.startStage(stage, gameRoot(), gameCtx)
+    : client.start(gameRoot(), gameCtx);
+  state.game = { key: payload.key, stage, handle, submitted: () => submitted };
   // Auto-collect partial progress just before the server closes the game.
   const msLeft = Math.max(0, localDeadline - Date.now() - 250);
   autoTimer = setTimeout(() => {
@@ -383,6 +392,14 @@ socket.on('phase', (p) => {
 socket.on('host:progress', ({ submitted, total }) => {
   const elP = document.getElementById('spec-progress');
   if (elP) elP.textContent = `${submitted} of ${total} submitted`;
+});
+
+// The server revised the round data mid-stage — today that only happens when
+// the host pulls a pooled entry off every screen.
+socket.on('game:data', ({ key, stage, clientData }) => {
+  const g = state.game;
+  if (!g || g.key !== key || g.stage !== (stage || 1)) return;
+  g.handle?.update?.(clientData);
 });
 
 // Personal score after each attempt (also fires for the chairs finale just

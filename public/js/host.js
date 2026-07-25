@@ -82,10 +82,20 @@ function enabledCount() {
   return state.config ? Object.values(state.config.enabled).filter(Boolean).length : 0;
 }
 
+// How many games this session will actually play: the K-of-N draw, capped by
+// how many are enabled. 0 = all of them.
+function drawCount() {
+  const k = state.config?.gamesPerSession || 0;
+  const n = enabledCount();
+  return k > 0 && k < n ? k : n;
+}
+
 function renderLobbySummary() {
+  const n = enabledCount();
+  const k = drawCount();
   $('lobby-ladder').replaceChildren(
     el('span', { class: 'step' },
-      `${enabledCount()} games + musical chairs · highest total score wins`)
+      `${k < n ? `${k} of ${n}` : `${n}`} games + musical chairs · highest total score wins`)
   );
 }
 
@@ -96,15 +106,22 @@ function buildConfigPanel() {
   $('cfg-dur').value = Math.round(c.gameDuration / 1000);
   $('cfg-dur-val').textContent = Math.round(c.gameDuration / 1000);
   $('cfg-practice').checked = c.practice;
+  $('cfg-count').max = String((c.roster || []).length);
+  $('cfg-count').value = String(c.gamesPerSession || 0);
+  $('cfg-count-val').textContent = c.gamesPerSession ? String(c.gamesPerSession) : 'all';
 
-  const nameOf = (key) => (c.roster || []).find((g) => g.key === key)?.name || key;
+  const meta = (key) => (c.roster || []).find((g) => g.key === key);
+  const nameOf = (key) => meta(key)?.name || key;
   const toggles = $('game-toggles');
   toggles.replaceChildren();
   for (const [key, on] of Object.entries(c.enabled)) {
     const cb = el('input', { type: 'checkbox' });
     cb.checked = on;
     cb.addEventListener('change', () => pushConfig({ enabled: { [key]: cb.checked } }));
-    toggles.append(el('label', {}, cb, nameOf(key)));
+    // A two-stage game costs roughly double a normal slot — worth knowing
+    // before you plan the meeting around it.
+    const stages = meta(key)?.stages || 1;
+    toggles.append(el('label', {}, cb, nameOf(key) + (stages > 1 ? ' ⏱⏱' : '')));
   }
 
   const tests = $('test-buttons');
@@ -120,6 +137,11 @@ function buildConfigPanel() {
 
   $('cfg-dur').oninput = (e) => { $('cfg-dur-val').textContent = e.target.value; pushConfig({ gameDuration: Number(e.target.value) * 1000 }); };
   $('cfg-practice').onchange = (e) => pushConfig({ practice: e.target.checked });
+  $('cfg-count').oninput = (e) => {
+    const v = Number(e.target.value);
+    $('cfg-count-val').textContent = v ? String(v) : 'all';
+    pushConfig({ gamesPerSession: v });
+  };
 }
 
 function pushConfig(patch) {
@@ -290,14 +312,59 @@ function renderTutorial(p) {
 
 // ---- minigame progress (count only, never live scores) ---------------------
 
+// Stage two of a two-stage game is where the projector earns its keep: the
+// room has to be able to READ the pool to vote on it. Vote tallies are NOT
+// shown live — only how many players have voted. Live scores stay off the
+// host screen, exactly as they do for every other game.
+let poolData = null;
+
+function renderPool() {
+  const box = $('entry-pool');
+  if (!box || !poolData) return;
+  const hidden = new Set(poolData.hidden || []);
+  box.replaceChildren();
+  for (const entry of poolData.entries || []) {
+    const gone = hidden.has(entry.id);
+    const row = el('div', { class: `pool-entry${gone ? ' hidden-entry' : ''}` },
+      el('span', { class: 'pool-text' }, gone ? '— removed by host —' : entry.text));
+    if (!gone) {
+      row.append(el('button', {
+        class: 'secondary pool-hide',
+        title: 'Remove this entry from every screen',
+        onclick: () => socket.emit('host:hide', { entryId: entry.id }, (res) => {
+          if (res && res.error) alert(res.error);
+        }),
+      }, '✕'));
+    }
+    box.append(row);
+  }
+}
+
 function renderMinigame(p) {
-  content().replaceChildren(
-    el('h1', {}, (p.practice ? '🧪 PRACTICE: ' : p.test ? '🔧 TEST: ' : '') + p.gameName),
+  const stage = p.stage || 1;
+  const totalStages = p.totalStages || 1;
+  const title = (p.practice ? '🧪 PRACTICE: ' : p.test ? '🔧 TEST: ' : '') + p.gameName
+    + (totalStages > 1 ? ` — stage ${stage} of ${totalStages}` : '');
+  const parts = [
+    el('h1', {}, title),
     el('p', { class: 'muted', style: 'font-size:20px' }, `${Math.round(p.duration / 1000)}s`),
+  ];
+  poolData = Array.isArray(p.clientData?.entries) ? p.clientData : null;
+  if (poolData) {
+    parts.push(
+      el('h2', {}, poolData.prompt || ''),
+      el('div', { class: 'entry-pool', id: 'entry-pool' }),
+      el('p', { class: 'muted', style: 'font-size:14px' },
+        `Everyone picks ${poolData.votesPerPlayer} — ✕ removes an entry from every screen and voids its votes.`)
+    );
+  }
+  parts.push(
     el('div', { class: 'progress-count', id: 'prog' }, '0'),
-    el('p', { class: 'muted', style: 'font-size:22px' }, 'submitted'),
+    el('p', { class: 'muted', style: 'font-size:22px' }, poolData ? 'voted' : 'submitted'),
     el('div', { class: 'countdown' }, el('div', { id: 'host-bar' }))
   );
+  content().replaceChildren(...parts);
+  renderPool();
   const localDeadline = p.deadline - state.offset;
   const tick = () => {
     const left = Math.max(0, localDeadline - Date.now());
@@ -314,6 +381,12 @@ socket.on('host:progress', ({ submitted, total }) => {
   if (prog) prog.textContent = `${submitted} of ${total}`;
 });
 
+socket.on('game:data', ({ clientData }) => {
+  if (!poolData || !Array.isArray(clientData?.entries)) return;
+  poolData = clientData;
+  renderPool();
+});
+
 // ---- per-game scores --------------------------------------------------------
 
 function extrasBlock(extras) {
@@ -321,6 +394,25 @@ function extrasBlock(extras) {
   if (!extras) return wrap;
   if (extras.readroom?.actualPct != null) {
     wrap.append(el('h3', {}, `The room's real answer: ${extras.readroom.actualPct}% said yes`));
+  }
+  const cap = extras.caption;
+  if (cap?.board) {
+    // The reveal: authorship was hidden for the whole voting stage, and this
+    // is the moment it stops being hidden.
+    wrap.append(el('h3', {}, cap.prompt || 'Caption Battle'));
+    if (cap.skipped) {
+      wrap.append(el('p', { class: 'muted' },
+        'Not enough answers to run a vote — the round stopped after stage one.'));
+    }
+    const table = el('table', { class: 'board' });
+    table.append(el('tr', {}, el('th', {}, 'Votes'), el('th', {}, 'Answer'), el('th', {}, 'Author')));
+    for (const row of cap.board) {
+      table.append(el('tr', {},
+        el('td', { class: 'num' }, String(row.votes)),
+        el('td', {}, row.hidden ? '— removed by host —' : row.text),
+        el('td', {}, row.name || '?')));
+    }
+    wrap.append(table);
   }
   return wrap;
 }

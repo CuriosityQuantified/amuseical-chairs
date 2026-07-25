@@ -138,6 +138,37 @@ test('score attack: every game once, totals accumulate, chairs finale, highest t
   }
 });
 
+test('gamesPerSession draws K of N — a two-stage game must not outgrow the meeting slot', () => {
+  const enabled = {};
+  for (const g of ROSTER) enabled[g.key] = true;
+
+  const all = new Room(stubIo(), 'FULL', { ...FAST, enabled });
+  const four = new Room(stubIo(), 'FULL', { ...FAST, enabled, gamesPerSession: 4 });
+  const over = new Room(stubIo(), 'FULL', { ...FAST, enabled, gamesPerSession: 99 });
+  try {
+    for (const room of [all, four, over]) {
+      addPlayer(room, 'p1', 'Anna');
+      addPlayer(room, 'p2', 'Ben');
+      room.clearTimer('music');
+    }
+    all.start();
+    four.start();
+    over.start();
+
+    assert.equal(all.queue.length, ROSTER.length, '0 means every enabled game');
+    assert.equal(four.queue.length, 4, 'K of N');
+    assert.equal(over.queue.length, ROSTER.length, 'K is clamped to what is enabled');
+    assert.equal(new Set(four.queue).size, 4, 'still no repeats');
+    // Same room code → same seeded shuffle, so K of N is a prefix of the full
+    // draw: which games you get is as random as the order they come in.
+    assert.deepEqual(four.queue, all.queue.slice(0, 4));
+    // The progress ladder counts the drawn games plus the chairs finale.
+    assert.equal(four.progressInfo().totalGames, 5);
+  } finally {
+    for (const room of [all, four, over]) room.destroy();
+  }
+});
+
 test('2-player finale: one round, placement bonus (3000 / 0) can flip the lead', async () => {
   const room = new Room(stubIo(), 'TESB', {
     ...FAST,
