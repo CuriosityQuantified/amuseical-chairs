@@ -145,7 +145,20 @@ scripts/  static checks run in CI
 
 ## CI
 
-`.github/workflows/ci.yml` runs on every pull request:
+The checks below all run locally today (`npm run check`, `npm test`). The
+GitHub Actions workflow that runs them on every pull request is in
+`docs/ci-workflow.yml` and needs one command to install:
+
+```bash
+mkdir -p .github/workflows && cp docs/ci-workflow.yml .github/workflows/ci.yml
+```
+
+It ships there rather than in place because the token that opened this branch
+has no `workflows` permission — GitHub rejects both a `git push` and an API
+write that touches `.github/workflows/`. Anyone with normal write access can
+run the copy above and commit it.
+
+The workflow runs:
 
 - **Static checks** (`npm run check`) — the browser half of this app has no
   build step, so `node --test` never parses `public/js/*.js` at all. The
