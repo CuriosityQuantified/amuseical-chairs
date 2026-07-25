@@ -17,7 +17,9 @@ import {
   ROSTER,
   ROSTER_BY_KEY,
   NEEDS_AGGREGATION,
+  TWO_STAGE,
   buildGameData,
+  buildStageTwo,
   computeMetric,
   aggregateGame,
   formatRaw,
@@ -35,6 +37,10 @@ export function makeRoomCode(rng = Math.random) {
 const DEFAULTS = {
   gameDuration: 45000,
   tutorialMs: 9000,        // animated how-to screen before each game; 0 = off
+  // K-of-N draw: how many of the enabled games a session actually plays.
+  // 0 = all of them. A two-stage game costs roughly double a normal slot, so
+  // a full roster can push a session past the meeting it is designed to fit.
+  gamesPerSession: 0,
   practice: true,
   minDelay: 2000,
   maxDelay: 6000,
@@ -58,6 +64,7 @@ function sanitizeConfig(raw = {}) {
   };
   c.gameDuration = numIn(raw.gameDuration, 500, 120000, DEFAULTS.gameDuration);
   c.tutorialMs = numIn(raw.tutorialMs, 0, 30000, DEFAULTS.tutorialMs);
+  c.gamesPerSession = Math.round(numIn(raw.gamesPerSession, 0, ROSTER.length, DEFAULTS.gamesPerSession));
   c.practice = raw.practice != null ? !!raw.practice : DEFAULTS.practice;
   c.minDelay = numIn(raw.minDelay, 500, 10000, DEFAULTS.minDelay);
   c.maxDelay = numIn(raw.maxDelay, c.minDelay, 15000, Math.max(c.minDelay, DEFAULTS.maxDelay));
@@ -285,9 +292,10 @@ export class Room {
   }
 
   publicConfig() {
-    const { gameDuration, practice, minDelay, maxDelay, enabled } = this.config;
-    const roster = ROSTER.map(({ key, name, category }) => ({ key, name, category }));
-    return { gameDuration, practice, minDelay, maxDelay, enabled, roster };
+    const { gameDuration, practice, minDelay, maxDelay, enabled, gamesPerSession } = this.config;
+    const roster = ROSTER.map(({ key, name, category, stages }) =>
+      ({ key, name, category, stages: stages || 1 }));
+    return { gameDuration, practice, minDelay, maxDelay, enabled, gamesPerSession, roster };
   }
 
   updateConfig(raw) {
@@ -304,12 +312,32 @@ export class Room {
     if (this.players.size < 2) return { error: 'Need at least 2 players.' };
     const enabledKeys = ROSTER.filter((g) => this.config.enabled[g.key]).map((g) => g.key);
     if (!enabledKeys.length) return { error: 'Enable at least one game.' };
-    this.queue = shuffle(seededRng(`${this.code}:queue`), enabledKeys);
+    // K-of-N draw: seeded shuffle first, then take the first K. Which games a
+    // session plays is as random as their order, and 0 still means "all".
+    const drawn = shuffle(seededRng(`${this.code}:queue`), enabledKeys);
+    const k = this.config.gamesPerSession;
+    this.queue = k > 0 && k < drawn.length ? drawn.slice(0, k) : drawn;
     this.queueIndex = 0;
     this.totals = new Map([...this.players.keys()].map((id) => [id, 0]));
     if (this.config.practice) this.startPractice();
     else this.nextGame();
     return { ok: true };
+  }
+
+  // One playable stage of one game. A two-stage game produces two of these:
+  // stage 2 is appended when stage 1 closes, with its own token, submissions
+  // map and deadline.
+  makeStage(meta, clientData, secret, stage = 1) {
+    return {
+      ...meta,
+      clientData,
+      secret,
+      submissions: new Map(),
+      metrics: new Map(),
+      token: crypto.randomUUID(),
+      stage,
+      totalStages: TWO_STAGE.has(meta.key) ? 2 : 1,
+    };
   }
 
   // Practice: one un-scored Stop the Clock so broken devices surface before
@@ -319,10 +347,7 @@ export class Room {
     const { clientData, secret } = buildGameData('stopclock', { rng, config: this.config, used: {} });
     this.round = {
       practice: true,
-      games: [{
-        key: 'stopclock', ...ROSTER_BY_KEY.get('stopclock'),
-        clientData, secret, submissions: new Map(), metrics: new Map(), token: crypto.randomUUID(),
-      }],
+      games: [this.makeStage(ROSTER_BY_KEY.get('stopclock'), clientData, secret)],
       gameIndex: 0,
     };
     this.startTutorial(
@@ -348,9 +373,7 @@ export class Room {
     this.round = {
       practice: false,
       test: true,
-      games: [{
-        ...meta, clientData, secret, submissions: new Map(), metrics: new Map(), token: crypto.randomUUID(),
-      }],
+      games: [this.makeStage(meta, clientData, secret)],
       gameIndex: 0,
       extras: {},
     };
@@ -396,6 +419,9 @@ export class Room {
       clientData: g.clientData,
       duration: dur,
       deadline: g.deadline ?? Date.now() + dur,
+      // Two-stage games label themselves the way the chairs rounds do.
+      stage: g.stage || 1,
+      totalStages: g.totalStages || 1,
       practice: !!this.round.practice,
       test: !!this.round.test,
     };
@@ -422,7 +448,7 @@ export class Room {
     });
     this.round = {
       practice: false,
-      games: [{ ...meta, clientData, secret, submissions: new Map(), metrics: new Map(), token: crypto.randomUUID() }],
+      games: [this.makeStage(meta, clientData, secret)],
       gameIndex: 0,
       extras: {},
     };
@@ -472,6 +498,64 @@ export class Room {
     this.setTimer('game', () => this.closeGame(g.token), duration + this.config.closeGraceMs);
   }
 
+  // Returns true when a second stage actually started. A degenerate pool
+  // (nobody wrote anything, or only one player did) has nothing to vote on:
+  // stage two is skipped and stage one is scored as-is, so the room always
+  // reaches a scores screen.
+  startStageTwo(g, entries) {
+    let built = null;
+    try {
+      built = buildStageTwo(g.key, entries, {
+        rng: seededRng(`${this.code}:g${this.queueIndex}:${g.key}:stage2`),
+        clientData: g.clientData,
+        config: this.config,
+      });
+    } catch (err) {
+      console.error(`room ${this.code} buildStageTwo ${g.key}:`, err);
+      return false;
+    }
+    if (!built) return false;
+    this.round.games.push(this.makeStage(ROSTER_BY_KEY.get(g.key), built.clientData, built.secret, 2));
+    this.startGame(this.round.games.length - 1);
+    return true;
+  }
+
+  // Authorship is server-side for the whole voting stage; names are attached
+  // only once the game is over and the reveal is the point.
+  withNames(extra) {
+    if (!extra || !Array.isArray(extra.board)) return extra;
+    return {
+      ...extra,
+      board: extra.board.map((row) => ({
+        ...row,
+        name: row.playerId ? (this.players.get(row.playerId)?.name || '?') : '?',
+      })),
+    };
+  }
+
+  // Host moderation for pooled player text. The host screen is projected in a
+  // work meeting and there is no undo on a room full of people reading
+  // something — pulling an entry removes it from every screen immediately and
+  // voids every vote cast for it.
+  hideEntry(entryId) {
+    if (this.phase !== 'minigame') return { error: 'Nothing on screen to hide.' };
+    const g = this.round?.games[this.round.gameIndex];
+    if (!g || !Array.isArray(g.clientData?.entries)) return { error: 'This game has no pooled entries.' };
+    const id = String(entryId || '');
+    if (!g.clientData.entries.some((e) => e.id === id)) return { error: 'Unknown entry.' };
+    const hidden = new Set(g.clientData.hidden || []);
+    hidden.add(id);
+    // Note: votesPerPlayer deliberately does NOT shrink — ballots already cast
+    // stay valid, and the hidden entry is dropped at aggregation instead.
+    g.clientData = { ...g.clientData, hidden: [...hidden] };
+    this.emitAll('game:data', {
+      key: g.key,
+      stage: g.stage || 1,
+      clientData: g.clientData,
+    });
+    return { ok: true, hidden: g.clientData.hidden };
+  }
+
   handleSubmit(playerId, payload) {
     if (this.phase !== 'minigame') return;
     const p = this.players.get(playerId);
@@ -496,11 +580,20 @@ export class Room {
     if (!g || g.token !== token || g.closed) return;
     g.closed = true;
     this.clearTimer('game');
+    const entries = [...g.submissions.entries()].map(([playerId, payload]) => ({ playerId, payload }));
+
+    // Two-stage game, stage one: don't score — build stage two's content out
+    // of the pool of stage-one submissions and re-enter `minigame` with a
+    // fresh token, a fresh submissions map and its own deadline.
+    if (g.totalStages === 2 && g.stage === 1 && this.startStageTwo(g, entries)) return;
+
     if (NEEDS_AGGREGATION.has(g.key)) {
-      const entries = [...g.submissions.entries()].map(([playerId, payload]) => ({ playerId, payload }));
-      const { metrics, extra } = aggregateGame(g.key, entries);
+      const { metrics, extra } = aggregateGame(g.key, entries, {
+        clientData: g.clientData,
+        secret: g.secret,
+      });
       g.metrics = metrics;
-      if (this.round.extras) this.round.extras[g.key] = extra;
+      if (this.round.extras) this.round.extras[g.key] = this.withNames(extra);
     }
     if (this.round.test) {
       // Raw metric per player, no normalization — solo results would all

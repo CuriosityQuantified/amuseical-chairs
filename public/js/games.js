@@ -1,14 +1,23 @@
 // Client-side minigame implementations. Contract:
-//   GameClients[key].start(root, ctx) -> { collect?: () => payload | null }
-// ctx: { data, duration, deadline, submit(payload), rng }
+//   GameClients[key].start(root, ctx) -> { collect?, update? }
+// ctx: { data, duration, deadline, submit(payload), rng, stage, totalStages }
 //   - data: server-built round data (identical for every player, seeded)
 //   - submit: call once with the payload; the shell locks the UI after
 //   - collect: shell calls it at the deadline to auto-submit partial progress
+//   - update: shell calls it when the server revises the round data mid-stage
+//     (host moderation pulling a pooled entry); optional
+//
+// Two-stage games instead expose:
+//   GameClients[key].startStage(stage, root, ctx) -> same handle
+// Both stages are played by every player at once; `collect` semantics are
+// per-stage. `intro` may be a function of the stage number.
+//
 // All randomness in game content comes from the server data or the seeded
 // rng — Math.random() only ever drives decoration, never scoring or physics.
 
 import { seededRng } from '/shared/rng.js';
 import { createPressCounter } from '/shared/presscounter.js';
+import { cleanEntryText } from '/shared/textclean.js';
 
 // ---- tiny DOM helpers ------------------------------------------------------
 
@@ -586,6 +595,115 @@ GameClients.readroom = {
     return { collect: () => (answer == null ? null : { answer, prediction: Number(slider.value) }) };
   },
 };
+
+// ---- 12. Caption Battle (two-stage) ----------------------------------------
+// Stage 1: everyone answers the same seeded prompt. Stage 2: everyone reads
+// the anonymized pool built out of stage 1 and spends their votes. Both stages
+// are played by all players at once. Score = votes received.
+
+// What this device wrote in stage 1, so stage 2 can grey out your own entry.
+// Server-side self-vote rejection is the real enforcement (by playerId) — this
+// is only so you aren't invited to click something that will be thrown away.
+let myCaption = null;
+
+GameClients.caption = {
+  intro: (stage) => (stage === 2
+    ? 'Read the room’s answers and vote for the best ones. You can’t vote for your own.'
+    : 'Answer the prompt. Everyone reads them next — votes are the points.'),
+
+  startStage(stage, root, ctx) {
+    return stage === 2 ? startVote(root, ctx) : startWrite(root, ctx);
+  },
+};
+
+function startWrite(root, ctx) {
+  const max = ctx.data.maxChars || 80;
+  myCaption = null;
+  const input = h('input', {
+    type: 'text', autocomplete: 'off', maxlength: String(max * 2),
+    placeholder: 'Your answer…',
+  });
+  const counter = h('p', { class: 'trial-note center' }, `0 / ${max}`);
+  // Count what the SERVER will keep, not what is in the box: whitespace runs
+  // collapse and control characters vanish before anything is pooled.
+  const cleaned = () => cleanEntryText(input.value, max);
+  const paint = () => {
+    const n = [...cleaned()].length;
+    counter.textContent = `${n} / ${max}`;
+    btn.disabled = n === 0;
+  };
+  const send = () => {
+    const text = cleaned();
+    if (!text) return;
+    myCaption = text;
+    ctx.submit({ text });
+  };
+  const btn = h('button', { class: 'big', onclick: send, disabled: true }, 'Lock it in');
+  input.addEventListener('input', paint);
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') send(); });
+  root.append(
+    h('h2', { class: 'center' }, ctx.data.prompt),
+    input, counter,
+    h('div', { style: { marginTop: '10px' } }, btn),
+    h('p', { class: 'muted center', style: { fontSize: '13px' } },
+      'Everyone reads these next — keep it short and keep it kind.')
+  );
+  input.focus();
+  return {
+    collect: () => {
+      const text = cleaned();
+      if (!text) return null;
+      myCaption = text;
+      return { text };
+    },
+  };
+}
+
+function startVote(root, ctx) {
+  let data = ctx.data;
+  const picked = new Set();
+  const note = h('p', { class: 'trial-note center' });
+  const list = h('div', {});
+  const btn = h('button', { class: 'big', onclick: () => ctx.submit({ votes: [...picked] }) }, 'Submit votes');
+
+  const render = () => {
+    const hidden = new Set(data.hidden || []);
+    const per = data.votesPerPlayer || 1;
+    for (const id of picked) if (hidden.has(id)) picked.delete(id);
+    note.textContent = `${picked.size} of ${per} vote${per === 1 ? '' : 's'} used`;
+    btn.disabled = picked.size === 0;
+    list.replaceChildren();
+    for (const entry of data.entries || []) {
+      if (hidden.has(entry.id)) continue;
+      const mine = myCaption != null && entry.text === myCaption;
+      const chosen = picked.has(entry.id);
+      const opt = h('button', {
+        class: `vote-option${chosen ? ' chosen' : ''}`,
+        onclick: () => {
+          if (mine) return;
+          if (chosen) picked.delete(entry.id);
+          else if (picked.size < per) picked.add(entry.id);
+          render();
+        },
+      }, mine ? `${entry.text}  (yours)` : entry.text);
+      if (mine) opt.style.opacity = '0.45';
+      list.append(opt);
+    }
+  };
+
+  root.append(
+    h('h2', { class: 'center' }, data.prompt),
+    h('p', { class: 'muted center' }, 'Vote for the best answers:'),
+    list, note,
+    h('div', { style: { marginTop: '10px', position: 'sticky', bottom: '10px' } }, btn)
+  );
+  render();
+  return {
+    collect: () => (picked.size ? { votes: [...picked] } : null),
+    // The host pulled an entry off every screen mid-vote.
+    update: (next) => { data = next; render(); },
+  };
+}
 
 // ---- 13. Typing Sprint -----------------------------------------------------
 

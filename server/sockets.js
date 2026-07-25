@@ -114,6 +114,8 @@ export function attachSockets(io) {
     socket.on('host:start', hostOnly((r, _p, cb) => cb?.(r.start())));
     socket.on('host:test', hostOnly((r, payload, cb) => cb?.(r.startTest(payload?.key))));
     socket.on('host:next', hostOnly((r, _p, cb) => cb?.(r.hostNext())));
+    // Moderation: pull a player-authored entry off the projector mid-stage.
+    socket.on('host:hide', hostOnly((r, payload, cb) => cb?.(r.hideEntry(payload?.entryId))));
     socket.on('host:config', hostOnly((r, payload, cb) => cb?.(r.updateConfig(payload || {}))));
 
     socket.on('disconnect', () => {

@@ -42,7 +42,22 @@ const TEST_CONFIG = {
   closeGraceMs: 300,
 };
 
-function botPayload(key, data, rnd) {
+// A bot's payload for one stage of one game. `bot` is threaded through so a
+// two-stage game can remember what this device wrote in stage one.
+function botPayload(key, data, rnd, stage = 1, bot = null) {
+  if (key === 'caption') {
+    if (stage === 2) {
+      // Vote for other people's entries only — a bot that spends its ballot on
+      // itself would have those votes dropped server-side and we would learn
+      // nothing about the vote spread.
+      const others = (data.entries || []).filter((e) => e.text !== bot?.myCaption);
+      const shuffled = others.slice().sort(() => rnd() - 0.5);
+      return { votes: shuffled.slice(0, data.votesPerPlayer || 1).map((e) => e.id) };
+    }
+    const text = `${bot?.name || 'Someone'} says thing ${Math.floor(rnd() * 1000)}`;
+    if (bot) bot.myCaption = text;
+    return { text };
+  }
   switch (key) {
     case 'rgb': return { r: Math.floor(rnd() * 256), g: Math.floor(rnd() * 256), b: Math.floor(rnd() * 256) };
     case 'oddoneout': return { cleared: 2 + Math.floor(rnd() * 20) };
@@ -67,6 +82,7 @@ class Bot {
     this.playerId = null;
     this.reconnected = false;
     this.scoreCards = [];     // every you:score payload received
+    this.myCaption = null;    // what this bot wrote in a two-stage game
     this.socket = null;
   }
 
@@ -98,7 +114,9 @@ class Bot {
           return;
         }
         await sleep(10 + Math.random() * 120);
-        s.emit('player:submit', { payload: botPayload(p.key, p.clientData, Math.random) });
+        s.emit('player:submit', {
+          payload: botPayload(p.key, p.clientData, Math.random, p.stage || 1, this),
+        });
       }
     });
     s.on('you:score', (card) => { this.scoreCards.push(card); });
@@ -131,7 +149,7 @@ test('20 bots: every game once, per-game scores, chairs finale, winner by total'
 
   const host = connect(url, { transports: ['websocket'], forceNew: true });
   const bots = [];
-  const minigameKeys = [];
+  const stagesSeen = [];    // { key, stage, totalStages } per minigame phase
   const scoreboards = [];
   let chairsSeen = 0;
   let winnerPayload = null;
@@ -149,7 +167,9 @@ test('20 bots: every game once, per-game scores, chairs finale, winner by total'
 
     const winnerReached = new Promise((resolve) => {
       host.on('phase', (p) => {
-        if (p.name === 'minigame') minigameKeys.push(p.key);
+        if (p.name === 'minigame') {
+          stagesSeen.push({ key: p.key, stage: p.stage || 1, totalStages: p.totalStages || 1 });
+        }
         if (p.name === 'scores') {
           scoreboards.push(p.leaderboard);
           setTimeout(() => host.emit('host:next', {}, () => {}), 30);
@@ -181,10 +201,21 @@ test('20 bots: every game once, per-game scores, chairs finale, winner by total'
 
     // ---- assertions ----
     const enabledCount = ROSTER.length;
-    assert.equal(minigameKeys.length, enabledCount, 'every enabled game played');
-    assert.equal(new Set(minigameKeys).size, enabledCount, 'no game repeats');
+    const firstStages = stagesSeen.filter((s) => s.stage === 1);
+    assert.equal(firstStages.length, enabledCount, 'every enabled game played');
+    assert.equal(new Set(firstStages.map((s) => s.key)).size, enabledCount, 'no game repeats');
     assert.equal(chairsSeen, bots.length - 1,
       'chairs tournament runs players − 1 elimination rounds');
+
+    // Two-stage games re-enter `minigame` for stage two. Without this the
+    // harness would silently stop covering the new phase.
+    const twoStageKeys = ROSTER.filter((g) => g.stages === 2).map((g) => g.key);
+    for (const key of twoStageKeys) {
+      const stages = stagesSeen.filter((s) => s.key === key).map((s) => s.stage);
+      assert.deepEqual(stages, [1, 2], `${key} played both stages, in order`);
+      assert.ok(stagesSeen.every((s) => s.key !== key || s.totalStages === 2),
+        `${key} labels itself as two-stage in the phase payload`);
+    }
 
     // Per-game scoreboards: full roster of 20 on every one, totals monotone.
     assert.equal(scoreboards.length, enabledCount, 'a scoreboard after every game');
