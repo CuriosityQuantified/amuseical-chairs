@@ -88,7 +88,9 @@ export function attachSockets(io) {
     socket.on('solo:play', soloOnly((r, payload, cb) => cb?.(r.startTest(payload?.key))));
     socket.on('solo:redemption', soloOnly((r, _p, cb) => cb?.(r.startRedemptionTest())));
     socket.on('solo:menu', soloOnly((r, _p, cb) => cb?.(r.backToLobby())));
-    socket.on('solo:skip', soloOnly((r, _p, cb) => cb?.(r.skipTutorial())));
+    // The lone player's Next: skips a tutorial, or advances a between-stages
+    // reveal that a hosted room's Next would advance.
+    socket.on('solo:skip', soloOnly((r, _p, cb) => cb?.(r.soloAdvance())));
 
     socket.on('sync:report', (sync) => {
       const r = room();

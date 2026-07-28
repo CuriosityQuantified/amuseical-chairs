@@ -28,7 +28,7 @@ npm run check      # static checks the test suite can't do (see CI below)
 
 Score attack — no elimination:
 
-1. Games are drawn from a 12-game roster across 6 categories and played by
+1. Games are drawn from a 13-game roster across 6 categories and played by
    **all players simultaneously**, in a seeded-shuffled order. By default
    every enabled game is played exactly once; the host can instead draw
    **K of N** (`Games this session`) to fit a shorter meeting slot. Music +
@@ -37,10 +37,10 @@ Score attack — no elimination:
    tutorial**: looping ✓ DO / ✗ AVOID demos of the game. Duration is a host
    config knob (default 9s, 0 = off); the host's Next — or the solo
    player's Skip — jumps straight in.
-3. Most games are one payload with one deadline. **Caption Battle** is
-   two-stage: everyone answers the same prompt, then everyone reads the
-   anonymized pool built from those answers and spends 3 votes on it. Both
-   stages are played by all players at once — see *Two-stage games* below.
+3. Most games are one payload with one deadline. **Caption Battle** and
+   **Icebreaker** are multi-stage: the room submits, and what it submitted
+   becomes the stages that follow. Every stage is still played by all players
+   at once — see *Multi-stage games* below.
 4. Raw metrics are normalized per game to 0–1000 **across only the players
    who played it** (P90/P10 outlier clamps; no rank-summing). Non-submitters
    score 0 for that game but stay in.
@@ -60,20 +60,31 @@ to every player, so everyone always plays the identical configuration:
 Stop the Clock draws a random 6–10s target, Grid Flash varies pattern sizes
 (6–9 cells), Slingshot jitters the distance ±25%, Trace picks from 15
 shapes, and Read the Room draws from an **80-question humorous bank**
-(Typing Sprint from 30 sentences, Caption Battle from 30 prompts) with no
-repeats within a session.
+(Typing Sprint from 30 sentences, Caption Battle from 30 prompts, Icebreaker
+from 16) with no repeats within a session. Icebreaker's fact order and its
+candidate list are drawn the same way, so the room walks the same list in the
+same order on every screen.
 
-## Two-stage games
+## Multi-stage games
 
-A minigame is normally one payload with one deadline. A **two-stage** game
-collects from everyone, builds the second stage's content out of what the
-room submitted, then collects from everyone again and scores. Both stages are
-played by every player at once — nothing here is turn-based.
+A minigame is normally one payload with one deadline. A **multi-stage** game
+collects from everyone, builds the stages that follow out of what the room
+submitted, then collects from everyone again and scores at the end. Every
+stage is played by every player at once — nothing here is turn-based.
 
-**Caption Battle** is the one on the roster. Stage 1: everyone answers the
-same seeded prompt. Stage 2: everyone reads the **anonymized** pool and
-spends 3 votes. Score = votes received; authorship is revealed only at the
-score reveal.
+Two rules hold for every one of them. **Degenerate pools are defined, not
+accidental**: fewer than two usable submissions means there is nothing to
+choose or guess between, so the later stages are skipped and stage 1 is
+scored — the room always reaches a scores screen. And **reconnects between
+stages** land on whatever stage the room is actually on, keep their identity
+and running total, and score 0 for the stage they missed, the same as any
+other missed submission.
+
+### Caption Battle
+
+Stage 1: everyone answers the same seeded prompt. Stage 2: everyone reads the
+**anonymized** pool and spends 3 votes. Score = votes received; authorship is
+revealed only at the score reveal.
 
 - **Why 3 votes and not 1.** Vote-based scoring concentrates: a room of 20
   puts its votes on 3–4 answers, and everyone else ties at the floor for a
@@ -82,16 +93,35 @@ score reveal.
   never be spent on yourself.
 - **Self-votes** are rejected server-side by `playerId`. The client greys out
   your own entry as a courtesy; it is not the enforcement.
-- **Degenerate pools are defined, not accidental.** 0 or 1 usable answers
-  means there is nothing to choose between: stage 2 is skipped and stage 1 is
-  scored, so the room always reaches a scores screen. 2 players works — each
-  can vote only for the other.
-- **Reconnects between stages** land on stage 2 with the pool, keep their
-  identity and running total, and score 0 for the stage they missed — the
-  same as any other missed submission.
-- **Pacing.** A two-stage game costs roughly double a normal slot (two
-  deadlines, plus time for the room to *read*). That is what the K-of-N
-  `Games this session` draw is for.
+- **2 players works** — each can vote only for the other.
+- **Pacing.** Two deadlines plus time for the room to *read* costs roughly
+  double a normal slot. The lobby marks it `⏱⏱`.
+
+### Icebreaker
+
+As long as the room. Stage 1: everyone writes one true fun fact about
+themselves. Then the room is served those facts **one at a time** — same
+fact, same order, same candidate list on every screen — and everyone picks
+who they think wrote it. Nobody sees the next fact until the current one
+closes for everybody. Between facts the room stops: the host screen invites
+the discussion (*"who wrote it?"*, everyone says their pick out loud), the
+host's **Next** puts the answer on the projector, and **Next** again starts
+the next fact. Score = facts matched to the right person.
+
+- **Every player is an option on every fact**, including yourself and
+  including anyone who never wrote one, in one order that never moves. The
+  same name can be picked as often as you like; only the correct picks score.
+- **Your own fact is a free point**, by design. Everyone in the room has
+  exactly one, so it cancels out — and it beats greying out your own name
+  mid-game, which would tell the room something. Your screen quietly notes
+  *"this one's yours"* so you aren't left wondering.
+- **The answer is never broadcast early.** Until the host presses Next the
+  server has not sent authorship to any device — the discussion half of the
+  reveal carries the fact and a count of locked-in guesses, nothing more.
+- **Pacing.** One guessing stage per fun fact, each on half a normal slot, so
+  the game costs roughly *players ÷ 2* slots on top of the writing stage. The
+  lobby marks it `⏱×players`. That, and Caption Battle's `⏱⏱`, is what the
+  K-of-N `Games this session` draw is for.
 
 ### Moderation
 
@@ -102,12 +132,17 @@ capped by code point, control and format characters stripped (including the
 bidi overrides that render text in an order it wasn't typed in), newlines and
 tabs collapsed, Zalgo mark stacks capped. The host screen has a **hide this
 entry** control that removes an entry from every screen immediately and voids
-every vote cast for it.
+every vote or guess cast for it — for Caption Battle one entry out of the
+pool, for Icebreaker the single fun fact currently on the projector, which
+then scores nobody and is not attributed to anyone at the reveal.
 
-The host screen shows the pool during stage 2 so the room can read it, and a
-count of how many players have voted. Per-entry tallies stay off the
-projector until scoring — **live scores never appear on the host screen**,
-for this game or any other.
+The host screen shows what the room has to read — Caption Battle's pool
+during the vote, Icebreaker's one fact during the guess — plus a count of how
+many players have answered. Per-entry tallies and running scores stay off the
+projector until the moment they are the point: **live scores never appear on
+the host screen**, for these games or any other. Icebreaker's between-facts
+reveal shows who wrote the fact and how the room voted on *that fact*; it
+never shows anyone's running total.
 
 ## Anti-cheat details worth knowing
 
@@ -138,7 +173,7 @@ for this game or any other.
 ```
 server/   express + socket wiring, room state machine, game metrics
 shared/   pure logic used by server, client, and tests
-public/   host screen, player screen, 12 minigame clients
+public/   host screen, player screen, 13 minigame clients
 test/     unit tests + room integration + 20-headless-bot harness
 scripts/  static checks run in CI
 ```
@@ -165,7 +200,7 @@ The workflow runs:
   checker parses every source file, verifies client modules only import
   absolute paths (there is no bundler, so a bare specifier is a 404 on a
   player's phone), verifies every roster game has both a client and a
-  tutorial and that two-stage games are wired end to end, and rejects
+  tutorial and that multi-stage games are wired end to end, and rejects
   `Math.random()` in server or shared code — round content must come from the
   seeded RNG or the room silently desyncs.
 - **Tests** on Node 20, 22 and 24. Every bug in this system is a 20-player

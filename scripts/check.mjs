@@ -14,7 +14,7 @@ import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
-import { ROSTER, TWO_STAGE, NEEDS_AGGREGATION } from '../server/games.js';
+import { ROSTER, MULTI_STAGE, NEEDS_AGGREGATION } from '../server/games.js';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const problems = [];
@@ -101,30 +101,33 @@ for (const key of tutorialKeys) {
   }
 }
 
-// ---- 4. two-stage games are wired end to end --------------------------------
-// A two-stage game that scores per-player on submit would score stage one's
+// ---- 4. multi-stage games are wired end to end ------------------------------
+// A multi-stage game that scores per-player on submit would score stage one's
 // raw payload; one whose client has no stage-aware entry point would render
-// its writing stage twice and never collect a vote.
-for (const key of TWO_STAGE) {
+// its writing stage twice and never collect a vote or a guess.
+const MULTI_STAGE_DECL = (s) => s === 'variable' || (typeof s === 'number' && s >= 2);
+for (const key of MULTI_STAGE) {
   const game = ROSTER.find((g) => g.key === key);
   if (!game) {
-    fail('server/games.js', `TWO_STAGE lists "${key}", which is not on the roster`);
+    fail('server/games.js', `MULTI_STAGE lists "${key}", which is not on the roster`);
     continue;
   }
-  if (game.stages !== 2) {
-    fail('server/games.js', `two-stage game "${key}" must declare stages: 2 on the roster`);
+  if (!MULTI_STAGE_DECL(game.stages)) {
+    fail('server/games.js',
+      `multi-stage game "${key}" must declare stages: <number ≥ 2> or 'variable' on the roster`);
   }
   if (!NEEDS_AGGREGATION.has(key)) {
-    fail('server/games.js', `two-stage game "${key}" must also be in NEEDS_AGGREGATION`);
+    fail('server/games.js', `multi-stage game "${key}" must also be in NEEDS_AGGREGATION`);
   }
   const block = clientSrc.slice(clientSrc.indexOf(`GameClients.${key} =`));
   if (!/startStage\s*\(/.test(block.slice(0, 800))) {
-    fail('public/js/games.js', `two-stage game "${key}" needs a stage-aware startStage()`);
+    fail('public/js/games.js', `multi-stage game "${key}" needs a stage-aware startStage()`);
   }
 }
 for (const game of ROSTER) {
-  if (game.stages === 2 && !TWO_STAGE.has(game.key)) {
-    fail('server/games.js', `roster game "${game.key}" declares stages: 2 but is not in TWO_STAGE`);
+  if (MULTI_STAGE_DECL(game.stages) && !MULTI_STAGE.has(game.key)) {
+    fail('server/games.js',
+      `roster game "${game.key}" declares stages: ${JSON.stringify(game.stages)} but is not in MULTI_STAGE`);
   }
 }
 
@@ -151,4 +154,4 @@ if (problems.length) {
   for (const p of problems) console.error(`  ${p}`);
   process.exit(1);
 }
-console.log(`✓ checked ${files.length} files, ${ROSTER.length} roster games, ${TWO_STAGE.size} two-stage`);
+console.log(`✓ checked ${files.length} files, ${ROSTER.length} roster games, ${MULTI_STAGE.size} multi-stage`);

@@ -7,10 +7,12 @@
 //   - update: shell calls it when the server revises the round data mid-stage
 //     (host moderation pulling a pooled entry); optional
 //
-// Two-stage games instead expose:
+// Multi-stage games instead expose:
 //   GameClients[key].startStage(stage, root, ctx) -> same handle
-// Both stages are played by every player at once; `collect` semantics are
-// per-stage. `intro` may be a function of the stage number.
+// Every stage is played by every player at once; `collect` semantics are
+// per-stage. `intro` may be a function of the stage number. How many stages
+// there are may depend on what the room submitted to stage one (Icebreaker
+// runs one guessing stage per fun fact), so a client must never assume.
 //
 // All randomness in game content comes from the server data or the seeded
 // rng — Math.random() only ever drives decoration, never scoring or physics.
@@ -612,16 +614,26 @@ GameClients.caption = {
     : 'Answer the prompt. Everyone reads them next — votes are the points.'),
 
   startStage(stage, root, ctx) {
-    return stage === 2 ? startVote(root, ctx) : startWrite(root, ctx);
+    return stage === 2
+      ? startVote(root, ctx)
+      : startWrite(root, ctx, {
+        placeholder: 'Your answer…',
+        footer: 'Everyone reads these next — keep it short and keep it kind.',
+        remember: (text) => { myCaption = text; },
+      });
   },
 };
 
-function startWrite(root, ctx) {
+// The writing stage shared by every game that pools player-authored text.
+// `remember` hands the cleaned string back to the game so its later stages can
+// recognize what this device wrote.
+function startWrite(root, ctx, opts = {}) {
   const max = ctx.data.maxChars || 80;
-  myCaption = null;
+  const remember = opts.remember || (() => {});
+  remember(null);
   const input = h('input', {
     type: 'text', autocomplete: 'off', maxlength: String(max * 2),
-    placeholder: 'Your answer…',
+    placeholder: opts.placeholder || 'Your answer…',
   });
   const counter = h('p', { class: 'trial-note center' }, `0 / ${max}`);
   // Count what the SERVER will keep, not what is in the box: whitespace runs
@@ -635,7 +647,7 @@ function startWrite(root, ctx) {
   const send = () => {
     const text = cleaned();
     if (!text) return;
-    myCaption = text;
+    remember(text);
     ctx.submit({ text });
   };
   const btn = h('button', { class: 'big', onclick: send, disabled: true }, 'Lock it in');
@@ -646,14 +658,14 @@ function startWrite(root, ctx) {
     input, counter,
     h('div', { style: { marginTop: '10px' } }, btn),
     h('p', { class: 'muted center', style: { fontSize: '13px' } },
-      'Everyone reads these next — keep it short and keep it kind.')
+      opts.footer || 'Everyone reads these next — keep it short and keep it kind.')
   );
   input.focus();
   return {
     collect: () => {
       const text = cleaned();
       if (!text) return null;
-      myCaption = text;
+      remember(text);
       return { text };
     },
   };
@@ -701,6 +713,82 @@ function startVote(root, ctx) {
   return {
     collect: () => (picked.size ? { votes: [...picked] } : null),
     // The host pulled an entry off every screen mid-vote.
+    update: (next) => { data = next; render(); },
+  };
+}
+
+// ---- 15. Icebreaker (multi-stage) ------------------------------------------
+// Stage 1: everyone writes one true fun fact about themselves. Stages 2…N+1:
+// the room is served those facts ONE at a time, in the same order on every
+// screen, and picks who it belongs to from the full list of players. Nobody
+// sees the next fact until everyone has locked a guess on this one — between
+// facts the room argues it out and the host reveals the answer. Every player
+// is an option on every fact, the same name can be picked as often as you
+// like, and only the right ones score.
+
+// What this device wrote in stage 1, so a fact can quietly tell you it's
+// yours instead of leaving you wondering. Server-side nothing changes: your
+// own fact is a point everyone in the room gets exactly one of.
+let myFact = null;
+
+GameClients.icebreaker = {
+  intro: (stage) => (stage === 1
+    ? 'Write one TRUE fun fact about yourself. The room has to guess who each one belongs to.'
+    : 'Whose fun fact is this? Pick anyone — the same person can be the answer more than once.'),
+
+  startStage(stage, root, ctx) {
+    return stage === 1
+      ? startWrite(root, ctx, {
+        placeholder: 'One true thing about you…',
+        footer: 'Keep it true — the whole room is about to guess who wrote it.',
+        remember: (text) => { myFact = text; },
+      })
+      : startGuess(root, ctx);
+  },
+};
+
+function startGuess(root, ctx) {
+  let data = ctx.data;
+  let picked = null;
+  const counter = h('p', { class: 'trial-note center' },
+    `Fun fact ${data.round} of ${data.totalRounds}`);
+  const fact = h('h2', { class: 'center' });
+  const mine = h('p', { class: 'muted center', style: { fontSize: '13px' } });
+  const ask = h('p', { class: 'muted center' });
+  const list = h('div', {});
+  const btn = h('button', {
+    class: 'big',
+    onclick: () => { if (picked) ctx.submit({ factId: data.factId, pick: picked }); },
+    disabled: true,
+  }, 'Lock in guess');
+
+  const render = () => {
+    const gone = !!data.hidden;
+    fact.textContent = gone ? '— removed by the host —' : data.text;
+    mine.textContent = !gone && myFact != null && data.text === myFact
+      ? '(this one’s yours — free point)' : '';
+    ask.textContent = gone ? 'Nobody scores this one — waiting for the host.' : 'Who wrote it?';
+    btn.disabled = gone || !picked;
+    list.replaceChildren();
+    if (gone) return;
+    // Every player in the room, in the order the server chose — identical on
+    // every screen and identical for every fact, so a name never moves.
+    for (const opt of data.options || []) {
+      list.append(h('button', {
+        class: `vote-option${picked === opt.id ? ' chosen' : ''}`,
+        onclick: () => { picked = opt.id; render(); },
+      }, opt.name));
+    }
+  };
+
+  root.append(
+    counter, fact, mine, ask, list,
+    h('div', { style: { marginTop: '10px', position: 'sticky', bottom: '10px' } }, btn)
+  );
+  render();
+  return {
+    collect: () => (picked && !data.hidden ? { factId: data.factId, pick: picked } : null),
+    // The host pulled this fact off every screen.
     update: (next) => { data = next; render(); },
   };
 }

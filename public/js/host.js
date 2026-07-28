@@ -118,10 +118,12 @@ function buildConfigPanel() {
     const cb = el('input', { type: 'checkbox' });
     cb.checked = on;
     cb.addEventListener('change', () => pushConfig({ enabled: { [key]: cb.checked } }));
-    // A two-stage game costs roughly double a normal slot — worth knowing
-    // before you plan the meeting around it.
+    // A multi-stage game costs more than a normal slot — worth knowing before
+    // you plan the meeting around it. 'variable' means it grows with the room
+    // (Icebreaker runs one guessing round per player who wrote a fact).
     const stages = meta(key)?.stages || 1;
-    toggles.append(el('label', {}, cb, nameOf(key) + (stages > 1 ? ' ⏱⏱' : '')));
+    const cost = stages === 'variable' ? ' ⏱×players' : stages > 1 ? ' ⏱⏱' : '';
+    toggles.append(el('label', {}, cb, nameOf(key) + cost));
   }
 
   const tests = $('test-buttons');
@@ -224,6 +226,7 @@ socket.on('phase', (p) => {
     case 'music': renderMusic(p); break;
     case 'tutorial': renderTutorial(p); break;
     case 'minigame': renderMinigame(p); break;
+    case 'reveal': renderReveal(p); break;
     case 'practice_done':
       content().replaceChildren(
         el('h1', {}, '🧪 Practice complete'),
@@ -318,6 +321,19 @@ function renderTutorial(p) {
 // host screen, exactly as they do for every other game.
 let poolData = null;
 
+// Whatever a stage puts on the projector, reduced to the shape the moderation
+// UI renders: the entries on screen plus the ids the host has pulled.
+function poolShape(clientData) {
+  if (Array.isArray(clientData?.entries)) return clientData;
+  if (clientData?.factId) {
+    return {
+      entries: [{ id: clientData.factId, text: clientData.text }],
+      hidden: clientData.hidden ? [clientData.factId] : [],
+    };
+  }
+  return null;
+}
+
 function renderPool() {
   const box = $('entry-pool');
   if (!box || !poolData) return;
@@ -340,27 +356,43 @@ function renderPool() {
   }
 }
 
+// A stage of a multi-stage game names itself when it has a better name than
+// its number ("Fun fact 3 of 6").
+function stageLabel(p) {
+  if (p.stageName) return ` — ${p.stageName}`;
+  const total = p.totalStages || 1;
+  return total > 1 ? ` — stage ${p.stage || 1} of ${total}` : '';
+}
+
 function renderMinigame(p) {
-  const stage = p.stage || 1;
-  const totalStages = p.totalStages || 1;
   const title = (p.practice ? '🧪 PRACTICE: ' : p.test ? '🔧 TEST: ' : '') + p.gameName
-    + (totalStages > 1 ? ` — stage ${stage} of ${totalStages}` : '');
+    + stageLabel(p);
   const parts = [
     el('h1', {}, title),
     el('p', { class: 'muted', style: 'font-size:20px' }, `${Math.round(p.duration / 1000)}s`),
   ];
-  poolData = Array.isArray(p.clientData?.entries) ? p.clientData : null;
-  if (poolData) {
+  // Icebreaker projects ONE player-authored fact at a time — the same
+  // moderation control as a pool, on a pool of one.
+  const fact = p.clientData?.factId ? p.clientData : null;
+  poolData = poolShape(p.clientData);
+  if (poolData && !fact) {
     parts.push(
-      el('h2', {}, poolData.prompt || ''),
+      el('h2', {}, p.clientData.prompt || ''),
       el('div', { class: 'entry-pool', id: 'entry-pool' }),
       el('p', { class: 'muted', style: 'font-size:14px' },
-        `Everyone picks ${poolData.votesPerPlayer} — ✕ removes an entry from every screen and voids its votes.`)
+        `Everyone picks ${p.clientData.votesPerPlayer} — ✕ removes an entry from every screen and voids its votes.`)
+    );
+  } else if (fact) {
+    parts.push(
+      el('h2', {}, 'Whose fun fact is this?'),
+      el('div', { class: 'entry-pool', id: 'entry-pool' }),
+      el('p', { class: 'muted', style: 'font-size:14px' },
+        'Everyone picks a name — nobody sees the next fact until this one closes. ✕ removes it from every screen and voids it.')
     );
   }
   parts.push(
     el('div', { class: 'progress-count', id: 'prog' }, '0'),
-    el('p', { class: 'muted', style: 'font-size:22px' }, poolData ? 'voted' : 'submitted'),
+    el('p', { class: 'muted', style: 'font-size:22px' }, fact ? 'guessed' : poolData ? 'voted' : 'submitted'),
     el('div', { class: 'countdown' }, el('div', { id: 'host-bar' }))
   );
   content().replaceChildren(...parts);
@@ -382,10 +414,61 @@ socket.on('host:progress', ({ submitted, total }) => {
 });
 
 socket.on('game:data', ({ clientData }) => {
-  if (!poolData || !Array.isArray(clientData?.entries)) return;
-  poolData = clientData;
+  const next = poolShape(clientData);
+  if (!poolData || !next) return;
+  poolData = next;
   renderPool();
 });
+
+// ---- between-facts reveal (Icebreaker) --------------------------------------
+//
+// The projector's half of the loop the game is built around: everyone has
+// locked a guess, the room says out loud who they picked, THEN the host puts
+// the answer up, and only then does the next fact start. Two presses of the
+// one Next button. No running scores here — same rule as every other screen.
+
+function renderReveal(p) {
+  const total = p.totalRounds ? ` of ${p.totalRounds}` : '';
+  if (p.hidden) {
+    content().replaceChildren(
+      el('h1', {}, `Fun fact ${p.round}${total}`),
+      el('h2', {}, 'Removed by the host — nobody scores this one.'),
+      el('p', { class: 'muted' }, 'Press Next ▸ for the next fun fact.'));
+    return;
+  }
+  const parts = [
+    el('h1', {}, `Fun fact ${p.round}${total}`),
+    el('div', { class: 'entry-pool' },
+      el('div', { class: 'pool-entry' }, el('span', { class: 'pool-text' }, p.text))),
+  ];
+  if (!p.answered) {
+    parts.push(
+      el('h2', {}, `🤔 ${p.guessed} guess${p.guessed === 1 ? '' : 'es'} in — who wrote it?`),
+      el('p', { class: 'muted', style: 'font-size:20px' },
+        'Go round the room: everyone says who they picked and why.'),
+      el('p', {}, 'Press Next ▸ to reveal the answer.'));
+    content().replaceChildren(...parts);
+    return;
+  }
+  parts.push(el('h2', {}, `🎉 It was ${p.authorName || '?'}!`));
+  if (p.tally?.length) {
+    const table = el('table', { class: 'board' });
+    table.append(el('tr', {}, el('th', {}, 'Guessed'), el('th', {}, 'Votes')));
+    for (const row of p.tally) {
+      table.append(el('tr', {},
+        el('td', {}, row.name + (row.playerId === p.playerId ? '  ✓' : '')),
+        el('td', { class: 'num' }, String(row.count))));
+    }
+    parts.push(table);
+  }
+  const right = (p.guesses || []).filter((g) => g.correct).map((g) => g.name);
+  parts.push(el('p', { class: 'muted', style: 'font-size:20px' },
+    right.length ? `Got it: ${right.join(' · ')}` : 'Nobody got that one.'));
+  parts.push(el('p', {}, p.round === p.totalRounds
+    ? 'That was the last fun fact — press Next ▸ for the scores.'
+    : 'Press Next ▸ for the next fun fact.'));
+  content().replaceChildren(...parts);
+}
 
 // ---- per-game scores --------------------------------------------------------
 
@@ -411,6 +494,25 @@ function extrasBlock(extras) {
         el('td', { class: 'num' }, String(row.votes)),
         el('td', {}, row.hidden ? '— removed by host —' : row.text),
         el('td', {}, row.name || '?')));
+    }
+    wrap.append(table);
+  }
+  const ice = extras.icebreaker;
+  if (ice?.rounds) {
+    wrap.append(el('h3', {}, 'Icebreaker — whose fun fact was whose'));
+    if (ice.skipped) {
+      wrap.append(el('p', { class: 'muted' },
+        'Fewer than two people wrote a fun fact — there was nothing to guess between.'));
+    }
+    const table = el('table', { class: 'board' });
+    table.append(el('tr', {},
+      el('th', {}, '#'), el('th', {}, 'Fun fact'), el('th', {}, 'Was'), el('th', {}, 'Got it')));
+    for (const row of ice.rounds) {
+      table.append(el('tr', {},
+        el('td', {}, String(row.round)),
+        el('td', {}, row.hidden ? '— removed by host —' : row.text),
+        el('td', {}, row.hidden ? '—' : (row.name || '?')),
+        el('td', { class: 'num' }, row.hidden ? '—' : `${row.rightCount}/${row.guessCount}`)));
     }
     wrap.append(table);
   }

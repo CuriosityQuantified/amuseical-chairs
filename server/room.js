@@ -17,9 +17,10 @@ import {
   ROSTER,
   ROSTER_BY_KEY,
   NEEDS_AGGREGATION,
-  TWO_STAGE,
+  MULTI_STAGE,
   buildGameData,
-  buildStageTwo,
+  buildStages,
+  buildReveal,
   computeMetric,
   aggregateGame,
   formatRaw,
@@ -97,6 +98,7 @@ export class Room {
     this.queueIndex = 0;
     this.totals = new Map();  // playerId -> cumulative points
     this.round = null;        // current single-game round (also practice/test)
+    this.reveal = null;       // between-stages reveal the host is holding on
     this.lastScores = null;   // leaderboard rows from the last scored game
     this.redemption = null;
     this.chairs = null;       // musical-chairs elimination tournament state
@@ -149,7 +151,9 @@ export class Room {
   setPhase(name, data = {}) {
     this.phase = name;
     this.lastActivity = Date.now();
-    this.emitAll('phase', { name, ...data, progress: this.progressInfo() });
+    // `name` last: it is what every client switches on, and no payload field
+    // may shadow it.
+    this.emitAll('phase', { ...data, name, progress: this.progressInfo() });
   }
 
   alive() { return [...this.players.values()]; }
@@ -285,6 +289,9 @@ export class Room {
     if (this.phase === 'scores' && this.lastScores) {
       snap.scores = this.lastScores;
     }
+    if (this.phase === 'reveal' && this.reveal) {
+      snap.reveal = this.revealPayload();
+    }
     if (this.phase === 'tutorial' && this.tutorial) {
       snap.tutorial = { ...this.tutorial };
     }
@@ -324,10 +331,10 @@ export class Room {
     return { ok: true };
   }
 
-  // One playable stage of one game. A two-stage game produces two of these:
-  // stage 2 is appended when stage 1 closes, with its own token, submissions
-  // map and deadline.
-  makeStage(meta, clientData, secret, stage = 1) {
+  // One playable stage of one game. A multi-stage game produces several: the
+  // ones after stage 1 are appended when stage 1 closes, each with its own
+  // token, submissions map and deadline.
+  makeStage(meta, clientData, secret, stage = 1, opts = {}) {
     return {
       ...meta,
       clientData,
@@ -336,8 +343,21 @@ export class Room {
       metrics: new Map(),
       token: crypto.randomUUID(),
       stage,
-      totalStages: TWO_STAGE.has(meta.key) ? 2 : 1,
+      // A game whose length depends on what the room submitted does not know
+      // its total until stage 1 closes; until then it labels itself as one.
+      totalStages: opts.totalStages ?? (meta.stages === 2 ? 2 : 1),
+      stageName: opts.stageName || null,
+      // Does the room stop for a reveal after this stage, before the next one?
+      reveal: !!opts.reveal,
+      // Fraction of the configured minigame duration this stage gets.
+      durationScale: opts.durationScale || 1,
     };
+  }
+
+  // The candidate list a guessing game offers: everyone in the room, in join
+  // order. The game reorders it once, seeded, so every screen agrees.
+  playerOptions() {
+    return [...this.players.values()].map((p) => ({ id: p.id, name: p.name }));
   }
 
   // Practice: one un-scored Stop the Clock so broken devices surface before
@@ -399,6 +419,7 @@ export class Room {
     this.clearTimer('redemption');
     this.clearTimer('tutorial');
     this.round = null;
+    this.reveal = null;
     this.redemption = null;
     this.chairs = null;
     this.tutorial = null;
@@ -409,7 +430,7 @@ export class Room {
   }
 
   gamePayload(g, duration) {
-    const dur = duration ?? this.config.gameDuration;
+    const dur = duration ?? this.stageDuration(g);
     return {
       gameNumber: this.queueIndex + 1,
       key: g.key,
@@ -419,12 +440,23 @@ export class Room {
       clientData: g.clientData,
       duration: dur,
       deadline: g.deadline ?? Date.now() + dur,
-      // Two-stage games label themselves the way the chairs rounds do.
+      // Multi-stage games label themselves the way the chairs rounds do.
       stage: g.stage || 1,
       totalStages: g.totalStages || 1,
+      // A stage that has a better name for itself than "stage 3 of 7".
+      stageName: g.stageName || null,
       practice: !!this.round.practice,
       test: !!this.round.test,
     };
+  }
+
+  // A guessing stage is one tap — it does not need a whole minigame slot, and
+  // a variable-length game runs one per player. Scaling off gameDuration (with
+  // no absolute floor) keeps the host's duration knob meaningful and keeps the
+  // bot harness able to run a whole session in seconds.
+  stageDuration(g) {
+    if (this.round?.practice) return Math.min(this.config.gameDuration, 30000);
+    return Math.max(1, Math.round(this.config.gameDuration * (g.durationScale || 1)));
   }
 
   // Music plays (avatars circle the chairs on the host screen), then the
@@ -485,52 +517,156 @@ export class Room {
     return { ok: true };
   }
 
+  // Solo practice has no host screen: the lone player drives the phases the
+  // host's Next would drive. Deliberately narrow — it advances a tutorial or
+  // a reveal, and nothing that could start or score a real session.
+  soloAdvance() {
+    if (this.phase === 'tutorial') return this.skipTutorial();
+    if (this.phase === 'reveal') return this.advanceReveal();
+    return { error: 'Nothing to advance.' };
+  }
+
   startGame(idx) {
     const g = this.round.games[idx];
     if (!g) return;
     this.round.gameIndex = idx;
-    const duration = this.round.practice
-      ? Math.min(this.config.gameDuration, 30000)
-      : this.config.gameDuration;
+    const duration = this.stageDuration(g);
     g.deadline = Date.now() + duration;
     this.setPhase('minigame', this.gamePayload(g, duration));
     this.emitHost('host:progress', { submitted: 0, total: this.players.size });
     this.setTimer('game', () => this.closeGame(g.token), duration + this.config.closeGraceMs);
   }
 
-  // Returns true when a second stage actually started. A degenerate pool
-  // (nobody wrote anything, or only one player did) has nothing to vote on:
-  // stage two is skipped and stage one is scored as-is, so the room always
-  // reaches a scores screen.
-  startStageTwo(g, entries) {
+  // Queue every stage that follows stage one — built out of what the room
+  // submitted to stage one — and start the first of them. Returns true when
+  // at least one actually started. A degenerate pool (nobody wrote anything,
+  // or only one player did) has nothing to vote or guess on: the rest of the
+  // game is skipped and stage one is scored as-is, so the room always reaches
+  // a scores screen.
+  startStages(g, entries) {
     let built = null;
     try {
-      built = buildStageTwo(g.key, entries, {
-        rng: seededRng(`${this.code}:g${this.queueIndex}:${g.key}:stage2`),
+      built = buildStages(g.key, entries, {
+        rng: seededRng(`${this.code}:g${this.queueIndex}:${g.key}:stages`),
         clientData: g.clientData,
+        players: this.playerOptions(),
         config: this.config,
       });
     } catch (err) {
-      console.error(`room ${this.code} buildStageTwo ${g.key}:`, err);
+      console.error(`room ${this.code} buildStages ${g.key}:`, err);
       return false;
     }
-    if (!built) return false;
-    this.round.games.push(this.makeStage(ROSTER_BY_KEY.get(g.key), built.clientData, built.secret, 2));
-    this.startGame(this.round.games.length - 1);
+    if (!built || !built.length) return false;
+    const meta = ROSTER_BY_KEY.get(g.key);
+    const totalStages = built.length + 1;
+    const firstIdx = this.round.games.length;
+    // Stage one only learns how long its own game is once it has closed.
+    g.totalStages = totalStages;
+    built.forEach((s, i) => {
+      this.round.games.push(this.makeStage(meta, s.clientData, s.secret, i + 2, {
+        totalStages,
+        stageName: s.stageName,
+        reveal: s.reveal,
+        durationScale: s.durationScale,
+      }));
+    });
+    this.startGame(firstIdx);
     return true;
   }
 
-  // Authorship is server-side for the whole voting stage; names are attached
-  // only once the game is over and the reveal is the point.
-  withNames(extra) {
-    if (!extra || !Array.isArray(extra.board)) return extra;
-    return {
-      ...extra,
-      board: extra.board.map((row) => ({
-        ...row,
-        name: row.playerId ? (this.players.get(row.playerId)?.name || '?') : '?',
-      })),
+  // Every stage of the game currently being played, oldest first, flattened
+  // for the pure scoring code in games.js. Stops at the stage on screen: a
+  // variable-length game queues all of its stages up front, and the ones
+  // nobody has played yet must not be revealed or scored.
+  stageHistory() {
+    return (this.round?.games || []).slice(0, (this.round?.gameIndex ?? 0) + 1).map((g) => ({
+      stage: g.stage || 1,
+      clientData: g.clientData,
+      secret: g.secret,
+      entries: [...g.submissions.entries()].map(([playerId, payload]) => ({ playerId, payload })),
+    }));
+  }
+
+  // A stage closed and this game stops here for a reveal: the room argues out
+  // loud over who it was, the host presses Next to put the answer on the
+  // projector, and Next again starts the next stage (or scores the game, if
+  // that was the last one). Two host presses, one control — the same Next
+  // that drives everything else. Returns false when there is no reveal to
+  // show, and the caller carries on.
+  betweenStages(g) {
+    const nextIndex = this.round.gameIndex + 1;
+    let built = null;
+    try {
+      built = buildReveal(g.key, this.stageHistory());
+    } catch (err) {
+      console.error(`room ${this.code} buildReveal ${g.key}:`, err);
+    }
+    if (!built) return false;
+    const head = { key: g.key, gameName: g.name, stage: g.stage, totalStages: g.totalStages };
+    this.reveal = {
+      nextIndex,
+      answered: false,
+      // The answer is deliberately NOT in the teaser: this goes to every
+      // device, and a player watching their own socket would have it before
+      // the room does.
+      teaser: { ...head, ...this.withNames(built.teaser), answered: false },
+      answer: { ...head, ...this.withNames(built.answer), answered: true },
     };
+    this.setPhase('reveal', this.revealPayload());
+    return true;
+  }
+
+  revealPayload() {
+    const r = this.reveal;
+    if (!r) return {};
+    return r.answered ? r.answer : r.teaser;
+  }
+
+  // Host (or the solo player) advancing the reveal: first press puts the
+  // answer up, second press starts the next stage — or scores the game, when
+  // the stage just revealed was its last.
+  advanceReveal() {
+    const r = this.reveal;
+    if (!r) return { ok: true };
+    if (!r.answered) {
+      r.answered = true;
+      this.setPhase('reveal', this.revealPayload());
+      return { ok: true };
+    }
+    this.reveal = null;
+    if (r.nextIndex < this.round.games.length) this.startGame(r.nextIndex);
+    else this.finishGame(this.round.games[this.round.gameIndex]);
+    return { ok: true };
+  }
+
+  // Authorship is server-side for the whole voting/guessing stage; names are
+  // attached only once the game is over, or once the host has revealed the
+  // answer, and the reveal is the point.
+  withNames(extra) {
+    if (!extra) return extra;
+    const nameOf = (id) => (id ? (this.players.get(id)?.name || '?') : null);
+    const out = { ...extra };
+    if (Array.isArray(extra.board)) {
+      out.board = extra.board.map((row) => ({ ...row, name: nameOf(row.playerId) || '?' }));
+    }
+    // Icebreaker: one row per fact, plus the shape of the room's argument.
+    if (Array.isArray(extra.rounds)) {
+      out.rounds = extra.rounds.map((row) => ({ ...row, name: nameOf(row.playerId) }));
+    }
+    if (Array.isArray(extra.tally)) {
+      out.tally = extra.tally.map((row) => ({ ...row, name: nameOf(row.playerId) || '?' }));
+    }
+    if (Array.isArray(extra.guesses)) {
+      out.guesses = extra.guesses.map((row) => ({
+        ...row,
+        name: nameOf(row.playerId) || '?',
+        pickedName: nameOf(row.pickedId) || '?',
+      }));
+    }
+    // Not `name`: a phase payload's own `name` is the phase, and this object
+    // is spread straight into one.
+    if ('playerId' in extra) out.authorName = nameOf(extra.playerId);
+    return out;
   }
 
   // Host moderation for pooled player text. The host screen is projected in a
@@ -540,20 +676,28 @@ export class Room {
   hideEntry(entryId) {
     if (this.phase !== 'minigame') return { error: 'Nothing on screen to hide.' };
     const g = this.round?.games[this.round.gameIndex];
-    if (!g || !Array.isArray(g.clientData?.entries)) return { error: 'This game has no pooled entries.' };
     const id = String(entryId || '');
-    if (!g.clientData.entries.some((e) => e.id === id)) return { error: 'Unknown entry.' };
-    const hidden = new Set(g.clientData.hidden || []);
-    hidden.add(id);
-    // Note: votesPerPlayer deliberately does NOT shrink — ballots already cast
-    // stay valid, and the hidden entry is dropped at aggregation instead.
-    g.clientData = { ...g.clientData, hidden: [...hidden] };
-    this.emitAll('game:data', {
-      key: g.key,
-      stage: g.stage || 1,
-      clientData: g.clientData,
-    });
-    return { ok: true, hidden: g.clientData.hidden };
+    // A pooled stage (Caption Battle) shows many entries at once.
+    if (Array.isArray(g?.clientData?.entries)) {
+      if (!g.clientData.entries.some((e) => e.id === id)) return { error: 'Unknown entry.' };
+      const hidden = new Set(g.clientData.hidden || []);
+      hidden.add(id);
+      // Note: votesPerPlayer deliberately does NOT shrink — ballots already
+      // cast stay valid, and the hidden entry is dropped at aggregation.
+      g.clientData = { ...g.clientData, hidden: [...hidden] };
+      this.emitAll('game:data', { key: g.key, stage: g.stage || 1, clientData: g.clientData });
+      return { ok: true, hidden: g.clientData.hidden };
+    }
+    // A single-entry stage (Icebreaker projects one fun fact at a time). The
+    // text is dropped from the payload outright — nothing downstream, on any
+    // screen or in the reveal, can render what it no longer has.
+    if (g?.clientData?.factId) {
+      if (g.clientData.factId !== id) return { error: 'Unknown entry.' };
+      g.clientData = { ...g.clientData, hidden: true, text: '' };
+      this.emitAll('game:data', { key: g.key, stage: g.stage || 1, clientData: g.clientData });
+      return { ok: true, hidden: true };
+    }
+    return { error: 'This game has no pooled entries.' };
   }
 
   handleSubmit(playerId, payload) {
@@ -582,15 +726,33 @@ export class Room {
     this.clearTimer('game');
     const entries = [...g.submissions.entries()].map(([playerId, payload]) => ({ playerId, payload }));
 
-    // Two-stage game, stage one: don't score — build stage two's content out
-    // of the pool of stage-one submissions and re-enter `minigame` with a
-    // fresh token, a fresh submissions map and its own deadline.
-    if (g.totalStages === 2 && g.stage === 1 && this.startStageTwo(g, entries)) return;
+    if (MULTI_STAGE.has(g.key)) {
+      // Stage one: don't score — build the stages that follow out of the pool
+      // of stage-one submissions and re-enter `minigame` with a fresh token, a
+      // fresh submissions map and its own deadline.
+      if (g.stage === 1 && this.startStages(g, entries)) return;
+      // A stage that stops for a reveal does so on the LAST one too: the room
+      // gets its answer out loud before anything is scored.
+      if (g.reveal && this.betweenStages(g)) return;
+      // Otherwise straight on to the next stage. Nothing is scored until the
+      // last stage of the game closes.
+      if (this.round.gameIndex < this.round.games.length - 1) {
+        return this.startGame(this.round.gameIndex + 1);
+      }
+    }
+    this.finishGame(g);
+  }
 
+  // The last stage of a game has closed (and been revealed): aggregate what
+  // the room did across every stage of it, then score — or, for a practice or
+  // test run, just show what happened.
+  finishGame(g) {
+    const entries = [...g.submissions.entries()].map(([playerId, payload]) => ({ playerId, payload }));
     if (NEEDS_AGGREGATION.has(g.key)) {
       const { metrics, extra } = aggregateGame(g.key, entries, {
         clientData: g.clientData,
         secret: g.secret,
+        stages: this.stageHistory(),
       });
       g.metrics = metrics;
       if (this.round.extras) this.round.extras[g.key] = this.withNames(extra);
@@ -872,6 +1034,7 @@ export class Room {
     this.totals = new Map();
     this.usedContent = {};
     this.round = null;
+    this.reveal = null;
     this.lastScores = null;
     this.redemption = null;
     this.chairs = null;
@@ -907,6 +1070,8 @@ export class Room {
       case 'tutorial':
         this.endTutorial();
         return { ok: true };
+      case 'reveal':
+        return this.advanceReveal();
       case 'scores':
         this.nextGame();
         return { ok: true };
