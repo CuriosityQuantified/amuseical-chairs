@@ -138,6 +138,9 @@ test('score attack: every game once, totals accumulate, chairs finale, highest t
   }
 });
 
+// gamesPerSession is an internal default, not a host option: every hosted
+// session plays all of its enabled games (0), and the K-of-N draw stays here
+// as the pacing lever a room can be constructed with.
 test('gamesPerSession draws K of N — a two-stage game must not outgrow the meeting slot', () => {
   const enabled = {};
   for (const g of ROSTER) enabled[g.key] = true;
@@ -166,6 +169,41 @@ test('gamesPerSession draws K of N — a two-stage game must not outgrow the mee
     assert.equal(four.progressInfo().totalGames, 5);
   } finally {
     for (const room of [all, four, over]) room.destroy();
+  }
+});
+
+// The host lobby is one knob — minigame duration — plus the per-game toggles.
+// "Games this session" and "Practice round first" were both host controls once
+// and both grew back with a later feature. scripts/check.mjs catches the lobby
+// half of that; this is the server half, and it is the stronger one: a control
+// cannot come back if the server neither publishes the value nor accepts it.
+test('the host config surface is minigame duration and the game toggles, nothing else', () => {
+  const room = new Room(stubIo(), 'CFGX', {});
+  try {
+    assert.deepEqual(
+      Object.keys(room.publicConfig()).sort(),
+      ['enabled', 'gameDuration', 'maxDelay', 'minDelay', 'roster'],
+      'publicConfig publishes no value the lobby is not allowed to change');
+
+    const internals = { ...room.config };
+    assert.equal(room.updateConfig({
+      gameDuration: 30000,
+      enabled: { stopclock: false },
+      practice: false,
+      gamesPerSession: 4,
+      tutorialMs: 0,
+    }).ok, true, 'a patch carrying dropped keys still applies the ones that are allowed');
+
+    assert.equal(room.config.gameDuration, 30000, 'the one host knob applies');
+    assert.equal(room.config.enabled.stopclock, false, 'per-game toggles apply');
+    assert.equal(room.config.practice, internals.practice,
+      'practice is internal — the lobby cannot reach it');
+    assert.equal(room.config.gamesPerSession, internals.gamesPerSession,
+      'gamesPerSession is internal — the lobby cannot reach it');
+    assert.equal(room.config.tutorialMs, internals.tutorialMs,
+      'and neither can it reach any other pacing default');
+  } finally {
+    room.destroy();
   }
 });
 

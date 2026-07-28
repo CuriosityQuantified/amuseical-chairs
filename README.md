@@ -16,8 +16,9 @@ npm start          # http://localhost:3000
 
 - **Host:** open `/host.html`, create a room, project the screen.
 - **Players:** scan the QR / open `/?code=XXXX`, enter a name.
-- Host config (durations, per-game toggles, practice round) lives in the
-  lobby screen.
+- Host config lives in the lobby screen and is deliberately one knob —
+  **minigame duration** — plus the per-game toggles and the solo-test
+  buttons. See *Host config* below before adding a second one.
 
 ```bash
 npm test           # unit tests + 20-bot end-to-end harness
@@ -29,14 +30,12 @@ npm run check      # static checks the test suite can't do (see CI below)
 Score attack — no elimination:
 
 1. Games are drawn from a 13-game roster across 6 categories and played by
-   **all players simultaneously**, in a seeded-shuffled order. By default
-   every enabled game is played exactly once; the host can instead draw
-   **K of N** (`Games this session`) to fit a shorter meeting slot. Music +
+   **all players simultaneously**, in a seeded-shuffled order. Every enabled
+   game is played exactly once — to shorten a session, turn games off. Music +
    circling avatars play between games.
 2. Before each game (and the finale), everyone sees an **animated how-to
-   tutorial**: looping ✓ DO / ✗ AVOID demos of the game. Duration is a host
-   config knob (default 9s, 0 = off); the host's Next — or the solo
-   player's Skip — jumps straight in.
+   tutorial**: looping ✓ DO / ✗ AVOID demos of the game. It loops until the
+   host's Next — or the solo player's Skip — jumps straight in.
 3. Most games are one payload with one deadline. **Caption Battle** and
    **Icebreaker** are multi-stage: the room submits, and what it submitted
    becomes the stages that follow. Every stage is still played by all players
@@ -120,8 +119,8 @@ the next fact. Score = facts matched to the right person.
   reveal carries the fact and a count of locked-in guesses, nothing more.
 - **Pacing.** One guessing stage per fun fact, each on half a normal slot, so
   the game costs roughly *players ÷ 2* slots on top of the writing stage. The
-  lobby marks it `⏱×players`. That, and Caption Battle's `⏱⏱`, is what the
-  K-of-N `Games this session` draw is for.
+  lobby marks it `⏱×players`, the way Caption Battle is marked `⏱⏱` — a big
+  room should know what it is enabling before it plans a meeting around it.
 
 ### Moderation
 
@@ -157,6 +156,35 @@ never shows anyone's running total.
 - **Space Mash:** counting requires a `keyup` between `keydown`s (holding the
   spacebar scores 1, not 300), plus a rolling 20 presses/sec anti-macro cap.
 - **Color match** is scored with CIEDE2000 (perceptual), not RGB distance.
+
+## Host config
+
+The lobby's config panel is **minigame duration**, the per-game toggles, and
+the solo-test buttons. That is the whole host-facing surface, and it is
+enforced rather than remembered:
+
+- `HOST_EDITABLE_CONFIG` in `server/room.js` is the only set of config keys
+  `updateConfig` accepts from the lobby; anything else in a `host:config`
+  patch is dropped.
+- `publicConfig()` publishes no value the host is not allowed to change, so a
+  control has nothing to render from either.
+- `npm run check` fails on any `cfg-*` control in `public/host.html` or
+  `public/js/host.js` that is not on its allowlist, and on the two ends of
+  that allowlist disagreeing.
+- `test/room.test.js` asserts the published keys and that a patch carrying
+  `practice` or `gamesPerSession` changes neither.
+
+Everything else — the practice round, `gamesPerSession`, the tutorial and
+pacing knobs, the early-press penalty, the slingshot distance — is an internal
+default. A room can be constructed with them (the bot harness runs a full
+session in seconds that way), but no host screen shows them. Two of them,
+`Games this session` and `Practice round first`, were removed once and grew
+back with a later feature; the checks above exist because nothing failed when
+they did. Adding a host option on purpose means changing the control, the
+allowlist in `scripts/check.mjs`, and `HOST_EDITABLE_CONFIG` together.
+
+Practical consequence: every hosted session runs the unscored practice round
+and plays all of its enabled games. To shorten a session, turn games off.
 
 ## Architecture
 
@@ -200,9 +228,10 @@ The workflow runs:
   checker parses every source file, verifies client modules only import
   absolute paths (there is no bundler, so a bare specifier is a 404 on a
   player's phone), verifies every roster game has both a client and a
-  tutorial and that multi-stage games are wired end to end, and rejects
+  tutorial and that multi-stage games are wired end to end, rejects
   `Math.random()` in server or shared code — round content must come from the
-  seeded RNG or the room silently desyncs.
+  seeded RNG or the room silently desyncs — and holds the host config panel to
+  its one knob (see *Host config* above).
 - **Tests** on Node 20, 22 and 24. Every bug in this system is a 20-player
   concurrency bug, and those surface differently across Node's timer and
   socket behaviour.

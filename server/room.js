@@ -35,13 +35,20 @@ export function makeRoomCode(rng = Math.random) {
   return code;
 }
 
+// The host lobby exposes exactly one knob (minigame duration) plus the
+// per-game toggles; HOST_EDITABLE_CONFIG below is the enforcement, and
+// scripts/check.mjs fails the build if the UI grows a second one. Everything
+// else here is an internal default — settable when a room is constructed (the
+// bot harness drives the pacing knobs that way) but never from the lobby.
 const DEFAULTS = {
   gameDuration: 45000,
   tutorialMs: 9000,        // animated how-to screen before each game; 0 = off
   // K-of-N draw: how many of the enabled games a session actually plays.
-  // 0 = all of them. A two-stage game costs roughly double a normal slot, so
-  // a full roster can push a session past the meeting it is designed to fit.
+  // 0 = all of them, which is what every hosted session plays: this was a host
+  // slider ("Games this session") and is deliberately not one any more.
   gamesPerSession: 0,
+  // One unscored Stop the Clock before the real games, so broken devices
+  // surface early. Was a host checkbox ("Practice round first"); now always on.
   practice: true,
   minDelay: 2000,
   maxDelay: 6000,
@@ -83,6 +90,13 @@ function sanitizeConfig(raw = {}) {
   }
   return c;
 }
+
+// The complete set of config keys the host screen may change from the lobby.
+// `updateConfig` drops everything else, so a control that reappears in the
+// lobby UI has no server to talk to. Growing this list is a deliberate act:
+// scripts/check.mjs asserts it against the controls in public/host.html, and
+// both have to change together.
+export const HOST_EDITABLE_CONFIG = new Set(['gameDuration', 'enabled']);
 
 export class Room {
   constructor(io, code, config, onEmpty = () => {}) {
@@ -298,16 +312,27 @@ export class Room {
     return snap;
   }
 
+  // What the host and player screens are allowed to see. A config key that is
+  // not here cannot be rendered as a control, because no client ever learns
+  // its value.
   publicConfig() {
-    const { gameDuration, practice, minDelay, maxDelay, enabled, gamesPerSession } = this.config;
+    const { gameDuration, minDelay, maxDelay, enabled } = this.config;
     const roster = ROSTER.map(({ key, name, category, stages }) =>
       ({ key, name, category, stages: stages || 1 }));
-    return { gameDuration, practice, minDelay, maxDelay, enabled, gamesPerSession, roster };
+    return { gameDuration, minDelay, maxDelay, enabled, roster };
   }
 
   updateConfig(raw) {
     if (this.phase !== 'lobby') return { error: 'Config can only change in the lobby.' };
-    this.config = sanitizeConfig({ ...this.config, ...raw, enabled: { ...this.config.enabled, ...(raw.enabled || {}) } });
+    // Anything outside the allowlist is dropped rather than rejected: a stale
+    // host tab pushing a knob that no longer exists should not fail the whole
+    // patch, and a hand-crafted socket payload should not be able to reach an
+    // internal default.
+    const patch = {};
+    for (const [key, value] of Object.entries(raw || {})) {
+      if (HOST_EDITABLE_CONFIG.has(key)) patch[key] = value;
+    }
+    this.config = sanitizeConfig({ ...this.config, ...patch, enabled: { ...this.config.enabled, ...(patch.enabled || {}) } });
     this.emitAll('room:config', this.publicConfig());
     return { ok: true };
   }
