@@ -35,14 +35,18 @@ export function makeRoomCode(rng = Math.random) {
   return code;
 }
 
+// The host lobby exposes exactly one knob (minigame duration) plus the
+// per-game toggles; HOST_EDITABLE_CONFIG below is the enforcement, and
+// scripts/check.mjs fails the build if the UI grows a second one. Everything
+// else here is an internal default — settable when a room is constructed (the
+// bot harness drives the pacing knobs that way) but never from the lobby.
 const DEFAULTS = {
   gameDuration: 45000,
   tutorialMs: 9000,        // animated how-to screen before each game; 0 = off
   // K-of-N draw: how many of the enabled games a session actually plays.
-  // 0 = all of them. A two-stage game costs roughly double a normal slot, so
-  // a full roster can push a session past the meeting it is designed to fit.
+  // 0 = all of them, which is what every hosted session plays: this was a host
+  // slider ("Games this session") and is deliberately not one any more.
   gamesPerSession: 0,
-  practice: true,
   minDelay: 2000,
   maxDelay: 6000,
   earlyPressPenalty: 0.1,
@@ -66,7 +70,6 @@ function sanitizeConfig(raw = {}) {
   c.gameDuration = numIn(raw.gameDuration, 500, 120000, DEFAULTS.gameDuration);
   c.tutorialMs = numIn(raw.tutorialMs, 0, 30000, DEFAULTS.tutorialMs);
   c.gamesPerSession = Math.round(numIn(raw.gamesPerSession, 0, ROSTER.length, DEFAULTS.gamesPerSession));
-  c.practice = raw.practice != null ? !!raw.practice : DEFAULTS.practice;
   c.minDelay = numIn(raw.minDelay, 500, 10000, DEFAULTS.minDelay);
   c.maxDelay = numIn(raw.maxDelay, c.minDelay, 15000, Math.max(c.minDelay, DEFAULTS.maxDelay));
   c.earlyPressPenalty = numIn(raw.earlyPressPenalty, 0, 0.5, DEFAULTS.earlyPressPenalty);
@@ -84,6 +87,13 @@ function sanitizeConfig(raw = {}) {
   return c;
 }
 
+// The complete set of config keys the host screen may change from the lobby.
+// `updateConfig` drops everything else, so a control that reappears in the
+// lobby UI has no server to talk to. Growing this list is a deliberate act:
+// scripts/check.mjs asserts it against the controls in public/host.html, and
+// both have to change together.
+export const HOST_EDITABLE_CONFIG = new Set(['gameDuration', 'enabled']);
+
 export class Room {
   constructor(io, code, config, onEmpty = () => {}) {
     this.io = io;
@@ -97,7 +107,7 @@ export class Room {
     this.queue = [];          // game keys, each played exactly once
     this.queueIndex = 0;
     this.totals = new Map();  // playerId -> cumulative points
-    this.round = null;        // current single-game round (also practice/test)
+    this.round = null;        // current single-game round (also a solo test run)
     this.reveal = null;       // between-stages reveal the host is holding on
     this.lastScores = null;   // leaderboard rows from the last scored game
     this.redemption = null;
@@ -280,7 +290,7 @@ export class Room {
       winnerId: this.winnerId,
       finalStandings: this.finalStandings,
     };
-    if ((this.phase === 'minigame' || this.phase === 'practice') && this.round) {
+    if (this.phase === 'minigame' && this.round) {
       const g = this.round.games[this.round.gameIndex];
       if (g && p && !g.submissions.has(p.id)) {
         snap.game = this.gamePayload(g);
@@ -298,16 +308,27 @@ export class Room {
     return snap;
   }
 
+  // What the host and player screens are allowed to see. A config key that is
+  // not here cannot be rendered as a control, because no client ever learns
+  // its value.
   publicConfig() {
-    const { gameDuration, practice, minDelay, maxDelay, enabled, gamesPerSession } = this.config;
+    const { gameDuration, minDelay, maxDelay, enabled } = this.config;
     const roster = ROSTER.map(({ key, name, category, stages }) =>
       ({ key, name, category, stages: stages || 1 }));
-    return { gameDuration, practice, minDelay, maxDelay, enabled, gamesPerSession, roster };
+    return { gameDuration, minDelay, maxDelay, enabled, roster };
   }
 
   updateConfig(raw) {
     if (this.phase !== 'lobby') return { error: 'Config can only change in the lobby.' };
-    this.config = sanitizeConfig({ ...this.config, ...raw, enabled: { ...this.config.enabled, ...(raw.enabled || {}) } });
+    // Anything outside the allowlist is dropped rather than rejected: a stale
+    // host tab pushing a knob that no longer exists should not fail the whole
+    // patch, and a hand-crafted socket payload should not be able to reach an
+    // internal default.
+    const patch = {};
+    for (const [key, value] of Object.entries(raw || {})) {
+      if (HOST_EDITABLE_CONFIG.has(key)) patch[key] = value;
+    }
+    this.config = sanitizeConfig({ ...this.config, ...patch, enabled: { ...this.config.enabled, ...(patch.enabled || {}) } });
     this.emitAll('room:config', this.publicConfig());
     return { ok: true };
   }
@@ -326,8 +347,9 @@ export class Room {
     this.queue = k > 0 && k < drawn.length ? drawn.slice(0, k) : drawn;
     this.queueIndex = 0;
     this.totals = new Map([...this.players.keys()].map((id) => [id, 0]));
-    if (this.config.practice) this.startPractice();
-    else this.nextGame();
+    // Straight into game one: there is no practice round. Anyone who wants to
+    // shake a game out before the session runs it from the lobby's solo test.
+    this.nextGame();
     return { ok: true };
   }
 
@@ -360,22 +382,6 @@ export class Room {
     return [...this.players.values()].map((p) => ({ id: p.id, name: p.name }));
   }
 
-  // Practice: one un-scored Stop the Clock so broken devices surface before
-  // the real games, not during them.
-  startPractice() {
-    const rng = seededRng(`${this.code}:practice`);
-    const { clientData, secret } = buildGameData('stopclock', { rng, config: this.config, used: {} });
-    this.round = {
-      practice: true,
-      games: [this.makeStage(ROSTER_BY_KEY.get('stopclock'), clientData, secret)],
-      gameIndex: 0,
-    };
-    this.startTutorial(
-      { key: 'stopclock', gameName: 'Stop the Clock', practice: true },
-      () => this.startGame(0)
-    );
-  }
-
   // Solo test: run any single game from the lobby, unscored, any player count
   // (host playtesting). Uses a throwaway content pool — the real session's
   // no-repeat pool is unaffected.
@@ -391,7 +397,6 @@ export class Room {
       used: {},
     });
     this.round = {
-      practice: false,
       test: true,
       games: [this.makeStage(meta, clientData, secret)],
       gameIndex: 0,
@@ -445,7 +450,6 @@ export class Room {
       totalStages: g.totalStages || 1,
       // A stage that has a better name for itself than "stage 3 of 7".
       stageName: g.stageName || null,
-      practice: !!this.round.practice,
       test: !!this.round.test,
     };
   }
@@ -455,7 +459,6 @@ export class Room {
   // no absolute floor) keeps the host's duration knob meaningful and keeps the
   // bot harness able to run a whole session in seconds.
   stageDuration(g) {
-    if (this.round?.practice) return Math.min(this.config.gameDuration, 30000);
     return Math.max(1, Math.round(this.config.gameDuration * (g.durationScale || 1)));
   }
 
@@ -479,7 +482,6 @@ export class Room {
       used: this.usedContent || (this.usedContent = {}),
     });
     this.round = {
-      practice: false,
       games: [this.makeStage(meta, clientData, secret)],
       gameIndex: 0,
       extras: {},
@@ -744,8 +746,8 @@ export class Room {
   }
 
   // The last stage of a game has closed (and been revealed): aggregate what
-  // the room did across every stage of it, then score — or, for a practice or
-  // test run, just show what happened.
+  // the room did across every stage of it, then score — or, for a solo test
+  // run, just show what happened.
   finishGame(g) {
     const entries = [...g.submissions.entries()].map(([playerId, payload]) => ({ playerId, payload }));
     if (NEEDS_AGGREGATION.has(g.key)) {
@@ -775,10 +777,6 @@ export class Room {
         total: this.players.size,
         extras: this.round.extras,
       });
-      return;
-    }
-    if (this.round.practice) {
-      this.setPhase('practice_done', { submitted: g.submissions.size, total: this.players.size });
       return;
     }
     this.scoreGame(g);
@@ -1054,7 +1052,6 @@ export class Room {
       case 'test_done':
       case 'redemption_test_done':
         return this.backToLobby();
-      case 'practice_done': this.nextGame(); return { ok: true };
       case 'minigame': {
         const g = this.round?.games[this.round.gameIndex];
         if (g) this.closeGame(g.token);

@@ -37,7 +37,7 @@ function onlyGames(...keys) {
 }
 
 const FAST = {
-  practice: false, gameDuration: 800, musicMs: 60, tutorialMs: 0,
+  gameDuration: 800, musicMs: 60, tutorialMs: 0,
   redemptionPrepMs: 60, redemptionLeadMs: 120,
   postGreenTimeout: 800, hardTimeout: 1500, closeGraceMs: 200,
 };
@@ -138,6 +138,9 @@ test('score attack: every game once, totals accumulate, chairs finale, highest t
   }
 });
 
+// gamesPerSession is an internal default, not a host option: every hosted
+// session plays all of its enabled games (0), and the K-of-N draw stays here
+// as the pacing lever a room can be constructed with.
 test('gamesPerSession draws K of N — a two-stage game must not outgrow the meeting slot', () => {
   const enabled = {};
   for (const g of ROSTER) enabled[g.key] = true;
@@ -166,6 +169,70 @@ test('gamesPerSession draws K of N — a two-stage game must not outgrow the mee
     assert.equal(four.progressInfo().totalGames, 5);
   } finally {
     for (const room of [all, four, over]) room.destroy();
+  }
+});
+
+// The host lobby is one knob — minigame duration — plus the per-game toggles.
+// "Games this session" and "Practice round first" were both host controls once
+// and both grew back with a later feature. scripts/check.mjs catches the lobby
+// half of that; this is the server half, and it is the stronger one: a control
+// cannot come back if the server neither publishes the value nor accepts it.
+test('the host config surface is minigame duration and the game toggles, nothing else', () => {
+  const room = new Room(stubIo(), 'CFGX', {});
+  try {
+    assert.deepEqual(
+      Object.keys(room.publicConfig()).sort(),
+      ['enabled', 'gameDuration', 'maxDelay', 'minDelay', 'roster'],
+      'publicConfig publishes no value the lobby is not allowed to change');
+
+    const internals = { ...room.config };
+    assert.equal(room.updateConfig({
+      gameDuration: 30000,
+      enabled: { stopclock: false },
+      gamesPerSession: 4,
+      tutorialMs: 0,
+    }).ok, true, 'a patch carrying dropped keys still applies the ones that are allowed');
+
+    assert.equal(room.config.gameDuration, 30000, 'the one host knob applies');
+    assert.equal(room.config.enabled.stopclock, false, 'per-game toggles apply');
+    assert.equal(room.config.gamesPerSession, internals.gamesPerSession,
+      'gamesPerSession is internal — the lobby cannot reach it');
+    assert.equal(room.config.tutorialMs, internals.tutorialMs,
+      'and neither can it reach any other pacing default');
+  } finally {
+    room.destroy();
+  }
+});
+
+// There is no practice round and no way to ask for one — not a host checkbox,
+// not a config key, not a phase. A session opens on game one, for points.
+test('no practice round: start() opens on a scored game, whatever the config says', async () => {
+  const room = new Room(stubIo(), 'NOPR', {
+    ...FAST, practice: true, enabled: onlyGames('stopclock'),
+  });
+  const phases = [];
+  const setPhase = room.setPhase.bind(room);
+  room.setPhase = (name, data) => { phases.push(name); return setPhase(name, data); };
+  try {
+    assert.equal('practice' in room.config, false, 'asking for one does not even make it into the config');
+    addPlayer(room, 'a', 'Anna');
+    addPlayer(room, 'b', 'Ben');
+    room.start();
+
+    await waitFor(() => room.phase === 'minigame', 3000, 'first minigame');
+    assert.equal(room.round.practice, undefined, 'the first round is a real one');
+    assert.equal(room.round.games[0].key, 'stopclock');
+    assert.equal(room.gamePayload(room.round.games[0]).gameNumber, 1,
+      'and it is game 1 of the session, not a warm-up before it');
+
+    room.handleSubmit('a', { best: 100 });
+    room.handleSubmit('b', { best: 400 });
+    await waitFor(() => room.phase === 'scores', 3000, 'scores');
+    assert.equal(room.lastScores.find((r) => r.id === 'a').points, 1000,
+      'the first thing the room played counted');
+    assert.equal(phases.includes('practice_done'), false, 'no practice_done phase, ever');
+  } finally {
+    room.destroy();
   }
 });
 

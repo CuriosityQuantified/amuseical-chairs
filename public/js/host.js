@@ -82,33 +82,24 @@ function enabledCount() {
   return state.config ? Object.values(state.config.enabled).filter(Boolean).length : 0;
 }
 
-// How many games this session will actually play: the K-of-N draw, capped by
-// how many are enabled. 0 = all of them.
-function drawCount() {
-  const k = state.config?.gamesPerSession || 0;
-  const n = enabledCount();
-  return k > 0 && k < n ? k : n;
-}
-
 function renderLobbySummary() {
-  const n = enabledCount();
-  const k = drawCount();
   $('lobby-ladder').replaceChildren(
     el('span', { class: 'step' },
-      `${k < n ? `${k} of ${n}` : `${n}`} games + musical chairs · highest total score wins`)
+      `${enabledCount()} games + musical chairs · highest total score wins`)
   );
 }
 
 // ---- config panel ----------------------------------------------------------
+//
+// The host's knobs are minigame duration and the per-game toggles, and that is
+// the whole list — the server accepts nothing else from the lobby (see
+// HOST_EDITABLE_CONFIG in server/room.js) and `npm run check` fails on any
+// other `cfg-*` control. Everything else is an internal default.
 
 function buildConfigPanel() {
   const c = state.config;
   $('cfg-dur').value = Math.round(c.gameDuration / 1000);
   $('cfg-dur-val').textContent = Math.round(c.gameDuration / 1000);
-  $('cfg-practice').checked = c.practice;
-  $('cfg-count').max = String((c.roster || []).length);
-  $('cfg-count').value = String(c.gamesPerSession || 0);
-  $('cfg-count-val').textContent = c.gamesPerSession ? String(c.gamesPerSession) : 'all';
 
   const meta = (key) => (c.roster || []).find((g) => g.key === key);
   const nameOf = (key) => meta(key)?.name || key;
@@ -138,12 +129,6 @@ function buildConfigPanel() {
   }
 
   $('cfg-dur').oninput = (e) => { $('cfg-dur-val').textContent = e.target.value; pushConfig({ gameDuration: Number(e.target.value) * 1000 }); };
-  $('cfg-practice').onchange = (e) => pushConfig({ practice: e.target.checked });
-  $('cfg-count').oninput = (e) => {
-    const v = Number(e.target.value);
-    $('cfg-count-val').textContent = v ? String(v) : 'all';
-    pushConfig({ gamesPerSession: v });
-  };
 }
 
 function pushConfig(patch) {
@@ -227,12 +212,6 @@ socket.on('phase', (p) => {
     case 'tutorial': renderTutorial(p); break;
     case 'minigame': renderMinigame(p); break;
     case 'reveal': renderReveal(p); break;
-    case 'practice_done':
-      content().replaceChildren(
-        el('h1', {}, '🧪 Practice complete'),
-        el('p', { class: 'muted' }, `${p.submitted} of ${p.total} submitted something. If someone was lost, fix it now.`),
-        el('p', {}, 'Press Next ▸ to start the games for real.'));
-      break;
     case 'test_done': renderTestDone(p); break;
     case 'scores': renderScores(p); break;
     case 'redemption': renderRedemption(p); break;
@@ -365,8 +344,7 @@ function stageLabel(p) {
 }
 
 function renderMinigame(p) {
-  const title = (p.practice ? '🧪 PRACTICE: ' : p.test ? '🔧 TEST: ' : '') + p.gameName
-    + stageLabel(p);
+  const title = (p.test ? '🔧 TEST: ' : '') + p.gameName + stageLabel(p);
   const parts = [
     el('h1', {}, title),
     el('p', { class: 'muted', style: 'font-size:20px' }, `${Math.round(p.duration / 1000)}s`),

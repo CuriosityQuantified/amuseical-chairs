@@ -15,6 +15,7 @@ import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { ROSTER, MULTI_STAGE, NEEDS_AGGREGATION } from '../server/games.js';
+import { HOST_EDITABLE_CONFIG } from '../server/room.js';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const problems = [];
@@ -146,6 +147,71 @@ for (const file of files.filter((f) => f.startsWith('server/') || f.startsWith('
     if (/rng = Math\.random/.test(line)) return;
     fail(file, `line ${i + 1}: Math.random() — round content must come from the seeded rng`);
   });
+}
+
+// ---- 6. the host config panel stays one knob --------------------------------
+// The lobby's host config is minigame duration, the per-game toggles, and
+// nothing else. Sliders keep growing back: "Games this session" and "Practice
+// round first" have each been removed once and returned with a later feature,
+// because a control that renders and pushes a value looks correct from every
+// angle — no test failed, so nothing said otherwise. This rule says otherwise.
+//
+// Adding a host option on purpose means changing three things together: the
+// control in public/host.html, its id in the map below, and
+// HOST_EDITABLE_CONFIG in server/room.js. Everything else in the room config
+// is an internal default and stays off the host screen.
+const ALLOWED_HOST_CONTROLS = new Map([
+  ['cfg-dur', 'gameDuration'],  // range: minigame duration, in seconds
+  ['cfg-dur-val', null],        // its live read-out — display, not a control
+]);
+const controlList = [...ALLOWED_HOST_CONTROLS.keys()].join(', ');
+
+const hostHtml = read('public/host.html');
+if (!hostHtml.includes('class="config-grid"')) {
+  fail('public/host.html', 'no .config-grid — the host config panel moved; move this rule with it');
+}
+for (const [, id] of hostHtml.matchAll(/id="(cfg-[^"]*)"/g)) {
+  if (!ALLOWED_HOST_CONTROLS.has(id)) {
+    fail('public/host.html',
+      `host config control "#${id}" is not an allowed host option — the lobby is ${controlList} and nothing else`);
+  }
+}
+for (const id of ALLOWED_HOST_CONTROLS.keys()) {
+  if (!hostHtml.includes(`id="${id}"`)) {
+    fail('public/host.html',
+      `allowed host control "#${id}" is missing — if removing it was deliberate, drop it from the allowlist in scripts/check.mjs`);
+  }
+}
+
+const hostJs = read('public/js/host.js');
+for (const [, id] of hostJs.matchAll(/\$\('(cfg-[^']*)'\)/g)) {
+  if (!ALLOWED_HOST_CONTROLS.has(id)) {
+    fail('public/js/host.js', `wires up host config control "#${id}", which is not an allowed host option`);
+  }
+}
+// Every pushConfig() call site sends a patch of exactly one key; that key has
+// to be one the server will still accept from the lobby.
+for (const [, key] of hostJs.matchAll(/pushConfig\(\s*\{\s*([A-Za-z0-9_]+)\s*:/g)) {
+  if (!HOST_EDITABLE_CONFIG.has(key)) {
+    fail('public/js/host.js',
+      `pushes config key "${key}", which server/room.js does not accept from the lobby (HOST_EDITABLE_CONFIG)`);
+  }
+}
+
+// The two ends of the allowlist have to agree: a key the server accepts that
+// no control writes is a knob waiting to be re-exposed, and a control writing
+// a key the server drops is a slider that silently does nothing.
+const controlKeys = new Set([...ALLOWED_HOST_CONTROLS.values()].filter(Boolean));
+controlKeys.add('enabled');  // the per-game toggles, built at runtime from the roster
+for (const key of HOST_EDITABLE_CONFIG) {
+  if (!controlKeys.has(key)) {
+    fail('server/room.js', `HOST_EDITABLE_CONFIG accepts "${key}", which no allowed host control writes`);
+  }
+}
+for (const key of controlKeys) {
+  if (!HOST_EDITABLE_CONFIG.has(key)) {
+    fail('server/room.js', `host controls write "${key}", which HOST_EDITABLE_CONFIG does not accept`);
+  }
 }
 
 // ---- report ------------------------------------------------------------------
