@@ -208,18 +208,11 @@ scripts/  static checks run in CI
 
 ## CI
 
-The checks below all run locally today (`npm run check`, `npm test`). The
-GitHub Actions workflow that runs them on every pull request is in
-`docs/ci-workflow.yml` and needs one command to install:
-
-```bash
-mkdir -p .github/workflows && cp docs/ci-workflow.yml .github/workflows/ci.yml
-```
-
-It ships there rather than in place because the token that opened this branch
-has no `workflows` permission — GitHub rejects both a `git push` and an API
-write that touches `.github/workflows/`. Anyone with normal write access can
-run the copy above and commit it.
+`.github/workflows/ci.yml` runs on every pull request and every push to
+`main`; the same checks run locally with `npm run check` and `npm test`.
+(The workflow spent two branches parked at `docs/ci-workflow.yml`, because
+the token that wrote it could not push to `.github/workflows/`. It is
+installed now — that file is gone, and there is one copy.)
 
 The workflow runs:
 
