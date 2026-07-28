@@ -159,6 +159,30 @@ const CAPTION_PROMPTS = [
   'A headline about today that nobody expected:',
 ];
 
+// Icebreaker stage-one prompts. Every one of them has to ask for a TRUE fact
+// about the player and nobody else — the whole game is the room guessing who
+// wrote which one, so an invented answer breaks it rather than winning it.
+// Work-meeting safe by construction: nothing here asks for anything a
+// colleague would rather not have on a projector.
+const ICEBREAKER_PROMPTS = [
+  'A fun fact about you that nobody in this room knows:',
+  'Something you have done that would surprise this room:',
+  'A hidden talent of yours:',
+  'The most unusual job you have ever had:',
+  'A place you have been that nobody here would guess:',
+  'Something you collected or were obsessed with as a kid:',
+  'An award, trophy or certificate you actually own:',
+  'The strangest food you have genuinely enjoyed:',
+  'A skill you learned that never once came up at work:',
+  'Something on your desk right now with a story behind it:',
+  'A hobby of yours that surprises people:',
+  'The closest you have come to being famous:',
+  'An animal you have met that most people have not:',
+  'A world record you could plausibly attempt:',
+  'Something you are weirdly good at:',
+  'A thing you have done exactly once and never again:',
+];
+
 export const ROSTER = [
   { key: 'rgb', name: 'RGB Color Match', category: 'perceptual', type: 'error' },
   { key: 'oddoneout', name: 'Odd One Out', category: 'perceptual', type: 'score' },
@@ -169,17 +193,24 @@ export const ROSTER = [
   { key: 'gridflash', name: 'Grid Flash', category: 'memory', type: 'error' },
   { key: 'readroom', name: 'Read the Room', category: 'social', type: 'error' },
   { key: 'caption', name: 'Caption Battle', category: 'social', type: 'score', stages: 2 },
+  { key: 'icebreaker', name: 'Icebreaker', category: 'social', type: 'score', stages: 'variable' },
   { key: 'typing', name: 'Typing Sprint', category: 'motor', type: 'score', keyboardOnly: true },
   { key: 'spacemash', name: 'Space Mash', category: 'motor', type: 'score' },
   { key: 'slingshot', name: 'Slingshot', category: 'motor', type: 'error' },
 ];
 
 export const ROSTER_BY_KEY = new Map(ROSTER.map((g) => [g.key, g]));
-export const NEEDS_AGGREGATION = new Set(['readroom', 'caption']);
-// Games whose second stage is built out of the first stage's submissions.
-// Both stages are still played by ALL players at once — this is not a
-// turn-based mechanic.
-export const TWO_STAGE = new Set(['caption']);
+export const NEEDS_AGGREGATION = new Set(['readroom', 'caption', 'icebreaker']);
+// Games whose later stages are built out of stage one's submissions. Every
+// stage is still played by ALL players at once — this is not a turn-based
+// mechanic. `stages` on the roster is 2 for a fixed two-stage game and
+// 'variable' for one whose length depends on what the room submitted
+// (Icebreaker runs one guessing stage per fun fact).
+export const MULTI_STAGE = new Set(['caption', 'icebreaker']);
+
+// A guessing stage is "which of these 20 names is it" — it does not need a
+// whole minigame slot, and Icebreaker runs one per player in the room.
+const ICEBREAKER_STAGE_SCALE = 0.5;
 
 // How many entries one player may vote for in a voting stage. Vote-based
 // scoring concentrates hard — a room of 20 puts its votes on 3–4 captions and
@@ -263,11 +294,20 @@ export function buildGameData(key, ctx) {
       return { clientData: { question: ROOM_QUESTIONS[idx] }, secret: {} };
     }
     case 'caption': {
-      // Stage one only. Stage two's content is buildStageTwo's job — it is
+      // Stage one only. The stages after it are buildStages' job — they are
       // made out of what the room actually wrote.
       const idx = pickContent(rng, CAPTION_PROMPTS.length, usedSet('caption'));
       return {
         clientData: { prompt: CAPTION_PROMPTS[idx], maxChars: ENTRY_MAX_CHARS },
+        secret: {},
+      };
+    }
+    case 'icebreaker': {
+      // Stage one only: everyone writes one true fact about themselves. The
+      // guessing stages are built out of those facts, one stage per fact.
+      const idx = pickContent(rng, ICEBREAKER_PROMPTS.length, usedSet('icebreaker'));
+      return {
+        clientData: { prompt: ICEBREAKER_PROMPTS[idx], maxChars: ENTRY_MAX_CHARS },
         secret: {},
       };
     }
@@ -290,15 +330,54 @@ export function buildGameData(key, ctx) {
   }
 }
 
-// Build stage two out of stage one's submissions.
+// Build every stage that follows stage one, out of stage one's submissions.
 // entries: [{ playerId, payload }] — every stage-one submission received.
-// ctx: { rng, clientData, config } where clientData is STAGE ONE's data.
-// Returns { clientData, secret } for stage two, or null when there is not
-// enough material to run a second stage at all (the caller scores stage one
-// instead). Never throws on a degenerate pool — a room where nobody typed
+// ctx: { rng, clientData, players, config } where clientData is STAGE ONE's
+// data and players is [{ id, name }] for the whole room.
+//
+// Returns an ARRAY of stage descriptors — { clientData, secret, stageName,
+// reveal, durationScale } — played in the order returned, or null when there
+// is not enough material to run any of them (the caller scores stage one
+// instead). Never throws on a degenerate pool: a room where nobody typed
 // anything still has to reach a scores screen.
-export function buildStageTwo(key, entries, ctx) {
-  const { rng, clientData } = ctx;
+export function buildStages(key, entries, ctx) {
+  const { rng, clientData, players = [] } = ctx;
+  if (key === 'icebreaker') {
+    // Same moderation pass as any other pooled player text — these strings go
+    // on a projector one at a time.
+    const usable = entries
+      .map((e) => ({ playerId: e.playerId, text: cleanEntryText(e.payload?.text) }))
+      .filter((e) => isUsableEntry(e.text));
+    // 0 or 1 facts: there is nothing to guess between. Skip the guessing.
+    if (usable.length < 2) return null;
+    // ONE seeded shuffle, server-side, broadcast one stage at a time: every
+    // player is served the identical fact list in the identical order, which
+    // is what makes the room's out-loud discussion and the host's reveal line
+    // up on every screen.
+    const facts = shuffle(rng, usable);
+    // The candidate list is every player in the room — including yourself,
+    // including anyone who never wrote a fact — in one order that is the same
+    // on every screen and for every fact, so a name never moves under a
+    // thumb mid-game. The same name can be picked for any number of facts;
+    // only the correct ones score.
+    const options = shuffle(rng, players).map((p) => ({ id: p.id, name: p.name }));
+    return facts.map((f, i) => ({
+      stageName: `Fun fact ${i + 1} of ${facts.length}`,
+      reveal: true,
+      durationScale: ICEBREAKER_STAGE_SCALE,
+      clientData: {
+        factId: `f${i}`,
+        text: f.text,
+        round: i + 1,
+        totalRounds: facts.length,
+        options,
+        hidden: false,
+      },
+      // Whose fact it is stays server-side until the host reveals it — that
+      // reveal is the entire point of the game.
+      secret: { answer: f.playerId },
+    }));
+  }
   if (key === 'caption') {
     // Moderation happens HERE, once, on the way into the pool: everything
     // downstream (host projector, player screens, the reveal) reads these
@@ -317,7 +396,7 @@ export function buildStageTwo(key, entries, ctx) {
       owners[id] = e.playerId;
       return { id, text: e.text };
     });
-    return {
+    return [{
       clientData: {
         prompt: clientData?.prompt ?? '',
         entries: pool,
@@ -328,9 +407,101 @@ export function buildStageTwo(key, entries, ctx) {
       // anonymous, which is both safer and funnier, and it is what makes
       // self-vote rejection a server-side check by playerId.
       secret: { owners },
-    };
+    }];
   }
-  throw new Error(`game ${key} has no second stage`);
+  throw new Error(`game ${key} has no stages after the first`);
+}
+
+// ---- Icebreaker -------------------------------------------------------------
+//
+// Stage 1: everyone writes one true fun fact about themselves. Stages 2…N+1:
+// one fact at a time, in the same order on every screen, with the whole room
+// as the candidate list. Everyone locks a guess before anyone sees the next
+// fact; between facts the room argues out loud and the host reveals the
+// answer. Metric = correct guesses.
+//
+// `stages` is this game's stages so far, oldest first, each shaped
+// { stage, clientData, secret, entries } — the room's own stage objects,
+// flattened. Walking them is the only source of truth for both the
+// between-fact reveal and the final scoring.
+function icebreakerTally(stages = []) {
+  const correct = new Map();   // playerId -> facts guessed right
+  const played = new Set();    // anyone who wrote a fact or locked a guess
+  const rounds = [];
+  for (const s of stages) {
+    const entries = s.entries || [];
+    if ((s.stage || 1) === 1) {
+      for (const e of entries) {
+        if (isUsableEntry(cleanEntryText(e.payload?.text))) played.add(e.playerId);
+      }
+      continue;
+    }
+    // A fact the host pulled off the screen scores nobody — the guesses made
+    // before it vanished are not the players' fault, so they are voided
+    // rather than counted wrong.
+    const hidden = !!s.clientData?.hidden;
+    const answer = s.secret?.answer ?? null;
+    const picks = [];
+    for (const e of entries) {
+      played.add(e.playerId);
+      const pickedId = typeof e.payload?.pick === 'string' ? e.payload.pick : null;
+      if (!pickedId) continue;
+      const ok = !hidden && pickedId === answer;
+      if (ok) correct.set(e.playerId, (correct.get(e.playerId) || 0) + 1);
+      picks.push({ playerId: e.playerId, pickedId, correct: ok });
+    }
+    rounds.push({
+      round: s.clientData?.round ?? rounds.length + 1,
+      totalRounds: s.clientData?.totalRounds ?? null,
+      text: hidden ? '' : (s.clientData?.text || ''),
+      hidden,
+      playerId: hidden ? null : answer,
+      picks,
+    });
+  }
+  return { correct, played, rounds };
+}
+
+// The between-facts screen. Returns two payloads for the same fact: `teaser`
+// goes out the moment the fact closes (the room discusses and calls it out
+// loud), `answer` goes out when the host presses Next. The answer is NOT in
+// the teaser — it is broadcast to every device, and a player reading their
+// own socket would otherwise have it before the room does.
+export function buildReveal(key, stages = []) {
+  if (key !== 'icebreaker') return null;
+  const closed = stages[stages.length - 1];
+  if (!closed || (closed.stage || 1) === 1) return null;
+  const { correct, rounds } = icebreakerTally(stages);
+  const here = rounds[rounds.length - 1];
+  if (!here) return null;
+  const common = {
+    round: here.round,
+    totalRounds: here.totalRounds,
+    text: here.text,
+    hidden: here.hidden,
+    guessed: here.picks.length,
+  };
+  const tally = new Map();
+  for (const p of here.picks) tally.set(p.pickedId, (tally.get(p.pickedId) || 0) + 1);
+  return {
+    teaser: common,
+    answer: {
+      ...common,
+      playerId: here.playerId,
+      // Who the room picked, most-picked first — the shape of the argument.
+      tally: [...tally.entries()]
+        .map(([playerId, count]) => ({ playerId, count }))
+        .sort((a, b) => b.count - a.count),
+      // Every player's own line: what they picked, whether it landed, and how
+      // many they have right so far. Each device renders only its own row.
+      guesses: here.picks.map((p) => ({
+        playerId: p.playerId,
+        pickedId: p.pickedId,
+        correct: p.correct,
+        rightSoFar: correct.get(p.playerId) || 0,
+      })),
+    },
+  };
 }
 
 // Compute the raw metric for one player's submission. Returns null for
@@ -444,10 +615,12 @@ export function computeMetric(key, payload, secret, clientData, config) {
 
 // Social games need every submission before anyone can be scored.
 // entries: [{ playerId, payload }] — the submissions of the stage that just
-// closed. ctx: { clientData, secret } of that same stage.
+// closed. ctx: { clientData, secret } of that same stage, plus `stages` (every
+// stage of this game, oldest first) for games scored across all of them.
 // Returns { metrics: Map, extra }.
 export function aggregateGame(key, entries, ctx = {}) {
   if (key === 'caption') return aggregateCaption(entries, ctx);
+  if (key === 'icebreaker') return aggregateIcebreaker(ctx);
   if (key === 'readroom') {
     const valid = entries.filter((e) => e.payload && typeof e.payload.answer === 'boolean');
     const metrics = new Map();
@@ -524,6 +697,37 @@ function aggregateCaption(entries, ctx) {
   return { metrics, extra: { prompt, board, votesPerPlayer: perVoter, voters, skipped: false } };
 }
 
+// Icebreaker scoring: one point per fact matched to the right person, summed
+// over every guessing stage. Anyone who wrote a fact or locked a single guess
+// is scored (possibly at 0) — only a player who did neither is a
+// non-submitter. A player's own fact is a gimme, and deliberately so: everyone
+// in the room has exactly one, so it cancels out and nobody has to be told
+// their own name is greyed out mid-game.
+function aggregateIcebreaker(ctx) {
+  const { correct, played, rounds } = icebreakerTally(ctx?.stages || []);
+  const metrics = new Map();
+  for (const id of played) metrics.set(id, correct.get(id) || 0);
+  return {
+    metrics,
+    extra: {
+      // The reveal table: every fact, whose it was, and how the room did on
+      // it. Names are attached by the room at the last moment.
+      rounds: rounds.map((r) => ({
+        round: r.round,
+        text: r.text,
+        hidden: r.hidden,
+        playerId: r.playerId,
+        rightCount: r.picks.filter((p) => p.correct).length,
+        guessCount: r.picks.length,
+      })),
+      // 0 facts means the guessing never ran — fewer than two people wrote
+      // anything, so there was nothing to guess between.
+      facts: rounds.length,
+      skipped: rounds.length === 0,
+    },
+  };
+}
+
 // Human-readable raw value for the reveal screens.
 export function formatRaw(key, metric, payload) {
   if (metric == null) {
@@ -544,6 +748,7 @@ export function formatRaw(key, metric, payload) {
     case 'gridflash': return `${metric} cells off`;
     case 'readroom': return `${metric.toFixed(0)} pts off`;
     case 'caption': return `${metric} vote${metric === 1 ? '' : 's'}`;
+    case 'icebreaker': return `${metric} right`;
     case 'typing': return `${Math.round(metric)} net cpm`;
     case 'spacemash': return `${metric} presses${payload?.flagged ? ' ⚠' : ''}`;
     case 'slingshot': return `${metric.toFixed(1)} ft`;

@@ -43,8 +43,16 @@ const TEST_CONFIG = {
 };
 
 // A bot's payload for one stage of one game. `bot` is threaded through so a
-// two-stage game can remember what this device wrote in stage one.
+// multi-stage game can remember what this device wrote in stage one.
 function botPayload(key, data, rnd, stage = 1, bot = null) {
+  if (key === 'icebreaker') {
+    // Stage 1 writes a fun fact; every stage after it is one fact on screen
+    // and the whole room as the candidate list.
+    if (stage === 1) return { text: `${bot?.name || 'Someone'} once did thing ${Math.floor(rnd() * 1000)}` };
+    const options = data.options || [];
+    if (!options.length) return {};
+    return { factId: data.factId, pick: options[Math.floor(rnd() * options.length)].id };
+  }
   if (key === 'caption') {
     if (stage === 2) {
       // Vote for other people's entries only — a bot that spends its ballot on
@@ -150,6 +158,7 @@ test('20 bots: every game once, per-game scores, chairs finale, winner by total'
   const host = connect(url, { transports: ['websocket'], forceNew: true });
   const bots = [];
   const stagesSeen = [];    // { key, stage, totalStages } per minigame phase
+  const reveals = [];       // { round, answered } per reveal phase
   const scoreboards = [];
   let chairsSeen = 0;
   let winnerPayload = null;
@@ -175,9 +184,11 @@ test('20 bots: every game once, per-game scores, chairs finale, winner by total'
           setTimeout(() => host.emit('host:next', {}, () => {}), 30);
         }
         // Tutorials no longer auto-advance — the host starts each game.
-        // Chairs round results also wait for the host's Next.
-        if (p.name === 'tutorial' || p.name === 'chairs_result') {
-          setTimeout(() => host.emit('host:next', {}, () => {}), 30);
+        // Chairs round results wait for the host's Next, and so does every
+        // Icebreaker reveal: once to put the answer up, once to move on.
+        if (p.name === 'tutorial' || p.name === 'chairs_result' || p.name === 'reveal') {
+          if (p.name === 'reveal') reveals.push({ round: p.round, answered: p.answered });
+          setTimeout(() => host.emit('host:next', {}, () => {}), 20);
         }
         if (p.name === 'redemption') chairsSeen++;
         if (p.name === 'winner') { winnerPayload = p; resolve(p); }
@@ -216,6 +227,26 @@ test('20 bots: every game once, per-game scores, chairs finale, winner by total'
       assert.ok(stagesSeen.every((s) => s.key !== key || s.totalStages === 2),
         `${key} labels itself as two-stage in the phase payload`);
     }
+
+    // Icebreaker is as long as the room: one guessing stage per bot that
+    // actually wrote a fun fact (16 normal + the flaky one that reconnects
+    // in time to write; the 2 silent bots and the masher never do). Every
+    // fact goes out on its own, in order, and every one of them stops for a
+    // two-press reveal before the next one starts.
+    const ice = stagesSeen.filter((s) => s.key === 'icebreaker');
+    const factCount = ice.length - 1;
+    assert.ok(factCount >= 16, `every writing bot's fact became a round (${factCount})`);
+    assert.deepEqual(ice.map((s) => s.stage), [...Array(ice.length).keys()].map((i) => i + 1),
+      'the facts went out one at a time, in order, and never in parallel');
+    assert.equal(ice[0].totalStages, 1,
+      'before the room has written anything, the game cannot know its own length');
+    assert.ok(ice.slice(1).every((s) => s.totalStages === ice.length),
+      'and every guessing stage knows how long it turned out to be');
+    assert.deepEqual(reveals.map((r) => r.answered),
+      [...Array(factCount)].flatMap(() => [false, true]),
+      'every fun fact was discussed first and answered second — including the last');
+    assert.deepEqual(reveals.filter((r) => !r.answered).map((r) => r.round),
+      [...Array(factCount).keys()].map((i) => i + 1));
 
     // Per-game scoreboards: full roster of 20 on every one, totals monotone.
     assert.equal(scoreboards.length, enabledCount, 'a scoreboard after every game');
@@ -282,8 +313,9 @@ test('2-player game runs to a winner', async () => {
     });
     const winner = new Promise((resolve) => {
       host.on('phase', (p) => {
-        if (p.name === 'scores' || p.name === 'tutorial' || p.name === 'chairs_result') {
-          setTimeout(() => host.emit('host:next', {}, () => {}), 30);
+        if (p.name === 'scores' || p.name === 'tutorial'
+            || p.name === 'chairs_result' || p.name === 'reveal') {
+          setTimeout(() => host.emit('host:next', {}, () => {}), 20);
         }
         if (p.name === 'winner') resolve(p);
       });

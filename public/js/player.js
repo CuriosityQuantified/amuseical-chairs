@@ -92,6 +92,8 @@ function applySnapshot(snap) {
     startMinigame(snap.game);
   } else if (snap.phase === 'tutorial' && snap.tutorial) {
     renderTutorial(snap.tutorial);
+  } else if (snap.phase === 'reveal' && snap.reveal) {
+    renderReveal(snap.reveal);
   } else if (snap.phase === 'scores' && snap.scores) {
     renderScores({ leaderboard: snap.scores });
   } else if (snap.phase === 'winner' && snap.finalStandings) {
@@ -242,6 +244,14 @@ function renderTutorial(p) {
   }
 }
 
+// How a stage of a multi-stage game names itself. A stage that has a better
+// name than its number ("Fun fact 3 of 6") carries one.
+function stageLabel(payload) {
+  if (payload.stageName) return ` — ${payload.stageName}`;
+  const total = payload.totalStages || 1;
+  return total > 1 ? ` — stage ${payload.stage || 1} of ${total}` : '';
+}
+
 function startMinigame(payload) {
   clearAll();
   const client = GameClients[payload.key];
@@ -251,7 +261,7 @@ function startMinigame(payload) {
   const intro = typeof client.intro === 'function' ? client.intro(stage) : client.intro;
   content().append(
     el('h2', {}, (payload.practice ? '🧪 PRACTICE — ' : payload.test ? '🔧 TEST — ' : '') + payload.gameName
-      + (totalStages > 1 ? ` — stage ${stage} of ${totalStages}` : '')),
+      + stageLabel(payload)),
     el('p', { class: 'muted' }, intro || '')
   );
   // Convert the server deadline to local time via the sync offset, then run
@@ -294,6 +304,68 @@ function startMinigame(payload) {
       if (data) submit(data);
     }
   }, msLeft);
+}
+
+// ---- between-stages reveal (Icebreaker) ------------------------------------
+//
+// Two steps on one screen, both driven by the host's Next (the solo player's
+// own button): everyone has locked a guess and the room argues it out, then
+// the answer goes up. Nothing here reveals the answer early — until the host
+// presses Next the server has not sent it to anybody.
+
+function renderReveal(p) {
+  clearAll();
+  const total = p.totalRounds ? ` of ${p.totalRounds}` : '';
+  banner(`FUN FACT ${p.round}${total}`);
+  if (p.hidden) {
+    content().append(
+      el('h2', { class: 'center' }, 'The host removed this one.'),
+      el('p', { class: 'muted center' }, 'Nobody scores it. Next fact coming up…')
+    );
+    if (state.solo) content().append(soloNextButton('Next ▸'));
+    return;
+  }
+  if (!p.answered) {
+    // Still the headline: the room is looking at this and arguing about it.
+    content().append(
+      el('h2', { class: 'center' }, `“${p.text}”`),
+      el('p', { class: 'muted center' },
+        `${p.guessed} guess${p.guessed === 1 ? '' : 'es'} locked in. Say out loud who you picked!`),
+      el('p', { class: 'muted center' }, 'The host reveals the answer next.')
+    );
+    if (state.solo) content().append(soloNextButton('Reveal ▸'));
+    return;
+  }
+
+  const mine = (p.guesses || []).find((g) => g.playerId === state.playerId);
+  const right = mine?.correct;
+  banner(right ? '✅ RIGHT!' : mine ? '❌ NOPE' : `FUN FACT ${p.round}${total}`, right ? 'safe' : '');
+  // The fact steps back once it has been answered — the name is the headline.
+  content().append(
+    el('p', { class: 'muted center', style: 'font-size:15px' }, `“${p.text}”`),
+    el('h2', { class: 'center' }, `It was ${p.authorName || '?'}!`)
+  );
+  if (mine) {
+    content().append(
+      el('p', { class: 'muted center' },
+        right ? `You said ${mine.pickedName} — spot on.` : `You said ${mine.pickedName}.`),
+      el('p', { class: 'center' }, `${mine.rightSoFar} right so far`)
+    );
+  } else {
+    content().append(el('p', { class: 'muted center' }, 'You didn’t lock a guess on this one.'));
+  }
+  content().append(el('p', { class: 'muted center' },
+    p.round === p.totalRounds ? 'That was the last one — scores next.' : 'Next fun fact coming up…'));
+  if (state.solo) content().append(soloNextButton('Next ▸'));
+}
+
+// Solo practice has no host screen — the lone player presses their own Next.
+function soloNextButton(label) {
+  return el('button', {
+    class: 'big',
+    style: 'margin-top:14px',
+    onclick: () => socket.emit('solo:skip', {}, () => {}),
+  }, label);
 }
 
 // ---- per-game score reveal -------------------------------------------------
@@ -370,6 +442,9 @@ socket.on('phase', (p) => {
       if (state.solo) content().append(soloBackButton());
       break;
     }
+    case 'reveal':
+      renderReveal(p);
+      break;
     case 'scores':
       renderScores(p);
       break;

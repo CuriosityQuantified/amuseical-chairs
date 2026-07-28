@@ -414,6 +414,44 @@ const TUTORIALS = {
       } },
   ],
 
+  icebreaker: [
+    { ok: true, dur: 5000, label: 'Write a TRUE fact about you · then guess whose each fact is',
+      draw(g, w, h, p) {
+        if (p < 0.45) {
+          text(g, 'STAGE 1', w / 2, 20, { size: 12, color: C.cyan, bold: true });
+          text(g, 'A fun fact about you that nobody knows:', w / 2, 44, { size: 13, color: C.ink });
+          const s = 'I once herded goats in Iceland';
+          box(g, 30, 68, w - 60, 40, C.panel, C.good);
+          const n = Math.floor(seg(p, 0.05, 0.4) * s.length);
+          text(g, s.slice(0, n) + (Math.floor(p * 22) % 2 ? '|' : ''), w / 2, 88, { size: 15, color: C.good });
+          timerBar(g, 30, 132, w - 60, 1 - p * 2.2, C.cyan);
+        } else {
+          text(g, 'FUN FACT 1 OF 6', w / 2, 18, { size: 12, color: C.cyan, bold: true });
+          box(g, 26, 32, w - 52, 30, C.panel, C.line);
+          text(g, '“I once herded goats in Iceland”', w / 2, 47, { size: 13, color: C.ink });
+          ['Priya', 'Sam', 'Dana'].forEach((nme, i) => {
+            const y = 74 + i * 30;
+            const on = i === 1 && p > 0.66;
+            box(g, 40, y, w - 80, 24, C.panel, on ? C.good : C.line);
+            text(g, nme, w / 2, y + 12, { size: 13, color: on ? C.good : C.ink });
+          });
+          cursor(g, w / 2 + 80, 116, p > 0.62 && p < 0.72);
+          if (p > 0.82) text(g, 'everyone locks in → the room argues → host reveals',
+            w / 2, h - 14, { size: 13, color: C.good, bold: true });
+        }
+      } },
+    { ok: false, dur: 3800, label: 'No made-up facts, and lock a guess on every one — blanks score nothing',
+      draw(g, w, h, p) {
+        text(g, 'FUN FACT 2 OF 6', w / 2, 18, { size: 12, color: C.cyan, bold: true });
+        box(g, 26, 32, w - 52, 30, C.panel, C.line);
+        text(g, '“I have been to the moon, honestly”', w / 2, 47, { size: 13, color: C.muted });
+        if (p > 0.3) text(g, 'invented facts just lose you the room', w / 2, 84, { size: 14, color: C.bad, bold: true });
+        timerBar(g, 30, 108, w - 60, 1 - p, p > 0.55 ? C.bad : C.accent);
+        if (p > 0.62) text(g, 'no guess locked in → 0 for that fact', w / 2, 140, { size: 14, color: C.bad });
+        if (p > 0.8) text(g, 'the same name can be right more than once', w / 2, h - 14, { size: 13, color: C.warn });
+      } },
+  ],
+
   typing: [
     { ok: true, dur: 4200, label: 'Type the sentence exactly — accuracy earns the speed',
       draw(g, w, h, p) {

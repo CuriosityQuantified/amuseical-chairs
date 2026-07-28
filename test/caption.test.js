@@ -7,14 +7,22 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { seededRng } from '../shared/rng.js';
 import { ENTRY_MAX_CHARS } from '../shared/textclean.js';
-import { buildStageTwo, aggregateGame, votesForPool, formatRaw } from '../server/games.js';
+import { buildStages, aggregateGame, votesForPool, formatRaw } from '../server/games.js';
 
 const rng = () => seededRng('caption-test');
 const stageOne = { prompt: 'A terrible name for a team offsite:' };
 
+// Caption Battle has exactly one stage after stage one; buildStages returns
+// the whole list, so unwrap it here and let the tests read as they always did.
+function stageTwo(entries, seeded = rng()) {
+  const built = buildStages('caption', entries, { rng: seeded, clientData: stageOne });
+  if (built) assert.equal(built.length, 1, 'caption runs exactly one stage after the first');
+  return built ? built[0] : null;
+}
+
 function build(texts) {
   const entries = texts.map((text, i) => ({ playerId: `p${i}`, payload: { text } }));
-  return { entries, built: buildStageTwo('caption', entries, { rng: rng(), clientData: stageOne }) };
+  return { entries, built: stageTwo(entries) };
 }
 
 // Cast ballots by AUTHOR name rather than entry id, so tests read the way the
@@ -133,10 +141,10 @@ test('a hidden entry is voided: no votes count, its author scores zero', () => {
 });
 
 test('degenerate pools: nobody wrote anything, or only one player did', () => {
-  assert.equal(buildStageTwo('caption', [], { rng: rng(), clientData: stageOne }), null,
+  assert.equal(stageTwo([]), null,
     '0 submissions: there is no second stage to run');
   const solo = [{ playerId: 'p0', payload: { text: 'the only answer' } }];
-  assert.equal(buildStageTwo('caption', solo, { rng: rng(), clientData: stageOne }), null,
+  assert.equal(stageTwo(solo), null,
     '1 submission: nothing to choose between');
 
   // With stage two skipped the caller aggregates stage one instead — the lone
@@ -165,9 +173,9 @@ test('two players: each can only vote for the other, and both are scored', () =>
 test('the pool shuffle is seeded — identical for every player, stable per round', () => {
   const texts = ['a', 'b', 'c', 'd', 'e', 'f'];
   const entries = texts.map((text, i) => ({ playerId: `p${i}`, payload: { text } }));
-  const once = buildStageTwo('caption', entries, { rng: rng(), clientData: stageOne });
-  const twice = buildStageTwo('caption', entries, { rng: rng(), clientData: stageOne });
+  const once = stageTwo(entries);
+  const twice = stageTwo(entries);
   assert.deepEqual(once.clientData.entries, twice.clientData.entries);
-  const different = buildStageTwo('caption', entries, { rng: seededRng('other'), clientData: stageOne });
+  const different = stageTwo(entries, seededRng('other'));
   assert.notDeepEqual(once.clientData.entries, different.clientData.entries);
 });
