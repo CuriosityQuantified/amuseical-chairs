@@ -260,8 +260,7 @@ function startMinigame(payload) {
   const totalStages = payload.totalStages || 1;
   const intro = typeof client.intro === 'function' ? client.intro(stage) : client.intro;
   content().append(
-    el('h2', {}, (payload.practice ? '🧪 PRACTICE — ' : payload.test ? '🔧 TEST — ' : '') + payload.gameName
-      + stageLabel(payload)),
+    el('h2', {}, (payload.test ? '🔧 TEST — ' : '') + payload.gameName + stageLabel(payload)),
     el('p', { class: 'muted' }, intro || '')
   );
   // Convert the server deadline to local time via the sync offset, then run
@@ -413,9 +412,6 @@ socket.on('phase', (p) => {
       break;
     case 'minigame':
       startMinigame(p);
-      break;
-    case 'practice_done':
-      renderWaiting('Practice over!', 'Host will start the games when everyone is ready.');
       break;
     case 'test_done': {
       const mine = (p.results || []).find((r) => r.id === state.playerId);

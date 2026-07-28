@@ -212,12 +212,6 @@ socket.on('phase', (p) => {
     case 'tutorial': renderTutorial(p); break;
     case 'minigame': renderMinigame(p); break;
     case 'reveal': renderReveal(p); break;
-    case 'practice_done':
-      content().replaceChildren(
-        el('h1', {}, '🧪 Practice complete'),
-        el('p', { class: 'muted' }, `${p.submitted} of ${p.total} submitted something. If someone was lost, fix it now.`),
-        el('p', {}, 'Press Next ▸ to start the games for real.'));
-      break;
     case 'test_done': renderTestDone(p); break;
     case 'scores': renderScores(p); break;
     case 'redemption': renderRedemption(p); break;
@@ -350,8 +344,7 @@ function stageLabel(p) {
 }
 
 function renderMinigame(p) {
-  const title = (p.practice ? '🧪 PRACTICE: ' : p.test ? '🔧 TEST: ' : '') + p.gameName
-    + stageLabel(p);
+  const title = (p.test ? '🔧 TEST: ' : '') + p.gameName + stageLabel(p);
   const parts = [
     el('h1', {}, title),
     el('p', { class: 'muted', style: 'font-size:20px' }, `${Math.round(p.duration / 1000)}s`),

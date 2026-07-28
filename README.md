@@ -172,19 +172,23 @@ enforced rather than remembered:
   `public/js/host.js` that is not on its allowlist, and on the two ends of
   that allowlist disagreeing.
 - `test/room.test.js` asserts the published keys and that a patch carrying
-  `practice` or `gamesPerSession` changes neither.
+  `gamesPerSession` changes nothing.
 
-Everything else — the practice round, `gamesPerSession`, the tutorial and
-pacing knobs, the early-press penalty, the slingshot distance — is an internal
-default. A room can be constructed with them (the bot harness runs a full
-session in seconds that way), but no host screen shows them. Two of them,
-`Games this session` and `Practice round first`, were removed once and grew
-back with a later feature; the checks above exist because nothing failed when
-they did. Adding a host option on purpose means changing the control, the
-allowlist in `scripts/check.mjs`, and `HOST_EDITABLE_CONFIG` together.
+Everything else — `gamesPerSession`, the tutorial and pacing knobs, the
+early-press penalty, the slingshot distance — is an internal default. A room
+can be constructed with them (the bot harness runs a full session in seconds
+that way), but no host screen shows them. `Games this session` and `Practice
+round first` were both host controls once and both grew back with a later
+feature; the checks above exist because nothing failed when they did. Adding a
+host option on purpose means changing the control, the allowlist in
+`scripts/check.mjs`, and `HOST_EDITABLE_CONFIG` together.
 
-Practical consequence: every hosted session runs the unscored practice round
-and plays all of its enabled games. To shorten a session, turn games off.
+**There is no practice round.** A session opens on game one, for points —
+`practice` is not a config key, `startPractice()` and the `practice_done`
+phase are gone, and `test/room.test.js` fails if a room ever enters one.
+Anyone who wants to shake a game out beforehand runs it from the lobby's
+**Solo test** buttons, which is what they are for. Every enabled game is
+played; to shorten a session, turn games off.
 
 ## Architecture
 

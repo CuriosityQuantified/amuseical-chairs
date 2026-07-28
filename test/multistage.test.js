@@ -47,7 +47,7 @@ function onlyGames(...keys) {
 }
 
 const FAST = {
-  practice: false, gameDuration: 400, musicMs: 40, tutorialMs: 0,
+  gameDuration: 400, musicMs: 40, tutorialMs: 0,
   redemptionPrepMs: 60, redemptionLeadMs: 120,
   postGreenTimeout: 600, hardTimeout: 1200, closeGraceMs: 150,
 };
