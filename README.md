@@ -208,7 +208,127 @@ shared/   pure logic used by server, client, and tests
 public/   host screen, player screen, 13 minigame clients
 test/     unit tests + room integration + 20-headless-bot harness
 scripts/  static checks run in CI
+graphify-out/  knowledge graph of this repo (see below)
 ```
+
+## Knowledge graph
+
+This repo carries a [graphify](https://github.com/Graphify-Labs/graphify) map of
+itself in `graphify-out/`, so a question about the codebase can be *asked*
+rather than grepped:
+
+```bash
+graphify query "how does clock sync and redemption scoring work?"
+graphify path "Room" "seededRng()"     # how two things connect
+graphify explain "Room"                # one concept and its 57 neighbours
+graphify affected "seededRng()"        # what breaks if this changes
+npm run graph:report                   # the god nodes, quickest look
+```
+
+`graphify-out/graph.html` is the same graph as a clickable force-directed map.
+`GRAPH_REPORT.md` is the prose version: god nodes, communities, the connections
+worth knowing, and the questions the graph is best placed to answer.
+
+One caveat on `graph.html`: it loads `vis-network` from unpkg, so unlike the
+rest of this repo it wants a network to render. That is graphify's output, not
+ours — `graph.json` and `GRAPH_REPORT.md` are entirely self-contained, and every
+`graphify` command works offline.
+
+`affected` earns its place here. This codebase has a standing rule that round
+content comes from the seeded RNG and never from `Math.random()`, enforced by
+`npm run check` — and `graphify affected "seededRng()"` lists the eight call
+sites in `server/room.js` plus the tests and `scripts/check.mjs` that depend on
+it, 20 nodes in all: the blast radius that rule exists to protect.
+
+### Setup
+
+```bash
+uv tool install "graphifyy[mcp]"   # or: pipx install "graphifyy[mcp]"
+npm run graph:setup                # skill, hooks, post-commit rebuild, merge driver
+```
+
+`graph:setup` is `graphify install --project && graphify hook install`, and it is
+the whole per-machine story. Take the `[mcp]` extra: without it the MCP server
+below cannot start.
+
+Committed, so it is there on clone: `.claude/skills/graphify/` (the `/graphify`
+skill), `.mcp.json`, and `.gitattributes`. Deliberately **not** committed: the
+`PreToolUse` hooks and the post-commit rebuild, because `graphify install` and
+`graphify hook install` both embed the absolute path of the interpreter that ran
+them — correct on one machine, a broken hook on every other. Those land in the
+gitignored `.claude/settings.local.json` and in `.git/hooks/`, which is why you
+run the setup yourself rather than inheriting someone else's paths.
+
+### The graph as tools, not commands
+
+`.mcp.json` registers graphify as a project MCP server, so an assistant working
+in this repo gets the graph as **native tools** — `query_graph`, `shortest_path`,
+`get_node`, `get_neighbors`, `get_community`, `god_nodes`, `graph_stats` — rather
+than a bash incantation it has to remember. That is the difference between a
+graph that gets used and a graph that gets documented.
+
+The soft `PreToolUse` nudge stays advisory on top of it: it reminds, it never
+blocks. Nothing in this repo denies you a plain `grep`.
+
+### Why merges don't rot it
+
+`.gitattributes` assigns `graphify-out/graph.json` a union merge driver, because
+that file is ~13k lines of JSON that two branches will both touch. Without the
+driver every branch merge is a conflict in a generated file, and the realistic
+outcome of that is not careful conflict resolution — it is somebody deleting the
+graph. `npm run graph:setup` registers the driver half in your git config; git
+falls back to an ordinary text merge if you skipped it, so the committed
+`.gitattributes` is safe either way.
+
+### Keeping it current
+
+```bash
+npm run graph            # graphify update .  — AST only, no API key, no cost
+npm run graph:rebuild    # graphify extract . — also re-reads docs, needs a backend
+```
+
+- **The code half is deterministic and free.** Every code node and edge comes
+  from a local tree-sitter parse: no API calls, nothing leaves the machine, same
+  input same output. That is the half `npm run graph` refreshes, and it is the
+  half that matters after a normal change.
+- **Two things here did use an LLM:** the semantic pass over the 5 non-code
+  files (`README.md`, `.claude-progress.md`, both HTML screens, the CI
+  workflow), and the community names. Neither is needed to query the graph.
+- **Community names drift.** Leiden clustering is not perfectly stable, so a
+  rebuild can shuffle communities and fall back to naming a few after their hub
+  node. `graphify label .` renames them; nothing else is affected.
+- **`npm run check` fails on a stale graph, and CI runs it.** Rule 7 compares
+  every indexed file against the content hash the graph was built from, kept in
+  `graphify-out/graph-lock.json`. Edit a module, delete one, or add one without
+  refreshing, and the build tells you to run `npm run graph`. This is the same
+  bet as the host-config allowlist: a stale graph looks right from every angle
+  and answers wrong, so something has to say otherwise.
+- **Freshness is checked by hash, not by commit.** Two tempting versions of that
+  rule are both broken, and it is worth knowing why before rewriting it.
+  `GRAPH_REPORT.md` records the commit the graph was built from and *cannot*
+  record the commit that adds it, so comparing against `HEAD` always reads one
+  behind. Requiring `graph.json` in the same diff as the code is worse: it is
+  satisfied by whichever commit first added the graph and then passes forever —
+  the rule was written that way first, and the mutation test caught it. And
+  rebuilding inside CI to diff would be flaky, because clustering isn't stable.
+- **The post-commit hook does the refresh for you.** `npm run graph:setup`
+  installs it; after each commit the code half rebuilds and you commit the
+  result. Rule 7 looks at the working tree, not a commit range, so it does not
+  care whether the graph rides along in the same commit or the next one.
+
+### What is deliberately not in the graph
+
+`.graphifyignore` holds the exclusions, and one is worth explaining.
+`public/vendor/` is 2MB of vendored three.js against roughly 300KB of this
+project. Indexed, it wins outright: the god nodes come back `Vector3`,
+`WebGLRenderer`, `Object3D`, `Matrix4`, and `Room` — the actual centre of this
+system — places third. A graph of this codebase is a graph of the code this repo
+is answerable for, so the vendored library, graphify's own 124KB of skill
+documentation, and `package-lock.json` all stay out. What remains is a few
+hundred nodes across a couple dozen communities, and `Room` sits at the top of it
+where it belongs. `GRAPH_REPORT.md` carries the exact counts — quoting them in
+prose is a losing game, since editing this paragraph changes the graph that
+describes it.
 
 ## CI
 
@@ -227,8 +347,11 @@ The workflow runs:
   player's phone), verifies every roster game has both a client and a
   tutorial and that multi-stage games are wired end to end, rejects
   `Math.random()` in server or shared code — round content must come from the
-  seeded RNG or the room silently desyncs — and holds the host config panel to
-  its one knob (see *Host config* above).
+  seeded RNG or the room silently desyncs — holds the host config panel to
+  its one knob (see *Host config* above), and fails when the committed knowledge
+  graph has gone stale against the code it describes (see *Knowledge graph*).
+  That last rule compares file hashes rather than git history, so it needs no
+  extra checkout depth and holds in a shallow clone.
 - **Tests** on Node 20, 22 and 24. Every bug in this system is a 20-player
   concurrency bug, and those surface differently across Node's timer and
   socket behaviour.
