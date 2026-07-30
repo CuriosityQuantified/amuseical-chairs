@@ -2,13 +2,18 @@ node_modules/
 npm-debug.log*
 .DS_Store
 
-# graphify: the three artifacts in graphify-out/ are committed on purpose —
-# graph.json is what `graphify query` reads, so a fresh clone can query the
-# codebase without rebuilding it. Everything below is either machine-specific
-# or regenerable, and rebuilds on the next `graphify update .`.
+# graphify: graph.json, graph.html, GRAPH_REPORT.md and graph-lock.json are
+# committed on purpose — graph.json is what `graphify query` reads, so a fresh
+# clone can query the codebase without rebuilding it, and graph-lock.json is how
+# `npm run check` knows the graph still matches the code. Everything below is
+# either machine-specific or regenerable, and rebuilds on the next
+# `graphify update .`.
 graphify-out/.graphify_root
 graphify-out/.graphify_analysis.json
 graphify-out/.graphify_semantic_marker
+# The manifest carries per-file mtimes, which are checkout time on a fresh clone:
+# committing it would make every machine's first rebuild rewrite all 40 entries.
+# scripts/graph-lock.mjs distils the part that matters into graph-lock.json.
 graphify-out/manifest.json
 graphify-out/cache/
 graphify-out/memory/

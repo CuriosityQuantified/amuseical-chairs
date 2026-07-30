@@ -10,10 +10,11 @@
 //
 // Run with `npm run check`. No dependencies — this repo stays install-light.
 
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { ROSTER, MULTI_STAGE, NEEDS_AGGREGATION } from '../server/games.js';
 import { HOST_EDITABLE_CONFIG } from '../server/room.js';
 
@@ -211,6 +212,75 @@ for (const key of HOST_EDITABLE_CONFIG) {
 for (const key of controlKeys) {
   if (!HOST_EDITABLE_CONFIG.has(key)) {
     fail('server/room.js', `host controls write "${key}", which HOST_EDITABLE_CONFIG does not accept`);
+  }
+}
+
+// ---- 7. the knowledge graph gets refreshed with the code --------------------
+// graphify-out/graph.json is committed so a fresh clone can query the codebase
+// without rebuilding it. That only holds while it is current, and a stale graph
+// is the same failure mode as the host config panel: it looks right from every
+// angle, nothing errors, and the answers are quietly wrong.
+//
+// The check is on CONTENT, and the two obvious alternatives both fail. Comparing
+// the graph's `built_at_commit` against HEAD cannot work: the graph records the
+// commit it was built from and can never record the commit that adds it, so a
+// single commit carrying both always looks one behind. Requiring graph.json to
+// appear in the same diff as the code is worse — it is satisfied by whichever
+// commit first added the graph and then passes forever (this rule was written
+// that way and the mutation test caught it). And rebuilding here to diff would
+// be flaky, because Leiden clustering is not stable: identical code re-clusters
+// into a different community count run to run.
+//
+// So compare hashes. graphify MD5s every file it indexes; `npm run graph` distils
+// those into graphify-out/graph-lock.json (see scripts/graph-lock.mjs). A file
+// whose content no longer matches the hash the graph was built from is a file the
+// graph describes wrongly, which is exactly the condition worth failing on. No
+// git history needed, so it holds in a shallow clone and on a tarball too.
+const LOCK_PATH = 'graphify-out/graph-lock.json';
+if (!existsSync(join(ROOT, 'graphify-out/graph.json'))) {
+  fail('graphify-out/graph.json',
+    'missing — the committed graph is what `graphify query` reads; run `npm run graph:rebuild`');
+} else if (!existsSync(join(ROOT, LOCK_PATH))) {
+  fail(LOCK_PATH, 'missing — run `npm run graph` to regenerate it from graphify\'s manifest');
+} else {
+  const lock = JSON.parse(read(LOCK_PATH));
+  const locked = lock.files || {};
+  const md5 = (rel) => createHash('md5').update(readFileSync(join(ROOT, rel))).digest('hex');
+  const stale = [];
+  const semanticBehind = [];
+  // Only the LLM pass puts a doc in the graph at all, and only `npm run
+  // graph:rebuild` (which needs a backend) can refresh it — so a doc drifting
+  // from its semantic hash is a warning, never a failed build. Code is judged on
+  // its AST hash alone, which `npm run graph` fixes for free.
+  const SEMANTIC_ONLY = /\.(md|html|ya?ml)$/;
+
+  for (const [rel, entry] of Object.entries(locked)) {
+    if (!existsSync(join(ROOT, rel))) {
+      stale.push(`${rel} (indexed, now deleted)`);
+      continue;
+    }
+    const current = md5(rel);
+    if (current !== entry.ast) stale.push(rel);
+    else if (SEMANTIC_ONLY.test(rel) && entry.semantic !== current) semanticBehind.push(rel);
+  }
+  // The other direction: a module added without a graph refresh is absent from
+  // the lock entirely, so hash comparison alone would never notice it.
+  for (const file of files) {
+    if (!(file in locked)) stale.push(`${file} (new, never indexed)`);
+  }
+
+  if (stale.length) {
+    const shown = stale.slice(0, 6).join(', ');
+    const more = stale.length > 6 ? ` (+${stale.length - 6} more)` : '';
+    fail(LOCK_PATH,
+      `the knowledge graph is stale against ${stale.length} file(s) — ${shown}${more}. ` +
+      'Run `npm run graph` and stage graphify-out/');
+  }
+  if (semanticBehind.length) {
+    console.warn(
+      `! ${semanticBehind.length} doc(s) changed since the last semantic pass: ` +
+      `${semanticBehind.join(', ')}. Their nodes still describe the old text — ` +
+      'run `npm run graph:rebuild` with an LLM backend when convenient. Not a failure.');
   }
 }
 

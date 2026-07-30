@@ -1,0 +1,164 @@
+{
+  "files": {
+    ".claude-progress.md": {
+      "ast": "c1d635966f3ecbd06d13eeebe687ad05",
+      "semantic": "c1d635966f3ecbd06d13eeebe687ad05"
+    },
+    ".github/workflows/ci.yml": {
+      "ast": "05b54eaee6eb7c8d8872d447bdaef710",
+      "semantic": "05b54eaee6eb7c8d8872d447bdaef710"
+    },
+    ".mcp.json": {
+      "ast": "1537a1504800a15fb24708220ea31081",
+      "semantic": "1537a1504800a15fb24708220ea31081"
+    },
+    "README.md": {
+      "ast": "7f1139b87cae9446f46a3e80f42f7330",
+      "semantic": "7f1139b87cae9446f46a3e80f42f7330"
+    },
+    "package.json": {
+      "ast": "78a566a0da4d3553bc4465e2366a3224",
+      "semantic": "78a566a0da4d3553bc4465e2366a3224"
+    },
+    "public/host.html": {
+      "ast": "89b91b83d6e6f5356b2edd93b3cb66aa",
+      "semantic": "89b91b83d6e6f5356b2edd93b3cb66aa"
+    },
+    "public/index.html": {
+      "ast": "a275c5b81046ca7131cb19076b2dce52",
+      "semantic": "a275c5b81046ca7131cb19076b2dce52"
+    },
+    "public/js/chairs.js": {
+      "ast": "f8ab4b1157d4b0554ae6cbe0c08f8a84",
+      "semantic": "f8ab4b1157d4b0554ae6cbe0c08f8a84"
+    },
+    "public/js/games.js": {
+      "ast": "27374355ffbe0bd749201ca73ba2e8ac",
+      "semantic": "27374355ffbe0bd749201ca73ba2e8ac"
+    },
+    "public/js/host.js": {
+      "ast": "0d6c9d9c55888b386448e2f3ccaefdef",
+      "semantic": "0d6c9d9c55888b386448e2f3ccaefdef"
+    },
+    "public/js/player.js": {
+      "ast": "ee270d24997029ca7729da28033a0be1",
+      "semantic": "ee270d24997029ca7729da28033a0be1"
+    },
+    "public/js/sync.js": {
+      "ast": "3d9aa8d2aabb42cdc226c0dc852c93f2",
+      "semantic": "3d9aa8d2aabb42cdc226c0dc852c93f2"
+    },
+    "public/js/tutorials.js": {
+      "ast": "3003f9b036766ae5ec73c99f3b1fab43",
+      "semantic": "3003f9b036766ae5ec73c99f3b1fab43"
+    },
+    "scripts/check.mjs": {
+      "ast": "9176a59f383009828f9e19e96b8d24d8",
+      "semantic": "9176a59f383009828f9e19e96b8d24d8"
+    },
+    "scripts/graph-lock.mjs": {
+      "ast": "f9e3038f3ccd50b0170573b01a909c0e",
+      "semantic": "f9e3038f3ccd50b0170573b01a909c0e"
+    },
+    "server/app.js": {
+      "ast": "24c1b81e5113a5aa4edaa98f2ffce2c1",
+      "semantic": "24c1b81e5113a5aa4edaa98f2ffce2c1"
+    },
+    "server/games.js": {
+      "ast": "747cf8e52d4342e540adebc6cbb6fc04",
+      "semantic": "747cf8e52d4342e540adebc6cbb6fc04"
+    },
+    "server/index.js": {
+      "ast": "f9bcb5a92468425b887f7d6ed3da4eb4",
+      "semantic": "f9bcb5a92468425b887f7d6ed3da4eb4"
+    },
+    "server/room.js": {
+      "ast": "ebcccd0f2abdbac7b14aaca48812cc2e",
+      "semantic": "ebcccd0f2abdbac7b14aaca48812cc2e"
+    },
+    "server/sockets.js": {
+      "ast": "a2a754f11c5b4ca162cf5931093f9cd0",
+      "semantic": "a2a754f11c5b4ca162cf5931093f9cd0"
+    },
+    "shared/ciede2000.js": {
+      "ast": "7f4c060e6080ff88d740e6b4e2d72237",
+      "semantic": "7f4c060e6080ff88d740e6b4e2d72237"
+    },
+    "shared/cluster.js": {
+      "ast": "2e5c2576f55f9b2973872e41e508e3d6",
+      "semantic": "2e5c2576f55f9b2973872e41e508e3d6"
+    },
+    "shared/normalize.js": {
+      "ast": "716ae08ad662b9426abd41f9221e0fc8",
+      "semantic": "716ae08ad662b9426abd41f9221e0fc8"
+    },
+    "shared/presscounter.js": {
+      "ast": "1c06ce2e24f36647698104a9cefe3494",
+      "semantic": "1c06ce2e24f36647698104a9cefe3494"
+    },
+    "shared/redemption-core.js": {
+      "ast": "20bdd19ffca1963ec231d8bf1cf16a60",
+      "semantic": "20bdd19ffca1963ec231d8bf1cf16a60"
+    },
+    "shared/rng.js": {
+      "ast": "351b6134407218b5e0bd36421b2881fd",
+      "semantic": "351b6134407218b5e0bd36421b2881fd"
+    },
+    "shared/textclean.js": {
+      "ast": "3d75f7a898bd0031acbff72bc333a027",
+      "semantic": "3d75f7a898bd0031acbff72bc333a027"
+    },
+    "test/caption.test.js": {
+      "ast": "992130741f237dc10beb1c0413630e67",
+      "semantic": "992130741f237dc10beb1c0413630e67"
+    },
+    "test/ciede2000.test.js": {
+      "ast": "68cbf83e2fa68f2b47af71a13e319627",
+      "semantic": "68cbf83e2fa68f2b47af71a13e319627"
+    },
+    "test/cluster.test.js": {
+      "ast": "c1a78e9382ffdab8c72dc66cd83dfcad",
+      "semantic": "c1a78e9382ffdab8c72dc66cd83dfcad"
+    },
+    "test/fakeclock.js": {
+      "ast": "e32e5d490281581fcef70cdcdb60c8b0",
+      "semantic": "e32e5d490281581fcef70cdcdb60c8b0"
+    },
+    "test/harness.test.js": {
+      "ast": "c9da2ec3b373a23337a425666fee24ad",
+      "semantic": "c9da2ec3b373a23337a425666fee24ad"
+    },
+    "test/icebreaker.test.js": {
+      "ast": "958da69ee3fd132739084c56db6257a0",
+      "semantic": "958da69ee3fd132739084c56db6257a0"
+    },
+    "test/multistage.test.js": {
+      "ast": "ee1ec4cc31c22fab2242e28887114a2e",
+      "semantic": "ee1ec4cc31c22fab2242e28887114a2e"
+    },
+    "test/normalize.test.js": {
+      "ast": "2b51657d6554e84ea82dd84ebfab9e69",
+      "semantic": "2b51657d6554e84ea82dd84ebfab9e69"
+    },
+    "test/presscounter.test.js": {
+      "ast": "0fd107fe9780bb836e13c1f9b3c6e06d",
+      "semantic": "0fd107fe9780bb836e13c1f9b3c6e06d"
+    },
+    "test/redemption.test.js": {
+      "ast": "307b23a14e2dbfd1e9b4c96196ee4af1",
+      "semantic": "307b23a14e2dbfd1e9b4c96196ee4af1"
+    },
+    "test/room.test.js": {
+      "ast": "090730fd5bd50643cea6369ab4e5c184",
+      "semantic": "090730fd5bd50643cea6369ab4e5c184"
+    },
+    "test/smoke.test.js": {
+      "ast": "a1a14e9592e27da009d4b90de8e51da4",
+      "semantic": "a1a14e9592e27da009d4b90de8e51da4"
+    },
+    "test/textclean.test.js": {
+      "ast": "eba65528d9fbadcebe5a9d003c4c22e5",
+      "semantic": "eba65528d9fbadcebe5a9d003c4c22e5"
+    }
+  }
+}

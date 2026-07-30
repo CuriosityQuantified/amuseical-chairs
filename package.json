@@ -10,9 +10,10 @@
     "start": "node server/index.js",
     "check": "node scripts/check.mjs",
     "test": "node --test test/*.test.js",
-    "graph": "graphify update .",
-    "graph:rebuild": "graphify extract .",
-    "graph:report": "graphify god-nodes --top 15"
+    "graph": "graphify update . && node scripts/graph-lock.mjs",
+    "graph:rebuild": "graphify extract . && node scripts/graph-lock.mjs",
+    "graph:report": "graphify god-nodes --top 15",
+    "graph:setup": "graphify install --project && graphify hook install"
   },
   "dependencies": {
     "express": "^4.19.2",
