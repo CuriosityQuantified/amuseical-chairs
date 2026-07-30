@@ -1,0 +1,21 @@
+# What graphify should not map. .gitignore is honoured too, so node_modules/
+# is already out; this file is for things that are tracked but are not this
+# project's own knowledge.
+
+# graphify's own install artifacts: ~124KB of vendored markdown about graphify,
+# which would otherwise dominate a graph of a party game, plus its hook config.
+.claude/
+CLAUDE.md
+
+# graphify's own output, including the report it just wrote.
+graphify-out/
+
+# A dependency lockfile is a manifest, not a concept map.
+package-lock.json
+
+# Vendored three.js — 2MB of somebody else's library against ~300KB of this
+# project. Left in, it wins: the god nodes come back Vector3, WebGLRenderer,
+# Object3D, and the one real answer (Room) places third. A graph of this
+# codebase is a graph of the code this repo is responsible for.
+public/vendor/
+

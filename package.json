@@ -9,7 +9,10 @@
   "scripts": {
     "start": "node server/index.js",
     "check": "node scripts/check.mjs",
-    "test": "node --test test/*.test.js"
+    "test": "node --test test/*.test.js",
+    "graph": "graphify update .",
+    "graph:rebuild": "graphify extract .",
+    "graph:report": "graphify god-nodes --top 15"
   },
   "dependencies": {
     "express": "^4.19.2",

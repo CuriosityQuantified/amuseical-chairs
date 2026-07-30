@@ -208,7 +208,79 @@ shared/   pure logic used by server, client, and tests
 public/   host screen, player screen, 13 minigame clients
 test/     unit tests + room integration + 20-headless-bot harness
 scripts/  static checks run in CI
+graphify-out/  knowledge graph of this repo (see below)
 ```
+
+## Knowledge graph
+
+This repo carries a [graphify](https://github.com/Graphify-Labs/graphify) map of
+itself in `graphify-out/`, so a question about the codebase can be *asked*
+rather than grepped:
+
+```bash
+graphify query "how does clock sync and redemption scoring work?"
+graphify path "Room" "seededRng()"     # how two things connect
+graphify explain "Room"                # one concept and its 57 neighbours
+graphify affected "seededRng()"        # what breaks if this changes
+npm run graph:report                   # the god nodes, quickest look
+```
+
+`graphify-out/graph.html` is the same graph as a clickable force-directed map.
+`GRAPH_REPORT.md` is the prose version: god nodes, communities, the connections
+worth knowing, and the questions the graph is best placed to answer.
+
+`affected` earns its place here. This codebase has a standing rule that round
+content comes from the seeded RNG and never from `Math.random()`, enforced by
+`npm run check` — and `graphify affected "seededRng()"` lists the six call sites
+in `server/room.js` plus the tests and `scripts/check.mjs` that depend on it,
+which is the blast radius that rule exists to protect.
+
+### Setup
+
+```bash
+uv tool install graphifyy      # or: pipx install graphifyy
+graphify install --project     # registers the /graphify skill for this repo
+```
+
+`.claude/skills/graphify/` is committed, so the skill is there on clone. The
+`PreToolUse` hooks are not: `graphify install` embeds the absolute path of the
+interpreter that installed it, which is correct on one machine and a broken hook
+on every other, so they land in the gitignored `.claude/settings.local.json`.
+Run the install yourself and you get hooks with your own paths.
+
+### Keeping it current
+
+```bash
+npm run graph            # graphify update .  — AST only, no API key, no cost
+npm run graph:rebuild    # graphify extract . — also re-reads docs, needs a backend
+```
+
+- **The code half is deterministic and free.** Every code node and edge comes
+  from a local tree-sitter parse: no API calls, nothing leaves the machine, same
+  input same output. That is the half `npm run graph` refreshes, and it is the
+  half that matters after a normal change.
+- **Two things here did use an LLM:** the semantic pass over the 5 non-code
+  files (`README.md`, `.claude-progress.md`, both HTML screens, the CI
+  workflow), and the community names. Neither is needed to query the graph.
+- **Community names drift.** Leiden clustering is not perfectly stable, so a
+  rebuild can shuffle communities and fall back to naming a few after their hub
+  node. `graphify label .` renames them; nothing else is affected.
+- **The graph is one commit behind by construction** — `GRAPH_REPORT.md` records
+  the commit it was built from, and it cannot record the commit that adds it.
+  `graphify hook install` wires a post-commit rebuild if you want it local; CI
+  deliberately does not gate on graph freshness, because a stale graph is a
+  stale map, not a broken game.
+
+### What is deliberately not in the graph
+
+`.graphifyignore` holds the exclusions, and one is worth explaining.
+`public/vendor/` is 2MB of vendored three.js against roughly 300KB of this
+project. Indexed, it wins outright: the god nodes come back `Vector3`,
+`WebGLRenderer`, `Object3D`, `Matrix4`, and `Room` — the actual centre of this
+system — places third. A graph of this codebase is a graph of the code this repo
+is answerable for, so the vendored library, graphify's own 124KB of skill
+documentation, and `package-lock.json` all stay out. What remains is 345 nodes
+across 19 communities, and `Room` sits at the top of it where it belongs.
 
 ## CI
 
