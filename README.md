@@ -229,6 +229,11 @@ npm run graph:report                   # the god nodes, quickest look
 `GRAPH_REPORT.md` is the prose version: god nodes, communities, the connections
 worth knowing, and the questions the graph is best placed to answer.
 
+One caveat on `graph.html`: it loads `vis-network` from unpkg, so unlike the
+rest of this repo it wants a network to render. That is graphify's output, not
+ours — `graph.json` and `GRAPH_REPORT.md` are entirely self-contained, and every
+`graphify` command works offline.
+
 `affected` earns its place here. This codebase has a standing rule that round
 content comes from the seeded RNG and never from `Math.random()`, enforced by
 `npm run check` — and `graphify affected "seededRng()"` lists the eight call
