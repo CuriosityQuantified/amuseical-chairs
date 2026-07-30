@@ -231,9 +231,9 @@ worth knowing, and the questions the graph is best placed to answer.
 
 `affected` earns its place here. This codebase has a standing rule that round
 content comes from the seeded RNG and never from `Math.random()`, enforced by
-`npm run check` — and `graphify affected "seededRng()"` lists the six call sites
-in `server/room.js` plus the tests and `scripts/check.mjs` that depend on it,
-which is the blast radius that rule exists to protect.
+`npm run check` — and `graphify affected "seededRng()"` lists the eight call
+sites in `server/room.js` plus the tests and `scripts/check.mjs` that depend on
+it, 20 nodes in all: the blast radius that rule exists to protect.
 
 ### Setup
 
@@ -279,8 +279,8 @@ project. Indexed, it wins outright: the god nodes come back `Vector3`,
 `WebGLRenderer`, `Object3D`, `Matrix4`, and `Room` — the actual centre of this
 system — places third. A graph of this codebase is a graph of the code this repo
 is answerable for, so the vendored library, graphify's own 124KB of skill
-documentation, and `package-lock.json` all stay out. What remains is 345 nodes
-across 19 communities, and `Room` sits at the top of it where it belongs.
+documentation, and `package-lock.json` all stay out. What remains is 361 nodes
+across 21 communities, and `Room` sits at the top of it where it belongs.
 
 ## CI
 
