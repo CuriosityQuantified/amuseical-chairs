@@ -183,6 +183,15 @@ const ICEBREAKER_PROMPTS = [
   'A thing you have done exactly once and never again:',
 ];
 
+// Metronome Blackout's tempo bank: every whole millisecond in 400–900ms that
+// is NOT a whole number of BPM (60000 / intervalMs). A round 100 or 120 BPM is
+// something a player can type into any metronome app; 673ms is not, and it has
+// to be matched in phase as well as tempo, inside one 45-second round. That
+// makes the obvious external tool impractical rather than impossible — an
+// accepted trade, and the honest version of "you cannot cheat this".
+const METRONOME_INTERVALS = [];
+for (let ms = 400; ms <= 900; ms++) if (60000 % ms !== 0) METRONOME_INTERVALS.push(ms);
+
 export const ROSTER = [
   { key: 'rgb', name: 'RGB Color Match', category: 'perceptual', type: 'error' },
   { key: 'oddoneout', name: 'Odd One Out', category: 'perceptual', type: 'score' },
@@ -190,6 +199,7 @@ export const ROSTER = [
   { key: 'trace', name: 'Trace the Shape', category: 'perceptual', type: 'error' },
   { key: 'dots', name: 'Dots in the Jar', category: 'numerical', type: 'error' },
   { key: 'stopclock', name: 'Stop the Clock', category: 'timing', type: 'error' },
+  { key: 'metronome', name: 'Metronome Blackout', category: 'timing', type: 'error' },
   { key: 'gridflash', name: 'Grid Flash', category: 'memory', type: 'error' },
   { key: 'readroom', name: 'Read the Room', category: 'social', type: 'error' },
   { key: 'caption', name: 'Caption Battle', category: 'social', type: 'score', stages: 2 },
@@ -283,6 +293,14 @@ export function buildGameData(key, ctx) {
       const targetMs = randInt(rng, 12, 20) * 500;
       return { clientData: { targetMs, visibleMs: 3000, attempts: 2 }, secret: {} };
     }
+    case 'metronome':
+      // Four beats play, then silence, and the player taps the next eight.
+      // There is no secret half: intervalMs implies the whole grid, and the
+      // player has just heard it — hiding it would hide nothing.
+      return {
+        clientData: { intervalMs: pick(rng, METRONOME_INTERVALS), leadInBeats: 4, silentBeats: 8 },
+        secret: {},
+      };
     case 'gridflash': {
       // 6–9 lit cells per round — pattern size varies between sessions.
       const patterns = [0, 1].map(() =>
@@ -567,6 +585,35 @@ export function computeMetric(key, payload, secret, clientData, config) {
       if (best == null || best < 0) return null;
       return clamp(best, 0, 60000);
     }
+    case 'metronome': {
+      // payload.offsets: ms from the LAST lead-in beat to each tap, in the
+      // order they were made, so the nth scored beat is due at intervalMs * n.
+      //
+      // Taps are consumed IN ORDER rather than matched to whichever beat they
+      // happen to sit nearest. That is the whole defence against mashing: the
+      // eighth tap is judged against the eighth beat wherever it landed, so
+      // filling the window with taps buys a worse average, never a better one.
+      if (!Array.isArray(payload.offsets)) return null;
+      const { intervalMs, silentBeats } = clientData;
+      const taps = payload.offsets
+        .map((v) => num(v))
+        .filter((v) => v != null)
+        .slice(0, silentBeats);   // extra taps past the last beat are ignored
+      // Not one usable tap: this player did not play the game. Scoring them as
+      // maximally bad would drag the P90 clamp for everyone who did (§4 —
+      // normalize across the players who played it), so they are a
+      // non-submission, the same way bisect treats an all-blank sheet.
+      if (!taps.length) return null;
+      let sum = 0;
+      for (let i = 0; i < silentBeats; i++) {
+        // A beat never tapped costs one full interval — exactly what the most
+        // wrong possible tap costs, so skipping a beat is never the cheaper
+        // option, and one wild tap cannot swamp seven good ones.
+        const dev = i < taps.length ? Math.abs(taps[i] - intervalMs * (i + 1)) : intervalMs;
+        sum += Math.min(dev, intervalMs);
+      }
+      return sum / silentBeats;   // mean absolute deviation, ms; ≤ intervalMs
+    }
     case 'gridflash': {
       if (!Array.isArray(payload.picks)) return null;
       let total = 0;
@@ -745,6 +792,7 @@ export function formatRaw(key, metric, payload) {
     case 'trace': return `${(metric * 100).toFixed(1)}% dev`;
     case 'dots': return `${(metric * 100).toFixed(0)}% off`;
     case 'stopclock': return `${Math.round(metric)} ms off`;
+    case 'metronome': return `${Math.round(metric)} ms avg off`;
     case 'gridflash': return `${metric} cells off`;
     case 'readroom': return `${metric.toFixed(0)} pts off`;
     case 'caption': return `${metric} vote${metric === 1 ? '' : 's'}`;

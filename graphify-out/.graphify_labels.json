@@ -1,1 +1,24 @@
-{"0": "Game Room Lifecycle", "1": "Game Data Aggregation", "2": "Host Control Validation Script", "3": "Host UI Lobby Setup", "4": "Player Client Sync UI", "5": "Project Dependencies", "6": "Server Bootstrap & Test Harness", "7": "Multi-Game Integration Tests", "8": "Game Canvas Client Utils", "9": "Tutorial Drawing Animations", "10": "Musical Chairs Game", "11": "Project Docs & Progress Log", "12": "Answer Clustering Logic", "13": "Graph Lock File", "14": "CI Workflow Jobs", "15": "Clock Sync Utility", "16": "Press Counter Utility", "17": "Graphify MCP Config", "18": "Claude Skill Docs", "19": "Host Screen UI", "20": "Player Join/Play Screen"}
+{
+  "0": "Room",
+  "1": "server/games.js",
+  "2": "check.mjs",
+  "3": "Host UI Lobby Setup",
+  "4": "Player Client Sync UI",
+  "5": "Project Dependencies",
+  "6": "Server Bootstrap & Test Harness",
+  "7": "multistage.test.js",
+  "8": "js/games.js",
+  "9": "Tutorial Drawing Animations",
+  "10": "Musical Chairs Game",
+  "11": "Project Docs & Progress Log",
+  "12": "Answer Clustering Logic",
+  "13": "Graph Lock File",
+  "14": "CI Workflow Jobs",
+  "15": "Clock Sync Utility",
+  "16": "Press Counter Utility",
+  "17": "Graphify MCP Config",
+  "18": "Claude Skill Docs",
+  "19": "Host Screen UI",
+  "20": "Player Join/Play Screen",
+  "21": "redemption.test.js"
+}

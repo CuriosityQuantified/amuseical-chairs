@@ -72,6 +72,14 @@ function botPayload(key, data, rnd, stage = 1, bot = null) {
     case 'trace': return { deviation: 0.01 + rnd() * 0.08, coverage: 0.92 + rnd() * 0.08 };
     case 'dots': return { guesses: data.counts.map((c) => Math.max(1, Math.round(c * (0.5 + rnd())))) };
     case 'stopclock': return { best: rnd() * 1500 };
+    // Keeps the beat with human jitter: the nth beat is due at intervalMs * n
+    // after the count-in, ±80ms. A bot that mashed instead would score the
+    // floor — that property is pinned deterministically in metronome.test.js
+    // rather than here, where every bot's payload is random.
+    case 'metronome': return {
+      offsets: [...Array(data.silentBeats)].map(
+        (_, i) => data.intervalMs * (i + 1) + (rnd() * 160 - 80)),
+    };
     case 'gridflash': return { picks: data.patterns.map(() => [...Array(8)].map(() => Math.floor(rnd() * 25))) };
     case 'readroom': return { answer: rnd() < 0.5, prediction: Math.floor(rnd() * 101) };
     case 'typing': return { typed: data.sentence.slice(0, 5 + Math.floor(rnd() * data.sentence.length)), elapsedMs: 15000 + rnd() * 20000 };

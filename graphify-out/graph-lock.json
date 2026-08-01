@@ -1,8 +1,8 @@
 {
   "files": {
     ".claude-progress.md": {
-      "ast": "c1d635966f3ecbd06d13eeebe687ad05",
-      "semantic": "c1d635966f3ecbd06d13eeebe687ad05"
+      "ast": "72dd0ac12a2d93fa2d8f5cb18fd713a7",
+      "semantic": null
     },
     ".github/workflows/ci.yml": {
       "ast": "05b54eaee6eb7c8d8872d447bdaef710",
@@ -13,8 +13,8 @@
       "semantic": "1537a1504800a15fb24708220ea31081"
     },
     "README.md": {
-      "ast": "7f1139b87cae9446f46a3e80f42f7330",
-      "semantic": "7f1139b87cae9446f46a3e80f42f7330"
+      "ast": "79ae02ad4e49332f3d077e7b4c172834",
+      "semantic": null
     },
     "package.json": {
       "ast": "78a566a0da4d3553bc4465e2366a3224",
@@ -33,8 +33,8 @@
       "semantic": "f8ab4b1157d4b0554ae6cbe0c08f8a84"
     },
     "public/js/games.js": {
-      "ast": "27374355ffbe0bd749201ca73ba2e8ac",
-      "semantic": "27374355ffbe0bd749201ca73ba2e8ac"
+      "ast": "473ce5598f3ec640522904ee650daa84",
+      "semantic": null
     },
     "public/js/host.js": {
       "ast": "0d6c9d9c55888b386448e2f3ccaefdef",
@@ -49,24 +49,24 @@
       "semantic": "3d9aa8d2aabb42cdc226c0dc852c93f2"
     },
     "public/js/tutorials.js": {
-      "ast": "3003f9b036766ae5ec73c99f3b1fab43",
-      "semantic": "3003f9b036766ae5ec73c99f3b1fab43"
+      "ast": "bc12778662dd191408ce4fa81db745f1",
+      "semantic": null
     },
     "scripts/check.mjs": {
       "ast": "9176a59f383009828f9e19e96b8d24d8",
       "semantic": "9176a59f383009828f9e19e96b8d24d8"
     },
     "scripts/graph-lock.mjs": {
-      "ast": "f9e3038f3ccd50b0170573b01a909c0e",
-      "semantic": "f9e3038f3ccd50b0170573b01a909c0e"
+      "ast": "43afb726a4cc1ae7db786249cc2e9b35",
+      "semantic": null
     },
     "server/app.js": {
       "ast": "24c1b81e5113a5aa4edaa98f2ffce2c1",
       "semantic": "24c1b81e5113a5aa4edaa98f2ffce2c1"
     },
     "server/games.js": {
-      "ast": "747cf8e52d4342e540adebc6cbb6fc04",
-      "semantic": "747cf8e52d4342e540adebc6cbb6fc04"
+      "ast": "15835d7a586b9f01489c986c5891047c",
+      "semantic": null
     },
     "server/index.js": {
       "ast": "f9bcb5a92468425b887f7d6ed3da4eb4",
@@ -125,12 +125,16 @@
       "semantic": "e32e5d490281581fcef70cdcdb60c8b0"
     },
     "test/harness.test.js": {
-      "ast": "c9da2ec3b373a23337a425666fee24ad",
-      "semantic": "c9da2ec3b373a23337a425666fee24ad"
+      "ast": "ab887c174510fe9e84d99ac0b7f65852",
+      "semantic": null
     },
     "test/icebreaker.test.js": {
       "ast": "958da69ee3fd132739084c56db6257a0",
       "semantic": "958da69ee3fd132739084c56db6257a0"
+    },
+    "test/metronome.test.js": {
+      "ast": "8536b335f7e46d0c677ef33162e53774",
+      "semantic": null
     },
     "test/multistage.test.js": {
       "ast": "ee1ec4cc31c22fab2242e28887114a2e",
@@ -151,6 +155,10 @@
     "test/room.test.js": {
       "ast": "090730fd5bd50643cea6369ab4e5c184",
       "semantic": "090730fd5bd50643cea6369ab4e5c184"
+    },
+    "test/roster.test.js": {
+      "ast": "8dc9530bfb59aed8791634be5cf38617",
+      "semantic": null
     },
     "test/smoke.test.js": {
       "ast": "a1a14e9592e27da009d4b90de8e51da4",

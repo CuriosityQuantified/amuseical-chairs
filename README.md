@@ -29,7 +29,7 @@ npm run check      # static checks the test suite can't do (see CI below)
 
 Score attack — no elimination:
 
-1. Games are drawn from a 13-game roster across 6 categories and played by
+1. Games are drawn from a 14-game roster across 6 categories and played by
    **all players simultaneously**, in a seeded-shuffled order. Every enabled
    game is played exactly once — to shorten a session, turn games off. Music +
    circling avatars play between games.
@@ -56,8 +56,9 @@ Score attack — no elimination:
 
 Round content is randomized **server-side** with a seeded RNG and broadcast
 to every player, so everyone always plays the identical configuration:
-Stop the Clock draws a random 6–10s target, Grid Flash varies pattern sizes
-(6–9 cells), Slingshot jitters the distance ±25%, Trace picks from 15
+Stop the Clock draws a random 6–10s target, Metronome Blackout draws a
+400–900ms beat that is never a whole number of BPM, Grid Flash varies pattern
+sizes (6–9 cells), Slingshot jitters the distance ±25%, Trace picks from 15
 shapes, and Read the Room draws from an **80-question humorous bank**
 (Typing Sprint from 30 sentences, Caption Battle from 30 prompts, Icebreaker
 from 16) with no repeats within a session. Icebreaker's fact order and its
@@ -156,6 +157,17 @@ never shows anyone's running total.
 - **Space Mash:** counting requires a `keyup` between `keydown`s (holding the
   spacebar scores 1, not 300), plus a rolling 20 presses/sec anti-macro cap.
 - **Color match** is scored with CIEDE2000 (perceptual), not RGB distance.
+- **Metronome Blackout:** taps are consumed *in order* against the beat grid,
+  never matched to whichever beat they landed nearest — so filling the window
+  with taps buys a worse average, never a better one, and a missed beat costs
+  exactly what the most wrong possible tap costs. The beat is a whole number of
+  milliseconds that is never a whole number of BPM (`60000 % intervalMs !== 0`),
+  which makes a metronome app impractical — you would still have to match phase
+  inside one round — rather than impossible. That trade is accepted knowingly;
+  the airtight version is a mid-round tempo change, at the cost of a harder
+  game. Unlike the finale, none of this needs clock sync: the grid is scheduled
+  and the taps are timed on the same device, so network latency never enters
+  the metric.
 
 ## Host config
 
@@ -205,7 +217,7 @@ played; to shorten a session, turn games off.
 ```
 server/   express + socket wiring, room state machine, game metrics
 shared/   pure logic used by server, client, and tests
-public/   host screen, player screen, 13 minigame clients
+public/   host screen, player screen, 14 minigame clients
 test/     unit tests + room integration + 20-headless-bot harness
 scripts/  static checks run in CI
 graphify-out/  knowledge graph of this repo (see below)

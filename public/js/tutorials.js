@@ -300,6 +300,59 @@ const TUTORIALS = {
       } },
   ],
 
+  metronome: [
+    { ok: true, dur: 4600, label: 'Four beats play, then silence — keep tapping the same beat',
+      draw(g, w, h, p) {
+        // 12 beats across the demo: 4 lit count-in, then 8 the player taps.
+        const LEAD = 4, SILENT = 8;
+        const beat = (p * (LEAD + SILENT)) - 0.5;
+        const idx = Math.floor(beat);
+        const onBeat = beat - idx < 0.34 && idx >= 0;
+        const inLead = idx < LEAD;
+        const y = 96;
+        text(g, inLead ? 'COUNT-IN' : 'SILENCE — keep the beat', w / 2, 28,
+          { size: 15, color: inLead ? C.cyan : C.muted, bold: true });
+        for (let i = 0; i < LEAD + SILENT; i++) {
+          const x = 26 + (i + 0.5) * ((w - 52) / (LEAD + SILENT));
+          const done = i < idx || (i === idx && onBeat);
+          const lit = i === idx && onBeat;
+          g.fillStyle = lit ? (i < LEAD ? C.cyan : C.good) : done ? C.line : C.panel;
+          g.strokeStyle = i < LEAD ? C.line : C.good;
+          g.lineWidth = i < LEAD ? 1 : 1.5;
+          g.beginPath();
+          g.arc(x, y, lit ? 12 : 7, 0, Math.PI * 2);
+          g.fill();
+          g.stroke();
+        }
+        text(g, inLead ? '🔊 listen' : '👆 tap', w / 2, y + 42, { size: 16, color: C.ink });
+        text(g, `${Math.max(0, Math.min(SILENT, idx - LEAD + (onBeat ? 1 : 0)))} / ${SILENT} tapped`,
+          w / 2, h - 18, { size: 14, color: C.muted });
+      } },
+    { ok: false, dur: 3400, label: 'Do not mash to cover the gaps — every tap is judged in order',
+      draw(g, w, h, p) {
+        const y = 96;
+        text(g, 'SILENCE — keep the beat', w / 2, 28, { size: 15, color: C.muted, bold: true });
+        for (let i = 0; i < 8; i++) {
+          const x = 26 + (i + 0.5) * ((w - 52) / 8);
+          box(g, x - 1, y - 26, 2, 52, C.line);
+        }
+        // A burst of taps crammed into the first beat, drifting off the grid.
+        const shown = Math.floor(seg(p, 0.1, 0.75) * 9);
+        for (let i = 0; i < shown; i++) {
+          const x = 30 + i * 11;
+          g.fillStyle = C.bad;
+          g.beginPath();
+          g.arc(x, y, 6, 0, Math.PI * 2);
+          g.fill();
+        }
+        cursor(g, 30 + shown * 11, y + 16, true);
+        if (p > 0.75) {
+          text(g, 'tap 8 landed on beat 1 → a full beat off, eight times',
+            w / 2, h - 18, { size: 14, color: C.bad, bold: true });
+        }
+      } },
+  ],
+
   gridflash: [
     { ok: true, dur: 4400, label: 'Memorize the lit cells, then rebuild the exact pattern',
       draw(g, w, h, p) {
