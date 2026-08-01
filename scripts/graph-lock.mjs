@@ -37,8 +37,20 @@ if (!existsSync(MANIFEST)) {
 }
 
 const manifest = JSON.parse(readFileSync(MANIFEST, 'utf8'));
+// The previous lock, when there is one. manifest.json is gitignored, so a fresh
+// clone (CI, a new machine, this repo's own container) rebuilds from nothing and
+// graphify has no record of the last semantic pass — it blanks semantic_hash for
+// EVERY file, including ones nobody has touched since. Taken at face value that
+// reports three untouched docs as describing old prose, which is the one thing
+// rule 7 must never do: a freshness check that cries wolf gets ignored, and then
+// it is not a freshness check. A file whose ast hash is byte-identical to the
+// locked one has content the last semantic pass already covered, so carry that
+// hash forward. Real drift is unaffected — changed content changes the ast hash,
+// and the carry-forward does not apply.
+const previous = existsSync(LOCK) ? (JSON.parse(readFileSync(LOCK, 'utf8')).files || {}) : {};
 const files = {};
 let semanticBehind = 0;
+let carried = 0;
 for (const path of Object.keys(manifest).sort()) {
   const entry = manifest[path] || {};
   // An entry with no ast_hash was never successfully parsed; recording an empty
@@ -49,7 +61,10 @@ for (const path of Object.keys(manifest).sort()) {
   }
   // graphify blanks semantic_hash when a file changes. Record null rather than ''
   // so the lock states "no semantic pass covers this content" outright.
-  const semantic = entry.semantic_hash || null;
+  const prior = previous[path];
+  const inherited = prior && prior.ast === entry.ast_hash ? prior.semantic : null;
+  const semantic = entry.semantic_hash || inherited || null;
+  if (semantic && !entry.semantic_hash) carried++;
   if (!semantic) semanticBehind++;
   files[path] = { ast: entry.ast_hash, semantic };
 }
@@ -57,4 +72,5 @@ for (const path of Object.keys(manifest).sort()) {
 writeFileSync(LOCK, `${JSON.stringify({ files }, null, 2)}\n`, 'utf8');
 const n = Object.keys(files).length;
 console.log(`graph-lock: wrote ${n} file hashes to graphify-out/graph-lock.json` +
-  (semanticBehind ? ` (${semanticBehind} awaiting a semantic pass)` : ''));
+  (semanticBehind ? ` (${semanticBehind} awaiting a semantic pass)` : '') +
+  (carried ? `, ${carried} semantic hash(es) carried forward for unchanged files` : ''));

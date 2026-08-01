@@ -272,6 +272,43 @@ canvas.game {
   border-color: #ff8ec4;
   box-shadow: 0 0 16px rgba(255, 45, 149, 0.9), inset 0 0 8px rgba(255, 255, 255, 0.4);
 }
+/* Metronome Blackout: one big tap target that flashes the count-in, then goes
+   dark for the beats the player has to keep on their own. The tap ring is the
+   same colour whether the tap was early or late — showing which way it was
+   wrong would turn a timing game into a follow-the-feedback game. */
+.beat-pad {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  border-radius: 8px;
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  transition: background 0.09s, box-shadow 0.09s, border-color 0.09s;
+}
+.beat-pad-label {
+  font-family: var(--pix);
+  font-size: 13px;
+  color: var(--dim);
+  letter-spacing: 1px;
+}
+.beat-pad.blackout { border-color: var(--line); background: #04080e; }
+.beat-pad.blackout .beat-pad-label { color: var(--muted); }
+.beat-pad.lead {
+  background: var(--accent2);
+  border-color: #7ff3ff;
+  box-shadow: 0 0 34px rgba(0, 229, 255, 0.85), inset 0 0 20px rgba(255, 255, 255, 0.45);
+}
+.beat-pad.lead .beat-pad-label { color: #04121a; }
+.beat-pad.hit {
+  border-color: var(--accent);
+  box-shadow: 0 0 22px rgba(255, 45, 149, 0.55), inset 0 0 18px rgba(255, 45, 149, 0.18);
+}
 .oddgrid { display: grid; gap: 5px; }
 .oddgrid .tile {
   aspect-ratio: 1;

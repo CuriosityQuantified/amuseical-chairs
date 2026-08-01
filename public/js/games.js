@@ -510,6 +510,156 @@ GameClients.stopclock = {
   },
 };
 
+// ---- 8b. Metronome Blackout -------------------------------------------------
+//
+// Four beats play, then the room goes dark and you keep the beat for eight
+// more. Everything measured here is LOCAL to this device: the beat grid is
+// scheduled from one performance.now() reading taken on this client, and every
+// tap is a delta against that same clock. No sync offset, no network latency,
+// nothing the finale's NTP-style estimation has to fight with — which is the
+// main reason this game is worth having.
+//
+// Audio is an enhancement, never the game. The click is built on the START
+// gesture (so autoplay policy never suspends it) inside a try/catch, and every
+// beat flashes whether or not a sound came out — a muted phone is not a
+// handicap.
+
+GameClients.metronome = {
+  intro: 'Four beats play. Then silence — keep tapping where the next 8 beats would land. Tap the pad or press SPACE.',
+  start(root, ctx) {
+    const { intervalMs, leadInBeats, silentBeats } = ctx.data;
+    const offsets = [];
+    let reference = null;   // scheduled time of the LAST lead-in beat
+    let phase = 'idle';     // idle → leadin → blackout → done
+    let beatTimer = null;
+    let flashTimer = null;
+    let audio = null;
+
+    const note = h('p', { class: 'trial-note center' }, 'Listen to the count-in, then keep the beat.');
+    const count = h('div', { class: 'mash-count' }, `0 / ${silentBeats}`);
+    const label = h('span', { class: 'beat-pad-label' }, 'START');
+    const pad = h('div', { class: 'beat-pad' }, label);
+    root.append(count, pad, note);
+
+    // A short click, scheduled on the audio clock so it lands with the flash.
+    function tick() {
+      if (!audio) return;
+      try {
+        const t = audio.currentTime;
+        const osc = audio.createOscillator();
+        const gain = audio.createGain();
+        osc.type = 'square';
+        osc.frequency.value = 1200;
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.exponentialRampToValueAtTime(0.25, t + 0.004);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
+        osc.connect(gain);
+        gain.connect(audio.destination);
+        osc.start(t);
+        osc.stop(t + 0.06);
+      } catch { /* the flash is a complete game on its own */ }
+    }
+
+    function flash(cls) {
+      pad.classList.add(cls);
+      clearTimeout(flashTimer);
+      flashTimer = setTimeout(() => pad.classList.remove(cls), 110);
+    }
+
+    // Each beat is scheduled against the absolute grid rather than chained off
+    // the previous timer, so setTimeout jitter cannot accumulate into drift.
+    function scheduleBeat(gridStart, i) {
+      const due = gridStart + i * intervalMs;
+      beatTimer = setTimeout(() => {
+        tick();
+        flash('lead');
+        if (i + 1 < leadInBeats) return scheduleBeat(gridStart, i + 1);
+        // The last lead-in beat is the origin every tap is measured from. It
+        // is the SCHEDULED time, not this callback's — the callback is late by
+        // however much the timer drifted, and that error would land on the
+        // player's score.
+        reference = due;
+        phase = 'blackout';
+        label.textContent = 'KEEP THE BEAT';
+        pad.classList.add('blackout');
+        note.textContent = `Silence — tap ${silentBeats} more beats on the same grid.`;
+      }, Math.max(0, due - performance.now()));
+    }
+
+    function begin() {
+      if (phase !== 'idle') return;
+      phase = 'leadin';
+      try {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (Ctx) {
+          audio = new Ctx();
+          audio.resume?.();
+        }
+      } catch { audio = null; }
+      label.textContent = 'COUNT-IN';
+      note.textContent = `${leadInBeats} beats — do not tap yet.`;
+      scheduleBeat(performance.now(), 0);
+    }
+
+    function tap() {
+      if (phase === 'idle') return begin();
+      if (phase !== 'blackout') return;
+      const offset = performance.now() - reference;
+      // A tap in the first half-beat belongs to the count-in the player is
+      // still tapping along with, not to beat one. Dropping it costs nothing;
+      // consuming it would push every later tap a whole beat out of phase.
+      if (offset < intervalMs / 2) return;
+      offsets.push(offset);
+      // A ring on every tap, identical whether the tap was early or late.
+      // Anything that reveals WHICH way it was wrong turns a timing game into
+      // a feedback-following game.
+      flash('hit');
+      count.textContent = `${offsets.length} / ${silentBeats}`;
+      if (offsets.length >= silentBeats) finish();
+    }
+
+    function finish() {
+      if (phase === 'done') return;
+      stop();
+      label.textContent = 'DONE';
+      note.textContent = 'Locked in.';
+      ctx.submit({ offsets });
+    }
+
+    // Detach everything: this client can end at its own last beat or at the
+    // shell's deadline, and a document-level key listener outliving either one
+    // would keep firing over the next game.
+    function stop() {
+      phase = 'done';
+      clearTimeout(beatTimer);
+      clearTimeout(flashTimer);
+      document.removeEventListener('keydown', onKeydown);
+      try { audio?.close(); } catch { /* already gone */ }
+      audio = null;
+    }
+
+    function onKeydown(e) {
+      if (e.code !== 'Space') return;
+      e.preventDefault();  // stop page scroll
+      if (!e.repeat) tap();
+    }
+
+    // pointerdown, never click: the mobile click delay would land every tap
+    // ~100ms late and score the whole room's phones behind its laptops.
+    pad.addEventListener('pointerdown', (e) => { e.preventDefault(); tap(); });
+    document.addEventListener('keydown', onKeydown);
+
+    return {
+      collect: () => {
+        stop();
+        // Whatever was tapped still scores — the beats never reached are
+        // charged a full interval each, server-side.
+        return offsets.length ? { offsets } : null;
+      },
+    };
+  },
+};
+
 // ---- 9. Grid Flash ---------------------------------------------------------
 
 GameClients.gridflash = {
