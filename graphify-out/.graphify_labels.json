@@ -8,7 +8,7 @@
   "6": "Server Bootstrap & Test Harness",
   "7": "multistage.test.js",
   "8": "js/games.js",
-  "9": "Tutorial Drawing Animations",
+  "9": "tutorials.js",
   "10": "Musical Chairs Game",
   "11": "Project Docs & Progress Log",
   "12": "Answer Clustering Logic",
@@ -20,5 +20,7 @@
   "18": "Claude Skill Docs",
   "19": "Host Screen UI",
   "20": "Player Join/Play Screen",
-  "21": "redemption.test.js"
+  "21": "redemption.test.js",
+  "22": "ciede2000.js",
+  "23": "normalize.js"
 }

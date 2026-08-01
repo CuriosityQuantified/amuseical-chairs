@@ -20,6 +20,7 @@
 import { seededRng } from '/shared/rng.js';
 import { createPressCounter } from '/shared/presscounter.js';
 import { cleanEntryText } from '/shared/textclean.js';
+import { cupsLevel } from '/shared/cups.js';
 
 // ---- tiny DOM helpers ------------------------------------------------------
 
@@ -715,6 +716,252 @@ GameClients.gridflash = {
     }
     round();
     return { collect: () => ({ picks: [...picks, ...(current.size && !showing ? [[...current]] : [])] }) };
+  },
+};
+
+// ---- 9b. Follow the Cup ----------------------------------------------------
+//
+// The one game here with nothing hidden: the ball's whole path is on screen
+// for as long as the shuffle runs, and the difficulty is holding attention on
+// it, not deducing it. Every level's script comes from shared/cups.js — the
+// same module the server re-derives to score — so what a player watches and
+// what their picks are checked against are the same shuffle by construction.
+//
+// Every animation here is driven by elapsed ms, never by frames: a phone that
+// drops to 20fps must get the SAME shuffle at the same speed as a laptop, or
+// the slow device is playing an easier game and the metric is about hardware.
+
+GameClients.cups = {
+  intro: 'Watch which cup the ball goes under, then tap that cup after the shuffle. Every level adds speed — one miss ends the run.',
+  start(root, ctx) {
+    const { seed, maxLevels, baseCups } = ctx.data;
+    // Everything that is not shuffle is overhead against a 45s round, so the
+    // fixed beats are as short as they can be and still be read. The reveal is
+    // the exception: it is the only moment the ball is ever on show, and
+    // rushing it makes the game unfair rather than harder.
+    const BEAT_MS = 650;                                   // the "LEVEL n" card
+    const LIFT_MS = 280, HOLD_MS = 580, DROP_MS = 260;     // ball on show
+    const REVEAL_MS = LIFT_MS + HOLD_MS + DROP_MS;
+    const VERDICT_MS = 750;                                // where it really was
+    const TONE = '#1b3a52';
+    const lerp = (a, b, p) => a + (b - a) * p;
+    const ease = (p) => (p < 0.5 ? 2 * p * p : 1 - ((-2 * p + 2) ** 2) / 2);
+
+    const picks = [];
+    let level = 0;
+    let plan = null;
+    let phase = 'beat';        // beat → reveal → shuffle → choose → verdict
+    let phaseAt = 0;
+    let tapped = null;
+    let raf = null;
+    let stopped = false;
+
+    const tag = h('div', { class: 'mash-count' }, 'LEVEL 1');
+    root.append(tag);
+    const { canvas, ctx: g, w, hgt } = makeCanvas(root, 320, 130);
+    const note = h('p', { class: 'trial-note center' }, 'Keep your eyes on the ball.');
+    root.append(note);
+
+    const PAD = 24;
+    const baseY = hgt - 40;
+    const cupH = Math.min(140, Math.max(72, hgt * 0.46));
+    // How far a cup tips up to show what is under it. Enough to clear the ball
+    // and no more — lifting by a whole cup height reads as the cup flying away.
+    const LIFT_PX = Math.min(72, cupH * 0.55);
+    const homeXs = (n) => [...Array(n)].map((_, i) => PAD + (w - 2 * PAD) * ((i + 0.5) / n));
+    const cupW = (n) => Math.min(96, ((w - 2 * PAD) / n) * 0.78);
+
+    function drawCup(x, n, lift = 0, scale = 1, edge = '#2c5f7d') {
+      const cw = cupW(n) * scale;
+      const ch = cupH * scale;
+      const bottom = baseY - lift;
+      const top = bottom - ch;
+      const halfB = cw / 2;
+      const halfT = cw * 0.34;
+      g.beginPath();
+      g.moveTo(x - halfB, bottom);
+      g.lineTo(x - halfT, top);
+      g.quadraticCurveTo(x, top - 10, x + halfT, top);
+      g.lineTo(x + halfB, bottom);
+      g.closePath();
+      const grad = g.createLinearGradient(x - halfB, 0, x + halfB, 0);
+      grad.addColorStop(0, '#0a141c');
+      grad.addColorStop(0.42, TONE);
+      grad.addColorStop(1, '#071019');
+      g.fillStyle = grad;
+      g.fill();
+      g.strokeStyle = edge;
+      g.lineWidth = 2;
+      g.stroke();
+    }
+
+    function drawBall(x) {
+      g.save();
+      g.shadowColor = '#ffd23d';
+      g.shadowBlur = 16;
+      g.fillStyle = '#ffd23d';
+      g.beginPath();
+      g.arc(x, baseY - 13, 13, 0, Math.PI * 2);
+      g.fill();
+      g.restore();
+    }
+
+    function drawTable(homes) {
+      g.strokeStyle = '#16303f';
+      g.lineWidth = 2;
+      g.beginPath();
+      g.moveTo(10, baseY + 2);
+      g.lineTo(w - 10, baseY + 2);
+      g.stroke();
+      // Numbered slots: the verdict names a cup, so the cups have names.
+      g.fillStyle = '#3d5a6b';
+      g.font = '13px system-ui, sans-serif';
+      g.textAlign = 'center';
+      homes.forEach((x, i) => g.fillText(String(i + 1), x, baseY + 22));
+    }
+
+    function draw(now) {
+      const t = now - phaseAt;
+      const homes = homeXs(plan.cups);
+      g.clearRect(0, 0, w, hgt);
+      drawTable(homes);
+
+      if (phase === 'reveal') {
+        // Up, hold, down — the only moment the ball is ever visible in play.
+        const lift = t < LIFT_MS ? ease(t / LIFT_MS)
+          : t < LIFT_MS + HOLD_MS ? 1
+            : 1 - ease(Math.min(1, (t - LIFT_MS - HOLD_MS) / DROP_MS));
+        drawBall(homes[plan.start]);
+        homes.forEach((x, i) => drawCup(x, plan.cups, i === plan.start ? lift * LIFT_PX : 0));
+        return;
+      }
+
+      if (phase === 'shuffle') {
+        const k = Math.min(plan.swaps.length - 1, Math.floor(t / plan.swapMs));
+        const p = clamp((t - k * plan.swapMs) / plan.swapMs, 0, 1);
+        const { a, b } = plan.swaps[k];
+        // One cup arcs over the top and one passes in front, so a crossing
+        // reads as two cups trading places rather than two cups merging.
+        const over = (a + b + k) % 2 === 0 ? a : b;
+        const under = over === a ? b : a;
+        const e = ease(p);
+        const bow = Math.sin(Math.PI * p);
+        homes.forEach((x, i) => { if (i !== a && i !== b) drawCup(x, plan.cups); });
+        drawCup(lerp(homes[over], homes[under], e), plan.cups, Math.min(54, cupH * 0.42) * bow, 1 - 0.12 * bow);
+        drawCup(lerp(homes[under], homes[over], e), plan.cups, -9 * bow, 1 + 0.1 * bow);
+        return;
+      }
+
+      if (phase === 'verdict') {
+        const right = tapped === plan.ball;
+        const lift = ease(Math.min(1, t / 260)) * LIFT_PX;
+        drawBall(homes[plan.ball]);
+        homes.forEach((x, i) => drawCup(
+          x, plan.cups,
+          i === plan.ball ? lift : 0,
+          1,
+          i === plan.ball ? '#3dff9e' : i === tapped ? '#ff5470' : '#2c5f7d'
+        ));
+        g.fillStyle = right ? '#3dff9e' : '#ff5470';
+        g.font = '700 26px system-ui, sans-serif';
+        g.textAlign = 'center';
+        g.fillText(right ? '✓' : '✗', w / 2, 30);
+        return;
+      }
+
+      homes.forEach((x) => drawCup(x, plan.cups, 0, 1, phase === 'choose' ? '#00e5ff' : '#2c5f7d'));
+      if (phase === 'beat') {
+        g.fillStyle = '#00e5ff';
+        g.font = '700 32px system-ui, sans-serif';
+        g.textAlign = 'center';
+        g.globalAlpha = clamp(t / 200, 0, 1);
+        g.fillText(`LEVEL ${level}`, w / 2, hgt * 0.24);
+        g.globalAlpha = 1;
+      }
+    }
+
+    function frame(now) {
+      // The handle is spent the moment the callback runs, so clear it here and
+      // nowhere else: `raf == null` then means "no frame is pending", which is
+      // what startLevel checks before restarting the loop. Leaving a stale
+      // handle behind stalls the run on the level-2 card, forever.
+      raf = null;
+      if (stopped) return;
+      const t = now - phaseAt;
+      if (phase === 'beat' && t >= BEAT_MS) enter('reveal', now, 'Watch the ball go under.');
+      else if (phase === 'reveal' && t >= REVEAL_MS) enter('shuffle', now, 'Follow it.');
+      else if (phase === 'shuffle' && t >= plan.shuffleMs) enter('choose', now, 'Where is it? Tap a cup.');
+      else if (phase === 'verdict' && t >= VERDICT_MS) {
+        if (tapped !== plan.ball || level >= maxLevels) return finish();
+        return startLevel(level + 1);
+      }
+      draw(now);
+      raf = requestAnimationFrame(frame);
+    }
+
+    function enter(next, now, msg) {
+      phase = next;
+      phaseAt = now;
+      note.textContent = msg;
+    }
+
+    function startLevel(n) {
+      level = n;
+      plan = cupsLevel(seed, n, { baseCups });
+      tapped = null;
+      phase = 'beat';
+      phaseAt = performance.now();
+      tag.textContent = `LEVEL ${n}`;
+      note.textContent = `${plan.cups} cups, ${plan.swaps.length} swaps.`;
+      if (raf == null && !stopped) raf = requestAnimationFrame(frame);
+    }
+
+    // pointerdown, never click: the mobile click delay would put every phone a
+    // tenth of a second behind every laptop on a game the deadline cuts short.
+    function onTap(ev) {
+      ev.preventDefault();
+      if (stopped || phase !== 'choose') return;
+      const { x } = canvasPos(canvas, ev);
+      const homes = homeXs(plan.cups);
+      let best = 0;
+      for (let i = 1; i < homes.length; i++) {
+        if (Math.abs(homes[i] - x) < Math.abs(homes[best] - x)) best = i;
+      }
+      tapped = best;
+      picks.push({ level, cupIndex: best });
+      const right = best === plan.ball;
+      tag.textContent = `LEVEL ${level} ${right ? '✓' : '✗'}`;
+      enter('verdict', performance.now(), right
+        ? (level >= maxLevels ? 'Cleared the last level.' : 'Still on it — the next one is faster.')
+        : `Lost it — the ball was under cup ${plan.ball + 1}.`);
+    }
+
+    function finish() {
+      stop();
+      ctx.submit({ picks });
+    }
+
+    // The run can end at its own last level, at a miss, or at the shell's
+    // deadline. A rAF loop and a pointer listener that outlived any of those
+    // would keep drawing over the next game's screen.
+    function stop() {
+      stopped = true;
+      if (raf != null) cancelAnimationFrame(raf);
+      raf = null;
+      canvas.removeEventListener('pointerdown', onTap);
+    }
+
+    canvas.addEventListener('pointerdown', onTap);
+    startLevel(1);
+
+    return {
+      collect: () => {
+        stop();
+        // Always a payload, even an empty one: no level cleared is a real score
+        // of zero here, the same as a wrong tap on level 1. The server agrees.
+        return { picks };
+      },
+    };
   },
 };
 
