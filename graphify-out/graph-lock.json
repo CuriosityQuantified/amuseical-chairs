@@ -1,7 +1,7 @@
 {
   "files": {
     ".claude-progress.md": {
-      "ast": "72dd0ac12a2d93fa2d8f5cb18fd713a7",
+      "ast": "6c9780e94899814e1c8085a15846686c",
       "semantic": null
     },
     ".github/workflows/ci.yml": {
@@ -13,7 +13,7 @@
       "semantic": "1537a1504800a15fb24708220ea31081"
     },
     "README.md": {
-      "ast": "79ae02ad4e49332f3d077e7b4c172834",
+      "ast": "91ae646fed7ef7ad75f663da1bdd35ea",
       "semantic": null
     },
     "package.json": {
@@ -33,7 +33,7 @@
       "semantic": "f8ab4b1157d4b0554ae6cbe0c08f8a84"
     },
     "public/js/games.js": {
-      "ast": "473ce5598f3ec640522904ee650daa84",
+      "ast": "14d7abce9b49362dc13dbcfa1b2394db",
       "semantic": null
     },
     "public/js/host.js": {
@@ -49,7 +49,7 @@
       "semantic": "3d9aa8d2aabb42cdc226c0dc852c93f2"
     },
     "public/js/tutorials.js": {
-      "ast": "bc12778662dd191408ce4fa81db745f1",
+      "ast": "979ada0c2f3d9e05f7a4726efde6e149",
       "semantic": null
     },
     "scripts/check.mjs": {
@@ -65,7 +65,7 @@
       "semantic": "24c1b81e5113a5aa4edaa98f2ffce2c1"
     },
     "server/games.js": {
-      "ast": "15835d7a586b9f01489c986c5891047c",
+      "ast": "b0c71067c356698c28330d961c9ef822",
       "semantic": null
     },
     "server/index.js": {
@@ -87,6 +87,10 @@
     "shared/cluster.js": {
       "ast": "2e5c2576f55f9b2973872e41e508e3d6",
       "semantic": "2e5c2576f55f9b2973872e41e508e3d6"
+    },
+    "shared/cups.js": {
+      "ast": "3a1ffc8a6b8e4dd72758e731dfe2ebcd",
+      "semantic": null
     },
     "shared/normalize.js": {
       "ast": "716ae08ad662b9426abd41f9221e0fc8",
@@ -120,12 +124,16 @@
       "ast": "c1a78e9382ffdab8c72dc66cd83dfcad",
       "semantic": "c1a78e9382ffdab8c72dc66cd83dfcad"
     },
+    "test/cups.test.js": {
+      "ast": "11c9dbde1a3625dc6340ed0109cdad79",
+      "semantic": null
+    },
     "test/fakeclock.js": {
       "ast": "e32e5d490281581fcef70cdcdb60c8b0",
       "semantic": "e32e5d490281581fcef70cdcdb60c8b0"
     },
     "test/harness.test.js": {
-      "ast": "ab887c174510fe9e84d99ac0b7f65852",
+      "ast": "cd5bbb7c672be2887a6a515e4fc374ae",
       "semantic": null
     },
     "test/icebreaker.test.js": {
@@ -157,7 +165,7 @@
       "semantic": "090730fd5bd50643cea6369ab4e5c184"
     },
     "test/roster.test.js": {
-      "ast": "8dc9530bfb59aed8791634be5cf38617",
+      "ast": "c363599fa85f51ddb324392d99229dd6",
       "semantic": null
     },
     "test/smoke.test.js": {

@@ -29,7 +29,7 @@ npm run check      # static checks the test suite can't do (see CI below)
 
 Score attack — no elimination:
 
-1. Games are drawn from a 14-game roster across 6 categories and played by
+1. Games are drawn from a 15-game roster across 7 categories and played by
    **all players simultaneously**, in a seeded-shuffled order. Every enabled
    game is played exactly once — to shorten a session, turn games off. Music +
    circling avatars play between games.
@@ -57,7 +57,8 @@ Score attack — no elimination:
 Round content is randomized **server-side** with a seeded RNG and broadcast
 to every player, so everyone always plays the identical configuration:
 Stop the Clock draws a random 6–10s target, Metronome Blackout draws a
-400–900ms beat that is never a whole number of BPM, Grid Flash varies pattern
+400–900ms beat that is never a whole number of BPM, Follow the Cup draws a
+seed every level's shuffle script is derived from, Grid Flash varies pattern
 sizes (6–9 cells), Slingshot jitters the distance ±25%, Trace picks from 15
 shapes, and Read the Room draws from an **80-question humorous bank**
 (Typing Sprint from 30 sentences, Caption Battle from 30 prompts, Icebreaker
@@ -168,6 +169,19 @@ never shows anyone's running total.
   game. Unlike the finale, none of this needs clock sync: the grid is scheduled
   and the taps are timed on the same device, so network latency never enters
   the metric.
+- **Follow the Cup** hides nothing, on purpose. Every level's swap script comes
+  from `shared/cups.js`, seeded per round — the client animates it, the server
+  re-derives it to score, and the ball's whole path is on screen while it runs.
+  Putting the answer in the round's `secret` half would hide it from nobody
+  (the client has to animate the ball to draw the game) so it is not pretended
+  otherwise. What the server does refuse to take on trust is the *payload*: a
+  run is walked from level 1 upward, each pick checked against the re-derived
+  ball position and against that level's cup count, and the walk stops at the
+  first pick that is not a correct answer to the level it is standing on. A
+  claimed level number buys nothing, a repeat clears one level, and a gap in
+  the ladder ends the run. Each level's animation is driven by elapsed
+  milliseconds, never by frame count, so a phone at half the frame rate gets
+  exactly the same shuffle at exactly the same speed as a laptop.
 
 ## Host config
 

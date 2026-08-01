@@ -10,6 +10,7 @@ import assert from 'node:assert/strict';
 import { io as connect } from 'socket.io-client';
 import { createServer } from '../server/app.js';
 import { ROSTER } from '../server/games.js';
+import { cupsLevel } from '../shared/cups.js';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -81,6 +82,21 @@ function botPayload(key, data, rnd, stage = 1, bot = null) {
         (_, i) => data.intervalMs * (i + 1) + (rnd() * 160 - 80)),
     };
     case 'gridflash': return { picks: data.patterns.map(() => [...Array(8)].map(() => Math.floor(rnd() * 25))) };
+    // Tracks the ball for a while and then loses it, like a person: every level
+    // up to a random one is correct, the next is a neighbouring cup. Derived
+    // from the round seed through the same module the real client animates —
+    // a bot that guessed blindly would clear ~0 levels and the whole room would
+    // tie at the floor, which would tell us nothing about scoring.
+    case 'cups': {
+      const lost = 1 + Math.floor(rnd() * data.maxLevels);
+      return {
+        picks: [...Array(lost)].map((_, i) => {
+          const plan = cupsLevel(data.seed, i + 1, data);
+          const wrong = i + 1 === lost;
+          return { level: i + 1, cupIndex: wrong ? (plan.ball + 1) % plan.cups : plan.ball };
+        }),
+      };
+    }
     case 'readroom': return { answer: rnd() < 0.5, prediction: Math.floor(rnd() * 101) };
     case 'typing': return { typed: data.sentence.slice(0, 5 + Math.floor(rnd() * data.sentence.length)), elapsedMs: 15000 + rnd() * 20000 };
     case 'spacemash': return { count: 40 + Math.floor(rnd() * 70), flagged: false };

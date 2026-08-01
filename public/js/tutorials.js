@@ -80,6 +80,31 @@ function starPts(cx, cy, R) {
   return pts;
 }
 
+// A cup standing on `baseY`, `lift` px off the table. Same silhouette as the
+// real game's canvas cup so the demo and the thing it teaches look alike.
+function cup(g, x, baseY, cw, ch, lift = 0, stroke = '#2c5f7d') {
+  const b = baseY - lift;
+  const t = b - ch;
+  g.beginPath();
+  g.moveTo(x - cw / 2, b);
+  g.lineTo(x - cw * 0.17, t);
+  g.quadraticCurveTo(x, t - 6, x + cw * 0.17, t);
+  g.lineTo(x + cw / 2, b);
+  g.closePath();
+  g.fillStyle = '#12293a';
+  g.fill();
+  g.strokeStyle = stroke;
+  g.lineWidth = 2;
+  g.stroke();
+}
+
+function ball(g, x, baseY, r = 9) {
+  g.fillStyle = C.warn;
+  g.beginPath();
+  g.arc(x, baseY - r, r, 0, Math.PI * 2);
+  g.fill();
+}
+
 function drawPolyline(g, pts, upTo, color, width) {
   g.strokeStyle = color;
   g.lineWidth = width;
@@ -391,6 +416,76 @@ const TUTORIALS = {
         }
         if (on) text(g, '3 wrong + 3 missed = 6 off', w / 2, h - 16, { size: 15, color: C.bad, bold: true });
         cursor(g, gx + 4 * (size + gap) + size / 2, gy + size / 2, p > 0.3 && p < 0.45);
+      } },
+  ],
+
+  cups: [
+    { ok: true, dur: 5200, label: 'Lock onto the one cup and stay on it through every swap',
+      draw(g, w, h, p) {
+        const baseY = h - 30;
+        const xs = [w / 2 - 76, w / 2, w / 2 + 76];
+        const CW = 56, CH = 60;
+        const SWAPS = [[0, 1], [1, 2], [0, 1]];
+        const S0 = 0.26, SW = 0.13;
+        // Walk the script up to `p`: apply every finished swap, and hold on to
+        // the one still in flight so it can be drawn mid-crossing.
+        let ballPos = 1;
+        let active = -1;
+        let ap = 0;
+        for (let k = 0; k < SWAPS.length; k++) {
+          const t0 = S0 + k * SW;
+          const [a, b] = SWAPS[k];
+          if (p >= t0 + SW) {
+            ballPos = ballPos === a ? b : ballPos === b ? a : ballPos;
+            continue;
+          }
+          if (p >= t0) { active = k; ap = (p - t0) / SW; }
+          break;
+        }
+        const showing = p < 0.22;
+        const lift = p < 0.06 ? seg(p, 0, 0.06) : p < 0.16 ? 1 : 1 - seg(p, 0.16, 0.22);
+        const reveal = p > 0.82;
+        text(g, showing ? 'the ball goes under' : active >= 0 ? 'follow that one cup'
+          : reveal ? 'still on it → next level' : 'which cup has it?',
+        w / 2, 22, { size: 15, color: reveal ? C.good : C.muted, bold: reveal });
+        if (showing) ball(g, xs[1], baseY);
+        if (reveal) ball(g, xs[ballPos], baseY);
+        for (let i = 0; i < 3; i++) {
+          if (active >= 0 && (i === SWAPS[active][0] || i === SWAPS[active][1])) continue;
+          const up = showing && i === 1 ? lift * (CH + 10)
+            : reveal && i === ballPos ? seg(p, 0.82, 0.9) * (CH + 10) : 0;
+          cup(g, xs[i], baseY, CW, CH, up, reveal && i === ballPos ? C.good : C.line);
+        }
+        if (active >= 0) {
+          const [a, b] = SWAPS[active];
+          const e = ease(ap);
+          const bow = Math.sin(Math.PI * ap);
+          cup(g, lerp(xs[a], xs[b], e), baseY, CW, CH, 26 * bow);
+          cup(g, lerp(xs[b], xs[a], e), baseY, CW, CH, -6 * bow);
+        }
+        // The hand clears out once the cup comes up: it sits exactly where the
+        // ball is, and the ball is the whole point of the last beat.
+        if (p > 0.68 && p < 0.87) {
+          const m = seg(p, 0.68, 0.82);
+          cursor(g, lerp(w / 2 - 104, xs[ballPos], m), lerp(h - 14, baseY - 18, m), p > 0.8);
+        }
+      } },
+    { ok: false, dur: 3600, label: 'Do not lose it and guess — one wrong cup ends the whole run',
+      draw(g, w, h, p) {
+        const baseY = h - 30;
+        const xs = [w / 2 - 76, w / 2, w / 2 + 76];
+        const CW = 56, CH = 60;
+        const TAPPED = 0, REAL = 2;
+        const lifted = p > 0.55;
+        if (lifted) ball(g, xs[REAL], baseY);
+        for (let i = 0; i < 3; i++) {
+          const up = lifted && i === REAL ? seg(p, 0.55, 0.68) * (CH + 10) : 0;
+          const stroke = lifted && i === TAPPED ? C.bad : lifted && i === REAL ? C.good : C.line;
+          cup(g, xs[i], baseY, CW, CH, up, stroke);
+        }
+        cursor(g, lerp(w / 2 + 40, xs[TAPPED], seg(p, 0.06, 0.42)), baseY - 18, p > 0.42 && p < 0.56);
+        text(g, lifted ? 'wrong cup — the run stops at level 4' : 'lost track… guessing',
+          w / 2, 22, { size: 15, color: lifted ? C.bad : C.muted, bold: lifted });
       } },
   ],
 
