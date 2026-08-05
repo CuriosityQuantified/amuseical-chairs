@@ -782,7 +782,7 @@ const TUTORIALS = {
   ],
 
   balance: [
-    { ok: true, dur: 4200, label: 'Drag anywhere to steer — small, early corrections keep it upright',
+    { ok: true, dur: 4200, label: 'Slide the base to catch the beam — small, early corrections keep it upright',
       draw(g, w, h, p) {
         const pivotY = h - 34;
         const len = 92;

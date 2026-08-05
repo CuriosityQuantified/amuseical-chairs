@@ -1,15 +1,25 @@
 // Pure, seeded physics for Balance the Beam (issue #13).
 //
-// An inverted pendulum on a carriage: the player drags anywhere to steer the
-// beam (drag position maps to a target angle, a virtual spring pulls the beam
-// toward it), seeded nudges try to knock it over, and the round ends when the
-// beam passes ~35° from vertical. Score = survival time.
+// A hand-caught broomstick: the player drags anywhere and the BASE (the
+// carriage under the pivot) follows the finger. The physics is a virtual
+// hand on the pole — drag RIGHT (base sliding right) commands the pole
+// toward the LEFT, i.e. the base shoves under a rightward fall, the way you
+// move the bottom of a broomstick toward the side it is tipping to. Seeded
+// nudges try to knock the pole over, and the round ends when the pole passes
+// ~35° from vertical. Score = survival time.
 //
 // Everything here is a pure function of the round seed + elapsed time, so the
 // client derives the identical nudge schedule on every device (the way
 // cups/oddoneout derive their layouts) and integrates with a FIXED timestep —
 // a 30fps phone and a 120Hz laptop get the same physics. No Math.random()
 // anywhere in here.
+//
+// Direction contract (pinned by tests): theta > 0 is a lean to the RIGHT and
+// a rightward drag (`steer` > 0, base sliding right) must produce a
+// CORRECTING torque (u < 0) — dragging toward the fall balances it, dragging
+// away makes it strictly worse. The version before this fix mapped the drag
+// to the pole's own target angle, so dragging right into a rightward fall
+// torqued the pole further right.
 //
 // This module is the single source of truth for the constants: server/games.js
 // and public/js/games.js both import it (the browser via the absolute
@@ -30,11 +40,10 @@ export const BALANCE_GRAVITY = 9.81;   // m/s²
 export const BALANCE_LENGTH = 2.0;     // m
 export const BALANCE_DAMPING = 2.2;    // 1/s
 
-// The player's drag maps to a target angle (rad) and the beam is pulled
-// toward it by a virtual spring. CTRL_K sits BELOW gravity/length on purpose:
-// the beam is still genuinely unstable at rest, so holding still costs the
-// round — the player has to keep correcting. CTRL_D is the hand's extra
-// damping so a correction settles instead of ringing.
+// The virtual hand. CTRL_K sits BELOW gravity/length on purpose: the pole is
+// still genuinely unstable at rest, so holding still costs the round — the
+// player has to keep correcting. CTRL_D is the hand's extra damping so a
+// correction settles instead of ringing.
 export const BALANCE_CTRL_K = 3.0;     // 1/s²
 export const BALANCE_CTRL_D = 1.6;     // 1/s
 export const BALANCE_TARGET_RANGE = 0.9; // rad — a full drag sweep maps here
@@ -67,7 +76,7 @@ export function balanceSchedule(seed, { durationMs = 45000 } = {}) {
   return out;
 }
 
-// One fixed-timestep of the beam. `u` is the control torque (rad/s²) from
+// One fixed-timestep of the pendulum. `u` is the control torque (rad/s²) from
 // balanceControl. Pure: identical inputs always produce the identical state.
 export function balanceStep(state, dt, u) {
   const theta = state.theta + state.omega * dt;
@@ -78,9 +87,12 @@ export function balanceStep(state, dt, u) {
   return { theta, omega };
 }
 
-// The virtual hand: spring the beam toward the dragged target angle, damped.
-export function balanceControl(thetaTarget, state) {
-  return BALANCE_CTRL_K * (thetaTarget - state.theta) - BALANCE_CTRL_D * state.omega;
+// The virtual hand. `steer` (rad, right = positive) is the drag interpreted
+// as the BASE sliding right: the pole is commanded toward the OPPOSITE angle
+// (the base shoving under it), so a rightward drag on a rightward lean
+// produces a correcting torque — balance the fall by dragging toward it.
+export function balanceControl(steer, state) {
+  return BALANCE_CTRL_K * (-steer - state.theta) - BALANCE_CTRL_D * state.omega;
 }
 
 export function balanceState() {
