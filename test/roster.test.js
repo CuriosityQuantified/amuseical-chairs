@@ -16,6 +16,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { seededRng } from '../shared/rng.js';
 import { cupsLevel } from '../shared/cups.js';
+import { trayLevel } from '../shared/tray.js';
 import {
   ROSTER,
   ROSTER_BY_KEY,
@@ -41,6 +42,7 @@ const PAYLOADS = {
     offsets: [...Array(cd.silentBeats)].map((_, i) => cd.intervalMs * (i + 1) + 20),
   }),
   gridflash: (cd) => ({ picks: cd.patterns.map((p) => p.slice(0, 3)) }),
+  tray: (cd) => ({ picks: trayLevel(cd.seed).changed }),
   cups: (cd) => ({
     picks: [1, 2, 3].map((level) => ({ level, cupIndex: cupsLevel(cd.seed, level, cd).ball })),
   }),

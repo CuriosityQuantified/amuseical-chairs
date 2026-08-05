@@ -419,6 +419,49 @@ const TUTORIALS = {
       } },
   ],
 
+  tray: [
+    { ok: true, dur: 5200, label: 'Memorize the tray, then tap the slots that changed',
+      draw(g, w, h, p) {
+        // A fixed 12-glyph demo tray; slots 3 and 8 get swapped at the reveal.
+        const GLYPHS = ['🍎','🍌','🍇','🍓','🍑','🍍','🥝','🥥','🍅','🥕','🌽','🍔'];
+        const SWAP = { 3: '🍩', 8: '🎲' };
+        const size = 42, gap = 6;
+        const gx = w / 2 - (4 * size + 3 * gap) / 2;
+        const gy = 24;
+        const showing = p < 0.38;
+        const picked = Math.floor(seg(p, 0.45, 0.9) * 2);
+        for (let i = 0; i < 12; i++) {
+          const x = gx + (i % 4) * (size + gap);
+          const y = gy + Math.floor(i / 4) * (size + gap);
+          const isSwap = i in SWAP;
+          const glyph = showing || !isSwap ? GLYPHS[i] : SWAP[i];
+          const isPicked = !showing && isSwap && Object.keys(SWAP).indexOf(String(i)) < picked;
+          box(g, x, y, size, size, showing ? C.panel : isPicked ? C.accent : isSwap ? C.cyan : C.panel, C.line);
+          text(g, glyph, x + size / 2, y + size / 2, { size: 22 });
+        }
+        text(g, showing ? 'memorize!' : 'two slots changed — tap them', w / 2, h - 14, { size: 15 });
+        if (!showing && picked < 2) {
+          const i = Number(Object.keys(SWAP)[picked]);
+          cursor(g, gx + (i % 4) * (size + gap) + size / 2, gy + Math.floor(i / 4) * (size + gap) + size / 2, true);
+        }
+      } },
+    { ok: false, dur: 3200, label: 'Flagging everything scores worse than a real attempt',
+      draw(g, w, h, p) {
+        const GLYPHS = ['🍎','🍌','🍇','🍓','🍑','🍍','🥝','🥥','🍅','🥕','🌽','🍔'];
+        const size = 42, gap = 6;
+        const gx = w / 2 - (4 * size + 3 * gap) / 2;
+        const gy = 24;
+        const on = p > 0.35;
+        for (let i = 0; i < 12; i++) {
+          const x = gx + (i % 4) * (size + gap);
+          const y = gy + Math.floor(i / 4) * (size + gap);
+          box(g, x, y, size, size, on ? C.bad : C.panel, C.line);
+          text(g, GLYPHS[i], x + size / 2, y + size / 2, { size: 22 });
+        }
+        if (on) text(g, '12 flagged, 10 unchanged = 10 off', w / 2, h - 14, { size: 15, color: C.bad, bold: true });
+      } },
+  ],
+
   cups: [
     { ok: true, dur: 5200, label: 'Lock onto the one cup and stay on it through every swap',
       draw(g, w, h, p) {

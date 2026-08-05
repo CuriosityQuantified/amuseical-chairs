@@ -7,6 +7,7 @@ import { randInt, shuffle, pick } from '../shared/rng.js';
 import { rgbToLab, ciede2000 } from '../shared/ciede2000.js';
 import { cleanEntryText, isUsableEntry, ENTRY_MAX_CHARS } from '../shared/textclean.js';
 import { CUPS_BASE_CUPS, CUPS_MAX_LEVELS, cupsLevel } from '../shared/cups.js';
+import { TRAY_SLOTS, trayLevel } from '../shared/tray.js';
 
 const SENTENCES = [
   'The quick brown fox jumps over the lazy dog while the band plays on.',
@@ -193,6 +194,14 @@ const ICEBREAKER_PROMPTS = [
 const METRONOME_INTERVALS = [];
 for (let ms = 400; ms <= 900; ms++) if (60000 % ms !== 0) METRONOME_INTERVALS.push(ms);
 
+// Vanishing Tray (issue #11): twelve items sit on a tray for five seconds,
+// then some are swapped for new ones. The whole round — which glyphs, which
+// slots change, what they change to — is a pure function of the round seed,
+// derived in shared/tray.js (the single source both the client and the server
+// import). Emoji render differently per platform, and that is fine: identity
+// is what is scored, not appearance, so near-identical pairs and
+// skin-tone / variation-selector families are excluded there.
+
 export const ROSTER = [
   { key: 'rgb', name: 'RGB Color Match', category: 'perceptual', type: 'error' },
   { key: 'oddoneout', name: 'Odd One Out', category: 'perceptual', type: 'score' },
@@ -202,6 +211,7 @@ export const ROSTER = [
   { key: 'stopclock', name: 'Stop the Clock', category: 'timing', type: 'error' },
   { key: 'metronome', name: 'Metronome Blackout', category: 'timing', type: 'error' },
   { key: 'gridflash', name: 'Grid Flash', category: 'memory', type: 'error' },
+  { key: 'tray', name: 'Vanishing Tray', category: 'memory', type: 'error' },
   { key: 'cups', name: 'Follow the Cup', category: 'attention', type: 'score' },
   { key: 'readroom', name: 'Read the Room', category: 'social', type: 'error' },
   { key: 'caption', name: 'Caption Battle', category: 'social', type: 'score', stages: 2 },
@@ -308,6 +318,16 @@ export function buildGameData(key, ctx) {
       const patterns = [0, 1].map(() =>
         shuffle(rng, [...Array(25).keys()]).slice(0, randInt(rng, 6, 9)).sort((a, b) => a - b));
       return { clientData: { patterns, showMs: 4000 }, secret: { patterns } };
+    }
+    case 'tray': {
+      // 12 glyphs for 5 seconds, then 2–4 are swapped for new ones. The seed
+      // derives the whole round — the client re-derives the swapped tray
+      // locally the way cups/oddoneout derive their layouts — so there is no
+      // mid-game emit (the engine has none for minigames). The metric is still
+      // computed server-side from `secret`.
+      const seed = `tray-${Math.floor(rng() * 1e9)}`;
+      const { items, changed, replacements } = trayLevel(seed);
+      return { clientData: { items, seed, showMs: 5000 }, secret: { changed, replacements } };
     }
     case 'cups':
       // One seed, every level. The client derives each level's swap script from
@@ -645,6 +665,22 @@ export function computeMetric(key, payload, secret, clientData, config) {
       }
       return total;
     }
+    case 'tray': {
+      // Symmetric difference: (changed slots missed) + (unchanged slots wrongly
+      // flagged). Flagging everything scores 12 - nSwaps errors, which is worse
+      // than a real attempt — blanket-tapping is never a winning strategy.
+      if (!Array.isArray(payload.picks)) return null;
+      const changed = new Set(secret.changed);
+      const picks = new Set(
+        payload.picks
+          .filter((c) => Number.isInteger(c) && c >= 0 && c < TRAY_SLOTS)
+          .slice(0, TRAY_SLOTS)
+      );
+      let diff = 0;
+      for (const c of changed) if (!picks.has(c)) diff++;
+      for (const c of picks) if (!changed.has(c)) diff++;
+      return diff;
+    }
     case 'cups': {
       // payload.picks: [{ level, cupIndex }] in the order they were tapped.
       //
@@ -840,6 +876,7 @@ export function formatRaw(key, metric, payload) {
     case 'stopclock': return `${Math.round(metric)} ms off`;
     case 'metronome': return `${Math.round(metric)} ms avg off`;
     case 'gridflash': return `${metric} cells off`;
+    case 'tray': return `${metric} wrong`;
     case 'cups': return `level ${metric}`;
     case 'readroom': return `${metric.toFixed(0)} pts off`;
     case 'caption': return `${metric} vote${metric === 1 ? '' : 's'}`;

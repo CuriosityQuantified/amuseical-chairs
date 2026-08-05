@@ -11,6 +11,7 @@ import { io as connect } from 'socket.io-client';
 import { createServer } from '../server/app.js';
 import { ROSTER } from '../server/games.js';
 import { cupsLevel } from '../shared/cups.js';
+import { trayLevel } from '../shared/tray.js';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -82,6 +83,20 @@ function botPayload(key, data, rnd, stage = 1, bot = null) {
         (_, i) => data.intervalMs * (i + 1) + (rnd() * 160 - 80)),
     };
     case 'gridflash': return { picks: data.patterns.map(() => [...Array(8)].map(() => Math.floor(rnd() * 25))) };
+    // Remembers the tray like a person: flags every changed slot except one
+    // (a human miss), derived from the round seed through the same module the
+    // real client animates — a bot that tapped blindly would flag random
+    // slots and the whole room would tie on noise.
+    case 'tray': {
+      const level = trayLevel(data.seed);
+      const picks = level.changed.slice(0, level.changed.length - 1);
+      // Half the time, also misremember one unchanged slot as changed.
+      if (rnd() < 0.5) {
+        const wrong = [...Array(12).keys()].find((i) => !level.changed.includes(i));
+        picks.push(wrong);
+      }
+      return { picks };
+    }
     // Tracks the ball for a while and then loses it, like a person: every level
     // up to a random one is correct, the next is a neighbouring cup. Derived
     // from the round seed through the same module the real client animates —
