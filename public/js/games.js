@@ -1256,6 +1256,59 @@ function startGuess(root, ctx) {
   };
 }
 
+// ---- Anagram Rush ----------------------------------------------------------
+
+GameClients.anagram = {
+  intro: 'Unscramble each word. Tap tiles or type your answer, then move on — English vocabulary, so hosts should enable this only for the right room.',
+  start(root, ctx) {
+    const scrambles = ctx.data.scrambles || [];
+    const solved = [];
+    let index = 0;
+    const progress = h('div', { class: 'mash-count' }, '');
+    const prompt = h('div', { style: { fontSize: '30px', fontWeight: '800', letterSpacing: '0.16em', textAlign: 'center', padding: '18px', background: 'var(--bg2)', border: '1px solid var(--line)', borderRadius: '8px' } });
+    const tiles = h('div', { style: { display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center', margin: '14px 0' } });
+    const input = h('input', { type: 'text', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false', placeholder: 'type or tap letters', style: { textTransform: 'uppercase', textAlign: 'center', fontSize: '22px', letterSpacing: '0.08em' } });
+    const note = h('div', { class: 'muted', style: { textAlign: 'center', margin: '8px 0' } });
+    const submit = h('button', { class: 'big' }, 'Next word');
+    const skip = h('button', { class: 'secondary' }, 'Skip');
+
+    const advance = (save) => {
+      if (index >= scrambles.length) return;
+      if (save && input.value) solved.push({ index, word: input.value });
+      index++;
+      input.value = '';
+      render();
+    };
+    const render = () => {
+      progress.textContent = `${Math.min(index + 1, scrambles.length)} / ${scrambles.length}`;
+      if (index >= scrambles.length) {
+        prompt.textContent = 'done';
+        tiles.replaceChildren();
+        input.disabled = true;
+        submit.disabled = true;
+        skip.disabled = true;
+        note.textContent = 'waiting on the room…';
+        return;
+      }
+      const scramble = scrambles[index];
+      prompt.textContent = scramble;
+      tiles.replaceChildren(...[...scramble].map((letter) => h('button', {
+        class: 'secondary', onclick: () => { input.value += letter; input.focus(); },
+      }, letter)));
+      note.textContent = 'Build an answer, then move on. There is no answer reveal during play.';
+      input.focus();
+    };
+    submit.addEventListener('click', () => advance(true));
+    skip.addEventListener('click', () => advance(false));
+    input.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') { event.preventDefault(); advance(true); }
+    });
+    root.append(progress, prompt, tiles, input, note, h('div', { style: { display: 'flex', gap: '10px', justifyContent: 'center' } }, submit, skip));
+    render();
+    return { collect: () => ({ solved }) };
+  },
+};
+
 // ---- 13. Typing Sprint -----------------------------------------------------
 
 GameClients.typing = {

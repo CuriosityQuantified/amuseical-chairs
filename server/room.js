@@ -82,7 +82,9 @@ function sanitizeConfig(raw = {}) {
   c.closeGraceMs = numIn(raw.closeGraceMs, 0, 5000, DEFAULTS.closeGraceMs);
   c.enabled = {};
   for (const g of ROSTER) {
-    c.enabled[g.key] = raw.enabled && raw.enabled[g.key] != null ? !!raw.enabled[g.key] : true;
+    c.enabled[g.key] = raw.enabled && raw.enabled[g.key] != null
+      ? !!raw.enabled[g.key]
+      : g.defaultEnabled !== false;
   }
   return c;
 }
@@ -313,8 +315,8 @@ export class Room {
   // its value.
   publicConfig() {
     const { gameDuration, minDelay, maxDelay, enabled } = this.config;
-    const roster = ROSTER.map(({ key, name, category, stages }) =>
-      ({ key, name, category, stages: stages || 1 }));
+    const roster = ROSTER.map(({ key, name, category, stages, defaultEnabled }) =>
+      ({ key, name, category, stages: stages || 1, defaultEnabled: defaultEnabled !== false }));
     return { gameDuration, minDelay, maxDelay, enabled, roster };
   }
 

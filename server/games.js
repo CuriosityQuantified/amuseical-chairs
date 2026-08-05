@@ -23,6 +23,7 @@ import {
   digitsOnly,
   spanStrings,
 } from '../shared/span.js';
+import { anagramRounds } from '../shared/anagram.js';
 
 const SENTENCES = [
   'The quick brown fox jumps over the lazy dog while the band plays on.',
@@ -233,6 +234,7 @@ export const ROSTER = [
   { key: 'caption', name: 'Caption Battle', category: 'social', type: 'score', stages: 2 },
   { key: 'icebreaker', name: 'Icebreaker', category: 'social', type: 'score', stages: 'variable' },
   { key: 'typing', name: 'Typing Sprint', category: 'motor', type: 'score', keyboardOnly: true },
+  { key: 'anagram', name: 'Anagram Rush', category: 'language', type: 'score', defaultEnabled: false },
   { key: 'spacemash', name: 'Space Mash', category: 'motor', type: 'score' },
   { key: 'slingshot', name: 'Slingshot', category: 'motor', type: 'error' },
   { key: 'balance', name: 'Balance the Beam', category: 'motor', type: 'score' },
@@ -402,6 +404,16 @@ export function buildGameData(key, ctx) {
     case 'typing': {
       const idx = pickContent(rng, SENTENCES.length, usedSet('typing'));
       return { clientData: { sentence: SENTENCES[idx] }, secret: { sentence: SENTENCES[idx] } };
+    }
+    case 'anagram': {
+      // The rendered strings must travel to the client, but the round seed and
+      // intended words stay server-side. shared/anagram.js makes the stream
+      // deterministic without turning the seed itself into a cheat surface.
+      const rounds = anagramRounds(`round-${Math.floor(rng() * 1e9)}`);
+      return {
+        clientData: { scrambles: rounds.map((round) => round.scramble) },
+        secret: { answers: rounds.map((round) => round.word) },
+      };
     }
     case 'spacemash':
       return { clientData: { activeMs: 10000, capPerSec: 20 }, secret: {} };
@@ -804,6 +816,21 @@ export function computeMetric(key, payload, secret, clientData, config) {
       const cpm = correct / (elapsed / 60000);
       return Math.max(0, cpm - 5 * errors);
     }
+    case 'anagram': {
+      if (!Array.isArray(payload.solved)) return null;
+      const answers = Array.isArray(secret?.answers) ? secret.answers : [];
+      const counted = new Set();
+      let solved = 0;
+      for (const entry of payload.solved.slice(0, answers.length)) {
+        if (!entry || typeof entry !== 'object') continue;
+        const index = entry.index;
+        if (!Number.isInteger(index) || index < 0 || index >= answers.length || counted.has(index)) continue;
+        counted.add(index);
+        if (typeof entry.word !== 'string') continue;
+        if (entry.word.toLowerCase() === answers[index].toLowerCase()) solved++;
+      }
+      return solved;
+    }
     case 'spacemash': {
       const c = num(payload.count);
       if (c == null) return null;
@@ -990,6 +1017,7 @@ export function formatRaw(key, metric, payload) {
     case 'caption': return `${metric} vote${metric === 1 ? '' : 's'}`;
     case 'icebreaker': return `${metric} right`;
     case 'typing': return `${Math.round(metric)} net cpm`;
+    case 'anagram': return `${metric} word${metric === 1 ? '' : 's'}`;
     case 'spacemash': return `${metric} presses${payload?.flagged ? ' ⚠' : ''}`;
     case 'slingshot': return `${metric.toFixed(1)} ft`;
     case 'balance': return `${(metric / 1000).toFixed(1)}s upright`;
