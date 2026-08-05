@@ -37,7 +37,7 @@
       "semantic": "f8ab4b1157d4b0554ae6cbe0c08f8a84"
     },
     "public/js/games.js": {
-      "ast": "e3454dcaf408c4c6f4eb6eff31a9c71d",
+      "ast": "14050ec1f60344b80c429b8a083fe98d",
       "semantic": null
     },
     "public/js/host.js": {
@@ -53,7 +53,7 @@
       "semantic": "3d9aa8d2aabb42cdc226c0dc852c93f2"
     },
     "public/js/tutorials.js": {
-      "ast": "fc5f56d4464dc86863691fc3b6c6eb4d",
+      "ast": "ab4aeca53d6cc5d9822ba0d11f1af7ca",
       "semantic": null
     },
     "scripts/check.mjs": {
@@ -89,7 +89,7 @@
       "semantic": null
     },
     "shared/balance.js": {
-      "ast": "ed099800eb6d276b0eeffd2bae315887",
+      "ast": "7f10ed23efa5e11767aeb438c0218b14",
       "semantic": null
     },
     "shared/ciede2000.js": {
@@ -141,7 +141,7 @@
       "semantic": null
     },
     "test/balance.test.js": {
-      "ast": "6ccfae1239ed65e5c1ef1d449e3969a4",
+      "ast": "df1db28adc38f45b034a709885842acf",
       "semantic": null
     },
     "test/caption.test.js": {
