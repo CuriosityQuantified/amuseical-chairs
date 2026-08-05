@@ -15,6 +15,14 @@ import {
   BALANCE_FIRST_NUDGE_MS,
 } from '../shared/balance.js';
 import { FRACTIONS_PENALTY, fractionsPairs } from '../shared/fractions.js';
+import {
+  SPAN_START_LEN,
+  SPAN_MAX_LEN,
+  SPAN_PER_DIGIT_MS,
+  SPAN_GAP_MS,
+  digitsOnly,
+  spanStrings,
+} from '../shared/span.js';
 
 const SENTENCES = [
   'The quick brown fox jumps over the lazy dog while the band plays on.',
@@ -219,6 +227,7 @@ export const ROSTER = [
   { key: 'metronome', name: 'Metronome Blackout', category: 'timing', type: 'error' },
   { key: 'gridflash', name: 'Grid Flash', category: 'memory', type: 'error' },
   { key: 'tray', name: 'Vanishing Tray', category: 'memory', type: 'error' },
+  { key: 'span', name: 'Reverse Digit Span', category: 'memory', type: 'score' },
   { key: 'cups', name: 'Follow the Cup', category: 'attention', type: 'score' },
   { key: 'readroom', name: 'Read the Room', category: 'social', type: 'error' },
   { key: 'caption', name: 'Caption Battle', category: 'social', type: 'score', stages: 2 },
@@ -337,6 +346,23 @@ export function buildGameData(key, ctx) {
       const seed = `tray-${Math.floor(rng() * 1e9)}`;
       const { items, changed, replacements } = trayLevel(seed);
       return { clientData: { items, seed, showMs: 5000 }, secret: { changed, replacements } };
+    }
+    case 'span': {
+      // The strings are seeded server-side and duplicated into clientData only
+      // because the client must flash them one digit at a time. Do not send the
+      // seed: unlike a one-off string, it reveals every future answer at once.
+      const strings = spanStrings(`span-${Math.floor(rng() * 1e9)}`);
+      return {
+        clientData: {
+          strings,
+          startLen: SPAN_START_LEN,
+          maxLen: SPAN_MAX_LEN,
+          perDigitMs: SPAN_PER_DIGIT_MS,
+          gapMs: SPAN_GAP_MS,
+          reverse: true,
+        },
+        secret: { strings },
+      };
     }
     case 'cups':
       // One seed, every level. The client derives each level's swap script from
@@ -721,6 +747,18 @@ export function computeMetric(key, payload, secret, clientData, config) {
       for (const c of picks) if (!changed.has(c)) diff++;
       return diff;
     }
+    case 'span': {
+      if (!payload || !Array.isArray(payload.answers)) return null;
+      const strings = secret && Array.isArray(secret.strings) ? secret.strings : [];
+      let longest = 0;
+      for (let i = 0; i < strings.length; i++) {
+        const answer = digitsOnly(payload.answers[i]);
+        const expected = [...strings[i]].reverse().join('');
+        if (answer !== expected) break;
+        longest = SPAN_START_LEN + i;
+      }
+      return longest;
+    }
     case 'cups': {
       // payload.picks: [{ level, cupIndex }] in the order they were tapped.
       //
@@ -946,6 +984,7 @@ export function formatRaw(key, metric, payload) {
     case 'metronome': return `${Math.round(metric)} ms avg off`;
     case 'gridflash': return `${metric} cells off`;
     case 'tray': return `${metric} wrong`;
+    case 'span': return `${metric} digits`;
     case 'cups': return `level ${metric}`;
     case 'readroom': return `${metric.toFixed(0)} pts off`;
     case 'caption': return `${metric} vote${metric === 1 ? '' : 's'}`;

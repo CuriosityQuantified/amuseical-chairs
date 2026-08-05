@@ -44,6 +44,7 @@ const PAYLOADS = {
   }),
   gridflash: (cd) => ({ picks: cd.patterns.map((p) => p.slice(0, 3)) }),
   tray: (cd) => ({ picks: trayLevel(cd.seed).changed }),
+  span: (cd) => ({ answers: cd.strings.map((value) => [...value].reverse().join('')) }),
   cups: (cd) => ({
     picks: [1, 2, 3].map((level) => ({ level, cupIndex: cupsLevel(cd.seed, level, cd).ball })),
   }),

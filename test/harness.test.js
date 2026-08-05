@@ -98,6 +98,17 @@ function botPayload(key, data, rnd, stage = 1, bot = null) {
       }
       return { picks };
     }
+    // Recalls a rising span, then misses one round. The string is necessarily
+    // client-visible while flashing, but the client never receives its seed.
+    case 'span': {
+      const answers = [];
+      const lost = Math.floor(rnd() * data.strings.length);
+      for (let i = 0; i < data.strings.length; i++) {
+        const reversed = [...data.strings[i]].reverse().join('');
+        answers.push(i < lost ? reversed : (i === lost ? '000000000000' : ''));
+      }
+      return { answers };
+    }
     // Tracks the ball for a while and then loses it, like a person: every level
     // up to a random one is correct, the next is a neighbouring cup. Derived
     // from the round seed through the same module the real client animates —
