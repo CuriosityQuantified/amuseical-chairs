@@ -800,6 +800,33 @@ const TUTORIALS = {
       } },
   ],
 
+  fractions: [
+    { ok: true, dur: 4200, label: 'Tap the bigger value — fast, confident picks. Every right tap adds 1 to your net',
+      draw(g, w, h, p) {
+        const by = h - 46, bw = 96, bh = 58;
+        const lx = w / 2 - bw - 10, rx = w / 2 + 10;
+        box(g, lx, by, bw, bh, C.panel, C.line);
+        box(g, rx, by, bw, bh, C.panel, C.line);
+        text(g, '3/7', lx + bw / 2, by + 22, { size: 22, bold: true, color: C.cyan });
+        text(g, '5/12', rx + bw / 2, by + 22, { size: 22, bold: true, color: C.cyan });
+        cursor(g, lx + bw / 2, by + bh + 10, p > 0.15 && p < 0.55);
+        if (p > 0.55) text(g, '+1', lx + bw / 2, by - 14, { size: 20, bold: true, color: C.good });
+        if (p > 0.75) text(g, 'net 1', w / 2, 24, { size: 16, bold: true, color: C.good });
+      } },
+    { ok: false, dur: 3600, label: 'Guessing burns points — every wrong tap costs 2 off your net',
+      draw(g, w, h, p) {
+        const by = h - 46, bw = 96, bh = 58;
+        const lx = w / 2 - bw - 10, rx = w / 2 + 10;
+        box(g, lx, by, bw, bh, C.panel, C.line);
+        box(g, rx, by, bw, bh, C.panel, C.line);
+        text(g, '2/5', lx + bw / 2, by + 22, { size: 22, bold: true, color: C.cyan });
+        text(g, '1/2', rx + bw / 2, by + 22, { size: 22, bold: true, color: C.cyan });
+        cursor(g, lx + bw / 2, by + bh + 10, p > 0.15 && p < 0.55);
+        if (p > 0.55) text(g, '−2', lx + bw / 2, by - 14, { size: 20, bold: true, color: C.bad });
+        if (p > 0.75) text(g, 'net 0 — don\u2019t guess', w / 2, 24, { size: 15, bold: true, color: C.bad });
+      } },
+  ],
+
   chairs: [
     { ok: true, dur: 4200, label: 'BONUS 3× — tap on GREEN fast: slowest each round loses their chair',
       draw(g, w, h, p) {
