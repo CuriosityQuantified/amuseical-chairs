@@ -37,7 +37,7 @@
       "semantic": "f8ab4b1157d4b0554ae6cbe0c08f8a84"
     },
     "public/js/games.js": {
-      "ast": "f932310dcbe562b371021fdcb226fa5f",
+      "ast": "73995150687a5578e63b85f73b63439f",
       "semantic": null
     },
     "public/js/host.js": {
@@ -53,7 +53,7 @@
       "semantic": "3d9aa8d2aabb42cdc226c0dc852c93f2"
     },
     "public/js/tutorials.js": {
-      "ast": "e55472fe24287e2ad335f8861743e0de",
+      "ast": "b7e0f015c37692aca1a957307c732761",
       "semantic": null
     },
     "scripts/check.mjs": {
@@ -69,7 +69,7 @@
       "semantic": "24c1b81e5113a5aa4edaa98f2ffce2c1"
     },
     "server/games.js": {
-      "ast": "1bceb5c4c0b9bdc2f9864b5a4ea437c7",
+      "ast": "5584ad534a3b1d0aa252e5d6430d93c9",
       "semantic": null
     },
     "server/index.js": {
@@ -83,6 +83,10 @@
     "server/sockets.js": {
       "ast": "a2a754f11c5b4ca162cf5931093f9cd0",
       "semantic": "a2a754f11c5b4ca162cf5931093f9cd0"
+    },
+    "shared/balance.js": {
+      "ast": "ed099800eb6d276b0eeffd2bae315887",
+      "semantic": null
     },
     "shared/ciede2000.js": {
       "ast": "7f4c060e6080ff88d740e6b4e2d72237",
@@ -120,6 +124,10 @@
       "ast": "0045da5c9344318bf4e8e0addb30a52c",
       "semantic": null
     },
+    "test/balance.test.js": {
+      "ast": "6ccfae1239ed65e5c1ef1d449e3969a4",
+      "semantic": null
+    },
     "test/caption.test.js": {
       "ast": "992130741f237dc10beb1c0413630e67",
       "semantic": "992130741f237dc10beb1c0413630e67"
@@ -141,7 +149,7 @@
       "semantic": "e32e5d490281581fcef70cdcdb60c8b0"
     },
     "test/harness.test.js": {
-      "ast": "99225105c67cf174882a69cf95a447ae",
+      "ast": "bc459e678546f91f629a0cce935595b4",
       "semantic": null
     },
     "test/icebreaker.test.js": {
@@ -173,7 +181,7 @@
       "semantic": "090730fd5bd50643cea6369ab4e5c184"
     },
     "test/roster.test.js": {
-      "ast": "facdc300c426631a0eb49f45032f00eb",
+      "ast": "a5a3607065c1ef89feba914ce936d4ae",
       "semantic": null
     },
     "test/smoke.test.js": {

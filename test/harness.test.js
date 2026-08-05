@@ -116,6 +116,11 @@ function botPayload(key, data, rnd, stage = 1, bot = null) {
     case 'typing': return { typed: data.sentence.slice(0, 5 + Math.floor(rnd() * data.sentence.length)), elapsedMs: 15000 + rnd() * 20000 };
     case 'spacemash': return { count: 40 + Math.floor(rnd() * 70), flagged: false };
     case 'slingshot': return { best: rnd() * 40 };
+    // Falls somewhere in the round like a person. The server clamps to the
+    // room's real duration, so a bot that "survives" past the deadline is
+    // scored at the maximum — the same claim a cheater could make, and the
+    // reason the clamp is pinned in balance.test.js rather than here.
+    case 'balance': return { survivedMs: Math.floor(rnd() * 45000) };
     default: return {};
   }
 }

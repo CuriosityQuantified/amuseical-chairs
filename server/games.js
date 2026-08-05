@@ -8,6 +8,12 @@ import { rgbToLab, ciede2000 } from '../shared/ciede2000.js';
 import { cleanEntryText, isUsableEntry, ENTRY_MAX_CHARS } from '../shared/textclean.js';
 import { CUPS_BASE_CUPS, CUPS_MAX_LEVELS, cupsLevel } from '../shared/cups.js';
 import { TRAY_SLOTS, trayLevel } from '../shared/tray.js';
+import {
+  BALANCE_GRAVITY,
+  BALANCE_LENGTH,
+  BALANCE_DAMPING,
+  BALANCE_FIRST_NUDGE_MS,
+} from '../shared/balance.js';
 
 const SENTENCES = [
   'The quick brown fox jumps over the lazy dog while the band plays on.',
@@ -219,6 +225,7 @@ export const ROSTER = [
   { key: 'typing', name: 'Typing Sprint', category: 'motor', type: 'score', keyboardOnly: true },
   { key: 'spacemash', name: 'Space Mash', category: 'motor', type: 'score' },
   { key: 'slingshot', name: 'Slingshot', category: 'motor', type: 'error' },
+  { key: 'balance', name: 'Balance the Beam', category: 'motor', type: 'score' },
 ];
 
 export const ROSTER_BY_KEY = new Map(ROSTER.map((g) => [g.key, g]));
@@ -375,6 +382,24 @@ export function buildGameData(key, ctx) {
       const distance = clamp(Math.round(config.slingshotDistance * (0.75 + rng() * 0.5)), 30, 150);
       return {
         clientData: { distance, shots: 5, rings: [2, 5, 10, 20] },
+        secret: {},
+      };
+    }
+    case 'balance': {
+      // Inverted pendulum kept upright by dragging its base. The seed derives
+      // the whole nudge schedule (shared/balance.js, identical on every
+      // device); the physics constants travel with the round so they are
+      // auditable on the host screen. There is no secret half — the metric is
+      // survival time, clamped server-side, the same trust model stopclock
+      // and slingshot already run on.
+      return {
+        clientData: {
+          seed: `balance-${Math.floor(rng() * 1e9)}`,
+          gravity: BALANCE_GRAVITY,
+          length: BALANCE_LENGTH,
+          damping: BALANCE_DAMPING,
+          nudgeEveryMs: BALANCE_FIRST_NUDGE_MS,
+        },
         secret: {},
       };
     }
@@ -737,6 +762,16 @@ export function computeMetric(key, payload, secret, clientData, config) {
       if (best == null || best < 0) return null;
       return clamp(best, 0, 500);
     }
+    case 'balance': {
+      // Survival time. The server can only sanity-clamp (no replay
+      // verification) — the payload is a single number bounded by the
+      // deadline, so the worst case is a player claiming the maximum, the
+      // same trust model stopclock and slingshot already run on. Negative or
+      // missing = non-submission; 0 = fell instantly, a real score.
+      const s = num(payload.survivedMs);
+      if (s == null || s < 0) return null;
+      return clamp(s, 0, config.gameDuration || 45000);
+    }
     default:
       return null;
   }
@@ -884,6 +919,7 @@ export function formatRaw(key, metric, payload) {
     case 'typing': return `${Math.round(metric)} net cpm`;
     case 'spacemash': return `${metric} presses${payload?.flagged ? ' ⚠' : ''}`;
     case 'slingshot': return `${metric.toFixed(1)} ft`;
+    case 'balance': return `${(metric / 1000).toFixed(1)}s upright`;
     default: return String(metric);
   }
 }

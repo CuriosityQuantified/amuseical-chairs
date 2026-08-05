@@ -1,11 +1,11 @@
 {
   "0": "Room",
   "1": "server/games.js",
-  "2": "check.mjs",
+  "2": "room.js",
   "3": "Host UI Lobby Setup",
   "4": "Player Client Sync UI",
   "5": "Project Dependencies",
-  "6": "app.js",
+  "6": "harness.test.js",
   "7": "multistage.test.js",
   "8": "js/games.js",
   "9": "tutorials.js",
@@ -20,10 +20,7 @@
   "18": "Claude Skill Docs",
   "19": "Host Screen UI",
   "20": "Player Join/Play Screen",
-  "21": "redemption.test.js",
+  "21": "caption.test.js",
   "22": "graphify runbook",
-  "23": "ciede2000.js",
-  "24": "room.test.js",
-  "25": "Bot",
-  "26": "normalize.js"
+  "23": "ciede2000.js"
 }
