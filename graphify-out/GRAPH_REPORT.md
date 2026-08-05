@@ -1,16 +1,16 @@
 # Graph Report - amuseical-chairs  (2026-08-05)
 
 ## Corpus Check
-- 52 files · ~81,304 words
+- 54 files · ~82,577 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 456 nodes · 1049 edges · 25 communities (19 shown, 6 thin omitted)
-- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 5 edges (avg confidence: 0.52)
+- 464 nodes · 1081 edges · 26 communities (20 shown, 6 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 6 edges (avg confidence: 0.57)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `094674ab`
+- Built from commit: `fce7ed22`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -40,17 +40,18 @@
 - graphify runbook
 - check.mjs
 - ciede2000.js
+- app.js
 
 ## God Nodes (most connected - your core abstractions)
 1. `Room` - 60 edges
-2. `seededRng()` - 39 edges
-3. `buildGameData()` - 29 edges
-4. `computeMetric()` - 22 edges
+2. `seededRng()` - 43 edges
+3. `buildGameData()` - 33 edges
+4. `computeMetric()` - 23 edges
 5. `attachSockets()` - 21 edges
 6. `el()` - 19 edges
-7. `ROSTER_BY_KEY` - 15 edges
-8. `clearAll()` - 14 edges
-9. `formatRaw()` - 14 edges
+7. `ROSTER_BY_KEY` - 16 edges
+8. `formatRaw()` - 15 edges
+9. `clearAll()` - 14 edges
 10. `el()` - 13 edges
 
 ## Surprising Connections (you probably didn't know these)
@@ -68,19 +69,19 @@
 ## Import Cycles
 - None detected.
 
-## Communities (25 total, 6 thin omitted)
+## Communities (26 total, 6 thin omitted)
 
 ### Community 0 - "Room"
 Cohesion: 0.11
-Nodes (3): Room, sanitizeConfig(), attachSockets()
+Nodes (4): makeRoomCode(), Room, sanitizeConfig(), attachSockets()
 
 ### Community 1 - "server/games.js"
-Cohesion: 0.06
-Nodes (75): buildGameData(), CAPTION_PROMPTS, clamp(), computeMetric(), formatRaw(), ICEBREAKER_PROMPTS, METRONOME_INTERVALS, MULTI_STAGE (+67 more)
+Cohesion: 0.05
+Nodes (82): buildGameData(), CAPTION_PROMPTS, clamp(), computeMetric(), formatRaw(), ICEBREAKER_PROMPTS, METRONOME_INTERVALS, MULTI_STAGE (+74 more)
 
 ### Community 2 - "room.js"
-Cohesion: 0.10
-Nodes (17): createServer(), __dirname, { httpServer }, DEFAULTS, makeRoomCode(), normalizeError(), normalizeScore(), percentile() (+9 more)
+Cohesion: 0.16
+Nodes (11): DEFAULTS, normalizeError(), normalizeScore(), percentile(), createRedemptionRun(), scoreRedemptionReport(), fakeClock(), run() (+3 more)
 
 ### Community 3 - "Host UI Lobby Setup"
 Cohesion: 0.14
@@ -132,7 +133,7 @@ Nodes (3): pingOnce(), sleep(), syncClock()
 
 ### Community 21 - "caption.test.js"
 Cohesion: 0.13
-Nodes (19): aggregateCaption(), aggregateGame(), aggregateIcebreaker(), buildReveal(), buildStages(), icebreakerTally(), num(), votesForPool() (+11 more)
+Nodes (18): aggregateCaption(), aggregateGame(), aggregateIcebreaker(), buildReveal(), buildStages(), icebreakerTally(), votesForPool(), cleanEntryText() (+10 more)
 
 ### Community 22 - "graphify runbook"
 Cohesion: 0.12
@@ -146,8 +147,12 @@ Nodes (18): ALLOWED_HOST_CONTROLS, clientKeys, clientSrc, controlKeys, controlLi
 Cohesion: 0.50
 Nodes (5): ciede2000(), ciede2000Rgb(), deg(), rad(), rgbToLab()
 
+### Community 25 - "app.js"
+Cohesion: 0.36
+Nodes (5): createServer(), __dirname, { httpServer }, ROOT, withServer()
+
 ## Knowledge Gaps
-- **95 isolated node(s):** `graphify-mcp`, `name`, `version`, `description`, `type` (+90 more)
+- **97 isolated node(s):** `graphify-mcp`, `name`, `version`, `description`, `type` (+92 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **6 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -155,16 +160,16 @@ Nodes (5): ciede2000(), ciede2000Rgb(), deg(), rad(), rgbToLab()
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `Room` connect `Room` to `server/games.js`, `room.js`, `multistage.test.js`?**
-  _High betweenness centrality (0.094) - this node is a cross-community bridge._
-- **Why does `attachSockets()` connect `Room` to `room.js`, `Project Dependencies`?**
-  _High betweenness centrality (0.080) - this node is a cross-community bridge._
+  _High betweenness centrality (0.093) - this node is a cross-community bridge._
+- **Why does `attachSockets()` connect `Room` to `app.js`, `Project Dependencies`?**
+  _High betweenness centrality (0.079) - this node is a cross-community bridge._
 - **Why does `qrcode` connect `Project Dependencies` to `Room`?**
   _High betweenness centrality (0.069) - this node is a cross-community bridge._
 - **What connects `graphify-mcp`, `name`, `version` to the rest of the system?**
-  _95 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _97 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Room` be split into smaller, more focused modules?**
-  _Cohesion score 0.11298701298701298 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.10768300060496068 - nodes in this community are weakly interconnected._
 - **Should `server/games.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.05717171717171717 - nodes in this community are weakly interconnected._
-- **Should `room.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.1010752688172043 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05385660890248046 - nodes in this community are weakly interconnected._
+- **Should `Host UI Lobby Setup` be split into smaller, more focused modules?**
+  _Cohesion score 0.14204545454545456 - nodes in this community are weakly interconnected._

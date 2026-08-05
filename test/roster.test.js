@@ -19,6 +19,7 @@ import { cupsLevel } from '../shared/cups.js';
 import { trayLevel } from '../shared/tray.js';
 import { parseValue } from '../shared/fractions.js';
 import { solveScramble } from '../shared/anagram.js';
+import { areaRatio } from '../shared/area.js';
 import {
   ROSTER,
   ROSTER_BY_KEY,
@@ -37,6 +38,7 @@ const PAYLOADS = {
   rgb: () => ({ r: 100, g: 120, b: 130 }),
   oddoneout: () => ({ cleared: 7 }),
   bisect: (cd) => ({ guesses: cd.targets.map((t) => t + 3) }),
+  area: (cd) => ({ guesses: cd.trials.map(areaRatio) }),
   trace: () => ({ deviation: 0.05, coverage: 0.95 }),
   dots: (cd) => ({ guesses: cd.counts.map((c) => c + 5) }),
   stopclock: () => ({ best: 240 }),
