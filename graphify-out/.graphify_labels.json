@@ -1,6 +1,6 @@
 {
   "0": "Room",
-  "1": "server/games.js",
+  "1": "seededRng",
   "2": "room.js",
   "3": "Host UI Lobby Setup",
   "4": "Player Client Sync UI",
@@ -20,7 +20,6 @@
   "18": "Claude Skill Docs",
   "19": "Host Screen UI",
   "20": "Player Join/Play Screen",
-  "21": "caption.test.js",
-  "22": "graphify runbook",
-  "23": "balance.test.js"
+  "21": "server/games.js",
+  "22": "graphify runbook"
 }

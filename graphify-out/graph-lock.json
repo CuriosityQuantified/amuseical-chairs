@@ -37,12 +37,12 @@
       "semantic": "f8ab4b1157d4b0554ae6cbe0c08f8a84"
     },
     "public/js/games.js": {
-      "ast": "3791ac59466fa7b9088b6d04f7a0ae17",
+      "ast": "e3454dcaf408c4c6f4eb6eff31a9c71d",
       "semantic": null
     },
     "public/js/host.js": {
-      "ast": "0d6c9d9c55888b386448e2f3ccaefdef",
-      "semantic": "0d6c9d9c55888b386448e2f3ccaefdef"
+      "ast": "7449072ddb3c2f3c85b3c58c7d14530a",
+      "semantic": null
     },
     "public/js/player.js": {
       "ast": "ee270d24997029ca7729da28033a0be1",
@@ -53,7 +53,7 @@
       "semantic": "3d9aa8d2aabb42cdc226c0dc852c93f2"
     },
     "public/js/tutorials.js": {
-      "ast": "02b5c1673df198bc9d4e9343614f8d86",
+      "ast": "fc5f56d4464dc86863691fc3b6c6eb4d",
       "semantic": null
     },
     "scripts/check.mjs": {
@@ -69,7 +69,7 @@
       "semantic": "24c1b81e5113a5aa4edaa98f2ffce2c1"
     },
     "server/games.js": {
-      "ast": "d1eea66339e2b16b6e8ab22cabc34396",
+      "ast": "f95cc414b465f924a3059729771cd649",
       "semantic": null
     },
     "server/index.js": {
@@ -77,12 +77,16 @@
       "semantic": "f9bcb5a92468425b887f7d6ed3da4eb4"
     },
     "server/room.js": {
-      "ast": "ebcccd0f2abdbac7b14aaca48812cc2e",
-      "semantic": "ebcccd0f2abdbac7b14aaca48812cc2e"
+      "ast": "3477e189912003009fcad0338a6b5c1f",
+      "semantic": null
     },
     "server/sockets.js": {
       "ast": "a2a754f11c5b4ca162cf5931093f9cd0",
       "semantic": "a2a754f11c5b4ca162cf5931093f9cd0"
+    },
+    "shared/anagram.js": {
+      "ast": "ef972db8495e8db6c4cbd97b426a8254",
+      "semantic": null
     },
     "shared/balance.js": {
       "ast": "ed099800eb6d276b0eeffd2bae315887",
@@ -132,6 +136,10 @@
       "ast": "0045da5c9344318bf4e8e0addb30a52c",
       "semantic": null
     },
+    "test/anagram.test.js": {
+      "ast": "03870aab47475e65c6c5ab10131b990c",
+      "semantic": null
+    },
     "test/balance.test.js": {
       "ast": "6ccfae1239ed65e5c1ef1d449e3969a4",
       "semantic": null
@@ -161,7 +169,7 @@
       "semantic": null
     },
     "test/harness.test.js": {
-      "ast": "836d62cc061e76ec57cfd656fdf70c54",
+      "ast": "d652d49ead21f0695b04786d40d18e17",
       "semantic": null
     },
     "test/icebreaker.test.js": {
@@ -193,7 +201,7 @@
       "semantic": "090730fd5bd50643cea6369ab4e5c184"
     },
     "test/roster.test.js": {
-      "ast": "8877069fed8d7655eebbe0a2cd4ba3a1",
+      "ast": "2cb97f9b2747917269affe4af14af059",
       "semantic": null
     },
     "test/smoke.test.js": {

@@ -643,6 +643,30 @@ const TUTORIALS = {
       } },
   ],
 
+  anagram: [
+    { ok: true, dur: 4000, label: 'Build the word with tiles or typing, then move on quickly',
+      draw(g, w, h, p) {
+        const letters = ['R', 'A', 'E', 'B', 'D'];
+        const by = h - 66;
+        letters.forEach((letter, i) => {
+          const x = w / 2 - 110 + i * 44;
+          box(g, x, by, 36, 36, C.panel, C.line);
+          text(g, letter, x + 18, by + 19, { size: 19, bold: true, color: C.cyan });
+        });
+        if (p > 0.25) text(g, 'BREAD', w / 2, 48, { size: 28, bold: true, color: C.good });
+        if (p > 0.7) text(g, 'next word →', w / 2, 92, { size: 16, bold: true, color: C.good });
+        cursor(g, w / 2 - 24, by + 47, p > 0.08 && p < 0.6);
+      } },
+    { ok: false, dur: 3400, label: 'Skip a stuck word — burning the clock cannot reveal its answer',
+      draw(g, w, h, p) {
+        text(g, 'N E A G R A M', w / 2, 48, { size: 23, bold: true, color: C.cyan });
+        text(g, '…', w / 2, 100, { size: 38, bold: true, color: C.bad });
+        box(g, w / 2 - 72, h - 64, 144, 36, C.panel, C.line);
+        text(g, 'SKIP', w / 2, h - 46, { size: 17, bold: true, color: C.warn });
+        if (p > 0.55) text(g, 'move on — no answer reveal', w / 2, 132, { size: 15, color: C.bad, bold: true });
+      } },
+  ],
+
   typing: [
     { ok: true, dur: 4200, label: 'Type the sentence exactly — accuracy earns the speed',
       draw(g, w, h, p) {

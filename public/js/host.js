@@ -114,7 +114,10 @@ function buildConfigPanel() {
     // (Icebreaker runs one guessing round per player who wrote a fact).
     const stages = meta(key)?.stages || 1;
     const cost = stages === 'variable' ? ' ⏱×players' : stages > 1 ? ' ⏱⏱' : '';
-    toggles.append(el('label', {}, cb, nameOf(key) + cost));
+    const note = meta(key)?.defaultEnabled === false
+      ? ' — English vocabulary; off by default for mixed-language rooms'
+      : '';
+    toggles.append(el('label', {}, cb, nameOf(key) + cost, note && el('span', { class: 'muted' }, note)));
   }
 
   const tests = $('test-buttons');

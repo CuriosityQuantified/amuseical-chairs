@@ -18,6 +18,7 @@ import { seededRng } from '../shared/rng.js';
 import { cupsLevel } from '../shared/cups.js';
 import { trayLevel } from '../shared/tray.js';
 import { parseValue } from '../shared/fractions.js';
+import { solveScramble } from '../shared/anagram.js';
 import {
   ROSTER,
   ROSTER_BY_KEY,
@@ -49,6 +50,7 @@ const PAYLOADS = {
     picks: [1, 2, 3].map((level) => ({ level, cupIndex: cupsLevel(cd.seed, level, cd).ball })),
   }),
   typing: (cd) => ({ typed: cd.sentence.slice(0, 24), elapsedMs: 20000 }),
+  anagram: (cd) => ({ solved: cd.scrambles.map((scramble, index) => ({ index, word: solveScramble(scramble) })) }),
   spacemash: () => ({ count: 55, flagged: false }),
   slingshot: () => ({ best: 12.5 }),
   balance: () => ({ survivedMs: 12000 }),

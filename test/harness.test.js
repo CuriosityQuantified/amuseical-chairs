@@ -13,6 +13,7 @@ import { ROSTER } from '../server/games.js';
 import { cupsLevel } from '../shared/cups.js';
 import { trayLevel } from '../shared/tray.js';
 import { parseValue } from '../shared/fractions.js';
+import { solveScramble } from '../shared/anagram.js';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -34,6 +35,9 @@ async function withDeadline(promise, ms, msg) {
 // Fast pacing so a full 20-player game runs in seconds. Game mechanics are
 // untouched — only phase timings shrink.
 const TEST_CONFIG = {
+  // The harness exercises every roster game, including deliberately default-off
+  // games such as Anagram Rush; production rooms retain their fair defaults.
+  enabled: Object.fromEntries(ROSTER.map((game) => [game.key, true])),
   gameDuration: 900,
   musicMs: 60,
   tutorialMs: 50,
@@ -126,6 +130,13 @@ function botPayload(key, data, rnd, stage = 1, bot = null) {
     }
     case 'readroom': return { answer: rnd() < 0.5, prediction: Math.floor(rnd() * 101) };
     case 'typing': return { typed: data.sentence.slice(0, 5 + Math.floor(rnd() * data.sentence.length)), elapsedMs: 15000 + rnd() * 20000 };
+    case 'anagram': {
+      const solved = [];
+      for (let i = 0; i < (data.scrambles || []).length; i++) {
+        if (rnd() < 0.7) solved.push({ index: i, word: solveScramble(data.scrambles[i]) });
+      }
+      return { solved };
+    }
     case 'spacemash': return { count: 40 + Math.floor(rnd() * 70), flagged: false };
     case 'slingshot': return { best: rnd() * 40 };
     // Falls somewhere in the round like a person. The server clamps to the
