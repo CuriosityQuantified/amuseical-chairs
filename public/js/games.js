@@ -21,6 +21,7 @@ import { seededRng } from '/shared/rng.js';
 import { createPressCounter } from '/shared/presscounter.js';
 import { cleanEntryText } from '/shared/textclean.js';
 import { cupsLevel } from '/shared/cups.js';
+import { trayLevel, traySwapped } from '/shared/tray.js';
 
 // ---- tiny DOM helpers ------------------------------------------------------
 
@@ -716,6 +717,61 @@ GameClients.gridflash = {
     }
     round();
     return { collect: () => ({ picks: [...picks, ...(current.size && !showing ? [[...current]] : [])] }) };
+  },
+};
+
+// ---- 9a. Vanishing Tray ----------------------------------------------------
+//
+// Twelve glyphs sit on a tray for five seconds; then a seeded 2–4 of them are
+// swapped for new ones, and you tap the slots that changed. The whole round is
+// a pure function of the round seed (shared/tray.js — the same module the
+// server re-derives to score), so the client builds the modified tray locally
+// the way cups/oddoneout build their layouts: no mid-game emit, and a player
+// who reconnects mid-round re-derives the same tray from the seed they already
+// hold.
+
+GameClients.tray = {
+  intro: 'Twelve items sit on the tray for 5 seconds — then some are swapped. Tap the slots that changed.',
+  start(root, ctx) {
+    const { items, seed, showMs } = ctx.data;
+    const { changed, replacements } = trayLevel(seed);
+    const swapped = traySwapped(items, changed, replacements);
+    const picks = new Set();
+    let showing = true;
+    const note = h('p', { class: 'trial-note center' });
+    const grid = h('div', { class: 'grid4' });
+    const btn = h('button', { class: 'big', onclick: confirm, disabled: true }, 'Done');
+    root.append(note, grid, h('div', { style: { marginTop: '8px' } }, btn));
+    // 4×3 grid of glyph tiles sized to fit above the Done button — never scroll.
+    const side = Math.min(root.clientWidth || 680, 400, availHeight(root, 150));
+    grid.style.width = `${side}px`;
+    grid.style.margin = '0 auto';
+    const cells = items.map((glyph, i) => {
+      const c = h('div', { class: 'cell' });
+      c.textContent = glyph;
+      c.onclick = () => {
+        if (showing) return;
+        if (picks.has(i)) picks.delete(i);
+        else picks.add(i);
+        c.classList.toggle('picked');
+      };
+      grid.append(c);
+      return c;
+    });
+
+    note.textContent = 'Memorize the tray!';
+    setTimeout(() => {
+      showing = false;
+      btn.disabled = false;
+      cells.forEach((c, i) => { c.textContent = swapped[i]; });
+      note.textContent = 'Tap the slots that changed';
+    }, showMs);
+
+    function confirm() {
+      ctx.submit({ picks: [...picks] });
+    }
+    // A partial attempt still scores: whatever is flagged at the deadline.
+    return { collect: () => ({ picks: [...picks] }) };
   },
 };
 

@@ -37,7 +37,7 @@
       "semantic": "f8ab4b1157d4b0554ae6cbe0c08f8a84"
     },
     "public/js/games.js": {
-      "ast": "14d7abce9b49362dc13dbcfa1b2394db",
+      "ast": "f932310dcbe562b371021fdcb226fa5f",
       "semantic": null
     },
     "public/js/host.js": {
@@ -53,7 +53,7 @@
       "semantic": "3d9aa8d2aabb42cdc226c0dc852c93f2"
     },
     "public/js/tutorials.js": {
-      "ast": "979ada0c2f3d9e05f7a4726efde6e149",
+      "ast": "e55472fe24287e2ad335f8861743e0de",
       "semantic": null
     },
     "scripts/check.mjs": {
@@ -69,7 +69,7 @@
       "semantic": "24c1b81e5113a5aa4edaa98f2ffce2c1"
     },
     "server/games.js": {
-      "ast": "b0c71067c356698c28330d961c9ef822",
+      "ast": "1bceb5c4c0b9bdc2f9864b5a4ea437c7",
       "semantic": null
     },
     "server/index.js": {
@@ -116,6 +116,10 @@
       "ast": "3d75f7a898bd0031acbff72bc333a027",
       "semantic": "3d75f7a898bd0031acbff72bc333a027"
     },
+    "shared/tray.js": {
+      "ast": "0045da5c9344318bf4e8e0addb30a52c",
+      "semantic": null
+    },
     "test/caption.test.js": {
       "ast": "992130741f237dc10beb1c0413630e67",
       "semantic": "992130741f237dc10beb1c0413630e67"
@@ -137,7 +141,7 @@
       "semantic": "e32e5d490281581fcef70cdcdb60c8b0"
     },
     "test/harness.test.js": {
-      "ast": "cd5bbb7c672be2887a6a515e4fc374ae",
+      "ast": "99225105c67cf174882a69cf95a447ae",
       "semantic": null
     },
     "test/icebreaker.test.js": {
@@ -169,7 +173,7 @@
       "semantic": "090730fd5bd50643cea6369ab4e5c184"
     },
     "test/roster.test.js": {
-      "ast": "c363599fa85f51ddb324392d99229dd6",
+      "ast": "facdc300c426631a0eb49f45032f00eb",
       "semantic": null
     },
     "test/smoke.test.js": {
@@ -179,6 +183,10 @@
     "test/textclean.test.js": {
       "ast": "eba65528d9fbadcebe5a9d003c4c22e5",
       "semantic": "eba65528d9fbadcebe5a9d003c4c22e5"
+    },
+    "test/tray.test.js": {
+      "ast": "c8af52e8c6fbd01c0ef3395369c75698",
+      "semantic": null
     }
   }
 }
