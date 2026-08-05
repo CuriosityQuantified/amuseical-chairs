@@ -757,6 +757,49 @@ const TUTORIALS = {
       } },
   ],
 
+  balance: [
+    { ok: true, dur: 4200, label: 'Drag anywhere to steer — small, early corrections keep it upright',
+      draw(g, w, h, p) {
+        const pivotY = h - 34;
+        const len = 92;
+        const lean = lerp(0.55, -0.06, seg(p, 0.12, 0.6));   // caught: tip comes back to vertical
+        const bx = lerp(w / 2 + 90, w / 2, seg(p, 0.12, 0.6)); // carriage follows the drag
+        // wedge
+        g.strokeStyle = 'rgba(255,84,112,0.35)'; g.lineWidth = 2;
+        for (const a of [-0.61, 0.61]) {
+          g.beginPath(); g.moveTo(bx, pivotY);
+          g.lineTo(bx + Math.sin(a) * len * 1.4, pivotY - Math.cos(a) * len * 1.4); g.stroke();
+        }
+        // carriage
+        g.fillStyle = C.line; g.fillRect(bx - 34, pivotY - 7, 68, 14);
+        // beam
+        const tx = bx + Math.sin(lean) * len, ty = pivotY - Math.cos(lean) * len;
+        g.strokeStyle = C.cyan; g.lineWidth = 6; g.lineCap = 'round';
+        g.beginPath(); g.moveTo(bx, pivotY - 3); g.lineTo(tx, ty); g.stroke();
+        g.fillStyle = C.warn; g.beginPath(); g.arc(tx, ty, 6, 0, Math.PI * 2); g.fill();
+        cursor(g, bx + (p < 0.4 ? 60 : 14), pivotY - 26, p > 0.1 && p < 0.55);
+        if (p > 0.8) text(g, 'upright — keep nudging it back', w / 2, 22, { size: 14, color: C.good, bold: true });
+      } },
+    { ok: false, dur: 3600, label: 'Let it pass the 35° line and the round is over — no second chances',
+      draw(g, w, h, p) {
+        const pivotY = h - 34;
+        const len = 92;
+        const bx = w / 2;
+        const lean = seg(p, 0.05, 0.7) * 0.95;              // tips straight past the wedge
+        g.strokeStyle = 'rgba(255,84,112,0.5)'; g.lineWidth = 2;
+        for (const a of [-0.61, 0.61]) {
+          g.beginPath(); g.moveTo(bx, pivotY);
+          g.lineTo(bx + Math.sin(a) * len * 1.4, pivotY - Math.cos(a) * len * 1.4); g.stroke();
+        }
+        const tx = bx + Math.sin(lean) * len, ty = pivotY - Math.cos(lean) * len;
+        g.fillStyle = C.line; g.fillRect(bx - 34, pivotY - 7, 68, 14);
+        g.strokeStyle = lean > 0.61 ? C.bad : C.cyan; g.lineWidth = 6; g.lineCap = 'round';
+        g.beginPath(); g.moveTo(bx, pivotY - 3); g.lineTo(tx, ty); g.stroke();
+        g.fillStyle = lean > 0.61 ? C.bad : C.warn; g.beginPath(); g.arc(tx, ty, 6, 0, Math.PI * 2); g.fill();
+        if (p > 0.5) text(g, `${Math.round(lean * 180 / Math.PI)}° — past the line!`, w / 2, 22, { size: 15, color: C.bad, bold: true });
+      } },
+  ],
+
   chairs: [
     { ok: true, dur: 4200, label: 'BONUS 3× — tap on GREEN fast: slowest each round loses their chair',
       draw(g, w, h, p) {

@@ -22,6 +22,15 @@ import { createPressCounter } from '/shared/presscounter.js';
 import { cleanEntryText } from '/shared/textclean.js';
 import { cupsLevel } from '/shared/cups.js';
 import { trayLevel, traySwapped } from '/shared/tray.js';
+import {
+  balanceSchedule,
+  balanceStep,
+  balanceControl,
+  balanceState,
+  BALANCE_MAX_ANGLE,
+  BALANCE_TARGET_RANGE,
+  BALANCE_DT,
+} from '/shared/balance.js';
 
 // ---- tiny DOM helpers ------------------------------------------------------
 
@@ -1626,6 +1635,145 @@ GameClients.slingshot = {
 
     return {
       collect: () => (best != null ? { best } : null),
+    };
+  },
+};
+
+// ---- 17. Balance the Beam ---------------------------------------------------
+//
+// Inverted pendulum on a carriage. Drag anywhere: the beam's pivot follows
+// your finger and the beam is steered toward the drag position by a virtual
+// spring (shared/balance.js). Seeded nudges — derived from the round seed,
+// identical on every device — kick the beam at escalating intervals and
+// strength. Fail past 35°; score = survival time. The physics runs on a fixed
+// 120Hz timestep driven by elapsed time, so a 30fps phone and a 120Hz laptop
+// get identical dynamics (the slingshot pattern).
+
+GameClients.balance = {
+  intro: 'Drag anywhere to steer the beam — keep it inside the 35° arc. The nudges get worse.',
+  start(root, ctx) {
+    const { canvas, ctx: g, w, hgt } = makeCanvas(root, 300, 56);
+    const pad = 30;
+    const pivotY = hgt - 30;
+    const lenPx = hgt * 0.52;                       // beam length in px (tip stays on canvas at 35°)
+    const pxPerRad = (w / 2 - pad) / BALANCE_TARGET_RANGE;
+    const schedule = balanceSchedule(ctx.data.seed, { durationMs: ctx.duration });
+    let state = balanceState();
+    let elapsed = 0;                                // simulated ms (fixed-timestep)
+    let survivedMs = 0;
+    let nudgeIdx = 0;
+    let dragging = false;
+    let dragPx = w / 2;
+    let acc = 0;
+    let last = performance.now();
+    let fallen = false;
+
+    const targetFromDrag = () =>
+      dragging ? clamp((dragPx - w / 2) / pxPerRad, -BALANCE_TARGET_RANGE, BALANCE_TARGET_RANGE) : 0;
+
+    // ---- input: drag anywhere, release to recentre -------------------------
+    canvas.addEventListener('pointerdown', (e) => {
+      dragging = true;
+      const p = canvasPos(canvas, e);
+      dragPx = clamp(p.x, pad, w - pad);
+      try { canvas.setPointerCapture(e.pointerId); } catch { /* synthetic events */ }
+    });
+    canvas.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      const p = canvasPos(canvas, e);
+      dragPx = clamp(p.x, pad, w - pad);
+    });
+    for (const ev of ['pointerup', 'pointercancel']) {
+      canvas.addEventListener(ev, () => {
+        dragging = false;
+        dragPx = w / 2;
+      });
+    }
+    canvas.style.touchAction = 'none';
+
+    // ---- rendering ---------------------------------------------------------
+    function draw() {
+      g.clearRect(0, 0, w, hgt);
+      // Fail wedge: the two 35° lines the beam must stay between.
+      g.strokeStyle = 'rgba(255,84,112,0.30)';
+      g.lineWidth = 2;
+      for (const a of [-BALANCE_MAX_ANGLE, BALANCE_MAX_ANGLE]) {
+        g.beginPath();
+        g.moveTo(dragPx, pivotY);
+        g.lineTo(dragPx + Math.sin(a) * lenPx * 1.45, pivotY - Math.cos(a) * lenPx * 1.45);
+        g.stroke();
+      }
+      // Carriage: a thumb-friendly sled under the pivot, following the drag.
+      g.fillStyle = '#0e3a4a';
+      g.strokeStyle = '#16303f';
+      g.lineWidth = 2;
+      const cw = 74, ch = 16;
+      g.fillRect(dragPx - cw / 2, pivotY - 8, cw, ch);
+      g.strokeRect(dragPx - cw / 2, pivotY - 8, cw, ch);
+      // Beam.
+      const tipX = dragPx + Math.sin(state.theta) * lenPx;
+      const tipY = pivotY - Math.cos(state.theta) * lenPx;
+      g.shadowColor = '#00e5ff';
+      g.shadowBlur = 14;
+      g.strokeStyle = '#00e5ff';
+      g.lineWidth = 7;
+      g.lineCap = 'round';
+      g.beginPath();
+      g.moveTo(dragPx, pivotY - 4);
+      g.lineTo(tipX, tipY);
+      g.stroke();
+      g.shadowBlur = 0;
+      g.fillStyle = '#ffd23d';
+      g.beginPath();
+      g.arc(tipX, tipY, 7, 0, Math.PI * 2);
+      g.fill();
+      // Survival clock.
+      g.fillStyle = '#d9faff';
+      g.font = '700 26px system-ui, sans-serif';
+      g.textAlign = 'left';
+      g.textBaseline = 'top';
+      g.fillText(`${(elapsed / 1000).toFixed(1)}s`, 14, 10);
+      g.fillStyle = '#7fb8cc';
+      g.font = '13px system-ui, sans-serif';
+      g.fillText('drag to steer', w - 14, 16);
+      g.textAlign = 'right';
+    }
+
+    // ---- fixed-timestep loop ----------------------------------------------
+    function frame(now) {
+      if (!canvas.isConnected) return;
+      acc += Math.min(100, now - last);             // clamp a backgrounded tab
+      last = now;
+      let steps = 0;
+      while (acc >= BALANCE_DT * 1000 && steps < 10) {
+        // Kicks due at this simulated time — identical schedule, every device.
+        while (nudgeIdx < schedule.length && schedule[nudgeIdx].atMs <= elapsed) {
+          const n = schedule[nudgeIdx++];
+          state.omega += n.impulse * n.dir;
+        }
+        const u = balanceControl(targetFromDrag(), state);
+        state = balanceStep(state, BALANCE_DT, u);
+        elapsed += BALANCE_DT * 1000;
+        acc -= BALANCE_DT * 1000;
+        steps++;
+        if (Math.abs(state.theta) > BALANCE_MAX_ANGLE) {
+          fallen = true;
+          survivedMs = elapsed;
+          break;
+        }
+      }
+      draw();
+      if (fallen) {
+        ctx.submit({ survivedMs: Math.round(survivedMs) });
+        return;
+      }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+
+    return {
+      // Still upright at the deadline: you scored the whole round.
+      collect: () => ({ survivedMs: Math.round(elapsed) }),
     };
   },
 };

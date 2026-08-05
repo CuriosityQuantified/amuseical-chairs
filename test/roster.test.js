@@ -49,6 +49,7 @@ const PAYLOADS = {
   typing: (cd) => ({ typed: cd.sentence.slice(0, 24), elapsedMs: 20000 }),
   spacemash: () => ({ count: 55, flagged: false }),
   slingshot: () => ({ best: 12.5 }),
+  balance: () => ({ survivedMs: 12000 }),
   readroom: null,
   caption: null,
   icebreaker: null,
