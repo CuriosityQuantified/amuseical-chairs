@@ -356,6 +356,13 @@ where it belongs. `GRAPH_REPORT.md` carries the exact counts — quoting them in
 prose is a losing game, since editing this paragraph changes the graph that
 describes it.
 
+### Doing this to another repo
+
+`docs/graphify-runbook.md` is the portable version of everything above: install,
+what to exclude and how to tell you got it wrong, what to commit, the MCP wiring,
+and the freshness gate — including the two designs for that gate that look right
+and are not. Written to be dropped into a repo that is not this one.
+
 ## CI
 
 `.github/workflows/ci.yml` runs on every pull request and every push to
