@@ -1830,3 +1830,67 @@ GameClients.fractions = {
     };
   },
 };
+
+// ---- Reverse Digit Span ----------------------------------------------------
+
+GameClients.span = {
+  intro: 'Watch each digit once, then type the whole string backwards. It gets longer every round.',
+  start(root, ctx) {
+    const { strings, startLen, perDigitMs, gapMs } = ctx.data;
+    const answers = [];
+    let index = 0;
+    const progress = h('div', { class: 'mash-count' }, `0 / ${strings.length}`);
+    const digit = h('div', { class: 'span-digit' }, 'ready');
+    const note = h('div', { class: 'muted', style: { textAlign: 'center' } }, 'memorize each flash — then enter it backwards');
+    const input = h('input', {
+      class: 'span-input', type: 'text', inputmode: 'numeric', autocomplete: 'off',
+      placeholder: 'type backwards', disabled: 'disabled', maxlength: String(startLen + strings.length - 1),
+    });
+    const submit = h('button', { class: 'big span-submit', disabled: 'disabled' }, 'submit');
+
+    const flashRound = () => {
+      if (index >= strings.length) {
+        digit.textContent = 'done';
+        note.textContent = 'waiting on the room…';
+        input.disabled = true;
+        submit.disabled = true;
+        return;
+      }
+      const value = strings[index];
+      let char = 0;
+      progress.textContent = `${index + 1} / ${strings.length}`;
+      input.value = '';
+      input.disabled = true;
+      submit.disabled = true;
+      note.textContent = `round ${startLen + index}: watch once, then type it backwards`;
+      const flash = () => {
+        if (char >= value.length) {
+          digit.textContent = '…';
+          setTimeout(() => {
+            input.disabled = false;
+            submit.disabled = false;
+            input.focus();
+            note.textContent = 'type the digits in reverse order';
+          }, gapMs);
+          return;
+        }
+        digit.textContent = value[char++];
+        setTimeout(flash, perDigitMs + gapMs);
+      };
+      flash();
+    };
+    const advance = () => {
+      if (input.disabled || index >= strings.length) return;
+      answers.push(input.value);
+      index++;
+      flashRound();
+    };
+    submit.addEventListener('click', advance);
+    input.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') { event.preventDefault(); advance(); }
+    });
+    root.append(progress, digit, note, input, submit);
+    flashRound();
+    return { collect: () => ({ answers }) };
+  },
+};

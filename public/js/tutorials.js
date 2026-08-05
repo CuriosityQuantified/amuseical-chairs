@@ -827,6 +827,25 @@ const TUTORIALS = {
       } },
   ],
 
+  span: [
+    { ok: true, dur: 4200, label: 'Watch each flash, then type the string backwards before the next round',
+      draw(g, w, h, p) {
+        const digits = ['8', '4', '1'];
+        const active = Math.min(2, Math.floor(p * 3));
+        text(g, digits[active], w / 2, h / 2 - 18, { size: 58, bold: true, color: C.cyan });
+        if (p > 0.62) {
+          box(g, w / 2 - 90, h - 62, 180, 38, C.panel, C.line);
+          text(g, '1 4 8', w / 2, h - 43, { size: 23, bold: true, color: C.good });
+        }
+      } },
+    { ok: false, dur: 3600, label: 'No replay: do not wait for the whole string or type it forwards',
+      draw(g, w, h, p) {
+        text(g, p < 0.55 ? '8' : '…', w / 2, h / 2 - 18, { size: 58, bold: true, color: C.cyan });
+        box(g, w / 2 - 90, h - 62, 180, 38, C.panel, C.line);
+        text(g, '8 4 1  ✗', w / 2, h - 43, { size: 23, bold: true, color: C.bad });
+      } },
+  ],
+
   chairs: [
     { ok: true, dur: 4200, label: 'BONUS 3× — tap on GREEN fast: slowest each round loses their chair',
       draw(g, w, h, p) {

@@ -37,7 +37,7 @@
       "semantic": "f8ab4b1157d4b0554ae6cbe0c08f8a84"
     },
     "public/js/games.js": {
-      "ast": "887d13347df0e10377dc937f91844cf8",
+      "ast": "3791ac59466fa7b9088b6d04f7a0ae17",
       "semantic": null
     },
     "public/js/host.js": {
@@ -53,7 +53,7 @@
       "semantic": "3d9aa8d2aabb42cdc226c0dc852c93f2"
     },
     "public/js/tutorials.js": {
-      "ast": "d922b00d62b456754c1ad4469dc066b8",
+      "ast": "02b5c1673df198bc9d4e9343614f8d86",
       "semantic": null
     },
     "scripts/check.mjs": {
@@ -69,7 +69,7 @@
       "semantic": "24c1b81e5113a5aa4edaa98f2ffce2c1"
     },
     "server/games.js": {
-      "ast": "5fe484ecc94ea052283bcf0b2ab3a542",
+      "ast": "d1eea66339e2b16b6e8ab22cabc34396",
       "semantic": null
     },
     "server/index.js": {
@@ -120,6 +120,10 @@
       "ast": "351b6134407218b5e0bd36421b2881fd",
       "semantic": "351b6134407218b5e0bd36421b2881fd"
     },
+    "shared/span.js": {
+      "ast": "b1de23e16f49e7db42fad897ba7c15f1",
+      "semantic": null
+    },
     "shared/textclean.js": {
       "ast": "3d75f7a898bd0031acbff72bc333a027",
       "semantic": "3d75f7a898bd0031acbff72bc333a027"
@@ -157,7 +161,7 @@
       "semantic": null
     },
     "test/harness.test.js": {
-      "ast": "cce83bdfeb12a5609448a22261c889cf",
+      "ast": "836d62cc061e76ec57cfd656fdf70c54",
       "semantic": null
     },
     "test/icebreaker.test.js": {
@@ -189,12 +193,16 @@
       "semantic": "090730fd5bd50643cea6369ab4e5c184"
     },
     "test/roster.test.js": {
-      "ast": "3f2b93a0f7e83d14335b4eabf15a1e02",
+      "ast": "8877069fed8d7655eebbe0a2cd4ba3a1",
       "semantic": null
     },
     "test/smoke.test.js": {
       "ast": "a1a14e9592e27da009d4b90de8e51da4",
       "semantic": "a1a14e9592e27da009d4b90de8e51da4"
+    },
+    "test/span.test.js": {
+      "ast": "fb81cdb6c64d7d4ff70013555cc5429e",
+      "semantic": null
     },
     "test/textclean.test.js": {
       "ast": "eba65528d9fbadcebe5a9d003c4c22e5",
