@@ -1695,22 +1695,23 @@ GameClients.slingshot = {
 
 // ---- 17. Balance the Beam ---------------------------------------------------
 //
-// Inverted pendulum on a carriage. Drag anywhere: the beam's pivot follows
-// your finger and the beam is steered toward the drag position by a virtual
-// spring (shared/balance.js). Seeded nudges — derived from the round seed,
-// identical on every device — kick the beam at escalating intervals and
-// strength. Fail past 35°; score = survival time. The physics runs on a fixed
-// 120Hz timestep driven by elapsed time, so a 30fps phone and a 120Hz laptop
-// get identical dynamics (the slingshot pattern).
+// Cart-pole: drag anywhere to slide the BASE under an inverted pendulum —
+// the base chases the falling pole, the way a hand catches a broomstick
+// (drag TOWARD the fall; the pole couples to base acceleration, see
+// shared/balance.js). Seeded nudges — derived from the round seed, identical
+// on every device — kick the beam at escalating intervals and strength. Fail
+// past 35°; score = survival time. The physics runs on a fixed 120Hz
+// timestep driven by elapsed time, so a 30fps phone and a 120Hz laptop get
+// identical dynamics (the slingshot pattern).
 
 GameClients.balance = {
-  intro: 'Drag anywhere to steer the beam — keep it inside the 35° arc. The nudges get worse.',
+  intro: 'Slide the base to keep the beam inside the 35° arc — the nudges get worse.',
   start(root, ctx) {
     const { canvas, ctx: g, w, hgt } = makeCanvas(root, 300, 56);
     const pad = 30;
     const pivotY = hgt - 30;
     const lenPx = hgt * 0.52;                       // beam length in px (tip stays on canvas at 35°)
-    const pxPerRad = (w / 2 - pad) / BALANCE_TARGET_RANGE;
+    const pxPerM = (w / 2 - pad) / BALANCE_TARGET_RANGE;   // m → px (full drag sweep = ±TARGET_RANGE)
     const schedule = balanceSchedule(ctx.data.seed, { durationMs: ctx.duration });
     let state = balanceState();
     let elapsed = 0;                                // simulated ms (fixed-timestep)
@@ -1722,8 +1723,9 @@ GameClients.balance = {
     let last = performance.now();
     let fallen = false;
 
-    const targetFromDrag = () =>
-      dragging ? clamp((dragPx - w / 2) / pxPerRad, -BALANCE_TARGET_RANGE, BALANCE_TARGET_RANGE) : 0;
+    // Drag maps to a target carriage position in meters. Release recentres.
+    const xTargetFromDrag = () =>
+      dragging ? clamp((dragPx - w / 2) / pxPerM, -BALANCE_TARGET_RANGE, BALANCE_TARGET_RANGE) : 0;
 
     // ---- input: drag anywhere, release to recentre -------------------------
     canvas.addEventListener('pointerdown', (e) => {
@@ -1748,24 +1750,31 @@ GameClients.balance = {
     // ---- rendering ---------------------------------------------------------
     function draw() {
       g.clearRect(0, 0, w, hgt);
+      // The carriage renders at the PHYSICS position (it springs toward the
+      // finger); a ghost sled marks where the drag is pulling it.
+      const cartX = w / 2 + state.x * pxPerM;
       // Fail wedge: the two 35° lines the beam must stay between.
       g.strokeStyle = 'rgba(255,84,112,0.30)';
       g.lineWidth = 2;
       for (const a of [-BALANCE_MAX_ANGLE, BALANCE_MAX_ANGLE]) {
         g.beginPath();
-        g.moveTo(dragPx, pivotY);
-        g.lineTo(dragPx + Math.sin(a) * lenPx * 1.45, pivotY - Math.cos(a) * lenPx * 1.45);
+        g.moveTo(cartX, pivotY);
+        g.lineTo(cartX + Math.sin(a) * lenPx * 1.45, pivotY - Math.cos(a) * lenPx * 1.45);
         g.stroke();
       }
-      // Carriage: a thumb-friendly sled under the pivot, following the drag.
+      const cw = 74, ch = 16;
+      // Ghost sled: where the drag is pulling the base to.
+      g.strokeStyle = 'rgba(0,229,255,0.25)';
+      g.lineWidth = 2;
+      if (dragging) g.strokeRect(dragPx - cw / 2, pivotY - 8, cw, ch);
+      // Carriage: a thumb-friendly sled under the pivot, following the physics.
       g.fillStyle = '#0e3a4a';
       g.strokeStyle = '#16303f';
       g.lineWidth = 2;
-      const cw = 74, ch = 16;
-      g.fillRect(dragPx - cw / 2, pivotY - 8, cw, ch);
-      g.strokeRect(dragPx - cw / 2, pivotY - 8, cw, ch);
+      g.fillRect(cartX - cw / 2, pivotY - 8, cw, ch);
+      g.strokeRect(cartX - cw / 2, pivotY - 8, cw, ch);
       // Beam.
-      const tipX = dragPx + Math.sin(state.theta) * lenPx;
+      const tipX = cartX + Math.sin(state.theta) * lenPx;
       const tipY = pivotY - Math.cos(state.theta) * lenPx;
       g.shadowColor = '#00e5ff';
       g.shadowBlur = 14;
@@ -1789,7 +1798,7 @@ GameClients.balance = {
       g.fillText(`${(elapsed / 1000).toFixed(1)}s`, 14, 10);
       g.fillStyle = '#7fb8cc';
       g.font = '13px system-ui, sans-serif';
-      g.fillText('drag to steer', w - 14, 16);
+      g.fillText('slide the base', w - 14, 16);
       g.textAlign = 'right';
     }
 
@@ -1805,8 +1814,8 @@ GameClients.balance = {
           const n = schedule[nudgeIdx++];
           state.omega += n.impulse * n.dir;
         }
-        const u = balanceControl(targetFromDrag(), state);
-        state = balanceStep(state, BALANCE_DT, u);
+        const a = balanceControl(xTargetFromDrag(), state);
+        state = balanceStep(state, BALANCE_DT, a);
         elapsed += BALANCE_DT * 1000;
         acc -= BALANCE_DT * 1000;
         steps++;

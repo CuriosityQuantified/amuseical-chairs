@@ -1,12 +1,16 @@
-// Balance the Beam (issue #13): an inverted pendulum kept upright by dragging
-// its base. The round is a pure function of the seed — shared/balance.js
-// derives the escalating nudge schedule and the fixed-timestep physics, the
-// client integrates it on every device identically, and the server clamps the
-// reported survival time (the same trust model stopclock and slingshot run
-// on). This file pins the schedule shape, the physics determinism, the
-// scorer's clamps, and the tuning: an idle player must fall quickly, a
-// reactive player must last longer, and the round must self-escalate so the
-// room spreads out instead of tie-clumping.
+// Balance the Beam (issue #13): a cart-pole — the player drags anywhere to
+// slide the BASE under an inverted pendulum, and the base chases the falling
+// pole (drag TOWARD the fall; the pole couples to base acceleration, the way
+// a hand catches a broomstick). The round is a pure function of the seed —
+// shared/balance.js derives the escalating nudge schedule and the
+// fixed-timestep physics, the client integrates it on every device
+// identically, and the server clamps the reported survival time (the same
+// trust model stopclock and slingshot run on). This file pins the schedule
+// shape, the physics determinism, the CART-POLE DIRECTION CONTRACT (a base
+// moving in the direction of the fall catches it; the wrong way makes the
+// fall strictly worse), the scorer's clamps, and the tuning: an idle player
+// must fall quickly, a reactive player must last longer, and the round must
+// self-escalate so the room spreads out instead of tie-clumping.
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -39,8 +43,13 @@ const round = (seed = 'balance-seed') =>
 const score = (survivedMs, cfg = CONFIG) =>
   computeMetric('balance', { survivedMs }, {}, {}, cfg);
 
-// A reactive player: drag opposite the lean (the minimal skill), clamped to
-// the same target range the client maps a full drag sweep to.
+// A reactive player: chases the fall — targets a base position toward the
+// lean and the lean's velocity (the minimal cart-pole skill), clamped to the
+// same ±range the client maps a full drag sweep to. Idle (useController =
+// false) just returns the base to centre.
+const chaseTarget = (theta, omega) =>
+  Math.max(-BALANCE_TARGET_RANGE, Math.min(BALANCE_TARGET_RANGE, 1.2 * theta + 0.35 * omega));
+
 const play = (seed, useController, durationMs = 45000) => {
   const schedule = balanceSchedule(seed, { durationMs });
   let state = balanceState();
@@ -51,14 +60,12 @@ const play = (seed, useController, durationMs = 45000) => {
       const k = schedule[n++];
       state.omega += k.impulse * k.dir;
     }
-    const raw = -0.55 * state.theta - 0.9 * state.omega;
-    const target = useController
-      ? Math.max(-BALANCE_TARGET_RANGE, Math.min(BALANCE_TARGET_RANGE, raw))
-      : 0;
+    const target = useController ? chaseTarget(state.theta, state.omega) : 0;
     state = balanceStep(state, BALANCE_DT, balanceControl(target, state));
     t += BALANCE_DT * 1000;
     if (Math.abs(state.theta) > BALANCE_MAX_ANGLE) return t;
-    assert.ok(Number.isFinite(state.theta) && Number.isFinite(state.omega),
+    assert.ok(
+      [state.theta, state.omega, state.x, state.v].every(Number.isFinite),
       `seed ${seed}: physics went non-finite at ${t}ms`);
   }
   return durationMs;
@@ -118,7 +125,67 @@ test('physics step is deterministic and stable across a full round', () => {
       n++;
     }
     state = balanceStep(state, BALANCE_DT, 0);
-    assert.ok(Number.isFinite(state.theta) && Number.isFinite(state.omega), `non-finite at ${t}ms`);
+    assert.ok([state.theta, state.omega, state.x, state.v].every(Number.isFinite),
+      `non-finite at ${t}ms`);
+  }
+});
+
+// ---- cart-pole direction contract (the regression this file exists to pin) --
+//
+// A broomstick falls RIGHT: the hand must move RIGHT to catch it. The pole
+// couples to base acceleration, so the sign of that coupling is the whole
+// game — the version before this fix steered the pole's ANGLE toward the
+// drag, so dragging right into a rightward fall made it fall harder.
+
+test('control direction: the base target chases the fall, never away from it', () => {
+  assert.ok(chaseTarget(0.3, 0) > 0, 'falling right → base target is to the right');
+  assert.ok(chaseTarget(-0.3, 0) < 0, 'falling left → base target is to the left');
+  assert.ok(chaseTarget(0.3, -0.4) > 0, 'falling right, even while swinging back, still chases right');
+  assert.ok(chaseTarget(-0.3, 0.4) < 0, 'falling left, even while swinging back, still chases left');
+  assert.equal(chaseTarget(0, 0), 0, 'upright and still → target is centre');
+});
+
+test('the pole couples to base acceleration the cart-pole way (regression pin)', () => {
+  // A rightward base acceleration on a rightward lean must REDUCE theta
+  // (catch the fall); a leftward acceleration must make it strictly worse.
+  const settle = (theta0, a, steps = 120) => {
+    let s = balanceState();
+    s.theta = theta0;
+    for (let i = 0; i < steps; i++) s = balanceStep(s, BALANCE_DT, a);
+    return s.theta;
+  };
+  const lean = 0.2;
+  assert.ok(settle(lean, 2.5) < lean, 'right accel catches a right lean');
+  assert.ok(settle(lean, -2.5) > lean, 'left accel makes a right lean strictly worse');
+  assert.ok(settle(-lean, -2.5) > -lean, 'left accel catches a left lean');
+  assert.ok(settle(-lean, 2.5) < -lean, 'right accel makes a left lean strictly worse');
+});
+
+test('a wrong-way controller falls at least as fast as doing nothing', () => {
+  // The "backwards physics" feel: steering the base AWAY from the fall must
+  // never out-survive idling, so the regression cannot creep back silently.
+  const playWrong = (seed, durationMs = 45000) => {
+    const schedule = balanceSchedule(seed, { durationMs });
+    let state = balanceState();
+    let t = 0;
+    let n = 0;
+    while (t < durationMs) {
+      while (n < schedule.length && schedule[n].atMs <= t) {
+        const k = schedule[n++];
+        state.omega += k.impulse * k.dir;
+      }
+      const target = -chaseTarget(state.theta, state.omega); // deliberately wrong way
+      state = balanceStep(state, BALANCE_DT, balanceControl(target, state));
+      t += BALANCE_DT * 1000;
+      if (Math.abs(state.theta) > BALANCE_MAX_ANGLE) return t;
+    }
+    return durationMs;
+  };
+  for (const seed of ['bal-wrong-0', 'bal-wrong-1', 'bal-wrong-2']) {
+    const idleT = play(seed, false);
+    const wrongT = playWrong(seed);
+    assert.ok(wrongT <= idleT + 200,
+      `seed ${seed}: wrong-way control must not outlive idling (${wrongT}ms vs ${idleT}ms)`);
   }
 });
 

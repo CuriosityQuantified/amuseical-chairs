@@ -1,15 +1,22 @@
 // Pure, seeded physics for Balance the Beam (issue #13).
 //
-// An inverted pendulum on a carriage: the player drags anywhere to steer the
-// beam (drag position maps to a target angle, a virtual spring pulls the beam
-// toward it), seeded nudges try to knock it over, and the round ends when the
-// beam passes ~35° from vertical. Score = survival time.
+// A cart-pole: the player drags anywhere to slide the BASE (the carriage)
+// under an inverted pendulum — drag right and the base moves right, and the
+// pole couples to base acceleration, so the base has to chase the falling
+// pole the way a hand catches a broomstick (drag TOWARD the fall). Seeded
+// nudges try to knock the pole over, and the round ends when the pole passes
+// ~35° from vertical. Score = survival time.
 //
 // Everything here is a pure function of the round seed + elapsed time, so the
 // client derives the identical nudge schedule on every device (the way
 // cups/oddoneout derive their layouts) and integrates with a FIXED timestep —
 // a 30fps phone and a 120Hz laptop get the same physics. No Math.random()
 // anywhere in here.
+//
+// Direction contract (pinned by tests): theta > 0 is a lean to the RIGHT;
+// a positive carriage acceleration (base moving right) DECREASES theta —
+// the base must move in the direction of the fall to catch it. A controller
+// that steers the base the other way makes the fall strictly worse.
 //
 // This module is the single source of truth for the constants: server/games.js
 // and public/js/games.js both import it (the browser via the absolute
@@ -30,14 +37,14 @@ export const BALANCE_GRAVITY = 9.81;   // m/s²
 export const BALANCE_LENGTH = 2.0;     // m
 export const BALANCE_DAMPING = 2.2;    // 1/s
 
-// The player's drag maps to a target angle (rad) and the beam is pulled
-// toward it by a virtual spring. CTRL_K sits BELOW gravity/length on purpose:
-// the beam is still genuinely unstable at rest, so holding still costs the
-// round — the player has to keep correcting. CTRL_D is the hand's extra
-// damping so a correction settles instead of ringing.
-export const BALANCE_CTRL_K = 3.0;     // 1/s²
-export const BALANCE_CTRL_D = 1.6;     // 1/s
-export const BALANCE_TARGET_RANGE = 0.9; // rad — a full drag sweep maps here
+// The player's drag maps to a target carriage position (m) and the base is
+// pulled toward it by a virtual spring. CART_K sits BELOW gravity/length on
+// purpose: the pole is still genuinely unstable at rest, so holding still
+// costs the round — the player has to keep correcting. CART_D is the base's
+// extra damping so a correction settles instead of ringing.
+export const BALANCE_CART_K = 3.0;     // 1/s²
+export const BALANCE_CART_D = 1.6;     // 1/s
+export const BALANCE_TARGET_RANGE = 0.9; // m — a full drag sweep maps here
 
 // Fixed physics step in seconds. Same on every device, frame rate be damned.
 export const BALANCE_DT = 1 / 120;
@@ -67,22 +74,27 @@ export function balanceSchedule(seed, { durationMs = 45000 } = {}) {
   return out;
 }
 
-// One fixed-timestep of the beam. `u` is the control torque (rad/s²) from
-// balanceControl. Pure: identical inputs always produce the identical state.
-export function balanceStep(state, dt, u) {
-  const theta = state.theta + state.omega * dt;
-  const omega = state.omega
-    + ((BALANCE_GRAVITY / BALANCE_LENGTH) * Math.sin(state.theta)
-       - BALANCE_DAMPING * state.omega
-       + u) * dt;
-  return { theta, omega };
+// One fixed-timestep of the cart-pole. `a` is the carriage acceleration
+// (m/s², positive = right). The pole couples to it: a positive `a` pushes
+// theta DOWN (toward vertical from the right) — the base chases the fall.
+// Pure: identical inputs always produce the identical state.
+export function balanceStep(state, dt, a) {
+  const pole = (BALANCE_GRAVITY / BALANCE_LENGTH) * Math.sin(state.theta)
+    - (a / BALANCE_LENGTH) * Math.cos(state.theta)
+    - BALANCE_DAMPING * state.omega;
+  const omega = state.omega + pole * dt;
+  const theta = state.theta + omega * dt;
+  const v = state.v + a * dt;
+  const x = state.x + v * dt;
+  return { theta, omega, x, v };
 }
 
-// The virtual hand: spring the beam toward the dragged target angle, damped.
-export function balanceControl(thetaTarget, state) {
-  return BALANCE_CTRL_K * (thetaTarget - state.theta) - BALANCE_CTRL_D * state.omega;
+// The virtual hand: spring the carriage toward the dragged target position
+// (m), damped. Returns the carriage acceleration fed to balanceStep.
+export function balanceControl(xTarget, state) {
+  return BALANCE_CART_K * (xTarget - state.x) - BALANCE_CART_D * state.v;
 }
 
 export function balanceState() {
-  return { theta: 0, omega: 0 };
+  return { theta: 0, omega: 0, x: 0, v: 0 };
 }
