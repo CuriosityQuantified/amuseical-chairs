@@ -37,7 +37,7 @@
       "semantic": "f8ab4b1157d4b0554ae6cbe0c08f8a84"
     },
     "public/js/games.js": {
-      "ast": "73995150687a5578e63b85f73b63439f",
+      "ast": "887d13347df0e10377dc937f91844cf8",
       "semantic": null
     },
     "public/js/host.js": {
@@ -53,7 +53,7 @@
       "semantic": "3d9aa8d2aabb42cdc226c0dc852c93f2"
     },
     "public/js/tutorials.js": {
-      "ast": "b7e0f015c37692aca1a957307c732761",
+      "ast": "d922b00d62b456754c1ad4469dc066b8",
       "semantic": null
     },
     "scripts/check.mjs": {
@@ -69,7 +69,7 @@
       "semantic": "24c1b81e5113a5aa4edaa98f2ffce2c1"
     },
     "server/games.js": {
-      "ast": "5584ad534a3b1d0aa252e5d6430d93c9",
+      "ast": "5fe484ecc94ea052283bcf0b2ab3a542",
       "semantic": null
     },
     "server/index.js": {
@@ -98,6 +98,10 @@
     },
     "shared/cups.js": {
       "ast": "3a1ffc8a6b8e4dd72758e731dfe2ebcd",
+      "semantic": null
+    },
+    "shared/fractions.js": {
+      "ast": "71ac42d0e64bb6dc43cccab02fc0b2b2",
       "semantic": null
     },
     "shared/normalize.js": {
@@ -148,8 +152,12 @@
       "ast": "e32e5d490281581fcef70cdcdb60c8b0",
       "semantic": "e32e5d490281581fcef70cdcdb60c8b0"
     },
+    "test/fractions.test.js": {
+      "ast": "7fc7bce4ee8d25ff71c3056be69f3555",
+      "semantic": null
+    },
     "test/harness.test.js": {
-      "ast": "bc459e678546f91f629a0cce935595b4",
+      "ast": "cce83bdfeb12a5609448a22261c889cf",
       "semantic": null
     },
     "test/icebreaker.test.js": {
@@ -181,7 +189,7 @@
       "semantic": "090730fd5bd50643cea6369ab4e5c184"
     },
     "test/roster.test.js": {
-      "ast": "a5a3607065c1ef89feba914ce936d4ae",
+      "ast": "3f2b93a0f7e83d14335b4eabf15a1e02",
       "semantic": null
     },
     "test/smoke.test.js": {

@@ -31,6 +31,7 @@ import {
   BALANCE_TARGET_RANGE,
   BALANCE_DT,
 } from '/shared/balance.js';
+import { FRACTIONS_PENALTY, parseValue } from '/shared/fractions.js';
 
 // ---- tiny DOM helpers ------------------------------------------------------
 
@@ -1774,6 +1775,58 @@ GameClients.balance = {
     return {
       // Still upright at the deadline: you scored the whole round.
       collect: () => ({ survivedMs: Math.round(elapsed) }),
+    };
+  },
+};
+
+// ---- Fraction Face-Off -----------------------------------------------------
+
+GameClients.fractions = {
+  intro: 'Tap the bigger value — fast and confident. Wrong taps cost points.',
+  start(root, ctx) {
+    const pairs = ctx.data.pairs;
+    const picks = [];
+    let idx = 0;
+    let correct = 0;
+    let wrong = 0;
+    const net = () => Math.max(0, correct - FRACTIONS_PENALTY * wrong);
+    const scoreEl = h('div', { class: 'mash-count' }, '0');
+    const hintEl = h('div', { class: 'muted', style: { textAlign: 'center' } }, 'tap the bigger one');
+    const leftBtn = h('button', { class: 'fractions-side big' }, '');
+    const rightBtn = h('button', { class: 'fractions-side big' }, '');
+    const flash = (btn) => {
+      btn.classList.add('flash');
+      setTimeout(() => btn.classList.remove('flash'), 130);
+    };
+    const tap = (side, btn) => {
+      if (idx >= pairs.length) return;
+      const pair = pairs[idx];
+      picks.push(side);
+      const mine = parseValue(pair.left) > parseValue(pair.right) ? 'left' : 'right';
+      if (side === mine) correct++;
+      else wrong++;
+      scoreEl.textContent = String(net());
+      flash(btn);
+      idx++;
+      render();
+    };
+    const render = () => {
+      if (idx >= pairs.length) {
+        leftBtn.textContent = rightBtn.textContent = 'done';
+        hintEl.textContent = 'waiting on the room…';
+        return;
+      }
+      leftBtn.textContent = pairs[idx].left;
+      rightBtn.textContent = pairs[idx].right;
+    };
+    leftBtn.addEventListener('click', () => tap('left', leftBtn));
+    rightBtn.addEventListener('click', () => tap('right', rightBtn));
+    render();
+    root.append(scoreEl, hintEl, leftBtn, rightBtn);
+    return {
+      // The scoreboard shows the server's authoritative net; correct/wrong
+      // ride along for the host's display line (formatRaw).
+      collect: () => ({ picks, correct, wrong }),
     };
   },
 };

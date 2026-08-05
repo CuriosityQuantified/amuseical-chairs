@@ -14,6 +14,7 @@ import {
   BALANCE_DAMPING,
   BALANCE_FIRST_NUDGE_MS,
 } from '../shared/balance.js';
+import { FRACTIONS_PENALTY, fractionsPairs } from '../shared/fractions.js';
 
 const SENTENCES = [
   'The quick brown fox jumps over the lazy dog while the band plays on.',
@@ -226,6 +227,7 @@ export const ROSTER = [
   { key: 'spacemash', name: 'Space Mash', category: 'motor', type: 'score' },
   { key: 'slingshot', name: 'Slingshot', category: 'motor', type: 'error' },
   { key: 'balance', name: 'Balance the Beam', category: 'motor', type: 'score' },
+  { key: 'fractions', name: 'Fraction Face-Off', category: 'numerical', type: 'score' },
 ];
 
 export const ROSTER_BY_KEY = new Map(ROSTER.map((g) => [g.key, g]));
@@ -401,6 +403,19 @@ export function buildGameData(key, ctx) {
           nudgeEveryMs: BALANCE_FIRST_NUDGE_MS,
         },
         secret: {},
+      };
+    }
+    case 'fractions': {
+      // A seeded stream of two-choice comparisons; the numeric values stay
+      // server-side. clientData carries only the rendered text (the stream is
+      // a pure function of the seed) and the secret is the per-pair answer,
+      // positionally matched to payload.picks. The calculator-on-every-device
+      // surface is stated, not hidden, in shared/fractions.js.
+      const seed = `fractions-${Math.floor(rng() * 1e9)}`;
+      const pairs = fractionsPairs(seed);
+      return {
+        clientData: { pairs: pairs.map((p) => ({ left: p.left, right: p.right })) },
+        secret: { answers: pairs.map((p) => p.answer) },
       };
     }
     default:
@@ -772,6 +787,25 @@ export function computeMetric(key, payload, secret, clientData, config) {
       if (s == null || s < 0) return null;
       return clamp(s, 0, config.gameDuration || 45000);
     }
+    case 'fractions': {
+      // Net = correct − PENALTY × wrong, clamped at 0 so a pure guesser
+      // scores near zero rather than half. Picks match the answer list
+      // positionally; entries past the stream's end and anything that is not
+      // 'left'|'right' are skipped, not counted wrong. The payload's own
+      // correct/wrong fields are display-only — this is the authoritative sum.
+      if (!payload || !Array.isArray(payload.picks)) return null;
+      const answers = secret && Array.isArray(secret.answers) ? secret.answers : [];
+      let correct = 0;
+      let wrong = 0;
+      const n = Math.min(payload.picks.length, answers.length);
+      for (let i = 0; i < n; i++) {
+        const pick = payload.picks[i];
+        if (pick !== 'left' && pick !== 'right') continue;
+        if (pick === answers[i]) correct++;
+        else wrong++;
+      }
+      return Math.max(0, correct - FRACTIONS_PENALTY * wrong);
+    }
     default:
       return null;
   }
@@ -920,6 +954,11 @@ export function formatRaw(key, metric, payload) {
     case 'spacemash': return `${metric} presses${payload?.flagged ? ' ⚠' : ''}`;
     case 'slingshot': return `${metric.toFixed(1)} ft`;
     case 'balance': return `${(metric / 1000).toFixed(1)}s upright`;
+    case 'fractions': {
+      const correct = Number.isFinite(payload?.correct) ? payload.correct : 0;
+      const wrong = Number.isFinite(payload?.wrong) ? payload.wrong : 0;
+      return `${metric} net (${correct}✓ ${wrong}✗)`;
+    }
     default: return String(metric);
   }
 }

@@ -12,6 +12,7 @@ import { createServer } from '../server/app.js';
 import { ROSTER } from '../server/games.js';
 import { cupsLevel } from '../shared/cups.js';
 import { trayLevel } from '../shared/tray.js';
+import { parseValue } from '../shared/fractions.js';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -121,6 +122,23 @@ function botPayload(key, data, rnd, stage = 1, bot = null) {
     // scored at the maximum — the same claim a cheater could make, and the
     // reason the clamp is pinned in balance.test.js rather than here.
     case 'balance': return { survivedMs: Math.floor(rnd() * 45000) };
+    // Answers ~70% of the pairs like a fast human with a calculator — the
+    // same parse-compare anyone can do from the on-screen text. The pure
+    // guesser (net clamped to zero, not half) is pinned deterministically in
+    // fractions.test.js rather than here, where every bot's payload is random.
+    case 'fractions': {
+      const picks = [];
+      let correct = 0;
+      let wrong = 0;
+      for (const pair of data.pairs || []) {
+        const mine = parseValue(pair.left) > parseValue(pair.right) ? 'left' : 'right';
+        const pick = rnd() < 0.7 ? mine : (mine === 'left' ? 'right' : 'left');
+        picks.push(pick);
+        if (pick === mine) correct++;
+        else wrong++;
+      }
+      return { picks, correct, wrong };
+    }
     default: return {};
   }
 }

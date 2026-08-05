@@ -17,6 +17,7 @@ import assert from 'node:assert/strict';
 import { seededRng } from '../shared/rng.js';
 import { cupsLevel } from '../shared/cups.js';
 import { trayLevel } from '../shared/tray.js';
+import { parseValue } from '../shared/fractions.js';
 import {
   ROSTER,
   ROSTER_BY_KEY,
@@ -50,6 +51,9 @@ const PAYLOADS = {
   spacemash: () => ({ count: 55, flagged: false }),
   slingshot: () => ({ best: 12.5 }),
   balance: () => ({ survivedMs: 12000 }),
+  fractions: (cd) => ({
+    picks: cd.pairs.map((p) => (parseValue(p.left) > parseValue(p.right) ? 'left' : 'right')),
+  }),
   readroom: null,
   caption: null,
   icebreaker: null,
