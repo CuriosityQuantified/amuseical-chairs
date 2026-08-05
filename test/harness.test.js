@@ -14,6 +14,7 @@ import { cupsLevel } from '../shared/cups.js';
 import { trayLevel } from '../shared/tray.js';
 import { parseValue } from '../shared/fractions.js';
 import { solveScramble } from '../shared/anagram.js';
+import { areaRatio } from '../shared/area.js';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -76,6 +77,7 @@ function botPayload(key, data, rnd, stage = 1, bot = null) {
     case 'rgb': return { r: Math.floor(rnd() * 256), g: Math.floor(rnd() * 256), b: Math.floor(rnd() * 256) };
     case 'oddoneout': return { cleared: 2 + Math.floor(rnd() * 20) };
     case 'bisect': return { guesses: data.targets.map((t) => Math.max(0, Math.min(100, t + (rnd() * 20 - 10)))) };
+    case 'area': return { guesses: data.trials.map((trial) => Math.max(0, Math.min(100, areaRatio(trial) + (rnd() * 16 - 8)))) };
     case 'trace': return { deviation: 0.01 + rnd() * 0.08, coverage: 0.92 + rnd() * 0.08 };
     case 'dots': return { guesses: data.counts.map((c) => Math.max(1, Math.round(c * (0.5 + rnd())))) };
     case 'stopclock': return { best: rnd() * 1500 };

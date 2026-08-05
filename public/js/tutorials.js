@@ -229,6 +229,25 @@ const TUTORIALS = {
       } },
   ],
 
+  area: [
+    { ok: true, dur: 3600, label: 'Compare filled area, not just the width',
+      draw(g, w, h, p) {
+        text(g, 'What percent is the small circle?', w / 2, 32, { size: 19, color: C.ink, bold: true });
+        g.fillStyle = C.cyan; g.beginPath(); g.arc(w * 0.3, 125, 58, 0, Math.PI * 2); g.fill();
+        g.fillStyle = C.good; g.beginPath(); g.arc(w * 0.72, 125, 29, 0, Math.PI * 2); g.fill();
+        const m = seg(p, 0.15, 0.65);
+        cursor(g, lerp(w - 45, w / 2, m), h - 35, p > 0.6 && p < 0.75);
+        if (p > 0.65) text(g, '25%', w / 2, h - 28, { size: 22, color: C.good, bold: true });
+      } },
+    { ok: false, dur: 3200, label: 'Do not anchor every answer at 50%',
+      draw(g, w, h, p) {
+        text(g, 'The small shape is much less than half the area', w / 2, 32, { size: 17, color: C.ink, bold: true });
+        g.fillStyle = C.cyan; g.fillRect(w * 0.17, 72, 130, 100);
+        g.fillStyle = C.good; g.fillRect(w * 0.68, 105, 55, 42);
+        if (p > 0.28) text(g, '50%?', w / 2, h - 36, { size: 23, color: C.bad, bold: true });
+      } },
+  ],
+
   trace: [
     { ok: true, dur: 4200, label: 'Follow the outline closely — cover the whole shape',
       draw(g, w, h, p) {

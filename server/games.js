@@ -24,6 +24,7 @@ import {
   spanStrings,
 } from '../shared/span.js';
 import { anagramRounds } from '../shared/anagram.js';
+import { areaTrials, areaRatio } from '../shared/area.js';
 
 const SENTENCES = [
   'The quick brown fox jumps over the lazy dog while the band plays on.',
@@ -222,6 +223,7 @@ export const ROSTER = [
   { key: 'rgb', name: 'RGB Color Match', category: 'perceptual', type: 'error' },
   { key: 'oddoneout', name: 'Odd One Out', category: 'perceptual', type: 'score' },
   { key: 'bisect', name: 'Bisect the Line', category: 'perceptual', type: 'error' },
+  { key: 'area', name: 'Proportion Sense', category: 'perceptual', type: 'error' },
   { key: 'trace', name: 'Trace the Shape', category: 'perceptual', type: 'error' },
   { key: 'dots', name: 'Dots in the Jar', category: 'numerical', type: 'error' },
   { key: 'stopclock', name: 'Stop the Clock', category: 'timing', type: 'error' },
@@ -302,6 +304,11 @@ export function buildGameData(key, ctx) {
         if (!targets.some((x) => Math.abs(x - t) < 4)) targets.push(t);
       }
       return { clientData: { targets }, secret: { targets } };
+    }
+    case 'area': {
+      const seed = `area-${Math.floor(rng() * 1e9)}`;
+      const trials = areaTrials(seed);
+      return { clientData: { trials }, secret: { ratios: trials.map(areaRatio) } };
     }
     case 'trace':
       return {
@@ -669,6 +676,20 @@ export function computeMetric(key, payload, secret, clientData, config) {
       }
       return any ? sum : null;
     }
+    case 'area': {
+      if (!Array.isArray(payload.guesses) || !Array.isArray(secret.ratios)) return null;
+      let any = false;
+      let sum = 0;
+      for (let i = 0; i < secret.ratios.length; i++) {
+        const guess = num(payload.guesses[i]);
+        if (guess == null) sum += 50; // missed trial: worst plausible deviation
+        else {
+          any = true;
+          sum += Math.abs(clamp(guess, 0, 100) - secret.ratios[i]);
+        }
+      }
+      return any ? sum / secret.ratios.length : null;
+    }
     case 'trace': {
       const dev = num(payload.deviation);
       const cov = num(payload.coverage);
@@ -1005,6 +1026,7 @@ export function formatRaw(key, metric, payload) {
     case 'rgb': return `ΔE ${metric.toFixed(1)}`;
     case 'oddoneout': return `${metric} tiles`;
     case 'bisect': return `${metric.toFixed(1)} pts off`;
+    case 'area': return `${metric.toFixed(1)} pts off`;
     case 'trace': return `${(metric * 100).toFixed(1)}% dev`;
     case 'dots': return `${(metric * 100).toFixed(0)}% off`;
     case 'stopclock': return `${Math.round(metric)} ms off`;

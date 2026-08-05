@@ -215,6 +215,61 @@ GameClients.bisect = {
   },
 };
 
+// ---- 4. Proportion Sense ---------------------------------------------------
+
+GameClients.area = {
+  intro: 'Estimate the small shape as a percentage of the big one. Four rounds; no feedback.',
+  start(root, ctx) {
+    const trials = ctx.data.trials;
+    const guesses = [];
+    const prompt = h('h2', { class: 'center' }, 'What percent of the big shape is the small one?');
+    const note = h('p', { class: 'trial-note center' });
+    const value = h('strong', {}, '50%');
+    const slider = h('input', { type: 'range', min: 0, max: 100, value: 50 });
+    const confirm = h('button', { class: 'big', type: 'button' }, 'Confirm');
+    const controls = h('div', { class: 'center' }, slider, value, confirm);
+    const { ctx: g, w } = makeCanvas(root, 290, 150);
+    root.prepend(prompt);
+    root.append(note, controls);
+
+    function shape(shape, x, y, size, color) {
+      g.fillStyle = color;
+      if (shape === 'circle') {
+        g.beginPath(); g.arc(x, y, size / 2, 0, Math.PI * 2); g.fill();
+      } else if (shape === 'rect') {
+        g.fillRect(x - size / 2, y - size * 0.3, size, size * 0.6);
+      } else {
+        const hgt = size * 0.87;
+        g.beginPath(); g.moveTo(x, y - hgt / 2); g.lineTo(x - size / 2, y + hgt / 2);
+        g.lineTo(x + size / 2, y + hgt / 2); g.closePath(); g.fill();
+      }
+    }
+    function draw(trial) {
+      g.clearRect(0, 0, w, 290);
+      g.fillStyle = '#3d5a6b'; g.font = 'bold 14px system-ui'; g.textAlign = 'center';
+      g.fillText('BIG', w * 0.27, 42); g.fillText('SMALL', w * 0.73, 42);
+      shape(trial.shape, w * 0.27, 158, trial.bigSize, '#00e5ff');
+      shape(trial.shape, w * 0.73, 158, trial.smallSize, '#ff2d95');
+      g.fillStyle = '#8ea8b5'; g.font = '14px system-ui';
+      g.fillText('Compare area, not width', w / 2, 262);
+    }
+    function show() {
+      if (guesses.length >= trials.length) return ctx.submit({ guesses });
+      note.textContent = `${guesses.length + 1} of ${trials.length}`;
+      slider.value = '50'; value.textContent = '50%';
+      draw(trials[guesses.length]);
+    }
+    slider.addEventListener('input', () => { value.textContent = `${slider.value}%`; });
+    confirm.addEventListener('click', () => {
+      if (guesses.length >= trials.length) return;
+      guesses.push(Number(slider.value));
+      show();
+    });
+    show();
+    return { collect: () => (guesses.length ? { guesses } : null) };
+  },
+};
+
 // ---- 5. Trace the Shape ----------------------------------------------------
 
 GameClients.trace = {

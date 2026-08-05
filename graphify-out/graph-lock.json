@@ -37,7 +37,7 @@
       "semantic": "f8ab4b1157d4b0554ae6cbe0c08f8a84"
     },
     "public/js/games.js": {
-      "ast": "14050ec1f60344b80c429b8a083fe98d",
+      "ast": "d3a314dff60df39ab7b4aa3a70dbb21e",
       "semantic": null
     },
     "public/js/host.js": {
@@ -53,7 +53,7 @@
       "semantic": "3d9aa8d2aabb42cdc226c0dc852c93f2"
     },
     "public/js/tutorials.js": {
-      "ast": "ab4aeca53d6cc5d9822ba0d11f1af7ca",
+      "ast": "3a83445ab67f693edbec838a627a8b63",
       "semantic": null
     },
     "scripts/check.mjs": {
@@ -69,7 +69,7 @@
       "semantic": "24c1b81e5113a5aa4edaa98f2ffce2c1"
     },
     "server/games.js": {
-      "ast": "f95cc414b465f924a3059729771cd649",
+      "ast": "8fcdb82086fb34e7619af9d95272753a",
       "semantic": null
     },
     "server/index.js": {
@@ -86,6 +86,10 @@
     },
     "shared/anagram.js": {
       "ast": "ef972db8495e8db6c4cbd97b426a8254",
+      "semantic": null
+    },
+    "shared/area.js": {
+      "ast": "b441c957765e4439c280b4c2849cdd1a",
       "semantic": null
     },
     "shared/balance.js": {
@@ -140,6 +144,10 @@
       "ast": "03870aab47475e65c6c5ab10131b990c",
       "semantic": null
     },
+    "test/area.test.js": {
+      "ast": "d2582d6ab75337d7d667139bc4db5dca",
+      "semantic": null
+    },
     "test/balance.test.js": {
       "ast": "df1db28adc38f45b034a709885842acf",
       "semantic": null
@@ -169,7 +177,7 @@
       "semantic": null
     },
     "test/harness.test.js": {
-      "ast": "d652d49ead21f0695b04786d40d18e17",
+      "ast": "f4f81026a637239a7cd64f8f282b23c5",
       "semantic": null
     },
     "test/icebreaker.test.js": {
@@ -201,7 +209,7 @@
       "semantic": "090730fd5bd50643cea6369ab4e5c184"
     },
     "test/roster.test.js": {
-      "ast": "2cb97f9b2747917269affe4af14af059",
+      "ast": "7b319b5ca318df6df67464c59691a86f",
       "semantic": null
     },
     "test/smoke.test.js": {
