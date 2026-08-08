@@ -15,11 +15,29 @@ permissions:
   contents: read
 
 jobs:
+  # Parse every .js/.mjs without executing it. Catches syntax errors in the
+  # browser modules that nothing else ever imports.
+  build:
+    name: Syntax smoke (node --check)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: npm
+      - run: npm ci
+      - name: Check syntax of all JS/MJS files
+        run: |
+          find server shared public/js scripts -name '*.js' -o -name '*.mjs' \
+            | xargs node --check
+
   # Static consistency the test suite structurally cannot cover: the browser
   # modules have no build step, so nothing else ever parses them, and nothing
   # else checks that a game on the server roster has a client and a tutorial.
-  check:
-    name: Static checks
+  # Also enforces that the knowledge graph is not stale against source files.
+  code-graph:
+    name: Static checks + graph freshness
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -30,16 +48,32 @@ jobs:
       - run: npm ci
       - run: npm run check
 
+  # Core unit tests on the oldest supported Node version.
+  unit:
+    name: Unit tests (Node 20)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: npm
+      - run: npm ci
+      - run: npm test
+
   # The whole point of the harness is that every bug here is a 20-player
   # concurrency bug, and those surface differently across Node's timer and
-  # socket behaviour — so it runs on every version the package supports.
-  test:
+  # socket behaviour — so regressions run on every other version the package
+  # supports. Also acts as a regression gate: any test that was green in unit
+  # must stay green across all supported Node versions.
+  regressions:
     name: Tests (Node ${{ matrix.node }})
     runs-on: ubuntu-latest
+    needs: unit
     strategy:
       fail-fast: false
       matrix:
-        node: ['20.x', '22.x', '24.x']
+        node: ['22.x', '24.x']
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

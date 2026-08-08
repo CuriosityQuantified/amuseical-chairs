@@ -482,30 +482,3 @@ canvas.game {
   touch-action: manipulation;
 }
 .fractions-side.flash { background: var(--accent2); color: #060b12; }
-
-/* Reverse Digit Span: an oversized single-digit flash and phone keypad input. */
-.span-digit {
-  min-height: 92px;
-  display: grid;
-  place-items: center;
-  margin: 12px auto;
-  font-size: 72px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: var(--accent2);
-}
-.span-input {
-  display: block;
-  width: min(320px, 92%);
-  margin: 12px auto;
-  padding: 16px;
-  font-size: 28px;
-  text-align: center;
-  letter-spacing: 0.2em;
-  font-variant-numeric: tabular-nums;
-  color: var(--ink);
-  background: var(--bg2);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-}
-.span-submit { display: block; margin: 0 auto; }

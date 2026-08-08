@@ -5,8 +5,8 @@
       "semantic": null
     },
     ".github/workflows/ci.yml": {
-      "ast": "05b54eaee6eb7c8d8872d447bdaef710",
-      "semantic": "05b54eaee6eb7c8d8872d447bdaef710"
+      "ast": "b3a977ecc3acf97f5d4ab556d09a07c6",
+      "semantic": null
     },
     ".mcp.json": {
       "ast": "1537a1504800a15fb24708220ea31081",
@@ -37,7 +37,7 @@
       "semantic": "f8ab4b1157d4b0554ae6cbe0c08f8a84"
     },
     "public/js/games.js": {
-      "ast": "d3a314dff60df39ab7b4aa3a70dbb21e",
+      "ast": "5d5123d92f4531cf3a22c86fe5eb5b94",
       "semantic": null
     },
     "public/js/host.js": {
@@ -53,7 +53,7 @@
       "semantic": "3d9aa8d2aabb42cdc226c0dc852c93f2"
     },
     "public/js/tutorials.js": {
-      "ast": "3a83445ab67f693edbec838a627a8b63",
+      "ast": "2b377a8cbf864b6bc4b8947b3ed78b6c",
       "semantic": null
     },
     "scripts/check.mjs": {
@@ -69,7 +69,7 @@
       "semantic": "24c1b81e5113a5aa4edaa98f2ffce2c1"
     },
     "server/games.js": {
-      "ast": "8fcdb82086fb34e7619af9d95272753a",
+      "ast": "07d0132e2471536a6a5cb07d1a7a5ad6",
       "semantic": null
     },
     "server/index.js": {
@@ -128,10 +128,6 @@
       "ast": "351b6134407218b5e0bd36421b2881fd",
       "semantic": "351b6134407218b5e0bd36421b2881fd"
     },
-    "shared/span.js": {
-      "ast": "b1de23e16f49e7db42fad897ba7c15f1",
-      "semantic": null
-    },
     "shared/textclean.js": {
       "ast": "3d75f7a898bd0031acbff72bc333a027",
       "semantic": "3d75f7a898bd0031acbff72bc333a027"
@@ -177,7 +173,7 @@
       "semantic": null
     },
     "test/harness.test.js": {
-      "ast": "f4f81026a637239a7cd64f8f282b23c5",
+      "ast": "d428e092c972a554d30de15c95323750",
       "semantic": null
     },
     "test/icebreaker.test.js": {
@@ -209,16 +205,12 @@
       "semantic": "090730fd5bd50643cea6369ab4e5c184"
     },
     "test/roster.test.js": {
-      "ast": "7b319b5ca318df6df67464c59691a86f",
+      "ast": "a2b7d38522e2ee4b3fbeaf8d8684f892",
       "semantic": null
     },
     "test/smoke.test.js": {
       "ast": "a1a14e9592e27da009d4b90de8e51da4",
       "semantic": "a1a14e9592e27da009d4b90de8e51da4"
-    },
-    "test/span.test.js": {
-      "ast": "fb81cdb6c64d7d4ff70013555cc5429e",
-      "semantic": null
     },
     "test/textclean.test.js": {
       "ast": "eba65528d9fbadcebe5a9d003c4c22e5",
