@@ -47,7 +47,6 @@ const PAYLOADS = {
   }),
   gridflash: (cd) => ({ picks: cd.patterns.map((p) => p.slice(0, 3)) }),
   tray: (cd) => ({ picks: trayLevel(cd.seed).changed }),
-  span: (cd) => ({ answers: cd.strings.map((value) => [...value].reverse().join('')) }),
   cups: (cd) => ({
     picks: [1, 2, 3].map((level) => ({ level, cupIndex: cupsLevel(cd.seed, level, cd).ball })),
   }),
@@ -156,4 +155,15 @@ test('multi-stage games are the ones that need aggregation, and they declare it'
     assert.equal(declared, MULTI_STAGE.has(g.key),
       `${g.key}: roster stage count and MULTI_STAGE disagree`);
   }
+});
+
+test('regression: span (Reverse Digit Span) has been removed and must not reappear', () => {
+  assert.ok(
+    !ROSTER_BY_KEY.has('span'),
+    'span is on the roster — it was removed in issue #34 and must not be re-added without deliberate review',
+  );
+  assert.ok(
+    !('span' in PAYLOADS),
+    'span has a payload entry — remove it along with the roster entry',
+  );
 });
