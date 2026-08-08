@@ -23,6 +23,7 @@ import {
   CUPS_MAX_CUPS,
   CUPS_MAX_LEVELS,
   CUPS_MIN_SWAP_MS,
+  CUPS_GAME_SPEED_DECAY,
   cupsLevel,
 } from '../shared/cups.js';
 import { Room } from '../server/room.js';
@@ -71,7 +72,7 @@ test('round data is a seed and the ramp bounds — the ball is derived, never sh
   const { clientData, secret } = buildGameData('cups', {
     rng: seededRng('shape'), config: {}, used: {},
   });
-  assert.deepEqual(Object.keys(clientData).sort(), ['baseCups', 'maxLevels', 'seed']);
+  assert.deepEqual(Object.keys(clientData).sort(), ['baseCups', 'maxLevels', 'seed', 'speedMultiplier']);
   assert.equal(clientData.baseCups, CUPS_BASE_CUPS);
   assert.equal(clientData.maxLevels, CUPS_MAX_LEVELS);
   assert.equal(typeof clientData.seed, 'string');
@@ -181,6 +182,52 @@ test('the shuffle actually moves the ball around, level over level', () => {
     if (plan.ball !== plan.start) moved++;
   }
   assert.ok(moved > total * 0.5, `the ball leaves its starting cup most rounds (${moved}/${total})`);
+});
+
+// ---- speedMultiplier (issue #35: 10% faster each subsequent game) ----------
+
+test('speedMultiplier is 1.0 when cups is the first game (queueIndex 0)', () => {
+  const { clientData } = buildGameData('cups', { rng: seededRng('x'), config: {}, used: {}, queueIndex: 0 });
+  assert.equal(clientData.speedMultiplier, 1.0);
+});
+
+test('speedMultiplier decreases by 10% each subsequent game', () => {
+  const idx1 = buildGameData('cups', { rng: seededRng('a'), config: {}, used: {}, queueIndex: 1 }).clientData.speedMultiplier;
+  const idx2 = buildGameData('cups', { rng: seededRng('b'), config: {}, used: {}, queueIndex: 2 }).clientData.speedMultiplier;
+  const idx5 = buildGameData('cups', { rng: seededRng('c'), config: {}, used: {}, queueIndex: 5 }).clientData.speedMultiplier;
+  assert.ok(Math.abs(idx1 - 0.9) < 1e-10, `queueIndex 1 → speedMultiplier 0.9, got ${idx1}`);
+  assert.ok(Math.abs(idx2 - 0.81) < 1e-10, `queueIndex 2 → speedMultiplier 0.81, got ${idx2}`);
+  assert.ok(Math.abs(idx5 - 0.59049) < 1e-10, `queueIndex 5 → speedMultiplier ~0.59049, got ${idx5}`);
+});
+
+test('cupsLevel respects speedMultiplier — a later-session game has faster swaps', () => {
+  const fast = cupsLevel('x', 1, { speedMultiplier: 0.9 });
+  const base = cupsLevel('x', 1, { speedMultiplier: 1 });
+  assert.ok(fast.swapMs < base.swapMs, `speedMultiplier 0.9 should yield faster swaps than 1`);
+});
+
+test('the floor still applies with speedMultiplier — no swap goes below CUPS_MIN_SWAP_MS', () => {
+  for (let level = 1; level <= CUPS_MAX_LEVELS * 3; level++) {
+    const { swapMs } = cupsLevel('floor', level, { speedMultiplier: 0.1 });
+    assert.ok(swapMs >= CUPS_MIN_SWAP_MS,
+      `level ${level} with speedMultiplier 0.1: ${swapMs}ms is under the ${CUPS_MIN_SWAP_MS}ms floor`);
+  }
+});
+
+test('the floor test still passes with an extreme speedMultiplier', () => {
+  for (let level = 1; level <= CUPS_MAX_LEVELS * 3; level++) {
+    const { swapMs } = cupsLevel('extreme', level, { speedMultiplier: 0.01 });
+    assert.ok(swapMs >= CUPS_MIN_SWAP_MS,
+      `level ${level} with speedMultiplier 0.01: ${swapMs}ms is under the ${CUPS_MIN_SWAP_MS}ms floor`);
+  }
+});
+
+test('speedMultiplier=1 is backward-compatible — cupsLevel behaves identically with and without it', () => {
+  for (let level = 1; level <= CUPS_MAX_LEVELS; level++) {
+    const withDefault = cupsLevel('compat', level, {});
+    const withExplicit = cupsLevel('compat', level, { speedMultiplier: 1 });
+    assert.deepEqual(withDefault, withExplicit, `level ${level}: speedMultiplier=1 produces the same plan as the default`);
+  }
 });
 
 // ---- the scorer ------------------------------------------------------------

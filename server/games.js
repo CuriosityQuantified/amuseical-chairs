@@ -6,7 +6,7 @@
 import { randInt, shuffle, pick } from '../shared/rng.js';
 import { rgbToLab, ciede2000 } from '../shared/ciede2000.js';
 import { cleanEntryText, isUsableEntry, ENTRY_MAX_CHARS } from '../shared/textclean.js';
-import { CUPS_BASE_CUPS, CUPS_MAX_LEVELS, cupsLevel } from '../shared/cups.js';
+import { CUPS_BASE_CUPS, CUPS_MAX_LEVELS, CUPS_GAME_SPEED_DECAY, cupsLevel } from '../shared/cups.js';
 import { TRAY_SLOTS, trayLevel } from '../shared/tray.js';
 import {
   BALANCE_GRAVITY,
@@ -347,19 +347,23 @@ export function buildGameData(key, ctx) {
       const { items, changed, replacements } = trayLevel(seed);
       return { clientData: { items, seed, showMs: 5000 }, secret: { changed, replacements } };
     }
-    case 'cups':
+    case 'cups': {
       // One seed, every level. The client derives each level's swap script from
       // it and animates that; the server derives the same script to score. No
       // secret half — a level's answer is on screen for as long as its shuffle
       // lasts, so there is nothing here that hiding could keep.
+      const playIndex = ctx.queueIndex ?? 0;
+      const speedMultiplier = CUPS_GAME_SPEED_DECAY ** playIndex;
       return {
         clientData: {
           seed: `cups-${Math.floor(rng() * 1e9)}`,
           maxLevels: CUPS_MAX_LEVELS,
           baseCups: CUPS_BASE_CUPS,
+          speedMultiplier,
         },
         secret: {},
       };
+    }
     case 'readroom': {
       const idx = pickContent(rng, ROOM_QUESTIONS.length, usedSet('readroom'));
       return { clientData: { question: ROOM_QUESTIONS[idx] }, secret: {} };

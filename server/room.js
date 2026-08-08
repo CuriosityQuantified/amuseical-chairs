@@ -482,6 +482,7 @@ export class Room {
       rng: seededRng(`${this.code}:g${this.queueIndex}:${key}`),
       config: this.config,
       used: this.usedContent || (this.usedContent = {}),
+      queueIndex: this.queueIndex,
     });
     this.round = {
       games: [this.makeStage(meta, clientData, secret)],
