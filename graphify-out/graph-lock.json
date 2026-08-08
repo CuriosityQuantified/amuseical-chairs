@@ -37,7 +37,7 @@
       "semantic": "f8ab4b1157d4b0554ae6cbe0c08f8a84"
     },
     "public/js/games.js": {
-      "ast": "5d5123d92f4531cf3a22c86fe5eb5b94",
+      "ast": "d80add42368ce65e0e2ad626e12def79",
       "semantic": null
     },
     "public/js/host.js": {
@@ -69,7 +69,7 @@
       "semantic": "24c1b81e5113a5aa4edaa98f2ffce2c1"
     },
     "server/games.js": {
-      "ast": "07d0132e2471536a6a5cb07d1a7a5ad6",
+      "ast": "81f269a660101bb60fdf704b70b39c56",
       "semantic": null
     },
     "server/index.js": {
@@ -77,7 +77,7 @@
       "semantic": "f9bcb5a92468425b887f7d6ed3da4eb4"
     },
     "server/room.js": {
-      "ast": "3477e189912003009fcad0338a6b5c1f",
+      "ast": "6c76893ae0460c1979f5125a8ed03d5f",
       "semantic": null
     },
     "server/sockets.js": {
@@ -105,7 +105,7 @@
       "semantic": "2e5c2576f55f9b2973872e41e508e3d6"
     },
     "shared/cups.js": {
-      "ast": "3a1ffc8a6b8e4dd72758e731dfe2ebcd",
+      "ast": "da6d829d0baef40c491ea0b76e8ef05a",
       "semantic": null
     },
     "shared/fractions.js": {
@@ -161,7 +161,7 @@
       "semantic": "c1a78e9382ffdab8c72dc66cd83dfcad"
     },
     "test/cups.test.js": {
-      "ast": "11c9dbde1a3625dc6340ed0109cdad79",
+      "ast": "a40876698018a555c5d36852a3fd4b73",
       "semantic": null
     },
     "test/fakeclock.js": {

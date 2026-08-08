@@ -26,6 +26,7 @@ export const CUPS_MAX_LEVELS = 12;
 // here down and then stops getting faster — the difficulty above that level
 // comes from more cups and more swaps instead.
 export const CUPS_MIN_SWAP_MS = 220;
+export const CUPS_GAME_SPEED_DECAY = 0.9; // per game in the queue: 0.9^n of base speed
 
 const FIRST_SWAP_MS = 620;   // a level-1 crossing, comfortably followable
 const SWAP_DECAY = 0.9;      // per level
@@ -45,12 +46,12 @@ export function cupsCount(level, baseCups = CUPS_BASE_CUPS, maxCups = CUPS_MAX_C
 
 // The plan for one level: where the ball starts, every swap in order, how long
 // one swap takes, and where the ball ends up.
-export function cupsLevel(seed, level, { baseCups = CUPS_BASE_CUPS, maxCups = CUPS_MAX_CUPS } = {}) {
+export function cupsLevel(seed, level, { baseCups = CUPS_BASE_CUPS, maxCups = CUPS_MAX_CUPS, speedMultiplier = 1 } = {}) {
   const n = Math.max(1, Math.floor(level));
   const rng = seededRng(`${seed}:lvl${n}`);
   const cups = cupsCount(n, baseCups, maxCups);
   const swapCount = 2 + n;
-  const swapMs = Math.max(CUPS_MIN_SWAP_MS, Math.round(FIRST_SWAP_MS * SWAP_DECAY ** (n - 1)));
+  const swapMs = Math.max(CUPS_MIN_SWAP_MS, Math.round(FIRST_SWAP_MS * SWAP_DECAY ** (n - 1) * speedMultiplier));
   const allPairs = pairsFor(cups);
 
   const start = randInt(rng, 0, cups - 1);

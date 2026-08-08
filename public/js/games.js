@@ -855,7 +855,7 @@ GameClients.tray = {
 GameClients.cups = {
   intro: 'Watch which cup the ball goes under, then tap that cup after the shuffle. Every level adds speed — one miss ends the run.',
   start(root, ctx) {
-    const { seed, maxLevels, baseCups } = ctx.data;
+    const { seed, maxLevels, baseCups, speedMultiplier = 1 } = ctx.data;
     // Everything that is not shuffle is overhead against a 45s round, so the
     // fixed beats are as short as they can be and still be read. The reveal is
     // the exception: it is the only moment the ball is ever on show, and
@@ -1028,7 +1028,7 @@ GameClients.cups = {
 
     function startLevel(n) {
       level = n;
-      plan = cupsLevel(seed, n, { baseCups });
+      plan = cupsLevel(seed, n, { baseCups, speedMultiplier });
       tapped = null;
       phase = 'beat';
       phaseAt = performance.now();
