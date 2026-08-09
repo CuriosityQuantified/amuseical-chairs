@@ -1033,6 +1033,10 @@ GameClients.cups = {
       phaseAt = performance.now();
       tag.textContent = `LEVEL ${n}`;
       note.textContent = `${plan.cups} cups, ${plan.swaps.length} swaps.`;
+      // Paint the initial frame synchronously. A throttled/background tab may
+      // delay its first rAF; without this, level 1 is an empty canvas and looks
+      // like the game never started.
+      draw(phaseAt);
       if (raf == null && !stopped) raf = requestAnimationFrame(frame);
     }
 
