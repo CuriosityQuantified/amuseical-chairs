@@ -26,7 +26,7 @@ export const CUPS_MAX_LEVELS = 12;
 // here down and then stops getting faster — the difficulty above that level
 // comes from more cups and more swaps instead.
 export const CUPS_MIN_SWAP_MS = 220;
-export const CUPS_GAME_SPEED_DECAY = 0.75; // per game in the queue: 0.9^n of base speed
+export const CUPS_GAME_SPEED_DECAY = 0.75; // per game in the queue: 0.75^n of base speed
 
 const FIRST_SWAP_MS = 620;   // a level-1 crossing, comfortably followable
 const SWAP_DECAY = 0.75;      // per level
