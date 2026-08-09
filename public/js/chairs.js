@@ -6,6 +6,8 @@
 // The rAF loops self-stop when the canvas leaves the DOM, so callers can
 // simply replace their screen content without leaking animations.
 
+import { prefersReducedMotion } from '/js/motion.js';
+
 const NEON = ['#00e5ff', '#ff2d95', '#ffd23d', '#3dff9e', '#a06bff', '#ff5470'];
 const colorFor = (i) => NEON[i % NEON.length];
 
@@ -60,6 +62,7 @@ function drawAvatar(g, x, y, i, name, { alpha = 1, radius = 13 } = {}) {
 export function startChairs(container, { names = [], chairs = 1, size = 320 } = {}) {
   const { canvas, g } = makeCanvas(container, size);
 
+  const reduced = prefersReducedMotion();
   const n = Math.max(1, names.length);
   const chairCount = Math.max(1, chairs);
   const cx = size / 2;
@@ -72,7 +75,7 @@ export function startChairs(container, { names = [], chairs = 1, size = 320 } = 
 
   function draw(now) {
     if (!running || !canvas.isConnected) return;
-    const t = (now - t0) / 1000;
+    const t = reduced ? 0 : (now - t0) / 1000;
     g.clearRect(0, 0, size, size);
 
     // walking track
@@ -92,12 +95,12 @@ export function startChairs(container, { names = [], chairs = 1, size = 320 } = 
     // avatars circling counter-clockwise, bobbing as they "walk"
     for (let i = 0; i < n; i++) {
       const a = -t * 0.9 + (i / n) * Math.PI * 2;
-      const bob = Math.sin(t * 6 + i * 1.7) * 3;
+      const bob = reduced ? 0 : Math.sin(t * 6 + i * 1.7) * 3;
       const x = cx + Math.cos(a) * (rWalk + bob);
       const y = cy + Math.sin(a) * (rWalk + bob);
       drawAvatar(g, x, y, i, names[i]);
     }
-    raf = requestAnimationFrame(draw);
+    if (!reduced) raf = requestAnimationFrame(draw);
   }
   raf = requestAnimationFrame(draw);
 
@@ -120,6 +123,7 @@ export function startChairs(container, { names = [], chairs = 1, size = 320 } = 
 export function startChairsSeated(container, { seated = [], out = null, size = 320 } = {}) {
   const { canvas, g } = makeCanvas(container, size);
 
+  const reduced = prefersReducedMotion();
   const cx = size / 2;
   const cy = size / 2;
   const rWalk = size * 0.36;
@@ -134,8 +138,8 @@ export function startChairsSeated(container, { seated = [], out = null, size = 3
 
   function draw(now) {
     if (!running || !canvas.isConnected) return;
-    const p = ease((now - t0) / WALK_MS);
-    const t = (now - t0) / 1000;
+    const p = reduced ? 1 : ease((now - t0) / WALK_MS);
+    const t = reduced ? 0 : (now - t0) / 1000;
     g.clearRect(0, 0, size, size);
     g.textAlign = 'center';
     g.textBaseline = 'middle';
@@ -150,7 +154,7 @@ export function startChairsSeated(container, { seated = [], out = null, size = 3
       const txr = chairCount === 1 ? 0 : rChairs;
       const tx = cx + Math.cos(a) * txr;
       const ty = cy + Math.sin(a) * txr - size * 0.02; // perch on the chair
-      const bounce = p >= 1 ? Math.sin(t * 5 + i) * 1.5 : 0;
+      const bounce = (!reduced && p >= 1) ? Math.sin(t * 5 + i) * 1.5 : 0;
       drawAvatar(g, sx + (tx - sx) * p, sy + (ty - sy) * p + bounce, i, name, { radius: 12 });
     });
 
@@ -167,7 +171,7 @@ export function startChairsSeated(container, { seated = [], out = null, size = 3
         g.fillText('OUT', x + 34, y);
       }
     }
-    raf = requestAnimationFrame(draw);
+    if (!reduced) raf = requestAnimationFrame(draw);
   }
   raf = requestAnimationFrame(draw);
 

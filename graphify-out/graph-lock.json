@@ -5,7 +5,7 @@
       "semantic": null
     },
     ".github/workflows/ci.yml": {
-      "ast": "e37a755a4d757ab81f1b133b7a56a863",
+      "ast": "1b84d91c4eaacd40a9b1ee169d32a371",
       "semantic": null
     },
     ".mcp.json": {
@@ -22,6 +22,10 @@
     },
     "docs/graphify-runbook.md": {
       "ast": "331a21ba33e9eb519390de13fae53d27",
+      "semantic": null
+    },
+    "docs/reduced-motion.md": {
+      "ast": "872ea66a250cf3517b0a84bf0033b845",
       "semantic": null
     },
     "package.json": {
@@ -41,15 +45,19 @@
       "semantic": "a275c5b81046ca7131cb19076b2dce52"
     },
     "public/js/chairs.js": {
-      "ast": "f8ab4b1157d4b0554ae6cbe0c08f8a84",
-      "semantic": "f8ab4b1157d4b0554ae6cbe0c08f8a84"
+      "ast": "69b58ae7bdf58991c260205c139d3a2b",
+      "semantic": null
     },
     "public/js/games.js": {
       "ast": "acf2fc267e88c0322d7153e5f03174e7",
       "semantic": null
     },
     "public/js/host.js": {
-      "ast": "7449072ddb3c2f3c85b3c58c7d14530a",
+      "ast": "83caeba988d0e9bf0c3ae11ae4ed477b",
+      "semantic": null
+    },
+    "public/js/motion.js": {
+      "ast": "dde7dc516269389e545b3723965f954c",
       "semantic": null
     },
     "public/js/player.js": {
@@ -61,12 +69,12 @@
       "semantic": "3d9aa8d2aabb42cdc226c0dc852c93f2"
     },
     "public/js/tutorials.js": {
-      "ast": "3c1e8b777dff72bd741f35c8a1f9b10b",
+      "ast": "5306e3f25f38cb25565ab94e4fecc22d",
       "semantic": null
     },
     "scripts/check.mjs": {
-      "ast": "9176a59f383009828f9e19e96b8d24d8",
-      "semantic": "9176a59f383009828f9e19e96b8d24d8"
+      "ast": "3027edfab001aa7159768a31dbdd216c",
+      "semantic": null
     },
     "scripts/graph-lock.mjs": {
       "ast": "43afb726a4cc1ae7db786249cc2e9b35",
@@ -227,6 +235,10 @@
     "test/redemption.test.js": {
       "ast": "307b23a14e2dbfd1e9b4c96196ee4af1",
       "semantic": "307b23a14e2dbfd1e9b4c96196ee4af1"
+    },
+    "test/reduced-motion.test.js": {
+      "ast": "d8562425bd8cd55e6a6ab1ae83d618a7",
+      "semantic": null
     },
     "test/reveal.test.js": {
       "ast": "c53fe26ef56ea97374fd039941e5e418",

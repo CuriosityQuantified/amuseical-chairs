@@ -3,6 +3,8 @@
 // steps show what to AVOID. Pure decoration — nothing here is scored, so
 // plain math (no seeded rng) is fine.
 
+import { prefersReducedMotion } from '/js/motion.js';
+
 const C = {
   ink: '#d9faff', muted: '#7fb8cc', accent: '#ff2d95', cyan: '#00e5ff',
   good: '#3dff9e', bad: '#ff5470', warn: '#ffd23d',
@@ -1012,6 +1014,36 @@ export function startTutorialAnim(root, key) {
   let stopped = false;
   let raf = null;
   let lastStep = -1;
+
+  if (prefersReducedMotion()) {
+    // Reduced motion: step through each DO/AVOID demo as a static end-frame
+    // instead of continuously animating. Same steps, same labels — no motion.
+    let i = 0;
+    let timer = null;
+    const renderStep = () => {
+      if (stopped || !canvas.isConnected) return;
+      const st = spec[i];
+      badge.textContent = `${st.ok ? '✓ DO:' : '✗ AVOID:'} ${st.label}`;
+      badge.classList.toggle('do', st.ok);
+      badge.classList.toggle('avoid', !st.ok);
+      g.clearRect(0, 0, w, hgt);
+      rr(g, 0, 0, w, hgt, 12);
+      g.fillStyle = '#060b12';
+      g.fill();
+      st.draw(g, w, hgt, 1);
+      stamp(g, w, st.ok, 1);
+      i = (i + 1) % spec.length;
+      timer = setTimeout(renderStep, Math.max(1200, st.dur));
+    };
+    renderStep();
+    return {
+      stop() {
+        stopped = true;
+        if (timer) clearTimeout(timer);
+        wrap.remove();
+      },
+    };
+  }
 
   function frame(now) {
     if (stopped || !canvas.isConnected) return;

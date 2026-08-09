@@ -1,6 +1,6 @@
 {
   "0": "Room",
-  "1": "caption.test.js",
+  "1": "server/games.js",
   "2": "room.js",
   "3": "Host UI Lobby Setup",
   "4": "Player Client Sync UI",
@@ -23,12 +23,18 @@
   "21": "ciede2000.js",
   "22": "graphify runbook",
   "23": "balance.test.js",
-  "24": "app.js",
+  "24": "harness.test.js",
   "25": "cups-solo.spec.js",
   "26": "playwright.config.js",
-  "27": "server/games.js",
+  "27": "seededRng",
   "28": "cups.test.js",
-  "29": "Bot",
+  "29": "computeMetric",
   "30": "feedback.js",
-  "34": "feedback.spec.js"
+  "31": "metronome.test.js",
+  "32": "reduced-motion.test.js",
+  "33": "formatRaw",
+  "34": "feedback.spec.js",
+  "35": "anagram.test.js",
+  "36": "stroop.test.js",
+  "37": "Reduced Motion Accessibility (issue #52)"
 }
