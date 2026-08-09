@@ -1475,6 +1475,104 @@ GameClients.anagram = {
   },
 };
 
+// ---- Word Hunt (issue #51) -------------------------------------------------
+// Everyone sees the same seeded grid. Tap adjacent letters to trace a word (or
+// type it) and add it to your list; the server accepts only real words that
+// actually path on the grid, so building junk lists earns nothing. Submits the
+// collected list of word strings — the server does all validation and scoring.
+GameClients.wordhunt = {
+  intro: 'Find as many real words as you can. Tap connected letters (any direction, including diagonals) or type a word, then add it. Longer words score more.',
+  start(root, ctx) {
+    const grid = ctx.data.grid || [];
+    const size = ctx.data.size || grid.length;
+    const words = [];
+    const wordSet = new Set(); // normalized spellings already added
+    let path = []; // list of [r, c] currently traced
+
+    const adjacent = (a, b) => a && b && Math.abs(a[0] - b[0]) <= 1 && Math.abs(a[1] - b[1]) <= 1 && !(a[0] === b[0] && a[1] === b[1]);
+    const inPath = (r, c) => path.some(([pr, pc]) => pr === r && pc === c);
+
+    const current = h('div', { style: { textAlign: 'center', fontSize: '24px', fontWeight: '800', letterSpacing: '0.14em', minHeight: '30px', margin: '6px 0' } });
+    const note = h('div', { class: 'muted', style: { textAlign: 'center', margin: '6px 0' } });
+    const found = h('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap', justifyContent: 'center', margin: '10px 0', minHeight: '20px' } });
+    const input = h('input', { type: 'text', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false', placeholder: 'or type a word', style: { textTransform: 'uppercase', textAlign: 'center', fontSize: '20px', letterSpacing: '0.08em' } });
+
+    const cellButtons = [];
+    const board = h('div', { style: { display: 'grid', gridTemplateColumns: `repeat(${size}, 1fr)`, gap: '6px', maxWidth: '260px', margin: '0 auto' } });
+
+    const traced = () => path.map(([r, c]) => grid[r][c]).join('');
+    const paintCells = () => {
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          const btn = cellButtons[r * size + c];
+          btn.style.background = inPath(r, c) ? 'var(--accent)' : 'var(--bg2)';
+          btn.style.color = inPath(r, c) ? '#fff' : 'var(--ink)';
+        }
+      }
+      current.textContent = traced();
+    };
+    const clearPath = () => { path = []; input.value = ''; paintCells(); };
+
+    const addWord = (text) => {
+      const norm = String(text || '').toLowerCase().replace(/[^a-z]/g, '');
+      if (norm.length < 3) { note.textContent = 'Words must be at least 3 letters.'; return; }
+      if (wordSet.has(norm)) { note.textContent = `Already added "${norm.toUpperCase()}".`; clearPath(); return; }
+      wordSet.add(norm);
+      words.push(norm);
+      found.append(h('span', { style: { padding: '3px 8px', background: 'var(--bg2)', border: '1px solid var(--line)', borderRadius: '6px', fontSize: '14px' } }, norm.toUpperCase()));
+      note.textContent = `${words.length} word${words.length === 1 ? '' : 's'} found`;
+      clearPath();
+    };
+
+    const tapCell = (r, c) => {
+      const last = path[path.length - 1];
+      if (inPath(r, c)) {
+        // Tapping the last cell again backs it off; tapping elsewhere in the
+        // path is ignored (a cell can be used at most once).
+        if (last && last[0] === r && last[1] === c) path.pop();
+        paintCells();
+        return;
+      }
+      if (path.length && !adjacent(last, [r, c])) { note.textContent = 'Letters must connect (touching cells).'; return; }
+      path.push([r, c]);
+      input.value = traced();
+      paintCells();
+    };
+
+    for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
+        const btn = h('button', {
+          class: 'secondary',
+          style: { fontSize: '22px', fontWeight: '800', padding: '14px 0', background: 'var(--bg2)' },
+          onclick: () => tapCell(r, c),
+        }, grid[r] ? grid[r][c] : '?');
+        cellButtons.push(btn);
+        board.append(btn);
+      }
+    }
+
+    const addBtn = h('button', { class: 'big', onclick: () => addWord(input.value) }, 'Add word');
+    const clearBtn = h('button', { class: 'secondary', onclick: clearPath }, 'Clear');
+    input.addEventListener('input', () => { path = []; paintCells(); current.textContent = input.value.toUpperCase(); });
+    input.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') { event.preventDefault(); addWord(input.value); }
+    });
+
+    root.append(
+      board,
+      current,
+      input,
+      h('div', { style: { display: 'flex', gap: '10px', justifyContent: 'center', margin: '8px 0' } }, addBtn, clearBtn),
+      note,
+      found,
+    );
+    paintCells();
+    note.textContent = 'Trace or type a word, then Add it.';
+
+    return { collect: () => ({ words }) };
+  },
+};
+
 // ---- 13. Typing Sprint -----------------------------------------------------
 
 GameClients.typing = {

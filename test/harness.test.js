@@ -14,6 +14,7 @@ import { cupsLevel } from '../shared/cups.js';
 import { trayLevel } from '../shared/tray.js';
 import { parseValue } from '../shared/fractions.js';
 import { solveScramble } from '../shared/anagram.js';
+import { solveGrid } from '../shared/wordhunt.js';
 import { areaRatio } from '../shared/area.js';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -136,6 +137,12 @@ function botPayload(key, data, rnd, stage = 1, bot = null) {
         if (rnd() < 0.7) solved.push({ index: i, word: solveScramble(data.scrambles[i]) });
       }
       return { solved };
+    }
+    case 'wordhunt': {
+      // Find real words on the shared grid, then submit a randomized subset so
+      // bots don't all tie on the full solution — a human finds some, not all.
+      const all = solveGrid(data.grid);
+      return { words: all.filter(() => rnd() < 0.6) };
     }
     case 'spacemash': return { count: 40 + Math.floor(rnd() * 70), flagged: false };
     case 'slingshot': return { best: rnd() * 40 };
