@@ -27,6 +27,7 @@ export const CUPS_MAX_LEVELS = 12;
 // comes from more cups and more swaps instead.
 export const CUPS_MIN_SWAP_MS = 220;
 export const CUPS_GAME_SPEED_DECAY = 0.9; // per game in the queue: 0.9^n of base speed
+export const CUPS_ADDITIONAL_SPEED_GROWTH = 1.2; // extra per-level speed factor: 1.2^n
 
 const FIRST_SWAP_MS = 620;   // a level-1 crossing, comfortably followable
 // 25% faster per level means each swap lasts 80% as long as the prior level.
@@ -52,7 +53,11 @@ export function cupsLevel(seed, level, { baseCups = CUPS_BASE_CUPS, maxCups = CU
   const rng = seededRng(`${seed}:lvl${n}`);
   const cups = cupsCount(n, baseCups, maxCups);
   const swapCount = 2 + n;
-  const swapMs = Math.max(CUPS_MIN_SWAP_MS, Math.round(FIRST_SWAP_MS * SWAP_DECAY ** (n - 1) * speedMultiplier));
+  const additionalSpeed = CUPS_ADDITIONAL_SPEED_GROWTH ** n;
+  const swapMs = Math.max(
+    CUPS_MIN_SWAP_MS,
+    Math.round(FIRST_SWAP_MS * SWAP_DECAY ** (n - 1) * speedMultiplier / additionalSpeed),
+  );
   const allPairs = pairsFor(cups);
 
   const start = randInt(rng, 0, cups - 1);
