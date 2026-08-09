@@ -532,7 +532,7 @@ const TUTORIALS = {
           cursor(g, lerp(w / 2 - 104, xs[ballPos], m), lerp(h - 14, baseY - 18, m), p > 0.8);
         }
       } },
-    { ok: false, dur: 3600, label: 'Do not lose it and guess — one wrong cup ends the whole run',
+    { ok: false, dur: 3600, label: 'Lose it and guess and you miss that level — but you keep going',
       draw(g, w, h, p) {
         const baseY = h - 30;
         const xs = [w / 2 - 76, w / 2, w / 2 + 76];
@@ -546,7 +546,7 @@ const TUTORIALS = {
           cup(g, xs[i], baseY, CW, CH, up, stroke);
         }
         cursor(g, lerp(w / 2 + 40, xs[TAPPED], seg(p, 0.06, 0.42)), baseY - 18, p > 0.42 && p < 0.56);
-        text(g, lifted ? 'wrong cup — the run stops at level 4' : 'lost track… guessing',
+        text(g, lifted ? 'wrong cup — miss this level, on to the next' : 'lost track… guessing',
           w / 2, 22, { size: 15, color: lifted ? C.bad : C.muted, bold: lifted });
       } },
   ],

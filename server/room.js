@@ -18,6 +18,7 @@ import {
   ROSTER_BY_KEY,
   NEEDS_AGGREGATION,
   MULTI_STAGE,
+  COMPLETION_MODE,
   buildGameData,
   buildStages,
   buildReveal,
@@ -59,6 +60,11 @@ const DEFAULTS = {
   redemptionPrepMs: 2500,  // client re-sync window before green is scheduled
   redemptionLeadMs: 3000,  // T_green broadcast this far ahead
   closeGraceMs: 1500,      // late-submission grace after a game's deadline
+  // Completion-mode games (cups) have no shared deadline — the room closes when
+  // everyone has submitted, or the host advances. This long backstop is the
+  // last resort so one non-submitter can never hang the room forever. The bot
+  // harness and tests override it to a tiny value to close deterministically.
+  completionSafetyMs: 15 * 60 * 1000,
 };
 
 function sanitizeConfig(raw = {}) {
@@ -80,6 +86,7 @@ function sanitizeConfig(raw = {}) {
   c.redemptionPrepMs = numIn(raw.redemptionPrepMs, 50, 10000, DEFAULTS.redemptionPrepMs);
   c.redemptionLeadMs = numIn(raw.redemptionLeadMs, 100, 10000, DEFAULTS.redemptionLeadMs);
   c.closeGraceMs = numIn(raw.closeGraceMs, 0, 5000, DEFAULTS.closeGraceMs);
+  c.completionSafetyMs = numIn(raw.completionSafetyMs, 1, 60 * 60 * 1000, DEFAULTS.completionSafetyMs);
   c.enabled = {};
   for (const g of ROSTER) {
     c.enabled[g.key] = raw.enabled && raw.enabled[g.key] != null
@@ -447,6 +454,11 @@ export class Room {
       clientData: g.clientData,
       duration: dur,
       deadline: g.deadline ?? Date.now() + dur,
+      // Completion-mode games (cups) run to completion, not to a deadline: the
+      // client ignores the countdown/auto-submit and submits when the player
+      // finishes all levels. `duration`/`deadline` stay in the payload for
+      // shape compatibility but are not counted down.
+      completion: COMPLETION_MODE.has(g.key),
       // Multi-stage games label themselves the way the chairs rounds do.
       stage: g.stage || 1,
       totalStages: g.totalStages || 1,
@@ -539,7 +551,14 @@ export class Room {
     g.deadline = Date.now() + duration;
     this.setPhase('minigame', this.gamePayload(g, duration));
     this.emitHost('host:progress', { submitted: 0, total: this.players.size });
-    this.setTimer('game', () => this.closeGame(g.token), duration + this.config.closeGraceMs);
+    if (COMPLETION_MODE.has(g.key)) {
+      // No shared deadline: the room closes on all-submit (handleSubmit) or a
+      // host advance (hostNext → closeGame). The only timer is a long safety
+      // backstop so a stalled/disconnected non-submitter can't hang the room.
+      this.setTimer('game', () => this.closeGame(g.token), this.config.completionSafetyMs);
+    } else {
+      this.setTimer('game', () => this.closeGame(g.token), duration + this.config.closeGraceMs);
+    }
   }
 
   // Queue every stage that follows stage one — built out of what the room

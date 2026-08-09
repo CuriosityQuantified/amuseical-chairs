@@ -1,19 +1,21 @@
-// Follow the Cup (issue #10): a ball goes under one of three to five cups, the
-// cups shuffle, and you tap the one still holding it. Clear a level and the
-// next one is faster with more cups; miss one and the game is over.
+// Follow the Cup (issue #10, reworked by issue #46): a ball goes under one of
+// three to five cups, the cups shuffle, and you tap the one still holding it.
+// Every player plays all TEN levels and submits at the end — a miss no longer
+// ends the run, it just costs that level's points. Each correct cup is worth
+// 100 × its level, scored INDEPENDENTLY and by POSITION, so a perfect ten-run
+// is 100·(1+…+10) = 5500.
 //
-// It is the first game on the roster that measures sustained visual TRACKING
-// rather than search, and the only one whose whole state is on screen the
-// entire time. That shape puts the weight in two places, and this file covers
-// both:
+// The weight sits in two places, and this file covers both:
 //
 //   1. The swap script has to be IDENTICAL for every player in the room and
 //      derivable by the server, or two people are playing different games and
 //      neither answer can be checked. shared/cups.js is that single source —
-//      the client animates the plan, the server re-derives it to score.
-//   2. The metric is a level count walked from an untrusted array. Nothing in
-//      the payload may be taken at face value: not the pick, not the cup index,
-//      and not the level number the client claims to have been on.
+//      the client animates the plan, the server re-derives it to score. The
+//      per-level swap durations are exact: [400, 372, 344, 317, 289, 261, 233,
+//      206, 178, 150] ms, endpoints exactly 400 and 150.
+//   2. The metric is a positional, independent point sum walked from an
+//      untrusted array. Nothing in the payload may be taken at face value: not
+//      the pick, not the cup index, and not the level number the client claims.
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -22,8 +24,9 @@ import {
   CUPS_BASE_CUPS,
   CUPS_MAX_CUPS,
   CUPS_MAX_LEVELS,
-  CUPS_MIN_SWAP_MS,
-  CUPS_GAME_SPEED_DECAY,
+  CUPS_FIRST_SWAP_MS,
+  CUPS_LAST_SWAP_MS,
+  cupsSwapMs,
   cupsLevel,
 } from '../shared/cups.js';
 import { Room } from '../server/room.js';
@@ -31,10 +34,14 @@ import {
   ROSTER_BY_KEY,
   MULTI_STAGE,
   NEEDS_AGGREGATION,
+  COMPLETION_MODE,
   buildGameData,
   computeMetric,
   formatRaw,
 } from '../server/games.js';
+
+// The ten exact per-level swap durations, level 1..10 (issue #46).
+const EXPECTED_MS = [400, 372, 344, 317, 289, 261, 233, 206, 178, 150];
 
 const build = (seed = 'cups-seed') =>
   buildGameData('cups', { rng: seededRng(seed), config: {}, used: {} }).clientData;
@@ -42,28 +49,35 @@ const build = (seed = 'cups-seed') =>
 const score = (picks, clientData) =>
   computeMetric('cups', { picks }, {}, clientData, {});
 
-// A run that clears exactly `upTo` levels: the real ball position for each one,
-// re-derived from the same seed the client would animate from.
-const clears = (cd, upTo) =>
-  [...Array(upTo)].map((_, i) => ({ level: i + 1, cupIndex: cupsLevel(cd.seed, i + 1, cd).ball }));
-
-// The same run, then one wrong tap on the next level.
-const clearsThenMiss = (cd, upTo) => {
-  const plan = cupsLevel(cd.seed, upTo + 1, cd);
-  return [...clears(cd, upTo), { level: upTo + 1, cupIndex: (plan.ball + 1) % plan.cups }];
+// A correct pick for one level: the real ball position, re-derived from the
+// same seed the client would animate from.
+const correct = (cd, level) => ({ level, cupIndex: cupsLevel(cd.seed, level, cd).ball });
+// A wrong pick for one level (a real cup, just not the ball).
+const wrong = (cd, level) => {
+  const plan = cupsLevel(cd.seed, level, cd);
+  return { level, cupIndex: (plan.ball + 1) % plan.cups };
 };
+
+// A run that answers every level 1..N correctly.
+const perfect = (cd, n = CUPS_MAX_LEVELS) =>
+  [...Array(n)].map((_, i) => correct(cd, i + 1));
+
+// The maximum achievable score: 100·(1+…+10) = 5500.
+const PERFECT_SCORE = 100 * (CUPS_MAX_LEVELS * (CUPS_MAX_LEVELS + 1)) / 2;
 
 // ---- roster wiring ---------------------------------------------------------
 
-test('cups is a single-stage attention game scored as a level count', () => {
+test('cups is a single-stage attention game scored as a point total', () => {
   const meta = ROSTER_BY_KEY.get('cups');
   assert.ok(meta, 'cups is on the roster');
   assert.equal(meta.category, 'attention');
-  assert.equal(meta.type, 'score', 'higher level reached is better');
-  assert.equal(meta.stages, undefined, 'one payload, one deadline');
+  assert.equal(meta.type, 'score', 'higher point total is better');
+  assert.equal(meta.stages, undefined, 'one payload');
   assert.ok(!MULTI_STAGE.has('cups'));
   assert.ok(!NEEDS_AGGREGATION.has('cups'),
     'the metric is per-player: nothing about it depends on the rest of the room');
+  assert.ok(COMPLETION_MODE.has('cups'),
+    'cups runs to completion — the room closes when everyone has submitted, not on a deadline');
 });
 
 // ---- round data ------------------------------------------------------------
@@ -72,12 +86,21 @@ test('round data is a seed and the ramp bounds — the ball is derived, never sh
   const { clientData, secret } = buildGameData('cups', {
     rng: seededRng('shape'), config: {}, used: {},
   });
-  assert.deepEqual(Object.keys(clientData).sort(), ['baseCups', 'maxLevels', 'seed', 'speedMultiplier']);
+  assert.deepEqual(Object.keys(clientData).sort(), ['baseCups', 'maxLevels', 'seed'],
+    'no speedMultiplier — the durations are fixed by cupsSwapMs (issue #46)');
   assert.equal(clientData.baseCups, CUPS_BASE_CUPS);
   assert.equal(clientData.maxLevels, CUPS_MAX_LEVELS);
+  assert.equal(clientData.maxLevels, 10, 'exactly ten levels');
   assert.equal(typeof clientData.seed, 'string');
   assert.deepEqual(secret, {},
     'every level is derivable from the seed — a secret half would be a second copy of the same truth');
+});
+
+test('the queue index no longer changes the round data — durations are fixed', () => {
+  const a = buildGameData('cups', { rng: seededRng('q'), config: {}, used: {}, queueIndex: 0 }).clientData;
+  const b = buildGameData('cups', { rng: seededRng('q'), config: {}, used: {}, queueIndex: 5 }).clientData;
+  assert.deepEqual(Object.keys(a).sort(), Object.keys(b).sort());
+  assert.ok(!('speedMultiplier' in a), 'no speedMultiplier key survives from issue #35');
 });
 
 test('the seed is seeded: same round seed, same shuffle for every player', () => {
@@ -93,6 +116,35 @@ test('the seed varies from round to round — nobody replays a shuffle they have
   assert.ok(seen.size > 150, `seeds spread across rounds (${seen.size} distinct of 200)`);
 });
 
+// ---- the exact ten swap durations (issue #46) ------------------------------
+
+test('cupsSwapMs is the exact linear ramp from 400ms to 150ms across ten levels', () => {
+  for (let level = 1; level <= CUPS_MAX_LEVELS; level++) {
+    assert.equal(cupsSwapMs(level), EXPECTED_MS[level - 1],
+      `level ${level}: swap duration is exactly ${EXPECTED_MS[level - 1]}ms`);
+  }
+  assert.equal(cupsSwapMs(1), 400, 'level 1 endpoint is exactly 400ms');
+  assert.equal(cupsSwapMs(1), CUPS_FIRST_SWAP_MS);
+  assert.equal(cupsSwapMs(CUPS_MAX_LEVELS), 150, 'level 10 endpoint is exactly 150ms');
+  assert.equal(cupsSwapMs(CUPS_MAX_LEVELS), CUPS_LAST_SWAP_MS);
+});
+
+test('cupsLevel.swapMs matches the exact ten durations, for several seeds', () => {
+  for (const seed of ['a', 'b', 'c', 'room-XY:g2:cups', 'another-seed']) {
+    for (let level = 1; level <= CUPS_MAX_LEVELS; level++) {
+      assert.equal(cupsLevel(seed, level, {}).swapMs, EXPECTED_MS[level - 1],
+        `${seed} level ${level}: ${EXPECTED_MS[level - 1]}ms (durations are seed-independent)`);
+    }
+  }
+});
+
+test('levels above ten clamp to the level-ten duration and never go negative', () => {
+  for (let level = CUPS_MAX_LEVELS + 1; level <= CUPS_MAX_LEVELS + 20; level++) {
+    assert.equal(cupsSwapMs(level), 150, `level ${level} clamps to 150ms`);
+    assert.ok(cupsLevel('clamp', level, {}).swapMs > 0, `level ${level}: swap duration stays positive`);
+  }
+});
+
 // ---- the level generator ---------------------------------------------------
 
 test('a level is derivable on its own — the server never has to replay the ones before it', () => {
@@ -106,7 +158,6 @@ test('the ball ends where the swaps put it', () => {
   const cd = build();
   for (let level = 1; level <= CUPS_MAX_LEVELS; level++) {
     const plan = cupsLevel(cd.seed, level, cd);
-    // Replay the script by hand: each swap exchanges the contents of two cups.
     let pos = plan.start;
     for (const { a, b } of plan.swaps) {
       if (pos === a) pos = b;
@@ -132,8 +183,6 @@ test('every swap is two different cups, both on the table', () => {
 });
 
 test('no swap immediately undoes the one before it', () => {
-  // Two identical swaps back to back read as a stutter, not a shuffle: the
-  // cups return to where they were and the player learns nothing.
   for (const seed of ['a', 'b', 'c', 'd', 'e', 'f']) {
     for (let level = 1; level <= CUPS_MAX_LEVELS; level++) {
       const { swaps } = cupsLevel(seed, level, {});
@@ -152,29 +201,15 @@ test('the ramp is monotonic in all three dimensions', () => {
   for (let i = 1; i < plans.length; i++) {
     assert.ok(plans[i].cups >= plans[i - 1].cups, `level ${i + 1}: cup count never drops`);
     assert.ok(plans[i].swaps.length > plans[i - 1].swaps.length, `level ${i + 1}: more swaps than the last`);
-    assert.ok(plans[i].swapMs <= plans[i - 1].swapMs, `level ${i + 1}: swaps never get slower`);
+    assert.ok(plans[i].swapMs < plans[i - 1].swapMs, `level ${i + 1}: swaps get strictly faster`);
   }
   assert.equal(plans[0].cups, CUPS_BASE_CUPS, 'level 1 opens at the base cup count');
   assert.equal(plans[plans.length - 1].cups, CUPS_MAX_CUPS, 'the last level is the full table');
-  assert.ok(plans[plans.length - 1].swaps.length > plans[0].swaps.length * 2,
-    'the top of the ramp is a materially longer shuffle');
-});
-
-test('a swap never gets faster than the eye can follow', () => {
-  // Below this a crossing stops being an arc and becomes a teleport, and the
-  // game turns from tracking into a coin flip. The floor is the reason the
-  // ramp runs out of headroom, so it is a decision, not a detail.
-  for (let level = 1; level <= CUPS_MAX_LEVELS * 3; level++) {
-    const { swapMs } = cupsLevel('fast', level, {});
-    assert.ok(swapMs >= CUPS_MIN_SWAP_MS,
-      `level ${level}: ${swapMs}ms is under the ${CUPS_MIN_SWAP_MS}ms readable floor`);
-  }
+  assert.equal(plans[0].swapMs, 400, 'level 1 crossing is exactly 400ms');
+  assert.equal(plans[plans.length - 1].swapMs, 150, 'level 10 crossing is exactly 150ms');
 });
 
 test('the shuffle actually moves the ball around, level over level', () => {
-  // A generator that left the ball under the starting cup most of the time
-  // would pass every structural test above and still be a game of "tap the
-  // one you first saw".
   let moved = 0;
   const total = 200;
   for (let i = 0; i < total; i++) {
@@ -184,138 +219,107 @@ test('the shuffle actually moves the ball around, level over level', () => {
   assert.ok(moved > total * 0.5, `the ball leaves its starting cup most rounds (${moved}/${total})`);
 });
 
-// ---- speedMultiplier (issue #35: 10% faster each subsequent game) ----------
+// ---- the scorer: independent, positional 100·level -------------------------
 
-test('speedMultiplier is 1.0 when cups is the first game (queueIndex 0)', () => {
-  const { clientData } = buildGameData('cups', { rng: seededRng('x'), config: {}, used: {}, queueIndex: 0 });
-  assert.equal(clientData.speedMultiplier, 1.0);
-});
-
-test('speedMultiplier decreases by 10% each subsequent game', () => {
-  const idx1 = buildGameData('cups', { rng: seededRng('a'), config: {}, used: {}, queueIndex: 1 }).clientData.speedMultiplier;
-  const idx2 = buildGameData('cups', { rng: seededRng('b'), config: {}, used: {}, queueIndex: 2 }).clientData.speedMultiplier;
-  const idx5 = buildGameData('cups', { rng: seededRng('c'), config: {}, used: {}, queueIndex: 5 }).clientData.speedMultiplier;
-  assert.ok(Math.abs(idx1 - 0.9) < 1e-10, `queueIndex 1 → speedMultiplier 0.9, got ${idx1}`);
-  assert.ok(Math.abs(idx2 - 0.81) < 1e-10, `queueIndex 2 → speedMultiplier 0.81, got ${idx2}`);
-  assert.ok(Math.abs(idx5 - 0.59049) < 1e-10, `queueIndex 5 → speedMultiplier ~0.59049, got ${idx5}`);
-});
-
-test('cupsLevel respects speedMultiplier — a later-session game has faster swaps', () => {
-  const fast = cupsLevel('x', 1, { speedMultiplier: 0.9 });
-  const base = cupsLevel('x', 1, { speedMultiplier: 1 });
-  assert.ok(fast.swapMs < base.swapMs, `speedMultiplier 0.9 should yield faster swaps than 1`);
-});
-
-test('the floor still applies with speedMultiplier — no swap goes below CUPS_MIN_SWAP_MS', () => {
-  for (let level = 1; level <= CUPS_MAX_LEVELS * 3; level++) {
-    const { swapMs } = cupsLevel('floor', level, { speedMultiplier: 0.1 });
-    assert.ok(swapMs >= CUPS_MIN_SWAP_MS,
-      `level ${level} with speedMultiplier 0.1: ${swapMs}ms is under the ${CUPS_MIN_SWAP_MS}ms floor`);
-  }
-});
-
-test('the floor test still passes with an extreme speedMultiplier', () => {
-  for (let level = 1; level <= CUPS_MAX_LEVELS * 3; level++) {
-    const { swapMs } = cupsLevel('extreme', level, { speedMultiplier: 0.01 });
-    assert.ok(swapMs >= CUPS_MIN_SWAP_MS,
-      `level ${level} with speedMultiplier 0.01: ${swapMs}ms is under the ${CUPS_MIN_SWAP_MS}ms floor`);
-  }
-});
-
-test('speedMultiplier=1 is backward-compatible — cupsLevel behaves identically with and without it', () => {
-  for (let level = 1; level <= CUPS_MAX_LEVELS; level++) {
-    const withDefault = cupsLevel('compat', level, {});
-    const withExplicit = cupsLevel('compat', level, { speedMultiplier: 1 });
-    assert.deepEqual(withDefault, withExplicit, `level ${level}: speedMultiplier=1 produces the same plan as the default`);
-  }
-});
-
-// ---- the scorer ------------------------------------------------------------
-
-test('the metric is the number of levels cleared in a row', () => {
+test('a perfect ten-level run scores 5500', () => {
   const cd = build();
-  assert.equal(score(clears(cd, 0), cd), 0);
-  assert.equal(score(clears(cd, 1), cd), 1);
-  assert.equal(score(clears(cd, 6), cd), 6);
+  assert.equal(PERFECT_SCORE, 5500, 'the arithmetic itself: 100·(1+…+10)');
+  assert.equal(score(perfect(cd), cd), 5500);
 });
 
-test('a miss ends the game — nothing after it counts', () => {
+test('each correct level adds exactly 100·level, independently', () => {
   const cd = build();
-  // Cleared five, missed the sixth, and then (impossibly) got the seventh.
-  const past = [...clearsThenMiss(cd, 5), ...clears(cd, 8).slice(6)];
-  assert.equal(score(past, cd), 5, 'the walk stops at the first wrong pick');
+  assert.equal(score([correct(cd, 1)], cd), 100, 'level 1 alone is worth 100');
+  assert.equal(score([wrong(cd, 1), correct(cd, 2)], cd), 200, 'level 2 alone is worth 200');
+  assert.equal(score([wrong(cd, 1), wrong(cd, 2), wrong(cd, 3), wrong(cd, 4), wrong(cd, 5),
+    wrong(cd, 6), wrong(cd, 7), wrong(cd, 8), wrong(cd, 9), correct(cd, 10)], cd), 1000,
+    'level 10 alone is worth 1000');
 });
 
-test('a perfect run tops out at the level cap and cannot be pushed past it', () => {
+test('a miss in the middle does NOT stop later levels from scoring', () => {
   const cd = build();
-  assert.equal(score(clears(cd, CUPS_MAX_LEVELS), cd), CUPS_MAX_LEVELS);
-  // 500 picks, every one of them naming a level that does not exist.
-  const overrun = [
-    ...clears(cd, CUPS_MAX_LEVELS),
-    ...[...Array(500)].map((_, i) => ({ level: CUPS_MAX_LEVELS + i + 1, cupIndex: 0 })),
-  ];
-  assert.equal(score(overrun, cd), CUPS_MAX_LEVELS, 'the cap is the cap');
+  // Clear everything except level 3.
+  const picks = perfect(cd).map((p, i) => (i + 1 === 3 ? wrong(cd, 3) : p));
+  assert.equal(score(picks, cd), PERFECT_SCORE - 300,
+    'missing level 3 costs 300 and nothing else — 5500-300 = 5200');
+  assert.equal(score(picks, cd), 5200);
+});
+
+test('missing several scattered levels costs exactly their point values and no more', () => {
+  const cd = build();
+  const missSet = new Set([1, 4, 7]); // costs 100 + 400 + 700 = 1200
+  const picks = perfect(cd).map((p, i) => (missSet.has(i + 1) ? wrong(cd, i + 1) : p));
+  assert.equal(score(picks, cd), PERFECT_SCORE - (100 + 400 + 700));
+  assert.equal(score(picks, cd), 4300);
 });
 
 test('an empty run is a real zero, not a non-submission', () => {
-  // A wrong tap on level 1 and never tapping at all are the same outcome —
-  // zero levels cleared — so they score the same. This is oddoneout's
-  // convention (`{ cleared: 0 }` is a 0), not metronome's, and it is the right
-  // one here because there is no partial credit inside a level to lose.
   const cd = build();
   assert.equal(score([], cd), 0);
-  assert.equal(score(clearsThenMiss(cd, 0), cd), 0, 'missing level 1 scores the same as never trying');
+  assert.equal(score([wrong(cd, 1)], cd), 0, 'missing level 1 scores the same as never trying');
+});
+
+test('a non-array picks payload is a non-submission (null)', () => {
+  const cd = build();
+  assert.equal(computeMetric('cups', { picks: null }, {}, cd, {}), null);
+  assert.equal(computeMetric('cups', {}, {}, cd, {}), null, 'no picks at all');
 });
 
 // ---- what the server refuses to take on trust ------------------------------
 
-test('the level number is checked, not believed', () => {
+test('a forged high level in position 1 scores nothing for it', () => {
   const cd = build();
-  // Every pick is genuinely correct — for the level it names. Claiming to have
-  // started at level 9 does not skip the eight levels underneath it.
-  const jumpStart = [9, 10, 11].map((level) => ({ level, cupIndex: cupsLevel(cd.seed, level, cd).ball }));
-  assert.equal(score(jumpStart, cd), 0, 'a run that does not start at level 1 clears nothing');
+  // Position 1 is only ever checked against level 1. Claiming to have been on
+  // level 10 (with level 10's correct ball) in slot 0 earns nothing.
+  const forge = [{ level: 10, cupIndex: cupsLevel(cd.seed, 10, cd).ball }];
+  assert.equal(score(forge, cd), 0, 'position 1 is level 1, whatever the entry claims');
+});
 
-  const skipped = [
-    { level: 1, cupIndex: cupsLevel(cd.seed, 1, cd).ball },
-    { level: 3, cupIndex: cupsLevel(cd.seed, 3, cd).ball },
+test('the level tag must match the position, or the entry earns no credit', () => {
+  const cd = build();
+  // Positions are right, but every entry lies about its own level → no credit,
+  // yet the scan keeps going.
+  const mislabeled = perfect(cd).map((p) => ({ ...p, level: p.level + 1 }));
+  assert.equal(score(mislabeled, cd), 0, 'a level tag that does not match its slot is worthless');
+});
+
+test('out-of-order and gap levels get no credit but do not abort the scan', () => {
+  const cd = build();
+  // Slot 0 says level 2 (mismatch → 0), slot 1 says level 2 correctly (matches
+  // position 2 → 200). The gap at position 1 does not stop later scoring.
+  const picks = [correct(cd, 2), correct(cd, 2)];
+  assert.equal(score(picks, cd), 200,
+    'only the entry whose level matches its position scores; the scan continues');
+});
+
+test('a cup index outside that level\'s table earns no credit and does not crash', () => {
+  const cd = build();
+  for (const cupIndex of [-1, 99, 1.5, '0', null, undefined, NaN, Infinity, {}]) {
+    const picks = perfect(cd).map((p, i) => (i === 0 ? { level: 1, cupIndex } : p));
+    // Level 1 loses its 100 points; everything else still scores.
+    assert.equal(score(picks, cd), PERFECT_SCORE - 100,
+      `cupIndex ${JSON.stringify(cupIndex) ?? String(cupIndex)} only costs level 1's points`);
+  }
+});
+
+test('junk entries inside a real run earn no credit and never abort the scan', () => {
+  const cd = build();
+  for (const rubbish of [null, undefined, 'level 3', 5, [], { cupIndex: 0 }, { level: 3 }, NaN]) {
+    // Put the junk at position 3 (level 3): level 3 loses its 300 points, the
+    // rest of the run still scores.
+    const picks = perfect(cd).map((p, i) => (i === 2 ? rubbish : p));
+    assert.equal(computeMetric('cups', { picks }, {}, cd, {}), PERFECT_SCORE - 300,
+      `${JSON.stringify(rubbish) ?? String(rubbish)} at position 3 only costs level 3, no throw`);
+  }
+});
+
+test('an overrun of hundreds of picks still caps at 5500', () => {
+  const cd = build();
+  const overrun = [
+    ...perfect(cd),
+    ...[...Array(500)].map((_, i) => ({ level: CUPS_MAX_LEVELS + i + 1, cupIndex: 0 })),
   ];
-  assert.equal(score(skipped, cd), 1, 'a gap in the ladder ends the walk');
-});
-
-test('replaying one cleared level does not clear the room', () => {
-  const cd = build();
-  const first = { level: 1, cupIndex: cupsLevel(cd.seed, 1, cd).ball };
-  assert.equal(score([...Array(20)].map(() => ({ ...first })), cd), 1,
-    'the second pick is judged against level 2, whatever it says it is');
-});
-
-test('a cup index outside that level\'s table is a miss, not a crash', () => {
-  const cd = build();
-  const plan = cupsLevel(cd.seed, 1, cd);
-  for (const cupIndex of [-1, plan.cups, 99, 1.5, '0', null, undefined, NaN, Infinity, {}]) {
-    assert.equal(score([{ level: 1, cupIndex }], cd), 0,
-      `cupIndex ${JSON.stringify(cupIndex) ?? String(cupIndex)} ends the walk`);
-  }
-});
-
-test('the ball is not under the cup a guesser would tap', () => {
-  // Tapping cup 0 every time, or the cup the ball started under, has to be a
-  // losing strategy across a spread of seeds — otherwise the shuffle is
-  // decoration and the metric measures nothing.
-  const runs = 300;
-  let alwaysZero = 0;
-  let alwaysStart = 0;
-  for (let i = 0; i < runs; i++) {
-    const cd = build(`guess-${i}`);
-    alwaysZero += score([...Array(CUPS_MAX_LEVELS)].map((_, l) => ({ level: l + 1, cupIndex: 0 })), cd);
-    alwaysStart += score(
-      [...Array(CUPS_MAX_LEVELS)].map((_, l) => ({ level: l + 1, cupIndex: cupsLevel(cd.seed, l + 1, cd).start })),
-      cd
-    );
-  }
-  assert.ok(alwaysZero / runs < 1.5, `tapping cup 0 averages ${(alwaysZero / runs).toFixed(2)} levels`);
-  assert.ok(alwaysStart / runs < 1.5, `tapping the starting cup averages ${(alwaysStart / runs).toFixed(2)} levels`);
+  assert.equal(score(overrun, cd), PERFECT_SCORE, 'only the first ten positions can score; the cap is the cap');
 });
 
 test('payloads that are not an attempt are non-submissions, never a crash', () => {
@@ -328,21 +332,30 @@ test('payloads that are not an attempt are non-submissions, never a crash', () =
   }
 });
 
-test('junk inside a real run ends the walk where it appears', () => {
-  const cd = build();
-  const good = clears(cd, 4);
-  for (const rubbish of [null, undefined, 'level 3', 5, [], { cupIndex: 0 }, { level: 3 }]) {
-    const dirty = [...good.slice(0, 2), rubbish, ...good.slice(2)];
-    assert.equal(computeMetric('cups', { picks: dirty }, {}, cd, {}), 2,
-      `${JSON.stringify(rubbish) ?? String(rubbish)} stops the walk at 2 without throwing`);
+test('tapping cup 0 or the starting cup every level is a losing strategy', () => {
+  const runs = 200;
+  let alwaysZeroTotal = 0;
+  let alwaysStartTotal = 0;
+  for (let i = 0; i < runs; i++) {
+    const cd = build(`guess-${i}`);
+    alwaysZeroTotal += score([...Array(CUPS_MAX_LEVELS)].map((_, l) => ({ level: l + 1, cupIndex: 0 })), cd);
+    alwaysStartTotal += score(
+      [...Array(CUPS_MAX_LEVELS)].map((_, l) => ({ level: l + 1, cupIndex: cupsLevel(cd.seed, l + 1, cd).start })),
+      cd
+    );
   }
+  // Both strategies should land far below the 5500 ceiling on average.
+  assert.ok(alwaysZeroTotal / runs < PERFECT_SCORE * 0.35,
+    `tapping cup 0 averages ${(alwaysZeroTotal / runs).toFixed(0)} pts`);
+  assert.ok(alwaysStartTotal / runs < PERFECT_SCORE * 0.35,
+    `tapping the starting cup averages ${(alwaysStartTotal / runs).toFixed(0)} pts`);
 });
 
 // ---- reveal ----------------------------------------------------------------
 
-test('the raw reveal names the level reached', () => {
-  assert.equal(formatRaw('cups', 7), 'level 7');
-  assert.equal(formatRaw('cups', 0), 'level 0');
+test('the raw reveal names the point total', () => {
+  assert.equal(formatRaw('cups', 5500), '5500 pts');
+  assert.equal(formatRaw('cups', 0), '0 pts');
   assert.equal(formatRaw('cups', null), 'no submission');
 });
 
@@ -373,16 +386,20 @@ function onlyCups() {
   return enabled;
 }
 
+// Completion mode has no deadline, so the room close for cups is driven by
+// all-submit or the safety backstop. A tiny completionSafetyMs keeps the
+// non-submitter case deterministic in tests.
 const FAST = {
   gameDuration: 800, musicMs: 60, tutorialMs: 0,
   redemptionPrepMs: 60, redemptionLeadMs: 120,
   postGreenTimeout: 800, hardTimeout: 1500, closeGraceMs: 200,
+  completionSafetyMs: 400,
 };
 
-test('a room plays it: one shuffle for everyone, and points follow the level reached', async () => {
-  const room = new Room(stubIo(), 'CUPS', { ...FAST, enabled: onlyCups() });
+test('a room plays it with no deadline auto-submit; all-submit closes it and points follow the total', async () => {
+  const room = new Room(stubIo(), 'CUPS', { ...FAST, completionSafetyMs: 60000, enabled: onlyCups() });
   try {
-    ['sharp', 'ok', 'lost', 'silent'].forEach((id) => addPlayer(room, id, id));
+    ['sharp', 'ok', 'lost'].forEach((id) => addPlayer(room, id, id));
     assert.equal(room.start().ok, true);
     await waitFor(() => room.phase === 'minigame', 3000, 'the cups round');
 
@@ -392,20 +409,48 @@ test('a room plays it: one shuffle for everyone, and points follow the level rea
     assert.equal(typeof cd.seed, 'string');
     assert.deepEqual(g.secret, {}, 'nothing is withheld from the players');
 
-    room.handleSubmit('sharp', { picks: clearsThenMiss(cd, 8) });
-    room.handleSubmit('ok', { picks: clearsThenMiss(cd, 4) });
-    room.handleSubmit('lost', { picks: clearsThenMiss(cd, 0) });
-    // 'silent' never submits.
+    // The payload marks cups as a completion game so the client suppresses the
+    // countdown/auto-submit.
+    const phasePayload = room.phasePayload || {};
+    // (phasePayload shape varies; the flag lives on the game payload.)
+    assert.ok(COMPLETION_MODE.has('cups'), 'completion mode is on for cups');
 
-    await waitFor(() => room.phase === 'scores', 3000, 'scores');
+    // sharp clears all ten (5500); ok misses levels 1 and 2 (5500-300=5200);
+    // lost misses everything (0). All three submit — the room must NOT wait on
+    // a deadline; it closes on all-submit.
+    room.handleSubmit('sharp', { picks: perfect(cd) });
+    room.handleSubmit('ok', { picks: perfect(cd).map((p, i) => (i < 2 ? wrong(cd, i + 1) : p)) });
+    room.handleSubmit('lost', { picks: perfect(cd).map((p) => wrong(cd, p.level)) });
+
+    await waitFor(() => room.phase === 'scores', 3000, 'scores (via all-submit close)');
     const board = room.lastScores;
     const row = (id) => board.find((r) => r.id === id);
 
-    assert.equal(row('sharp').points, 1000, 'the deepest run in the room takes the game');
-    assert.ok(row('sharp').points > row('ok').points, 'eight levels beats four');
-    assert.ok(row('ok').points > row('lost').points, 'four levels beats none');
-    assert.equal(row('sharp').raw, 'level 8');
-    assert.equal(row('lost').raw, 'level 0', 'a first-level miss is a played game, not a missing one');
+    assert.equal(row('sharp').points, 1000, 'the highest point total in the room takes the game');
+    assert.ok(row('sharp').points > row('ok').points, '5500 beats 5200');
+    assert.ok(row('ok').points > row('lost').points, '5200 beats 0');
+    assert.equal(row('sharp').raw, '5500 pts');
+    assert.equal(row('ok').raw, '5200 pts');
+    assert.equal(row('lost').raw, '0 pts', 'an all-wrong run is a played game worth zero, not a missing one');
+  } finally {
+    room.destroy();
+  }
+});
+
+test('a non-submitter scores 0 and stays; the safety backstop closes a stalled game', async () => {
+  const room = new Room(stubIo(), 'CUPN', { ...FAST, completionSafetyMs: 300, enabled: onlyCups() });
+  try {
+    ['done', 'silent'].forEach((id) => addPlayer(room, id, id));
+    assert.equal(room.start().ok, true);
+    await waitFor(() => room.phase === 'minigame', 3000, 'the cups round');
+    const cd = room.round.games[0].clientData;
+
+    room.handleSubmit('done', { picks: perfect(cd) });
+    // 'silent' never submits — the completionSafetyMs backstop must close it.
+
+    await waitFor(() => room.phase === 'scores', 3000, 'scores (via safety backstop)');
+    const row = (id) => room.lastScores.find((r) => r.id === id);
+    assert.equal(row('done').points, 1000, 'the only submitter takes the game');
     assert.equal(row('silent').points, 0, 'a non-submitter scores 0');
     assert.ok(room.players.has('silent'), 'and stays in the game');
     assert.equal(row('silent').raw, 'no submission');
@@ -414,26 +459,23 @@ test('a room plays it: one shuffle for everyone, and points follow the level rea
   }
 });
 
-test('in a room, a partial run collected at the deadline still scores', async () => {
-  const room = new Room(stubIo(), 'CUPD', { ...FAST, enabled: onlyCups() });
+test('the host can advance a stalled completion game (hostNext → closeGame)', async () => {
+  const room = new Room(stubIo(), 'CUPH', { ...FAST, completionSafetyMs: 60000, enabled: onlyCups() });
   try {
-    ['deadline', 'guesser'].forEach((id) => addPlayer(room, id, id));
+    ['fast', 'afk'].forEach((id) => addPlayer(room, id, id));
     assert.equal(room.start().ok, true);
     await waitFor(() => room.phase === 'minigame', 3000, 'the cups round');
     const cd = room.round.games[0].clientData;
 
-    // Still tracking level 4 when time ran out: collect() sends the three
-    // levels already cleared, with no miss on the end.
-    room.handleSubmit('deadline', { picks: clears(cd, 3) });
-    // Tapped cup 0 on every level from the start.
-    room.handleSubmit('guesser', {
-      picks: [...Array(CUPS_MAX_LEVELS)].map((_, l) => ({ level: l + 1, cupIndex: 0 })),
-    });
+    room.handleSubmit('fast', { picks: perfect(cd) });
+    // 'afk' never submits, and the safety backstop is a full minute out. The
+    // host presses Next to move the room on.
+    room.hostNext();
 
-    await waitFor(() => room.phase === 'scores', 3000, 'scores');
-    const points = (id) => room.lastScores.find((r) => r.id === id).points;
-    assert.ok(points('deadline') > points('guesser'),
-      'running out of time three levels in beats guessing your way out of level 1');
+    await waitFor(() => room.phase === 'scores', 3000, 'scores (via host advance)');
+    const row = (id) => room.lastScores.find((r) => r.id === id);
+    assert.equal(row('fast').points, 1000);
+    assert.equal(row('afk').points, 0, 'the stalled player scores 0');
   } finally {
     room.destroy();
   }
