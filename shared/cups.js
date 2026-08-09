@@ -20,18 +20,15 @@ import { seededRng, randInt } from './rng.js';
 
 export const CUPS_BASE_CUPS = 3;   // level 1 opens with three cups
 export const CUPS_MAX_CUPS = 5;    // and the ramp tops out at five
-export const CUPS_MAX_LEVELS = 12;
+export const CUPS_MAX_LEVELS = 10;
 // Below this a crossing stops reading as an arc and becomes a teleport, and
-// the game turns from tracking into a coin flip. The ramp gets its speed from
-// here down and then stops getting faster — the difficulty above that level
-// comes from more cups and more swaps instead.
-export const CUPS_MIN_SWAP_MS = 220;
+// the game turns from tracking into a coin flip. The final level is deliberately
+// the 150ms endpoint requested for the ten-level run.
+export const CUPS_MIN_SWAP_MS = 150;
 export const CUPS_GAME_SPEED_DECAY = 0.9; // per game in the queue: 0.9^n of base speed
-export const CUPS_ADDITIONAL_SPEED_GROWTH = 1.5; // extra per-level speed factor: 1.5^n
 
-const FIRST_SWAP_MS = 620;   // a level-1 crossing, comfortably followable
-// 25% faster per level means each swap lasts 80% as long as the prior level.
-const SWAP_DECAY = 0.8;      // per level: 1 / 1.25
+const FIRST_SWAP_MS = 400;   // level 1: the requested starting duration
+const LAST_SWAP_MS = 150;    // level 10: the requested ending duration
 
 // Every unordered pair of cup positions. A swap is symmetric, so (a, b) is
 // stored with a < b and the client decides which one arcs over the top.
@@ -53,11 +50,10 @@ export function cupsLevel(seed, level, { baseCups = CUPS_BASE_CUPS, maxCups = CU
   const rng = seededRng(`${seed}:lvl${n}`);
   const cups = cupsCount(n, baseCups, maxCups);
   const swapCount = 2 + n;
-  const additionalSpeed = CUPS_ADDITIONAL_SPEED_GROWTH ** n;
-  const swapMs = Math.max(
-    CUPS_MIN_SWAP_MS,
-    Math.round(FIRST_SWAP_MS * SWAP_DECAY ** (n - 1) * speedMultiplier / additionalSpeed),
-  );
+  const speedLevel = Math.min(n, CUPS_MAX_LEVELS);
+  const baseSwapMs = FIRST_SWAP_MS
+    - ((speedLevel - 1) * (FIRST_SWAP_MS - LAST_SWAP_MS)) / (CUPS_MAX_LEVELS - 1);
+  const swapMs = Math.max(CUPS_MIN_SWAP_MS, Math.round(baseSwapMs * speedMultiplier));
   const allPairs = pairsFor(cups);
 
   const start = randInt(rng, 0, cups - 1);

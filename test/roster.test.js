@@ -48,7 +48,10 @@ const PAYLOADS = {
   gridflash: (cd) => ({ picks: cd.patterns.map((p) => p.slice(0, 3)) }),
   tray: (cd) => ({ picks: trayLevel(cd.seed).changed }),
   cups: (cd) => ({
-    picks: [1, 2, 3].map((level) => ({ level, cupIndex: cupsLevel(cd.seed, level, cd).ball })),
+    picks: [...Array(cd.maxLevels)].map((_, i) => ({
+      level: i + 1,
+      cupIndex: cupsLevel(cd.seed, i + 1, cd).ball,
+    })),
   }),
   typing: (cd) => ({ typed: cd.sentence.slice(0, 24), elapsedMs: 20000 }),
   anagram: (cd) => ({ solved: cd.scrambles.map((scramble, index) => ({ index, word: solveScramble(scramble) })) }),

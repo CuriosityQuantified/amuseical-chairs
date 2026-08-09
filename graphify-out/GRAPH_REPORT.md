@@ -1,22 +1,22 @@
 # Graph Report - amuseical-chairs  (2026-08-08)
 
 ## Corpus Check
-- 52 files · ~81,865 words
+- 52 files · ~81,954 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 456 nodes · 1053 edges · 25 communities (19 shown, 6 thin omitted)
+- 457 nodes · 1056 edges · 25 communities (19 shown, 6 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 6 edges (avg confidence: 0.57)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `41591663`
+- Built from commit: `6d96f4c5`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - Room
-- seededRng
+- server/games.js
 - room.js
 - Host UI Lobby Setup
 - Player Client Sync UI
@@ -36,10 +36,10 @@
 - Claude Skill Docs
 - Host Screen UI
 - Player Join/Play Screen
-- server/games.js
+- caption.test.js
 - graphify runbook
 - check.mjs
-- balance.test.js
+- ciede2000.js
 
 ## God Nodes (most connected - your core abstractions)
 1. `Room` - 60 edges
@@ -51,7 +51,7 @@
 7. `ROSTER_BY_KEY` - 15 edges
 8. `clearAll()` - 14 edges
 9. `formatRaw()` - 14 edges
-10. `el()` - 13 edges
+10. `cupsLevel()` - 14 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `rng()` --calls--> `seededRng()`  [EXTRACTED]
@@ -74,13 +74,13 @@
 Cohesion: 0.09
 Nodes (11): read(), createServer(), __dirname, { httpServer }, HOST_EDITABLE_CONFIG, makeRoomCode(), Room, sanitizeConfig() (+3 more)
 
-### Community 1 - "seededRng"
+### Community 1 - "server/games.js"
 Cohesion: 0.06
-Nodes (61): buildGameData(), computeMetric(), MULTI_STAGE, NEEDS_AGGREGATION, pickContent(), ROSTER_BY_KEY, anagramRounds(), isTrivialRotation() (+53 more)
+Nodes (76): buildGameData(), CAPTION_PROMPTS, clamp(), computeMetric(), formatRaw(), ICEBREAKER_PROMPTS, METRONOME_INTERVALS, MULTI_STAGE (+68 more)
 
 ### Community 2 - "room.js"
-Cohesion: 0.13
-Nodes (13): formatRaw(), ROSTER, DEFAULTS, normalizeError(), normalizeScore(), percentile(), createRedemptionRun(), scoreRedemptionReport() (+5 more)
+Cohesion: 0.16
+Nodes (11): DEFAULTS, normalizeError(), normalizeScore(), percentile(), createRedemptionRun(), scoreRedemptionReport(), fakeClock(), run() (+3 more)
 
 ### Community 3 - "Host UI Lobby Setup"
 Cohesion: 0.14
@@ -95,8 +95,8 @@ Cohesion: 0.07
 Nodes (27): express, dependencies, express, qrcode, socket.io, three, description, devDependencies (+19 more)
 
 ### Community 7 - "multistage.test.js"
-Cohesion: 0.22
-Nodes (13): addPlayer(), captionRoom(), FAST, guessAll(), icebreakerRoom(), onlyGames(), recordingIo(), sleep() (+5 more)
+Cohesion: 0.20
+Nodes (14): NEEDS_AGGREGATION, addPlayer(), captionRoom(), FAST, guessAll(), icebreakerRoom(), onlyGames(), recordingIo() (+6 more)
 
 ### Community 8 - "js/games.js"
 Cohesion: 0.25
@@ -130,9 +130,9 @@ Nodes (4): CI Workflow, CI: Dependency Audit Job, CI: Static Checks Job, CI: Tes
 Cohesion: 0.83
 Nodes (3): pingOnce(), sleep(), syncClock()
 
-### Community 21 - "server/games.js"
-Cohesion: 0.10
-Nodes (30): aggregateCaption(), aggregateGame(), aggregateIcebreaker(), buildReveal(), buildStages(), CAPTION_PROMPTS, clamp(), ICEBREAKER_PROMPTS (+22 more)
+### Community 21 - "caption.test.js"
+Cohesion: 0.13
+Nodes (19): aggregateCaption(), aggregateGame(), aggregateIcebreaker(), buildReveal(), buildStages(), icebreakerTally(), num(), votesForPool() (+11 more)
 
 ### Community 22 - "graphify runbook"
 Cohesion: 0.12
@@ -142,9 +142,9 @@ Nodes (15): 0. Quickstart, 1. Install, 2. Write `.graphifyignore` before you ext
 Cohesion: 0.11
 Nodes (16): ALLOWED_HOST_CONTROLS, clientKeys, clientSrc, controlKeys, controlList, files, hostHtml, hostJs (+8 more)
 
-### Community 24 - "balance.test.js"
-Cohesion: 0.47
-Nodes (7): balanceControl(), balanceSchedule(), balanceState(), balanceStep(), CONFIG, play(), steerTowardFall()
+### Community 24 - "ciede2000.js"
+Cohesion: 0.50
+Nodes (5): ciede2000(), ciede2000Rgb(), deg(), rad(), rgbToLab()
 
 ## Knowledge Gaps
 - **96 isolated node(s):** `graphify-mcp`, `name`, `version`, `description`, `type` (+91 more)
@@ -154,17 +154,17 @@ Nodes (7): balanceControl(), balanceSchedule(), balanceState(), balanceStep(), C
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Room` connect `Room` to `seededRng`, `room.js`, `multistage.test.js`?**
-  _High betweenness centrality (0.094) - this node is a cross-community bridge._
-- **Why does `attachSockets()` connect `Room` to `Project Dependencies`, `multistage.test.js`?**
+- **Why does `Room` connect `Room` to `server/games.js`, `room.js`, `multistage.test.js`?**
+  _High betweenness centrality (0.095) - this node is a cross-community bridge._
+- **Why does `attachSockets()` connect `Room` to `server/games.js`, `Project Dependencies`, `multistage.test.js`?**
   _High betweenness centrality (0.080) - this node is a cross-community bridge._
 - **Why does `qrcode` connect `Project Dependencies` to `Room`?**
   _High betweenness centrality (0.069) - this node is a cross-community bridge._
 - **What connects `graphify-mcp`, `name`, `version` to the rest of the system?**
   _96 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Room` be split into smaller, more focused modules?**
-  _Cohesion score 0.08779761904761904 - nodes in this community are weakly interconnected._
-- **Should `seededRng` be split into smaller, more focused modules?**
-  _Cohesion score 0.06323396567299007 - nodes in this community are weakly interconnected._
-- **Should `room.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08653846153846154 - nodes in this community are weakly interconnected._
+- **Should `server/games.js` be split into smaller, more focused modules?**
+  _Cohesion score 0.05722772277227723 - nodes in this community are weakly interconnected._
+- **Should `Host UI Lobby Setup` be split into smaller, more focused modules?**
+  _Cohesion score 0.14204545454545456 - nodes in this community are weakly interconnected._
