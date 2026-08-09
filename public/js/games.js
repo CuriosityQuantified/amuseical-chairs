@@ -21,6 +21,7 @@ import { seededRng } from '/shared/rng.js';
 import { createPressCounter } from '/shared/presscounter.js';
 import { cleanEntryText } from '/shared/textclean.js';
 import { cupsLevel } from '/shared/cups.js';
+import { PALETTE } from '/shared/stroop.js';
 import { trayLevel, traySwapped } from '/shared/tray.js';
 import {
   balanceSchedule,
@@ -1570,6 +1571,70 @@ GameClients.wordhunt = {
     note.textContent = 'Trace or type a word, then Add it.';
 
     return { collect: () => ({ words }) };
+  },
+};
+
+// ---- Stroop Rush (issue #50) ----------------------------------------------
+// Each card shows a colour NAME printed in some ink colour. Tap the button for
+// the INK colour, not the word. Buttons are labelled by colour name text so the
+// task is answerable without hue discrimination (accessibility parity). The
+// next card appears the instant you answer; collect the ordered picks and the
+// server counts the correct ones.
+GameClients.stroop = {
+  intro: 'Tap the INK COLOUR of each word — not what the word says. Go fast; buttons are labelled by colour name so you never have to guess a hue.',
+  start(root, ctx) {
+    const items = ctx.data.items || [];
+    // Prefer the palette the server sent; fall back to the shared PALETTE so a
+    // client always has label text and swatches even if clientData is thin.
+    const palette = Array.isArray(ctx.data.palette) && ctx.data.palette.length ? ctx.data.palette : PALETTE;
+    const hexByName = new Map(palette.map((c) => [c.name, c.hex]));
+    const picks = [];
+    let index = 0;
+
+    const progress = h('div', { class: 'mash-count' }, '');
+    const word = h('div', {
+      style: {
+        fontSize: '46px', fontWeight: '900', letterSpacing: '0.14em', textAlign: 'center',
+        padding: '30px 18px', background: 'var(--bg2)', border: '1px solid var(--line)', borderRadius: '8px',
+      },
+    });
+    const note = h('div', { class: 'muted', style: { textAlign: 'center', margin: '10px 0' } }, 'Pick the ink colour, not the word.');
+    const buttons = h('div', { style: { display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center', margin: '14px 0' } });
+
+    const answer = (name) => {
+      if (index >= items.length) return;
+      picks.push({ index, color: name });
+      index += 1;
+      render();
+    };
+
+    const btnEls = palette.map((c) => h('button', {
+      class: 'big',
+      // The label text is the colour NAME — the accessibility cue. The coloured
+      // left edge is a secondary, redundant hint only.
+      style: { borderLeft: `10px solid ${c.hex}`, minWidth: '96px' },
+      onclick: () => answer(c.name),
+    }, c.name));
+    buttons.append(...btnEls);
+
+    const render = () => {
+      if (index >= items.length) {
+        progress.textContent = `${items.length} / ${items.length}`;
+        word.textContent = 'done';
+        word.style.color = 'var(--ink)';
+        note.textContent = 'waiting on the room…';
+        btnEls.forEach((b) => { b.disabled = true; });
+        return;
+      }
+      progress.textContent = `${index + 1} / ${items.length}`;
+      const it = items[index];
+      word.textContent = it.word;
+      word.style.color = hexByName.get(it.ink) || 'var(--ink)';
+    };
+
+    root.append(progress, word, note, buttons);
+    render();
+    return { collect: () => ({ picks }) };
   },
 };
 

@@ -17,6 +17,7 @@ import {
 import { FRACTIONS_PENALTY, fractionsPairs } from '../shared/fractions.js';
 import { anagramRounds } from '../shared/anagram.js';
 import { buildGrid, WORDLIST, gridHasPath, scoreWord } from '../shared/wordhunt.js';
+import { stroopSequence, PALETTE } from '../shared/stroop.js';
 import { areaTrials, areaRatio } from '../shared/area.js';
 
 const SENTENCES = [
@@ -224,6 +225,7 @@ export const ROSTER = [
   { key: 'gridflash', name: 'Grid Flash', category: 'memory', type: 'error' },
   { key: 'tray', name: 'Vanishing Tray', category: 'memory', type: 'error' },
   { key: 'cups', name: 'Follow the Cup', category: 'attention', type: 'score' },
+  { key: 'stroop', name: 'Stroop Rush', category: 'attention', type: 'score' },
   { key: 'readroom', name: 'Read the Room', category: 'social', type: 'error' },
   { key: 'caption', name: 'Caption Battle', category: 'social', type: 'score', stages: 2 },
   { key: 'icebreaker', name: 'Icebreaker', category: 'social', type: 'score', stages: 'variable' },
@@ -422,6 +424,18 @@ export function buildGameData(key, ctx) {
       return {
         clientData: { grid, size: grid.length },
         secret: { seed, grid },
+      };
+    }
+    case 'stroop': {
+      // The word/ink stream must travel to the client — the ink is the pixels
+      // it renders — so unlike a hidden-answer game the sequence is public. The
+      // secret keeps the authoritative ink for each position; the scorer trusts
+      // it, never a value echoed back by the client. The palette rides along so
+      // the buttons can be labelled by colour NAME (accessibility parity).
+      const items = stroopSequence(`round-${Math.floor(rng() * 1e9)}`);
+      return {
+        clientData: { items, palette: PALETTE },
+        secret: { inks: items.map((it) => it.ink) },
       };
     }
     case 'spacemash':
@@ -876,6 +890,26 @@ export function computeMetric(key, payload, secret, clientData, config) {
       }
       return total;
     }
+    case 'stroop': {
+      // Each item is answered by exactly ONE ink-colour pick, deduped by index.
+      // Committing to a single scalar `color` per position is the blanket-input
+      // defence: a client that "presses every button" for an item still leaves
+      // at most one counted answer there, so flooding can never register more
+      // than one correct pick per item and cannot beat honest single-pick play.
+      if (!Array.isArray(payload.picks)) return null;
+      const inks = Array.isArray(secret?.inks) ? secret.inks : [];
+      const counted = new Set();
+      let correct = 0;
+      for (const entry of payload.picks.slice(0, inks.length)) {
+        if (!entry || typeof entry !== 'object') continue;
+        const index = entry.index;
+        if (!Number.isInteger(index) || index < 0 || index >= inks.length || counted.has(index)) continue;
+        counted.add(index);
+        if (typeof entry.color !== 'string') continue;
+        if (entry.color === inks[index]) correct++;
+      }
+      return correct;
+    }
     case 'spacemash': {
       const c = num(payload.count);
       if (c == null) return null;
@@ -1058,6 +1092,7 @@ export function formatRaw(key, metric, payload) {
     case 'gridflash': return `${metric} cells off`;
     case 'tray': return `${metric} wrong`;
     case 'cups': return `${metric} pts`;
+    case 'stroop': return `${metric} correct`;
     case 'readroom': return `${metric.toFixed(0)} pts off`;
     case 'caption': return `${metric} vote${metric === 1 ? '' : 's'}`;
     case 'icebreaker': return `${metric} right`;

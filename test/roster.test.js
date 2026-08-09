@@ -54,6 +54,7 @@ const PAYLOADS = {
   typing: (cd) => ({ typed: cd.sentence.slice(0, 24), elapsedMs: 20000 }),
   anagram: (cd) => ({ solved: cd.scrambles.map((scramble, index) => ({ index, word: solveScramble(scramble) })) }),
   wordhunt: (cd) => ({ words: solveGrid(cd.grid) }),
+  stroop: (cd) => ({ picks: cd.items.map((it, index) => ({ index, color: it.ink })) }),
   spacemash: () => ({ count: 55, flagged: false }),
   slingshot: () => ({ best: 12.5 }),
   balance: () => ({ survivedMs: 12000 }),

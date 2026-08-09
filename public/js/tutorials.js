@@ -727,6 +727,48 @@ const TUTORIALS = {
       } },
   ],
 
+  stroop: [
+    { ok: true, dur: 4200, label: 'Tap the INK colour — buttons are labelled by name, so no hue-guessing',
+      draw(g, w, h, p) {
+        // The word says RED but it is printed in blue ink; the ink is the answer.
+        text(g, 'RED', w / 2, 52, { size: 34, bold: true, color: C.cyan });
+        const labels = ['RED', 'BLUE', 'GREEN'];
+        const inks = [C.bad, C.cyan, C.good];
+        const bw = 78;
+        const gap = 12;
+        const total = labels.length * bw + (labels.length - 1) * gap;
+        const bx = w / 2 - total / 2;
+        const by = h - 70;
+        labels.forEach((label, i) => {
+          const x = bx + i * (bw + gap);
+          const pick = label === 'BLUE'; // the correct ink is blue
+          box(g, x, by, bw, 40, pick && p > 0.45 ? C.panel : C.panel, pick ? inks[i] : C.line);
+          text(g, label, x + bw / 2, by + 20, { size: 15, bold: true, color: inks[i] });
+        });
+        cursor(g, w / 2 + 6, by + 20, p > 0.1 && p < 0.6);
+        if (p > 0.6) text(g, 'ink is BLUE ✓', w / 2, 96, { size: 16, bold: true, color: C.good });
+      } },
+    { ok: false, dur: 3600, label: 'Do not answer what the word SAYS — that is the trap',
+      draw(g, w, h, p) {
+        text(g, 'RED', w / 2, 52, { size: 34, bold: true, color: C.cyan });
+        const labels = ['RED', 'BLUE', 'GREEN'];
+        const inks = [C.bad, C.cyan, C.good];
+        const bw = 78;
+        const gap = 12;
+        const total = labels.length * bw + (labels.length - 1) * gap;
+        const bx = w / 2 - total / 2;
+        const by = h - 70;
+        labels.forEach((label, i) => {
+          const x = bx + i * (bw + gap);
+          const trap = label === 'RED'; // reading the word instead of the ink
+          box(g, x, by, bw, 40, C.panel, trap && p > 0.4 ? C.bad : C.line);
+          text(g, label, x + bw / 2, by + 20, { size: 15, bold: true, color: inks[i] });
+        });
+        cursor(g, bx + bw / 2 + 6, by + 20, p > 0.1 && p < 0.6);
+        if (p > 0.55) text(g, 'that reads the word — wrong', w / 2, 96, { size: 15, bold: true, color: C.bad });
+      } },
+  ],
+
   typing: [
     { ok: true, dur: 4200, label: 'Type the sentence exactly — accuracy earns the speed',
       draw(g, w, h, p) {

@@ -5,7 +5,7 @@
       "semantic": null
     },
     ".github/workflows/ci.yml": {
-      "ast": "05ce53c52fae3a86a84d207d5de7f101",
+      "ast": "e37a755a4d757ab81f1b133b7a56a863",
       "semantic": null
     },
     ".mcp.json": {
@@ -45,7 +45,7 @@
       "semantic": "f8ab4b1157d4b0554ae6cbe0c08f8a84"
     },
     "public/js/games.js": {
-      "ast": "86e64edd48757d780276f8dca52c1810",
+      "ast": "acf2fc267e88c0322d7153e5f03174e7",
       "semantic": null
     },
     "public/js/host.js": {
@@ -61,7 +61,7 @@
       "semantic": "3d9aa8d2aabb42cdc226c0dc852c93f2"
     },
     "public/js/tutorials.js": {
-      "ast": "b285543c57f02d911c6c503bf8604920",
+      "ast": "3c1e8b777dff72bd741f35c8a1f9b10b",
       "semantic": null
     },
     "scripts/check.mjs": {
@@ -77,7 +77,7 @@
       "semantic": "24c1b81e5113a5aa4edaa98f2ffce2c1"
     },
     "server/games.js": {
-      "ast": "0d5221049916d36fee6e7696cc037118",
+      "ast": "276faed937e8ed59b08fd956df31f865",
       "semantic": null
     },
     "server/index.js": {
@@ -140,6 +140,10 @@
       "ast": "351b6134407218b5e0bd36421b2881fd",
       "semantic": "351b6134407218b5e0bd36421b2881fd"
     },
+    "shared/stroop.js": {
+      "ast": "af7e9e225582372e32e7cd5b9539046d",
+      "semantic": null
+    },
     "shared/textclean.js": {
       "ast": "3d75f7a898bd0031acbff72bc333a027",
       "semantic": "3d75f7a898bd0031acbff72bc333a027"
@@ -197,7 +201,7 @@
       "semantic": null
     },
     "test/harness.test.js": {
-      "ast": "016e5aeedf5850b4303d7ef024b1b035",
+      "ast": "30c06bfab4723798bc56bd9092e2eba2",
       "semantic": null
     },
     "test/icebreaker.test.js": {
@@ -233,12 +237,16 @@
       "semantic": "090730fd5bd50643cea6369ab4e5c184"
     },
     "test/roster.test.js": {
-      "ast": "76d71fafa37f2a4e3b1084c1c7c5e50a",
+      "ast": "c701ab7634f98f2678abaddd28d33982",
       "semantic": null
     },
     "test/smoke.test.js": {
       "ast": "a1a14e9592e27da009d4b90de8e51da4",
       "semantic": "a1a14e9592e27da009d4b90de8e51da4"
+    },
+    "test/stroop.test.js": {
+      "ast": "460d75b4fe09931c272cad4fb6f41f3b",
+      "semantic": null
     },
     "test/textclean.test.js": {
       "ast": "eba65528d9fbadcebe5a9d003c4c22e5",
