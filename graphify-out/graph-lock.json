@@ -41,7 +41,7 @@
       "semantic": "f8ab4b1157d4b0554ae6cbe0c08f8a84"
     },
     "public/js/games.js": {
-      "ast": "fe5846fd0d46f3470d016c5c7286841e",
+      "ast": "3a6c7ea5b081ee1e07b1ff05c20b566d",
       "semantic": null
     },
     "public/js/host.js": {
@@ -49,7 +49,7 @@
       "semantic": null
     },
     "public/js/player.js": {
-      "ast": "4663e0fcbaecd461a0ff9b8fbe33fbb8",
+      "ast": "c9fa7bebd49e32e7b7f6bbe6678ff9ee",
       "semantic": null
     },
     "public/js/sync.js": {
@@ -81,12 +81,12 @@
       "semantic": "f9bcb5a92468425b887f7d6ed3da4eb4"
     },
     "server/room.js": {
-      "ast": "e17c648ae84af8d26ed1a8d19827c769",
+      "ast": "d6d85de5959ba3e8cd97291295f07fbd",
       "semantic": null
     },
     "server/sockets.js": {
-      "ast": "a2a754f11c5b4ca162cf5931093f9cd0",
-      "semantic": "a2a754f11c5b4ca162cf5931093f9cd0"
+      "ast": "db866bf321cc3b6f66f5bb2dff3edc18",
+      "semantic": null
     },
     "shared/anagram.js": {
       "ast": "ef972db8495e8db6c4cbd97b426a8254",
@@ -110,6 +110,10 @@
     },
     "shared/cups.js": {
       "ast": "c07ff08b6a03a8aaccc6024f20867d68",
+      "semantic": null
+    },
+    "shared/feedback.js": {
+      "ast": "8745e99e22bfa522869fdb002819b47d",
       "semantic": null
     },
     "shared/fractions.js": {
@@ -176,6 +180,10 @@
       "ast": "e32e5d490281581fcef70cdcdb60c8b0",
       "semantic": "e32e5d490281581fcef70cdcdb60c8b0"
     },
+    "test/feedback.test.js": {
+      "ast": "45c19c26ff9c1f22a69fac6a3d7d718b",
+      "semantic": null
+    },
     "test/fractions.test.js": {
       "ast": "7fc7bce4ee8d25ff71c3056be69f3555",
       "semantic": null
@@ -208,6 +216,10 @@
       "ast": "307b23a14e2dbfd1e9b4c96196ee4af1",
       "semantic": "307b23a14e2dbfd1e9b4c96196ee4af1"
     },
+    "test/reveal.test.js": {
+      "ast": "0727f776e42d36f559dbe586418c05f0",
+      "semantic": null
+    },
     "test/room.test.js": {
       "ast": "090730fd5bd50643cea6369ab4e5c184",
       "semantic": "090730fd5bd50643cea6369ab4e5c184"
@@ -230,6 +242,10 @@
     },
     "tests/e2e/cups-solo.spec.js": {
       "ast": "0c264c97acb44df87467e77efdb303d7",
+      "semantic": null
+    },
+    "tests/e2e/feedback.spec.js": {
+      "ast": "24b257cdc0ffc3eafd109933d7952b9f",
       "semantic": null
     }
   }

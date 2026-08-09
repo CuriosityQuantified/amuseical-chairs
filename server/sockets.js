@@ -102,6 +102,23 @@ export function attachSockets(io) {
       if (r && socket.data.playerId) r.handleSubmit(socket.data.playerId, payload);
     });
 
+    // Per-turn answer feedback for games whose correct answer is a server
+    // secret (Anagram, issue #48). The ack goes back to THIS socket only, so a
+    // player only ever learns their own current game's turn answer.
+    socket.on('player:reveal', ({ index } = {}, cb) => {
+      if (typeof cb !== 'function') return;
+      try {
+        const r = room();
+        if (r && socket.data.playerId) cb(r.revealTurn(socket.data.playerId, index));
+        else cb({ error: 'Not in a room.' });
+      } catch (err) {
+        // A reveal is advisory feedback — never let it escape as an unhandled
+        // server exception.
+        console.error('player:reveal', err);
+        cb({ error: 'Reveal failed.' });
+      }
+    });
+
     socket.on('redemption:report', (report) => {
       const r = room();
       if (r && socket.data.playerId) r.handleRedemptionReport(socket.data.playerId, report);

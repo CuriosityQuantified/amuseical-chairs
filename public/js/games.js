@@ -32,6 +32,15 @@ import {
   BALANCE_DT,
 } from '/shared/balance.js';
 import { FRACTIONS_PENALTY, parseValue } from '/shared/fractions.js';
+import {
+  bisectFeedback,
+  areaFeedback,
+  dotsFeedback,
+  stopclockFeedback,
+  gridflashFeedback,
+  fractionsFeedback,
+  anagramFeedback,
+} from '/shared/feedback.js';
 
 // ---- tiny DOM helpers ------------------------------------------------------
 
@@ -82,6 +91,48 @@ function canvasPos(canvas, ev) {
 }
 
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+
+// Per-turn answer feedback (issue #48). After a turn is committed, show the
+// player their own answer, the correct answer, and whether they got it, then
+// wait for them to continue before the next turn is drawn. This is player-local
+// UI: it runs entirely on this device and blocks nothing on any other player.
+//
+// `fb` is a record from shared/feedback.js: { your, correct, ok, answered }.
+// `onContinue` is called exactly once, when the player taps Next or the
+// readable delay elapses — whichever comes first (the `done` guard makes the
+// second path a no-op). The next turn must never be drawn before this panel is
+// visible, so callers draw the next turn only from inside `onContinue`. A
+// deadline auto-collect that clears the game root simply detaches the panel;
+// its pending timer then fires harmlessly (remove() on a detached node is a
+// no-op and submit() is idempotent).
+function turnFeedback(root, fb, onContinue, { progress = '', autoMs = 2200 } = {}) {
+  const stateText = fb.ok ? '✓ Correct' : (fb.answered ? '✗ Not quite' : '✗ No answer');
+  const panel = h('div', {
+    class: `turn-feedback ${fb.ok ? 'fb-ok' : 'fb-bad'}`,
+    'data-testid': 'turn-feedback',
+    role: 'status',
+    'aria-live': 'polite',
+  },
+    h('div', { class: 'fb-state' }, stateText),
+    h('div', { class: 'fb-row' }, h('span', { class: 'fb-label' }, 'Your answer'), h('strong', { class: 'fb-your' }, fb.your)),
+    h('div', { class: 'fb-row' }, h('span', { class: 'fb-label' }, 'Correct answer'), h('strong', { class: 'fb-correct' }, fb.correct)),
+    progress ? h('div', { class: 'fb-progress muted' }, progress) : document.createTextNode(''),
+  );
+  const next = h('button', { class: 'big', type: 'button', 'data-testid': 'feedback-next' }, 'Next');
+  panel.append(next);
+  root.append(panel);
+  let done = false;
+  let timer = null;
+  const go = () => {
+    if (done) return;
+    done = true;
+    if (timer) clearTimeout(timer);
+    panel.remove();
+    onContinue();
+  };
+  next.addEventListener('click', go);
+  timer = setTimeout(go, autoMs);
+}
 
 export const GameClients = {};
 
@@ -171,10 +222,11 @@ GameClients.oddoneout = {
 // ---- 3. Bisect the Line ----------------------------------------------------
 
 GameClients.bisect = {
-  intro: 'Tap the line at exactly the percentage asked. No feedback between tries.',
+  intro: 'Tap the line at exactly the percentage asked. Each tap shows your answer and the target before the next line.',
   start(root, ctx) {
     const targets = ctx.data.targets;
     const guesses = [];
+    let reviewing = false;
     const prompt = h('h2', { class: 'center' });
     const note = h('p', { class: 'trial-note center' });
     const { canvas, ctx: g, w } = makeCanvas(root, 140);
@@ -205,10 +257,14 @@ GameClients.bisect = {
       draw();
     }
     canvas.addEventListener('pointerdown', (e) => {
-      if (guesses.length >= targets.length) return;
+      if (reviewing || guesses.length >= targets.length) return;
       const { x } = canvasPos(canvas, e);
+      const i = guesses.length;
       guesses.push(clamp(((x - pad) / (w - 2 * pad)) * 100, 0, 100));
-      show();
+      reviewing = true;
+      turnFeedback(root, bisectFeedback(targets[i], guesses[i]),
+        () => { reviewing = false; show(); },
+        { progress: `${i + 1} of ${targets.length}` });
     });
     show();
     return { collect: () => (guesses.length ? { guesses } : null) };
@@ -218,10 +274,11 @@ GameClients.bisect = {
 // ---- 4. Proportion Sense ---------------------------------------------------
 
 GameClients.area = {
-  intro: 'Estimate the small shape as a percentage of the big one. Four rounds; no feedback.',
+  intro: 'Estimate the small shape as a percentage of the big one. Four rounds; each shows your answer and the true area after you confirm.',
   start(root, ctx) {
     const trials = ctx.data.trials;
     const guesses = [];
+    let reviewing = false;
     const prompt = h('h2', { class: 'center' }, 'What percent of the big shape is the small one?');
     const note = h('p', { class: 'trial-note center' });
     const value = h('strong', {}, '50%');
@@ -261,9 +318,13 @@ GameClients.area = {
     }
     slider.addEventListener('input', () => { value.textContent = `${slider.value}%`; });
     confirm.addEventListener('click', () => {
-      if (guesses.length >= trials.length) return;
+      if (reviewing || guesses.length >= trials.length) return;
+      const i = guesses.length;
       guesses.push(Number(slider.value));
-      show();
+      reviewing = true;
+      turnFeedback(root, areaFeedback(trials[i], guesses[i]),
+        () => { reviewing = false; show(); },
+        { progress: `${i + 1} of ${trials.length}` });
     });
     show();
     return { collect: () => (guesses.length ? { guesses } : null) };
@@ -480,11 +541,12 @@ function shapePath(shape, w, hgt) {
 // ---- 6. Dots in the Jar ----------------------------------------------------
 
 GameClients.dots = {
-  intro: 'Dots flash for 4 seconds. Estimate how many. Three jars.',
+  intro: 'Dots flash for 4 seconds. Estimate how many. Three jars — each shows your estimate and the real count.',
   start(root, ctx) {
     const rng = seededRng(ctx.data.seed);
     const counts = ctx.data.counts;
     const guesses = [];
+    let reviewing = false;
     const note = h('p', { class: 'trial-note center' });
     const { canvas, ctx: g, w, hgt } = makeCanvas(root, 300);
     const input = h('input', { type: 'number', placeholder: 'How many dots?', min: 0, inputmode: 'numeric' });
@@ -525,10 +587,16 @@ GameClients.dots = {
       }, 4000);
     }
     function confirm() {
+      if (reviewing) return;
       const v = Number(input.value);
       if (!Number.isFinite(v) || v < 0) return;
+      const i = guesses.length;
       guesses.push(v);
-      show();
+      btn.disabled = true;
+      reviewing = true;
+      turnFeedback(root, dotsFeedback(counts[i], guesses[i]),
+        () => { reviewing = false; show(); },
+        { progress: `Jar ${i + 1} of ${counts.length}` });
     }
     show();
     return { collect: () => (guesses.length ? { guesses } : null) };
@@ -538,10 +606,11 @@ GameClients.dots = {
 // ---- 8. Stop the Clock -----------------------------------------------------
 
 GameClients.stopclock = {
-  intro: 'Stop the timer at exactly the target time shown. It disappears after 3 seconds. Two tries, best counts.',
+  intro: 'Stop the timer at exactly the target time shown. It disappears after 3 seconds. Two tries, best counts — each shows your time and the target.',
   start(root, ctx) {
     const { targetMs, visibleMs, attempts } = ctx.data;
     const errors = [];
+    let reviewing = false;
     const display = h('div', { class: 'mash-count' }, '0.000');
     const note = h('p', { class: 'trial-note center' }, `Attempt 1 of ${attempts} — stop at ${(targetMs / 1000).toFixed(3)}s`);
     const btn = h('button', { class: 'big' }, 'START');
@@ -555,6 +624,7 @@ GameClients.stopclock = {
       raf = requestAnimationFrame(tick);
     }
     btn.addEventListener('click', () => {
+      if (reviewing) return;
       if (startTs == null) {
         startTs = performance.now();
         btn.textContent = 'STOP';
@@ -565,12 +635,19 @@ GameClients.stopclock = {
         startTs = null;
         errors.push(Math.abs(el - targetMs));
         display.textContent = (el / 1000).toFixed(3);
-        if (errors.length >= attempts) {
-          ctx.submit({ best: Math.min(...errors) });
-        } else {
-          note.textContent = `That was ${(el / 1000).toFixed(3)}s. Attempt ${errors.length + 1} of ${attempts}.`;
-          btn.textContent = 'START';
-        }
+        const attemptNo = errors.length;
+        reviewing = true;
+        turnFeedback(root, stopclockFeedback(targetMs, el),
+          () => {
+            reviewing = false;
+            if (attemptNo >= attempts) {
+              ctx.submit({ best: Math.min(...errors) });
+            } else {
+              note.textContent = `Attempt ${attemptNo + 1} of ${attempts} — stop at ${(targetMs / 1000).toFixed(3)}s`;
+              btn.textContent = 'START';
+            }
+          },
+          { progress: `Attempt ${attemptNo} of ${attempts}` });
       }
     });
     return { collect: () => (errors.length ? { best: Math.min(...errors) } : null) };
@@ -730,7 +807,7 @@ GameClients.metronome = {
 // ---- 9. Grid Flash ---------------------------------------------------------
 
 GameClients.gridflash = {
-  intro: 'Some cells light up for 4 seconds. Rebuild the pattern from memory. Two rounds.',
+  intro: 'Some cells light up for 4 seconds. Rebuild the pattern from memory. Two rounds — each reveals the true cells after you commit.',
   start(root, ctx) {
     const { patterns, showMs } = ctx.data;
     const picks = [];
@@ -777,8 +854,17 @@ GameClients.gridflash = {
       }, showMs);
     }
     function confirm() {
+      if (showing) return;
+      const r = picks.length;
       picks.push([...current]);
-      round();
+      // Freeze the board during review and light the true pattern so the
+      // player sees which cells they missed alongside their own picks.
+      showing = true;
+      btn.disabled = true;
+      cells.forEach((c, i) => c.classList.toggle('lit', patterns[r].includes(i)));
+      turnFeedback(root, gridflashFeedback(patterns[r], picks[r]),
+        () => { cells.forEach((c) => c.classList.remove('lit')); round(); },
+        { progress: `Round ${r + 1} of ${patterns.length}` });
     }
     round();
     return { collect: () => ({ picks: [...picks, ...(current.size && !showing ? [[...current]] : [])] }) };
@@ -1319,11 +1405,12 @@ function startGuess(root, ctx) {
 // ---- Anagram Rush ----------------------------------------------------------
 
 GameClients.anagram = {
-  intro: 'Unscramble each word. Tap tiles or type your answer, then move on — English vocabulary, so hosts should enable this only for the right room.',
+  intro: 'Unscramble each word. Tap tiles or type your answer, then move on — the correct word is revealed after each turn.',
   start(root, ctx) {
     const scrambles = ctx.data.scrambles || [];
     const solved = [];
     let index = 0;
+    let reviewing = false;
     const progress = h('div', { class: 'mash-count' }, '');
     const prompt = h('div', { style: { fontSize: '30px', fontWeight: '800', letterSpacing: '0.16em', textAlign: 'center', padding: '18px', background: 'var(--bg2)', border: '1px solid var(--line)', borderRadius: '8px' } });
     const tiles = h('div', { style: { display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center', margin: '14px 0' } });
@@ -1332,12 +1419,31 @@ GameClients.anagram = {
     const submit = h('button', { class: 'big' }, 'Next word');
     const skip = h('button', { class: 'secondary' }, 'Skip');
 
-    const advance = (save) => {
-      if (index >= scrambles.length) return;
-      if (save && input.value) solved.push({ index, word: input.value });
-      index++;
-      input.value = '';
-      render();
+    const setEnabled = (on) => { input.disabled = !on; submit.disabled = !on; skip.disabled = !on; };
+    const advance = async (save) => {
+      if (reviewing || index >= scrambles.length) return;
+      const i = index;
+      const word = save && input.value ? input.value : '';
+      if (word) solved.push({ index: i, word });
+      reviewing = true;
+      setEnabled(false);
+      // The intended word is a server secret, so ask the server for THIS
+      // player's turn answer only. A null/failed reveal shows the correct
+      // answer as unknown rather than fabricating one.
+      let answer = null;
+      try {
+        const rev = typeof ctx.reveal === 'function' ? await ctx.reveal(i) : null;
+        if (rev && typeof rev.answer === 'string') answer = rev.answer;
+      } catch { /* reveal is advisory — never block advancing on it */ }
+      turnFeedback(root, anagramFeedback(answer, word),
+        () => {
+          reviewing = false;
+          index = i + 1;
+          input.value = '';
+          setEnabled(true);
+          render();
+        },
+        { progress: `${i + 1} of ${scrambles.length}` });
     };
     const render = () => {
       progress.textContent = `${Math.min(index + 1, scrambles.length)} / ${scrambles.length}`;
@@ -1355,7 +1461,7 @@ GameClients.anagram = {
       tiles.replaceChildren(...[...scramble].map((letter) => h('button', {
         class: 'secondary', onclick: () => { input.value += letter; input.focus(); },
       }, letter)));
-      note.textContent = 'Build an answer, then move on. There is no answer reveal during play.';
+      note.textContent = 'Build an answer, then move on — the correct word is revealed after each turn.';
       input.focus();
     };
     submit.addEventListener('click', () => advance(true));
@@ -1900,13 +2006,14 @@ GameClients.balance = {
 // ---- Fraction Face-Off -----------------------------------------------------
 
 GameClients.fractions = {
-  intro: 'Tap the bigger value — fast and confident. Wrong taps cost points.',
+  intro: 'Tap the bigger value. Each tap shows your pick and the larger value before the next pair. Wrong taps cost points.',
   start(root, ctx) {
     const pairs = ctx.data.pairs;
     const picks = [];
     let idx = 0;
     let correct = 0;
     let wrong = 0;
+    let reviewing = false;
     const net = () => Math.max(0, correct - FRACTIONS_PENALTY * wrong);
     const scoreEl = h('div', { class: 'mash-count' }, '0');
     const hintEl = h('div', { class: 'muted', style: { textAlign: 'center' } }, 'tap the bigger one');
@@ -1917,8 +2024,9 @@ GameClients.fractions = {
       setTimeout(() => btn.classList.remove('flash'), 130);
     };
     const tap = (side, btn) => {
-      if (idx >= pairs.length) return;
+      if (reviewing || idx >= pairs.length) return;
       const pair = pairs[idx];
+      const i = idx;
       picks.push(side);
       const mine = parseValue(pair.left) > parseValue(pair.right) ? 'left' : 'right';
       if (side === mine) correct++;
@@ -1926,7 +2034,10 @@ GameClients.fractions = {
       scoreEl.textContent = String(net());
       flash(btn);
       idx++;
-      render();
+      reviewing = true;
+      turnFeedback(root, fractionsFeedback(pair, side),
+        () => { reviewing = false; render(); },
+        { progress: `${i + 1} of ${pairs.length}`, autoMs: 1400 });
     };
     const render = () => {
       if (idx >= pairs.length) {

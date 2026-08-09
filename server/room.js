@@ -27,6 +27,12 @@ import {
   formatRaw,
 } from './games.js';
 
+// Games whose per-turn correct answer is a server secret (never in the
+// broadcast clientData), so the client must ask the server for its own turn
+// answer to show per-turn feedback (issue #48). The secret is stored on the
+// game stage as `secret.answers` (one entry per turn/round).
+const PER_TURN_SECRET = new Set(['anagram']);
+
 // Ambiguity-free room-code alphabet: no I or O (and digits are excluded).
 const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
 
@@ -741,6 +747,24 @@ export class Room {
     this.emitAll('host:progress', { submitted, total });
     this.emitPlayer(playerId, 'submit:ack', { gameIndex: this.round.gameIndex });
     if (submitted >= total) this.closeGame(g.token);
+  }
+
+  // Server-authoritative per-turn feedback (issue #48). Returns ONLY the
+  // requesting player's own current-game turn answer, and only for games whose
+  // answer is a server secret. Every input is validated: an unknown player, a
+  // non-secret game, a wrong phase, or a bad/out-of-range index yields an error
+  // object, never a crash and never another player's data.
+  revealTurn(playerId, index) {
+    if (!this.players.has(playerId)) return { error: 'Not in this room.' };
+    if (this.phase !== 'minigame' || !this.round) return { error: 'No active turn.' };
+    const g = this.round.games[this.round.gameIndex];
+    if (!g || !PER_TURN_SECRET.has(g.key)) return { error: 'No per-turn reveal for this game.' };
+    const answers = g.secret && Array.isArray(g.secret.answers) ? g.secret.answers : null;
+    if (!answers) return { error: 'No answer available.' };
+    // Require a real integer — no string/null coercion — so a hostile client
+    // cannot smuggle a non-index value that happens to coerce into range.
+    if (!Number.isInteger(index) || index < 0 || index >= answers.length) return { error: 'Bad turn index.' };
+    return { index, answer: answers[index] };
   }
 
   closeGame(token) {
