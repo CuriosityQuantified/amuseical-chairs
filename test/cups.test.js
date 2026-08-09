@@ -184,6 +184,19 @@ test('the shuffle actually moves the ball around, level over level', () => {
   assert.ok(moved > total * 0.5, `the ball leaves its starting cup most rounds (${moved}/${total})`);
 });
 
+test('the level speed increases by 25% until the readability floor', () => {
+  const plans = [...Array(6)].map((_, i) => cupsLevel('speed-ramp', i + 1, {}));
+  // Levels 1–5 are above the floor, so their duration ratios expose the
+  // intended 1.25x speed progression without floor interference.
+  for (let i = 1; i < 5; i++) {
+    const speedRatio = plans[i - 1].swapMs / plans[i].swapMs;
+    assert.ok(Math.abs(speedRatio - 1.25) < 0.01,
+      `level ${i + 1}: expected 1.25x speed, got ${speedRatio.toFixed(4)}x`);
+  }
+  assert.equal(plans[5].swapMs, CUPS_MIN_SWAP_MS,
+    'the readability floor still caps the accelerated ramp');
+});
+
 // ---- speedMultiplier (issue #35: 10% faster each subsequent game) ----------
 
 test('speedMultiplier is 1.0 when cups is the first game (queueIndex 0)', () => {

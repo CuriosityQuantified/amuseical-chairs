@@ -26,10 +26,11 @@ export const CUPS_MAX_LEVELS = 12;
 // here down and then stops getting faster — the difficulty above that level
 // comes from more cups and more swaps instead.
 export const CUPS_MIN_SWAP_MS = 220;
-export const CUPS_GAME_SPEED_DECAY = 0.75; // per game in the queue: 0.75^n of base speed
+export const CUPS_GAME_SPEED_DECAY = 0.9; // per game in the queue: 0.9^n of base speed
 
 const FIRST_SWAP_MS = 620;   // a level-1 crossing, comfortably followable
-const SWAP_DECAY = 0.75;      // per level
+// 25% faster per level means each swap lasts 80% as long as the prior level.
+const SWAP_DECAY = 0.8;      // per level: 1 / 1.25
 
 // Every unordered pair of cup positions. A swap is symmetric, so (a, b) is
 // stored with a < b and the client decides which one arcs over the top.
