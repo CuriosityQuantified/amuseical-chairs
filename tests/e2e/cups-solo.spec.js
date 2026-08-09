@@ -64,24 +64,31 @@ test('cups solo: ten levels of real clicks, visible canvas, clean console, final
   }
 
   // Sample the canvas: nonzero client size + non-uniform, non-transparent
-  // pixels. A blank/transparent canvas fails here.
+  // pixels. A blank/transparent canvas fails here. The client paints every
+  // rAF frame, so we poll rather than one-shot sample — the only way to fail
+  // is a canvas that NEVER renders within the timeout, not one caught in the
+  // gap before its first paint.
+  const sampleCanvas = () => page.evaluate(() => {
+    const c = document.querySelector('#game-root canvas');
+    if (!c) return { ok: false, reason: 'no canvas' };
+    const rect = c.getBoundingClientRect();
+    if (rect.width < 40 || rect.height < 40) return { ok: false, reason: `tiny ${rect.width}x${rect.height}` };
+    const g = c.getContext('2d');
+    const { data } = g.getImageData(0, 0, c.width, c.height);
+    let opaque = 0;
+    const seenColors = new Set();
+    for (let i = 0; i < data.length; i += 4) {
+      if (data[i + 3] > 0) opaque++;
+      if (i % 400 === 0) seenColors.add(`${data[i]},${data[i + 1]},${data[i + 2]}`);
+    }
+    return { ok: opaque > 0 && seenColors.size > 1, opaque, colors: seenColors.size, w: rect.width, h: rect.height };
+  });
   async function assertCanvasRendered(level) {
-    const shot = await page.evaluate(() => {
-      const c = document.querySelector('#game-root canvas');
-      if (!c) return { ok: false, reason: 'no canvas' };
-      const rect = c.getBoundingClientRect();
-      if (rect.width < 40 || rect.height < 40) return { ok: false, reason: `tiny ${rect.width}x${rect.height}` };
-      const g = c.getContext('2d');
-      const { data } = g.getImageData(0, 0, c.width, c.height);
-      let opaque = 0;
-      const seenColors = new Set();
-      for (let i = 0; i < data.length; i += 4) {
-        if (data[i + 3] > 0) opaque++;
-        if (i % 400 === 0) seenColors.add(`${data[i]},${data[i + 1]},${data[i + 2]}`);
-      }
-      return { ok: opaque > 0 && seenColors.size > 1, opaque, colors: seenColors.size, w: rect.width, h: rect.height };
-    });
-    expect(shot.ok, `level ${level}: canvas visible & non-transparent (${JSON.stringify(shot)})`).toBe(true);
+    let last = null;
+    await expect
+      .poll(async () => { last = await sampleCanvas(); return last.ok; },
+        { timeout: 15_000, message: () => `level ${level}: canvas visible & non-transparent (${JSON.stringify(last)})` })
+      .toBe(true);
   }
 
   // The x of a cup index in CSS pixels relative to the canvas, from the client's

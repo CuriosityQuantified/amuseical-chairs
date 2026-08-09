@@ -41,7 +41,7 @@
       "semantic": "f8ab4b1157d4b0554ae6cbe0c08f8a84"
     },
     "public/js/games.js": {
-      "ast": "79401bebb71652803b3a7ea5a45e1e0f",
+      "ast": "fe5846fd0d46f3470d016c5c7286841e",
       "semantic": null
     },
     "public/js/host.js": {
@@ -229,7 +229,7 @@
       "semantic": null
     },
     "tests/e2e/cups-solo.spec.js": {
-      "ast": "a0560dd66e3ff0ba57debfe30f45936f",
+      "ast": "0c264c97acb44df87467e77efdb303d7",
       "semantic": null
     }
   }

@@ -4944,7 +4944,7 @@
       "label": "assertCanvasRendered()",
       "file_type": "code",
       "source_file": "tests/e2e/cups-solo.spec.js",
-      "source_location": "L68",
+      "source_location": "L86",
       "_origin": "ast",
       "id": "tests_e2e_cups_solo_spec_assertcanvasrendered",
       "community": 25,
@@ -4955,7 +4955,7 @@
       "label": "cupClickPoint()",
       "file_type": "code",
       "source_file": "tests/e2e/cups-solo.spec.js",
-      "source_location": "L89",
+      "source_location": "L96",
       "_origin": "ast",
       "id": "tests_e2e_cups_solo_spec_cupclickpoint",
       "community": 25,
@@ -17825,7 +17825,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/e2e/cups-solo.spec.js",
-      "source_location": "L68",
+      "source_location": "L86",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_e2e_cups_solo_spec",
@@ -17836,7 +17836,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/e2e/cups-solo.spec.js",
-      "source_location": "L89",
+      "source_location": "L96",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_e2e_cups_solo_spec",
@@ -18175,5 +18175,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "514ac4ab7c91125f582f654c452cad9c5fd272c1"
+  "built_at_commit": "7aa742f8ac0c351cad6ac12a0745d1fd9ce46e6d"
 }

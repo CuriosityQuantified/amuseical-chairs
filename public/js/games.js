@@ -1067,8 +1067,8 @@ GameClients.cups = {
       ctx.submit({ picks });
     }
 
-    // The run can end at its own last level, at a miss, or at the shell's
-    // deadline. A rAF loop and a pointer listener that outlived any of those
+    // The run ends at the last level (finish) or at the shell's host-advance
+    // path (collect). A rAF loop and a pointer listener that outlived either
     // would keep drawing over the next game's screen.
     function stop() {
       stopped = true;
