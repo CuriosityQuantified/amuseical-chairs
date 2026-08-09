@@ -5,7 +5,7 @@
       "semantic": null
     },
     ".github/workflows/ci.yml": {
-      "ast": "b3a977ecc3acf97f5d4ab556d09a07c6",
+      "ast": "d6847466a26b8018a5654d07fc147c4b",
       "semantic": null
     },
     ".mcp.json": {
@@ -21,8 +21,12 @@
       "semantic": null
     },
     "package.json": {
-      "ast": "78a566a0da4d3553bc4465e2366a3224",
-      "semantic": "78a566a0da4d3553bc4465e2366a3224"
+      "ast": "11bfd68d7db93de0790e38b497bfbae9",
+      "semantic": null
+    },
+    "playwright.config.js": {
+      "ast": "c0747e76ff8c28988b9770ffdc7eee58",
+      "semantic": null
     },
     "public/host.html": {
       "ast": "89b91b83d6e6f5356b2edd93b3cb66aa",
@@ -162,6 +166,10 @@
     },
     "test/cups.test.js": {
       "ast": "e33bea1571ad548e3bfc36bbe344f129",
+      "semantic": null
+    },
+    "test/e2e/follow-the-cup.spec.js": {
+      "ast": "53285a09aae5a7712deabdbfb2c05140",
       "semantic": null
     },
     "test/fakeclock.js": {
