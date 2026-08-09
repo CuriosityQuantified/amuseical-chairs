@@ -27,7 +27,7 @@ export const CUPS_MAX_LEVELS = 12;
 // comes from more cups and more swaps instead.
 export const CUPS_MIN_SWAP_MS = 220;
 export const CUPS_GAME_SPEED_DECAY = 0.9; // per game in the queue: 0.9^n of base speed
-export const CUPS_ADDITIONAL_SPEED_GROWTH = 1.2; // extra per-level speed factor: 1.2^n
+export const CUPS_ADDITIONAL_SPEED_GROWTH = 1.5; // extra per-level speed factor: 1.5^n
 
 const FIRST_SWAP_MS = 620;   // a level-1 crossing, comfortably followable
 // 25% faster per level means each swap lasts 80% as long as the prior level.
