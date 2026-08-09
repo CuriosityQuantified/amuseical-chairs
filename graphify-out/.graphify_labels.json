@@ -27,7 +27,7 @@
   "25": "cups-solo.spec.js",
   "26": "playwright.config.js",
   "27": "server/games.js",
-  "28": "room.test.js",
+  "28": "cups.test.js",
   "29": "Bot",
   "30": "feedback.js",
   "34": "feedback.spec.js"

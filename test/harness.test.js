@@ -144,6 +144,21 @@ function botPayload(key, data, rnd, stage = 1, bot = null) {
       const all = solveGrid(data.grid);
       return { words: all.filter(() => rnd() < 0.6) };
     }
+    case 'stroop': {
+      // A plausible human: answer each card's ink mostly right, sometimes fall
+      // for the printed word (a wrong pick), and run out of time before the end.
+      const items = data.items || [];
+      const names = (data.palette || []).map((c) => c.name);
+      const reached = Math.max(1, Math.floor(items.length * (0.4 + rnd() * 0.4)));
+      const picks = [];
+      for (let i = 0; i < reached; i++) {
+        const correct = items[i].ink;
+        const wrong = names.filter((n) => n !== correct);
+        const color = rnd() < 0.8 || !wrong.length ? correct : wrong[Math.floor(rnd() * wrong.length)];
+        picks.push({ index: i, color });
+      }
+      return { picks };
+    }
     case 'spacemash': return { count: 40 + Math.floor(rnd() * 70), flagged: false };
     case 'slingshot': return { best: rnd() * 40 };
     // Falls somewhere in the round like a person. The server clamps to the
