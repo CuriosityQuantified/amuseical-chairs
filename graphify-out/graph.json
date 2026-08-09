@@ -53,7 +53,7 @@
       "_origin": "ast",
       "id": "package",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "package.json"
     },
     {
@@ -64,7 +64,7 @@
       "_origin": "ast",
       "id": "package_name",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "name"
     },
     {
@@ -75,7 +75,7 @@
       "_origin": "ast",
       "id": "package_version",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "version"
     },
     {
@@ -86,7 +86,7 @@
       "_origin": "ast",
       "id": "package_description",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "description"
     },
     {
@@ -97,7 +97,7 @@
       "_origin": "ast",
       "id": "package_type",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "type"
     },
     {
@@ -108,7 +108,7 @@
       "_origin": "ast",
       "id": "package_engines",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "engines"
     },
     {
@@ -119,7 +119,7 @@
       "_origin": "ast",
       "id": "package_engines_node",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "node"
     },
     {
@@ -130,7 +130,7 @@
       "_origin": "ast",
       "id": "package_scripts",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "scripts"
     },
     {
@@ -141,7 +141,7 @@
       "_origin": "ast",
       "id": "package_scripts_start",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "start"
     },
     {
@@ -152,7 +152,7 @@
       "_origin": "ast",
       "id": "package_scripts_check",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "check"
     },
     {
@@ -163,195 +163,239 @@
       "_origin": "ast",
       "id": "package_scripts_test",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "test"
+    },
+    {
+      "label": "test:e2e",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L13",
+      "_origin": "ast",
+      "id": "package_scripts_test_e2e",
+      "community": 5,
+      "community_name": "package.json",
+      "norm_label": "test:e2e"
     },
     {
       "label": "graph",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L13",
+      "source_location": "L14",
       "_origin": "ast",
       "id": "package_scripts_graph",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "graph"
     },
     {
       "label": "graph:rebuild",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L14",
+      "source_location": "L15",
       "_origin": "ast",
       "id": "package_scripts_graph_rebuild",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "graph:rebuild"
     },
     {
       "label": "graph:report",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L15",
+      "source_location": "L16",
       "_origin": "ast",
       "id": "package_scripts_graph_report",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "graph:report"
     },
     {
       "label": "graph:setup",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L16",
+      "source_location": "L17",
       "_origin": "ast",
       "id": "package_scripts_graph_setup",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "graph:setup"
     },
     {
       "label": "dependencies",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L18",
+      "source_location": "L19",
       "_origin": "ast",
       "id": "package_dependencies",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "dependencies"
     },
     {
       "label": "express",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L19",
+      "source_location": "L20",
       "_origin": "ast",
       "id": "package_dependencies_express",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "express"
     },
     {
       "label": "express",
       "file_type": "concept",
       "source_file": "package.json",
-      "source_location": "L19",
+      "source_location": "L20",
       "_origin": "ast",
       "id": "express",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "express"
     },
     {
       "label": "qrcode",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L20",
+      "source_location": "L21",
       "_origin": "ast",
       "id": "package_dependencies_qrcode",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "qrcode"
     },
     {
       "label": "qrcode",
       "file_type": "concept",
       "source_file": "package.json",
-      "source_location": "L20",
+      "source_location": "L21",
       "_origin": "ast",
       "id": "qrcode",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "qrcode"
     },
     {
       "label": "socket.io",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L21",
+      "source_location": "L22",
       "_origin": "ast",
       "id": "package_dependencies_socket_io",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "socket.io"
     },
     {
       "label": "socket.io",
       "file_type": "concept",
       "source_file": "package.json",
-      "source_location": "L21",
+      "source_location": "L22",
       "_origin": "ast",
       "id": "socket_io",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "socket.io"
     },
     {
       "label": "three",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L22",
+      "source_location": "L23",
       "_origin": "ast",
       "id": "package_dependencies_three",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "three"
     },
     {
       "label": "three",
       "file_type": "concept",
       "source_file": "package.json",
-      "source_location": "L22",
+      "source_location": "L23",
       "_origin": "ast",
       "id": "three",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "three"
     },
     {
       "label": "devDependencies",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L24",
+      "source_location": "L25",
       "_origin": "ast",
       "id": "package_devdependencies",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "devdependencies"
+    },
+    {
+      "label": "@playwright/test",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "package_devdependencies_playwright_test",
+      "community": 5,
+      "community_name": "package.json",
+      "norm_label": "@playwright/test"
+    },
+    {
+      "label": "@playwright/test",
+      "file_type": "concept",
+      "source_file": "package.json",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "playwright_test",
+      "community": 5,
+      "community_name": "package.json",
+      "norm_label": "@playwright/test"
     },
     {
       "label": "socket.io-client",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L25",
+      "source_location": "L27",
       "_origin": "ast",
       "id": "package_devdependencies_socket_io_client",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "socket.io-client"
     },
     {
       "label": "socket.io-client",
       "file_type": "concept",
       "source_file": "package.json",
-      "source_location": "L25",
+      "source_location": "L27",
       "_origin": "ast",
       "id": "socket_io_client",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "socket.io-client"
     },
     {
       "label": "license",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L27",
+      "source_location": "L29",
       "_origin": "ast",
       "id": "package_license",
       "community": 5,
-      "community_name": "Project Dependencies",
+      "community_name": "package.json",
       "norm_label": "license"
+    },
+    {
+      "label": "playwright.config.js",
+      "file_type": "code",
+      "source_file": "playwright.config.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "playwright_config",
+      "community": 24,
+      "community_name": "playwright.config.js",
+      "norm_label": "playwright.config.js"
     },
     {
       "label": "chairs.js",
@@ -1614,8 +1658,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "scripts_check",
-      "community": 23,
-      "community_name": "check.mjs",
+      "community": 2,
+      "community_name": "room.js",
       "norm_label": "check.mjs"
     },
     {
@@ -1625,8 +1669,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "scripts_check_root",
-      "community": 23,
-      "community_name": "check.mjs",
+      "community": 2,
+      "community_name": "room.js",
       "norm_label": "root"
     },
     {
@@ -1636,8 +1680,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "scripts_check_problems",
-      "community": 23,
-      "community_name": "check.mjs",
+      "community": 2,
+      "community_name": "room.js",
       "norm_label": "problems"
     },
     {
@@ -1647,8 +1691,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "scripts_check_fail",
-      "community": 23,
-      "community_name": "check.mjs",
+      "community": 2,
+      "community_name": "room.js",
       "norm_label": "fail()"
     },
     {
@@ -1658,8 +1702,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "scripts_check_read",
-      "community": 0,
-      "community_name": "Room",
+      "community": 2,
+      "community_name": "room.js",
       "norm_label": "read()"
     },
     {
@@ -1669,8 +1713,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "scripts_check_rel",
-      "community": 23,
-      "community_name": "check.mjs",
+      "community": 2,
+      "community_name": "room.js",
       "norm_label": "rel()"
     },
     {
@@ -1680,8 +1724,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "scripts_check_walk",
-      "community": 23,
-      "community_name": "check.mjs",
+      "community": 2,
+      "community_name": "room.js",
       "norm_label": "walk()"
     },
     {
@@ -1691,8 +1735,8 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "scripts_check_source_dirs",
-      "community": 23,
-      "community_name": "check.mjs",
+      "community": 2,
+      "community_name": "room.js",
       "norm_label": "source_dirs"
     },
     {
@@ -1702,8 +1746,8 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "scripts_check_files",
-      "community": 23,
-      "community_name": "check.mjs",
+      "community": 2,
+      "community_name": "room.js",
       "norm_label": "files"
     },
     {
@@ -1713,8 +1757,8 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "scripts_check_clientsrc",
-      "community": 23,
-      "community_name": "check.mjs",
+      "community": 2,
+      "community_name": "room.js",
       "norm_label": "clientsrc"
     },
     {
@@ -1724,8 +1768,8 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "scripts_check_tutorialsrc",
-      "community": 23,
-      "community_name": "check.mjs",
+      "community": 2,
+      "community_name": "room.js",
       "norm_label": "tutorialsrc"
     },
     {
@@ -1735,8 +1779,8 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "scripts_check_clientkeys",
-      "community": 23,
-      "community_name": "check.mjs",
+      "community": 2,
+      "community_name": "room.js",
       "norm_label": "clientkeys"
     },
     {
@@ -1746,8 +1790,8 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "scripts_check_tutorialbody",
-      "community": 23,
-      "community_name": "check.mjs",
+      "community": 2,
+      "community_name": "room.js",
       "norm_label": "tutorialbody"
     },
     {
@@ -1757,8 +1801,8 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "scripts_check_tutorialkeys",
-      "community": 23,
-      "community_name": "check.mjs",
+      "community": 2,
+      "community_name": "room.js",
       "norm_label": "tutorialkeys"
     },
     {
@@ -1768,8 +1812,8 @@
       "source_location": "L110",
       "_origin": "ast",
       "id": "scripts_check_multi_stage_decl",
-      "community": 23,
-      "community_name": "check.mjs",
+      "community": 2,
+      "community_name": "room.js",
       "norm_label": "multi_stage_decl()"
     },
     {
@@ -1779,8 +1823,8 @@
       "source_location": "L164",
       "_origin": "ast",
       "id": "scripts_check_allowed_host_controls",
-      "community": 23,
-      "community_name": "check.mjs",
+      "community": 2,
+      "community_name": "room.js",
       "norm_label": "allowed_host_controls"
     },
     {
@@ -1790,8 +1834,8 @@
       "source_location": "L168",
       "_origin": "ast",
       "id": "scripts_check_controllist",
-      "community": 23,
-      "community_name": "check.mjs",
+      "community": 2,
+      "community_name": "room.js",
       "norm_label": "controllist"
     },
     {
@@ -1801,8 +1845,8 @@
       "source_location": "L170",
       "_origin": "ast",
       "id": "scripts_check_hosthtml",
-      "community": 23,
-      "community_name": "check.mjs",
+      "community": 2,
+      "community_name": "room.js",
       "norm_label": "hosthtml"
     },
     {
@@ -1812,8 +1856,8 @@
       "source_location": "L187",
       "_origin": "ast",
       "id": "scripts_check_hostjs",
-      "community": 23,
-      "community_name": "check.mjs",
+      "community": 2,
+      "community_name": "room.js",
       "norm_label": "hostjs"
     },
     {
@@ -1823,8 +1867,8 @@
       "source_location": "L205",
       "_origin": "ast",
       "id": "scripts_check_controlkeys",
-      "community": 23,
-      "community_name": "check.mjs",
+      "community": 2,
+      "community_name": "room.js",
       "norm_label": "controlkeys"
     },
     {
@@ -1889,8 +1933,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_app",
-      "community": 0,
-      "community_name": "Room",
+      "community": 6,
+      "community_name": "app.js",
       "norm_label": "app.js"
     },
     {
@@ -1900,8 +1944,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "server_app_dirname",
-      "community": 0,
-      "community_name": "Room",
+      "community": 6,
+      "community_name": "app.js",
       "norm_label": "__dirname"
     },
     {
@@ -1911,8 +1955,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "server_app_createserver",
-      "community": 0,
-      "community_name": "Room",
+      "community": 6,
+      "community_name": "app.js",
       "norm_label": "createserver()"
     },
     {
@@ -1988,8 +2032,8 @@
       "source_location": "L214",
       "_origin": "ast",
       "id": "server_games_roster",
-      "community": 1,
-      "community_name": "server/games.js",
+      "community": 2,
+      "community_name": "room.js",
       "norm_label": "roster"
     },
     {
@@ -2033,7 +2077,7 @@
       "_origin": "ast",
       "id": "server_games_votesforpool",
       "community": 21,
-      "community_name": "caption.test.js",
+      "community_name": "icebreaker.test.js",
       "norm_label": "votesforpool()"
     },
     {
@@ -2043,8 +2087,8 @@
       "source_location": "L260",
       "_origin": "ast",
       "id": "server_games_num",
-      "community": 21,
-      "community_name": "caption.test.js",
+      "community": 1,
+      "community_name": "server/games.js",
       "norm_label": "num()"
     },
     {
@@ -2088,7 +2132,7 @@
       "_origin": "ast",
       "id": "server_games_buildstages",
       "community": 21,
-      "community_name": "caption.test.js",
+      "community_name": "icebreaker.test.js",
       "norm_label": "buildstages()"
     },
     {
@@ -2099,7 +2143,7 @@
       "_origin": "ast",
       "id": "server_games_icebreakertally",
       "community": 21,
-      "community_name": "caption.test.js",
+      "community_name": "icebreaker.test.js",
       "norm_label": "icebreakertally()"
     },
     {
@@ -2110,7 +2154,7 @@
       "_origin": "ast",
       "id": "server_games_buildreveal",
       "community": 21,
-      "community_name": "caption.test.js",
+      "community_name": "icebreaker.test.js",
       "norm_label": "buildreveal()"
     },
     {
@@ -2131,8 +2175,8 @@
       "source_location": "L861",
       "_origin": "ast",
       "id": "server_games_aggregategame",
-      "community": 21,
-      "community_name": "caption.test.js",
+      "community": 1,
+      "community_name": "server/games.js",
       "norm_label": "aggregategame()"
     },
     {
@@ -2143,7 +2187,7 @@
       "_origin": "ast",
       "id": "server_games_aggregatecaption",
       "community": 21,
-      "community_name": "caption.test.js",
+      "community_name": "icebreaker.test.js",
       "norm_label": "aggregatecaption()"
     },
     {
@@ -2154,7 +2198,7 @@
       "_origin": "ast",
       "id": "server_games_aggregateicebreaker",
       "community": 21,
-      "community_name": "caption.test.js",
+      "community_name": "icebreaker.test.js",
       "norm_label": "aggregateicebreaker()"
     },
     {
@@ -2175,8 +2219,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_index",
-      "community": 0,
-      "community_name": "Room",
+      "community": 6,
+      "community_name": "app.js",
       "norm_label": "index.js"
     },
     {
@@ -2186,8 +2230,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "server_index_httpserver",
-      "community": 0,
-      "community_name": "Room",
+      "community": 6,
+      "community_name": "app.js",
       "norm_label": "{ httpserver }"
     },
     {
@@ -2241,8 +2285,8 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "server_room_host_editable_config",
-      "community": 0,
-      "community_name": "Room",
+      "community": 2,
+      "community_name": "room.js",
       "norm_label": "host_editable_config"
     },
     {
@@ -2461,8 +2505,8 @@
       "source_location": "L340",
       "_origin": "ast",
       "id": "server_room_room_start",
-      "community": 7,
-      "community_name": "multistage.test.js",
+      "community": 0,
+      "community_name": "Room",
       "norm_label": ".start()"
     },
     {
@@ -2494,8 +2538,8 @@
       "source_location": "L390",
       "_origin": "ast",
       "id": "server_room_room_starttest",
-      "community": 1,
-      "community_name": "server/games.js",
+      "community": 0,
+      "community_name": "Room",
       "norm_label": ".starttest()"
     },
     {
@@ -3066,8 +3110,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "shared_ciede2000",
-      "community": 24,
-      "community_name": "ciede2000.js",
+      "community": 21,
+      "community_name": "icebreaker.test.js",
       "norm_label": "ciede2000.js"
     },
     {
@@ -3077,8 +3121,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "shared_ciede2000_rgbtolab",
-      "community": 24,
-      "community_name": "ciede2000.js",
+      "community": 21,
+      "community_name": "icebreaker.test.js",
       "norm_label": "rgbtolab()"
     },
     {
@@ -3088,8 +3132,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "shared_ciede2000_rad",
-      "community": 24,
-      "community_name": "ciede2000.js",
+      "community": 21,
+      "community_name": "icebreaker.test.js",
       "norm_label": "rad()"
     },
     {
@@ -3099,8 +3143,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "shared_ciede2000_deg",
-      "community": 24,
-      "community_name": "ciede2000.js",
+      "community": 21,
+      "community_name": "icebreaker.test.js",
       "norm_label": "deg()"
     },
     {
@@ -3110,8 +3154,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "shared_ciede2000_ciede2000",
-      "community": 24,
-      "community_name": "ciede2000.js",
+      "community": 21,
+      "community_name": "icebreaker.test.js",
       "norm_label": "ciede2000()"
     },
     {
@@ -3121,8 +3165,8 @@
       "source_location": "L87",
       "_origin": "ast",
       "id": "shared_ciede2000_ciede2000rgb",
-      "community": 24,
-      "community_name": "ciede2000.js",
+      "community": 21,
+      "community_name": "icebreaker.test.js",
       "norm_label": "ciede2000rgb()"
     },
     {
@@ -3463,7 +3507,7 @@
       "_origin": "ast",
       "id": "shared_textclean",
       "community": 21,
-      "community_name": "caption.test.js",
+      "community_name": "icebreaker.test.js",
       "norm_label": "textclean.js"
     },
     {
@@ -3474,7 +3518,7 @@
       "_origin": "ast",
       "id": "shared_textclean_cleanentrytext",
       "community": 21,
-      "community_name": "caption.test.js",
+      "community_name": "icebreaker.test.js",
       "norm_label": "cleanentrytext()"
     },
     {
@@ -3485,7 +3529,7 @@
       "_origin": "ast",
       "id": "shared_textclean_isusableentry",
       "community": 21,
-      "community_name": "caption.test.js",
+      "community_name": "icebreaker.test.js",
       "norm_label": "isusableentry()"
     },
     {
@@ -3671,8 +3715,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "test_caption_test",
-      "community": 21,
-      "community_name": "caption.test.js",
+      "community": 1,
+      "community_name": "server/games.js",
       "norm_label": "caption.test.js"
     },
     {
@@ -3682,8 +3726,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "test_caption_test_rng",
-      "community": 21,
-      "community_name": "caption.test.js",
+      "community": 1,
+      "community_name": "server/games.js",
       "norm_label": "rng()"
     },
     {
@@ -3693,8 +3737,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "test_caption_test_stageone",
-      "community": 21,
-      "community_name": "caption.test.js",
+      "community": 1,
+      "community_name": "server/games.js",
       "norm_label": "stageone"
     },
     {
@@ -3705,7 +3749,7 @@
       "_origin": "ast",
       "id": "test_caption_test_stagetwo",
       "community": 21,
-      "community_name": "caption.test.js",
+      "community_name": "icebreaker.test.js",
       "norm_label": "stagetwo()"
     },
     {
@@ -3716,7 +3760,7 @@
       "_origin": "ast",
       "id": "test_caption_test_build",
       "community": 21,
-      "community_name": "caption.test.js",
+      "community_name": "icebreaker.test.js",
       "norm_label": "build()"
     },
     {
@@ -3726,8 +3770,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "test_caption_test_ballot",
-      "community": 21,
-      "community_name": "caption.test.js",
+      "community": 1,
+      "community_name": "server/games.js",
       "norm_label": "ballot()"
     },
     {
@@ -3737,8 +3781,8 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "test_caption_test_score",
-      "community": 21,
-      "community_name": "caption.test.js",
+      "community": 1,
+      "community_name": "server/games.js",
       "norm_label": "score()"
     },
     {
@@ -3748,8 +3792,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "test_ciede2000_test",
-      "community": 24,
-      "community_name": "ciede2000.js",
+      "community": 21,
+      "community_name": "icebreaker.test.js",
       "norm_label": "ciede2000.test.js"
     },
     {
@@ -3759,8 +3803,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "test_ciede2000_test_close",
-      "community": 24,
-      "community_name": "ciede2000.js",
+      "community": 21,
+      "community_name": "icebreaker.test.js",
       "norm_label": "close()"
     },
     {
@@ -3907,6 +3951,28 @@
       "norm_label": "fast"
     },
     {
+      "label": "follow-the-cup.spec.js",
+      "file_type": "code",
+      "source_file": "test/e2e/follow-the-cup.spec.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "test_e2e_follow_the_cup_spec",
+      "community": 23,
+      "community_name": "follow-the-cup.spec.js",
+      "norm_label": "follow-the-cup.spec.js"
+    },
+    {
+      "label": "nonTransparentPixels()",
+      "file_type": "code",
+      "source_file": "test/e2e/follow-the-cup.spec.js",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "test_e2e_follow_the_cup_spec_nontransparentpixels",
+      "community": 23,
+      "community_name": "follow-the-cup.spec.js",
+      "norm_label": "nontransparentpixels()"
+    },
+    {
       "label": "fakeclock.js",
       "file_type": "code",
       "source_file": "test/fakeclock.js",
@@ -3991,7 +4057,7 @@
       "_origin": "ast",
       "id": "test_harness_test_sleep",
       "community": 6,
-      "community_name": "Bot",
+      "community_name": "app.js",
       "norm_label": "sleep()"
     },
     {
@@ -4035,7 +4101,7 @@
       "_origin": "ast",
       "id": "test_harness_test_bot",
       "community": 6,
-      "community_name": "Bot",
+      "community_name": "app.js",
       "norm_label": "bot"
     },
     {
@@ -4046,7 +4112,7 @@
       "_origin": "ast",
       "id": "test_harness_test_bot_constructor",
       "community": 6,
-      "community_name": "Bot",
+      "community_name": "app.js",
       "norm_label": ".constructor()"
     },
     {
@@ -4057,7 +4123,7 @@
       "_origin": "ast",
       "id": "test_harness_test_bot_join",
       "community": 6,
-      "community_name": "Bot",
+      "community_name": "app.js",
       "norm_label": ".join()"
     },
     {
@@ -4068,7 +4134,7 @@
       "_origin": "ast",
       "id": "test_harness_test_bot_wire",
       "community": 6,
-      "community_name": "Bot",
+      "community_name": "app.js",
       "norm_label": ".wire()"
     },
     {
@@ -4079,7 +4145,7 @@
       "_origin": "ast",
       "id": "test_harness_test_bot_close",
       "community": 6,
-      "community_name": "Bot",
+      "community_name": "app.js",
       "norm_label": ".close()"
     },
     {
@@ -4090,7 +4156,7 @@
       "_origin": "ast",
       "id": "test_icebreaker_test",
       "community": 21,
-      "community_name": "caption.test.js",
+      "community_name": "icebreaker.test.js",
       "norm_label": "icebreaker.test.js"
     },
     {
@@ -4101,7 +4167,7 @@
       "_origin": "ast",
       "id": "test_icebreaker_test_rng",
       "community": 21,
-      "community_name": "caption.test.js",
+      "community_name": "icebreaker.test.js",
       "norm_label": "rng()"
     },
     {
@@ -4112,7 +4178,7 @@
       "_origin": "ast",
       "id": "test_icebreaker_test_stageone",
       "community": 21,
-      "community_name": "caption.test.js",
+      "community_name": "icebreaker.test.js",
       "norm_label": "stageone"
     },
     {
@@ -4123,7 +4189,7 @@
       "_origin": "ast",
       "id": "test_icebreaker_test_players",
       "community": 21,
-      "community_name": "caption.test.js",
+      "community_name": "icebreaker.test.js",
       "norm_label": "players"
     },
     {
@@ -4134,7 +4200,7 @@
       "_origin": "ast",
       "id": "test_icebreaker_test_facts",
       "community": 21,
-      "community_name": "caption.test.js",
+      "community_name": "icebreaker.test.js",
       "norm_label": "facts()"
     },
     {
@@ -4145,7 +4211,7 @@
       "_origin": "ast",
       "id": "test_icebreaker_test_play",
       "community": 21,
-      "community_name": "caption.test.js",
+      "community_name": "icebreaker.test.js",
       "norm_label": "play()"
     },
     {
@@ -4156,7 +4222,7 @@
       "_origin": "ast",
       "id": "test_icebreaker_test_stageof",
       "community": 21,
-      "community_name": "caption.test.js",
+      "community_name": "icebreaker.test.js",
       "norm_label": "stageof()"
     },
     {
@@ -4628,8 +4694,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "test_smoke_test",
-      "community": 0,
-      "community_name": "Room",
+      "community": 6,
+      "community_name": "app.js",
       "norm_label": "smoke.test.js"
     },
     {
@@ -4639,8 +4705,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "test_smoke_test_root",
-      "community": 0,
-      "community_name": "Room",
+      "community": 6,
+      "community_name": "app.js",
       "norm_label": "root"
     },
     {
@@ -4650,8 +4716,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "test_smoke_test_withserver",
-      "community": 0,
-      "community_name": "Room",
+      "community": 6,
+      "community_name": "app.js",
       "norm_label": "withserver()"
     },
     {
@@ -4662,7 +4728,7 @@
       "_origin": "ast",
       "id": "test_textclean_test",
       "community": 21,
-      "community_name": "caption.test.js",
+      "community_name": "icebreaker.test.js",
       "norm_label": "textclean.test.js"
     },
     {
@@ -5128,7 +5194,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "package.json",
-      "source_location": "L18",
+      "source_location": "L19",
       "weight": 1.0,
       "_origin": "ast",
       "source": "package",
@@ -5150,7 +5216,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "package.json",
-      "source_location": "L24",
+      "source_location": "L25",
       "weight": 1.0,
       "_origin": "ast",
       "source": "package",
@@ -5172,7 +5238,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "package.json",
-      "source_location": "L27",
+      "source_location": "L29",
       "weight": 1.0,
       "_origin": "ast",
       "source": "package",
@@ -5249,7 +5315,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "package.json",
-      "source_location": "L13",
+      "source_location": "L14",
       "weight": 1.0,
       "_origin": "ast",
       "source": "package_scripts",
@@ -5260,7 +5326,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "package.json",
-      "source_location": "L14",
+      "source_location": "L15",
       "weight": 1.0,
       "_origin": "ast",
       "source": "package_scripts",
@@ -5271,7 +5337,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "package.json",
-      "source_location": "L15",
+      "source_location": "L16",
       "weight": 1.0,
       "_origin": "ast",
       "source": "package_scripts",
@@ -5282,7 +5348,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "package.json",
-      "source_location": "L16",
+      "source_location": "L17",
       "weight": 1.0,
       "_origin": "ast",
       "source": "package_scripts",
@@ -5315,11 +5381,11 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "package.json",
-      "source_location": "L19",
+      "source_location": "L13",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "package_dependencies",
-      "target": "package_dependencies_express",
+      "source": "package_scripts",
+      "target": "package_scripts_test_e2e",
       "confidence_score": 1.0
     },
     {
@@ -5330,7 +5396,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "package_dependencies",
-      "target": "package_dependencies_qrcode",
+      "target": "package_dependencies_express",
       "confidence_score": 1.0
     },
     {
@@ -5341,7 +5407,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "package_dependencies",
-      "target": "package_dependencies_socket_io",
+      "target": "package_dependencies_qrcode",
       "confidence_score": 1.0
     },
     {
@@ -5352,6 +5418,17 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "package_dependencies",
+      "target": "package_dependencies_socket_io",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L23",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "package_dependencies",
       "target": "package_dependencies_three",
       "confidence_score": 1.0
     },
@@ -5359,7 +5436,7 @@
       "relation": "imports",
       "confidence": "EXTRACTED",
       "source_file": "package.json",
-      "source_location": "L19",
+      "source_location": "L20",
       "weight": 1.0,
       "context": "import",
       "_origin": "ast",
@@ -5371,7 +5448,7 @@
       "relation": "imports",
       "confidence": "EXTRACTED",
       "source_file": "package.json",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0,
       "context": "import",
       "_origin": "ast",
@@ -5395,7 +5472,7 @@
       "relation": "imports",
       "confidence": "EXTRACTED",
       "source_file": "package.json",
-      "source_location": "L21",
+      "source_location": "L22",
       "weight": 1.0,
       "context": "import",
       "_origin": "ast",
@@ -5407,7 +5484,7 @@
       "relation": "imports",
       "confidence": "EXTRACTED",
       "source_file": "package.json",
-      "source_location": "L22",
+      "source_location": "L23",
       "weight": 1.0,
       "context": "import",
       "_origin": "ast",
@@ -5419,7 +5496,18 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "package.json",
-      "source_location": "L25",
+      "source_location": "L26",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "package_devdependencies",
+      "target": "package_devdependencies_playwright_test",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L27",
       "weight": 1.0,
       "_origin": "ast",
       "source": "package_devdependencies",
@@ -5430,7 +5518,19 @@
       "relation": "imports",
       "confidence": "EXTRACTED",
       "source_file": "package.json",
-      "source_location": "L25",
+      "source_location": "L26",
+      "weight": 1.0,
+      "context": "import",
+      "_origin": "ast",
+      "source": "package_devdependencies_playwright_test",
+      "target": "playwright_test",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L27",
       "weight": 1.0,
       "context": "import",
       "_origin": "ast",
@@ -16171,6 +16271,17 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "test/e2e/follow-the-cup.spec.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "test_e2e_follow_the_cup_spec",
+      "target": "test_e2e_follow_the_cup_spec_nontransparentpixels",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "test/fakeclock.js",
       "source_location": "L4",
       "weight": 1.0,
@@ -17379,5 +17490,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "a3b79e802351e00065455abd38a9dbbc0937fc7c"
+  "built_at_commit": "4b5a05eff3ac137cd1bf7541622d4f53fff10db7"
 }
