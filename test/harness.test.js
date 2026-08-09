@@ -47,6 +47,12 @@ const TEST_CONFIG = {
   postGreenTimeout: 800,
   hardTimeout: 1500,
   closeGraceMs: 300,
+  // Completion-mode games (cups, issue #46) have no shared deadline: they close
+  // on all-submit or this safety backstop. The harness has silent
+  // non-submitters, so without a short backstop the cups round would hang until
+  // the 15-minute production default. Keep it just above gameDuration so the
+  // stalled room still closes deterministically in seconds.
+  completionSafetyMs: 1200,
 };
 
 // A bot's payload for one stage of one game. `bot` is threaded through so a
@@ -104,18 +110,21 @@ function botPayload(key, data, rnd, stage = 1, bot = null) {
       }
       return { picks };
     }
-    // Tracks the ball for a while and then loses it, like a person: every level
-    // up to a random one is correct, the next is a neighbouring cup. Derived
-    // from the round seed through the same module the real client animates —
-    // a bot that guessed blindly would clear ~0 levels and the whole room would
-    // tie at the floor, which would tell us nothing about scoring.
+    // Issue #46: every player plays all ten levels and a miss no longer ends
+    // the run. The bot tracks the ball well early and loses it more often as
+    // the shuffle speeds up — each level independently correct or a
+    // neighbouring cup. Derived from the round seed through the same module the
+    // real client animates, so the point total (100·level per correct level)
+    // varies across bots and the room does not tie at the floor.
     case 'cups': {
-      const lost = 1 + Math.floor(rnd() * data.maxLevels);
       return {
-        picks: [...Array(lost)].map((_, i) => {
-          const plan = cupsLevel(data.seed, i + 1, data);
-          const wrong = i + 1 === lost;
-          return { level: i + 1, cupIndex: wrong ? (plan.ball + 1) % plan.cups : plan.ball };
+        picks: [...Array(data.maxLevels)].map((_, i) => {
+          const level = i + 1;
+          const plan = cupsLevel(data.seed, level, data);
+          // Harder (faster) levels are missed more often.
+          const missChance = level / (data.maxLevels + 2);
+          const missed = rnd() < missChance;
+          return { level, cupIndex: missed ? (plan.ball + 1) % plan.cups : plan.ball };
         }),
       };
     }

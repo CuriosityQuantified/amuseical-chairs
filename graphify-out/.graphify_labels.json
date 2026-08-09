@@ -1,10 +1,10 @@
 {
   "0": "Room",
-  "1": "seededRng",
+  "1": "server/games.js",
   "2": "room.js",
   "3": "Host UI Lobby Setup",
   "4": "Player Client Sync UI",
-  "5": "Project Dependencies",
+  "5": "package.json",
   "6": "Bot",
   "7": "multistage.test.js",
   "8": "js/games.js",
@@ -20,8 +20,10 @@
   "18": "Claude Skill Docs",
   "19": "Host Screen UI",
   "20": "Player Join/Play Screen",
-  "21": "server/games.js",
+  "21": "ciede2000.js",
   "22": "graphify runbook",
   "23": "check.mjs",
-  "24": "balance.test.js"
+  "24": "cups.test.js",
+  "25": "cups-solo.spec.js",
+  "26": "playwright.config.js"
 }

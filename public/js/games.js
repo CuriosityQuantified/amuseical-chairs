@@ -853,9 +853,9 @@ GameClients.tray = {
 // the slow device is playing an easier game and the metric is about hardware.
 
 GameClients.cups = {
-  intro: 'Watch which cup the ball goes under, then tap that cup after the shuffle. Every level adds speed — one miss ends the run.',
+  intro: 'Watch which cup the ball goes under, then tap that cup after the shuffle. You play all ten levels — each correct cup scores 100 × its level, and a miss just moves you on to the next.',
   start(root, ctx) {
-    const { seed, maxLevels, baseCups, speedMultiplier = 1 } = ctx.data;
+    const { seed, maxLevels, baseCups } = ctx.data;
     // Everything that is not shuffle is overhead against a 45s round, so the
     // fixed beats are as short as they can be and still be read. The reveal is
     // the exception: it is the only moment the ball is ever on show, and
@@ -1013,7 +1013,9 @@ GameClients.cups = {
       else if (phase === 'reveal' && t >= REVEAL_MS) enter('shuffle', now, 'Follow it.');
       else if (phase === 'shuffle' && t >= plan.shuffleMs) enter('choose', now, 'Where is it? Tap a cup.');
       else if (phase === 'verdict' && t >= VERDICT_MS) {
-        if (tapped !== plan.ball || level >= maxLevels) return finish();
+        // A miss no longer ends the run — every level is played and scored on
+        // its own. The run ends only after the last level.
+        if (level >= maxLevels) return finish();
         return startLevel(level + 1);
       }
       draw(now);
@@ -1028,7 +1030,7 @@ GameClients.cups = {
 
     function startLevel(n) {
       level = n;
-      plan = cupsLevel(seed, n, { baseCups, speedMultiplier });
+      plan = cupsLevel(seed, n, { baseCups });
       tapped = null;
       phase = 'beat';
       phaseAt = performance.now();
@@ -1051,10 +1053,13 @@ GameClients.cups = {
       tapped = best;
       picks.push({ level, cupIndex: best });
       const right = best === plan.ball;
+      const last = level >= maxLevels;
       tag.textContent = `LEVEL ${level} ${right ? '✓' : '✗'}`;
       enter('verdict', performance.now(), right
-        ? (level >= maxLevels ? 'Cleared the last level.' : 'Still on it — the next one is faster.')
-        : `Lost it — the ball was under cup ${plan.ball + 1}.`);
+        ? (last ? 'Cleared the last level.' : `+${100 * level} — next level →`)
+        : (last
+          ? `Missed — the ball was under cup ${plan.ball + 1}.`
+          : `Missed — the ball was under cup ${plan.ball + 1}. Next level →`));
     }
 
     function finish() {

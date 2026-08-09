@@ -6,7 +6,7 @@
 import { randInt, shuffle, pick } from '../shared/rng.js';
 import { rgbToLab, ciede2000 } from '../shared/ciede2000.js';
 import { cleanEntryText, isUsableEntry, ENTRY_MAX_CHARS } from '../shared/textclean.js';
-import { CUPS_BASE_CUPS, CUPS_MAX_LEVELS, CUPS_GAME_SPEED_DECAY, cupsLevel } from '../shared/cups.js';
+import { CUPS_BASE_CUPS, CUPS_MAX_LEVELS, cupsLevel } from '../shared/cups.js';
 import { TRAY_SLOTS, trayLevel } from '../shared/tray.js';
 import {
   BALANCE_GRAVITY,
@@ -243,6 +243,13 @@ export const NEEDS_AGGREGATION = new Set(['readroom', 'caption', 'icebreaker']);
 // (Icebreaker runs one guessing stage per fun fact).
 export const MULTI_STAGE = new Set(['caption', 'icebreaker']);
 
+// Games that run to COMPLETION instead of to a deadline: every player plays the
+// whole thing (all ten cups levels) and submits when done, and the room closes
+// when everyone has submitted rather than when a shared clock runs out. The
+// room suppresses the countdown/auto-submit for these and relies on all-submit
+// close, host advance, and a long server-side safety backstop. (Issue #46.)
+export const COMPLETION_MODE = new Set(['cups']);
+
 // A guessing stage is "which of these 20 names is it" — it does not need a
 // whole minigame slot, and Icebreaker runs one per player in the room.
 const ICEBREAKER_STAGE_SCALE = 0.5;
@@ -352,14 +359,16 @@ export function buildGameData(key, ctx) {
       // it and animates that; the server derives the same script to score. No
       // secret half — a level's answer is on screen for as long as its shuffle
       // lasts, so there is nothing here that hiding could keep.
-      const playIndex = ctx.queueIndex ?? 0;
-      const speedMultiplier = CUPS_GAME_SPEED_DECAY ** playIndex;
+      //
+      // Issue #46: every player plays all ten levels at exact per-level swap
+      // durations and submits once at the end. There is no per-game speed
+      // scaling anymore — the durations are fixed by cupsSwapMs, so nothing in
+      // the queue can change how fast a level shuffles.
       return {
         clientData: {
           seed: `cups-${Math.floor(rng() * 1e9)}`,
           maxLevels: CUPS_MAX_LEVELS,
           baseCups: CUPS_BASE_CUPS,
-          speedMultiplier,
         },
         secret: {},
       };
@@ -759,35 +768,35 @@ export function computeMetric(key, payload, secret, clientData, config) {
       return diff;
     }
     case 'cups': {
-      // payload.picks: [{ level, cupIndex }] in the order they were tapped.
+      // payload.picks: [{ level, cupIndex }], one entry per level in order.
       //
-      // The walk re-derives every level from the round seed and stops at the
-      // first pick that is not a correct answer to the level it is standing on.
-      // Three things are checked rather than believed, because all three are
-      // free to forge in a payload: that the run starts at level 1 and climbs
-      // one at a time (so no ladder can be skipped), that the cup index is a
-      // real cup on THAT level's table (3–5 of them, and it grows), and that it
-      // is the cup the ball is actually under. Anything else — junk, a gap, a
-      // repeat — ends the walk exactly where a miss would.
+      // Issue #46: every level is scored INDEPENDENTLY and by POSITION. Pick i
+      // is checked against level i+1 — a wrong tap does not stop the levels
+      // after it from scoring, and a forged high level in an early slot cannot
+      // steal that level's points because position i is only ever compared to
+      // level i+1's ball. A correct level is worth 100*level; a perfect ten-run
+      // is 100*(1+..+10) = 5500. Three things are still checked rather than
+      // believed, because all three are free to forge: that the entry's own
+      // level tag matches its position, that the cup index is a real cup on
+      // THAT level's table, and that it is the cup the ball is under. Junk,
+      // gaps, and repeats earn no credit but do not abort the scan.
       if (!Array.isArray(payload.picks)) return null;
       const { seed, maxLevels, baseCups } = clientData;
-      let cleared = 0;
-      for (const entry of payload.picks) {
-        if (cleared >= maxLevels) break;
-        if (!entry || typeof entry !== 'object') break;
-        const level = cleared + 1;
-        if (entry.level !== level) break;
+      let score = 0;
+      const n = Math.min(payload.picks.length, maxLevels);
+      for (let i = 0; i < n; i++) {
+        const level = i + 1;                              // ordered by position
+        const entry = payload.picks[i];
+        if (!entry || typeof entry !== 'object') continue; // hostile/junk → skip
+        if (entry.level !== level) continue;               // forged/skipped → skip
         const plan = cupsLevel(seed, level, { baseCups });
         const idx = entry.cupIndex;
-        if (!Number.isInteger(idx) || idx < 0 || idx >= plan.cups) break;
-        if (idx !== plan.ball) break;
-        cleared++;
+        if (!Number.isInteger(idx) || idx < 0 || idx >= plan.cups) continue;
+        if (idx === plan.ball) score += 100 * level;       // correct → 100*level
       }
-      // Zero is a real score, not a non-submission: a wrong tap on level 1 and
-      // never tapping at all are the same outcome — no level cleared — and
-      // there is no partial credit inside a level for one of them to have more
-      // of than the other. Same convention as oddoneout's `{ cleared: 0 }`.
-      return cleared;
+      // Zero is a real score, not a non-submission: an all-wrong run and never
+      // tapping at all both score zero. Non-submission is the null above.
+      return score;
     }
     case 'typing': {
       const typed = typeof payload.typed === 'string' ? payload.typed.slice(0, 500) : null;
@@ -999,7 +1008,7 @@ export function formatRaw(key, metric, payload) {
     case 'metronome': return `${Math.round(metric)} ms avg off`;
     case 'gridflash': return `${metric} cells off`;
     case 'tray': return `${metric} wrong`;
-    case 'cups': return `level ${metric}`;
+    case 'cups': return `${metric} pts`;
     case 'readroom': return `${metric.toFixed(0)} pts off`;
     case 'caption': return `${metric} vote${metric === 1 ? '' : 's'}`;
     case 'icebreaker': return `${metric} right`;

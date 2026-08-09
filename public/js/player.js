@@ -256,6 +256,11 @@ function startMinigame(payload) {
   clearAll();
   const client = GameClients[payload.key];
   if (!client) return renderWaiting(`Unknown game ${payload.key}`);
+  // Read-only diagnostic seam for the e2e harness: expose the round's
+  // already-broadcast clientData (seed, baseCups, maxLevels) so a test can
+  // derive the on-screen answer from the SAME shared module and drive real
+  // pointer clicks. Purely observational — it never influences game flow.
+  if (typeof window !== 'undefined') window.__lastMinigame = { key: payload.key, clientData: payload.clientData, completion: !!payload.completion };
   const stage = payload.stage || 1;
   const totalStages = payload.totalStages || 1;
   const intro = typeof client.intro === 'function' ? client.intro(stage) : client.intro;
@@ -264,10 +269,12 @@ function startMinigame(payload) {
     el('p', { class: 'muted' }, intro || '')
   );
   // Convert the server deadline to local time via the sync offset, then run
-  // the countdown off performance.now().
+  // the countdown off performance.now(). Completion-mode games (cups) have no
+  // shared deadline — the player runs the whole thing and submits when done —
+  // so their countdown stays hidden.
   const localDeadline = payload.deadline - state.offset;
   const perfDeadline = performance.now() + (localDeadline - Date.now());
-  showCountdown(perfDeadline, payload.duration);
+  if (!payload.completion) showCountdown(perfDeadline, payload.duration);
 
   let submitted = false;
   const submit = (data) => {
@@ -296,13 +303,18 @@ function startMinigame(payload) {
     : client.start(gameRoot(), gameCtx);
   state.game = { key: payload.key, stage, handle, submitted: () => submitted };
   // Auto-collect partial progress just before the server closes the game.
-  const msLeft = Math.max(0, localDeadline - Date.now() - 250);
-  autoTimer = setTimeout(() => {
-    if (!submitted && handle && typeof handle.collect === 'function') {
-      const data = handle.collect();
-      if (data) submit(data);
-    }
-  }, msLeft);
+  // Completion-mode games submit themselves when the player finishes, so there
+  // is no deadline to race — their `collect()` stays only as the host-close
+  // safety path and is not armed on a timer here.
+  if (!payload.completion) {
+    const msLeft = Math.max(0, localDeadline - Date.now() - 250);
+    autoTimer = setTimeout(() => {
+      if (!submitted && handle && typeof handle.collect === 'function') {
+        const data = handle.collect();
+        if (data) submit(data);
+      }
+    }, msLeft);
+  }
 }
 
 // ---- between-stages reveal (Icebreaker) ------------------------------------

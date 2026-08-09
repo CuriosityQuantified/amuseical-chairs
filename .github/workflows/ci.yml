@@ -15,10 +15,12 @@ permissions:
   contents: read
 
 jobs:
-  # Parse every .js/.mjs without executing it. Catches syntax errors in the
-  # browser modules that nothing else ever imports.
+  # ---- build / smoke -------------------------------------------------------
+  # Parse every .js/.mjs without executing it (catches syntax errors in the
+  # browser modules that nothing else ever imports), then boot the real server
+  # and curl the served player page — proof the app starts and serves a bundle.
   build:
-    name: Syntax smoke (node --check)
+    name: Build / smoke (syntax + server boot)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -31,13 +33,26 @@ jobs:
         run: |
           find server shared public/js scripts -name '*.js' -o -name '*.mjs' \
             | xargs node --check
+      - name: Boot server and curl the served page
+        run: |
+          PORT=3111 node server/index.js &
+          SERVER_PID=$!
+          for i in $(seq 1 30); do
+            if curl -fsS "http://127.0.0.1:3111/healthz" >/dev/null 2>&1; then break; fi
+            sleep 1
+          done
+          curl -fsS "http://127.0.0.1:3111/healthz" | grep -q '"ok":true'
+          curl -fsS "http://127.0.0.1:3111/" | grep -qi 'solo'
+          curl -fsS "http://127.0.0.1:3111/shared/cups.js" | grep -q 'cupsSwapMs'
+          kill "$SERVER_PID" 2>/dev/null || true
 
+  # ---- code graph / freshness ----------------------------------------------
   # Static consistency the test suite structurally cannot cover: the browser
   # modules have no build step, so nothing else ever parses them, and nothing
   # else checks that a game on the server roster has a client and a tutorial.
   # Also enforces that the knowledge graph is not stale against source files.
   code-graph:
-    name: Static checks + graph freshness
+    name: Code graph / freshness (npm run check)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -48,9 +63,10 @@ jobs:
       - run: npm ci
       - run: npm run check
 
-  # Core unit tests on the oldest supported Node version.
+  # ---- unit / integration --------------------------------------------------
+  # Core unit + integration suite on the oldest supported Node version.
   unit:
-    name: Unit tests (Node 20)
+    name: Unit / integration (Node 20)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -61,13 +77,14 @@ jobs:
       - run: npm ci
       - run: npm test
 
-  # The whole point of the harness is that every bug here is a 20-player
-  # concurrency bug, and those surface differently across Node's timer and
-  # socket behaviour — so regressions run on every other version the package
-  # supports. Also acts as a regression gate: any test that was green in unit
-  # must stay green across all supported Node versions.
+  # ---- regressions ---------------------------------------------------------
+  # The named regression suites, run first for a fast, focused signal, then the
+  # full suite — across every other Node version the package supports (20 is
+  # covered by `unit`). Every 20-player concurrency bug surfaces differently
+  # across Node's timer and socket behaviour, and the issue #46 cups suite is
+  # the dedicated ten-level / completion-scoring regression guard.
   regressions:
-    name: Tests (Node ${{ matrix.node }})
+    name: Regressions (Node ${{ matrix.node }})
     runs-on: ubuntu-latest
     needs: unit
     strategy:
@@ -81,10 +98,44 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: npm
       - run: npm ci
-      - run: npm test
+      - name: Named regression suites (issue #46 + harness + roster)
+        run: node --test test/cups-ten-level.test.js test/cups.test.js test/harness.test.js test/roster.test.js
+      - name: Full test suite
+        run: npm test
 
+  # ---- Playwright (Chromium) -----------------------------------------------
+  # The real-browser proof: cups-solo drives real pointer input through all ten
+  # levels of Follow the Cup against a freshly booted server. On failure the
+  # HTML report and traces are uploaded for triage.
+  e2e:
+    name: E2E (Playwright, Chromium)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: npm
+      - run: npm ci
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+      - name: Run Playwright (Chromium)
+        env:
+          CI: '1'
+        run: npm run test:e2e
+      - name: Upload Playwright report and traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  # ---- dependency audit ----------------------------------------------------
   # This runs in a room of real people on a real network; a high-severity
-  # advisory in a four-dependency tree is worth stopping for.
+  # advisory in a small dependency tree is worth stopping for.
   audit:
     name: Dependency audit
     runs-on: ubuntu-latest

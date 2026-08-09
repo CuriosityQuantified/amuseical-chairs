@@ -5,7 +5,7 @@
       "semantic": null
     },
     ".github/workflows/ci.yml": {
-      "ast": "b3a977ecc3acf97f5d4ab556d09a07c6",
+      "ast": "a608176cd34cf9c42a33268234eabb65",
       "semantic": null
     },
     ".mcp.json": {
@@ -21,8 +21,12 @@
       "semantic": null
     },
     "package.json": {
-      "ast": "78a566a0da4d3553bc4465e2366a3224",
-      "semantic": "78a566a0da4d3553bc4465e2366a3224"
+      "ast": "11bfd68d7db93de0790e38b497bfbae9",
+      "semantic": null
+    },
+    "playwright.config.js": {
+      "ast": "1acbdb5f431d05244237b59ca7951dc5",
+      "semantic": null
     },
     "public/host.html": {
       "ast": "89b91b83d6e6f5356b2edd93b3cb66aa",
@@ -37,7 +41,7 @@
       "semantic": "f8ab4b1157d4b0554ae6cbe0c08f8a84"
     },
     "public/js/games.js": {
-      "ast": "d80add42368ce65e0e2ad626e12def79",
+      "ast": "79401bebb71652803b3a7ea5a45e1e0f",
       "semantic": null
     },
     "public/js/host.js": {
@@ -45,15 +49,15 @@
       "semantic": null
     },
     "public/js/player.js": {
-      "ast": "ee270d24997029ca7729da28033a0be1",
-      "semantic": "ee270d24997029ca7729da28033a0be1"
+      "ast": "4663e0fcbaecd461a0ff9b8fbe33fbb8",
+      "semantic": null
     },
     "public/js/sync.js": {
       "ast": "3d9aa8d2aabb42cdc226c0dc852c93f2",
       "semantic": "3d9aa8d2aabb42cdc226c0dc852c93f2"
     },
     "public/js/tutorials.js": {
-      "ast": "2b377a8cbf864b6bc4b8947b3ed78b6c",
+      "ast": "852f4d333477f63d04f1252bdc950176",
       "semantic": null
     },
     "scripts/check.mjs": {
@@ -69,7 +73,7 @@
       "semantic": "24c1b81e5113a5aa4edaa98f2ffce2c1"
     },
     "server/games.js": {
-      "ast": "81f269a660101bb60fdf704b70b39c56",
+      "ast": "2c101b718314688a18f19ce35d79e480",
       "semantic": null
     },
     "server/index.js": {
@@ -77,7 +81,7 @@
       "semantic": "f9bcb5a92468425b887f7d6ed3da4eb4"
     },
     "server/room.js": {
-      "ast": "6c76893ae0460c1979f5125a8ed03d5f",
+      "ast": "e17c648ae84af8d26ed1a8d19827c769",
       "semantic": null
     },
     "server/sockets.js": {
@@ -105,7 +109,7 @@
       "semantic": "2e5c2576f55f9b2973872e41e508e3d6"
     },
     "shared/cups.js": {
-      "ast": "da6d829d0baef40c491ea0b76e8ef05a",
+      "ast": "c07ff08b6a03a8aaccc6024f20867d68",
       "semantic": null
     },
     "shared/fractions.js": {
@@ -160,8 +164,12 @@
       "ast": "c1a78e9382ffdab8c72dc66cd83dfcad",
       "semantic": "c1a78e9382ffdab8c72dc66cd83dfcad"
     },
+    "test/cups-ten-level.test.js": {
+      "ast": "a5339bff521d25181650a77e4244e23e",
+      "semantic": null
+    },
     "test/cups.test.js": {
-      "ast": "a40876698018a555c5d36852a3fd4b73",
+      "ast": "cab6734bdc8e707171270eedce71638b",
       "semantic": null
     },
     "test/fakeclock.js": {
@@ -173,7 +181,7 @@
       "semantic": null
     },
     "test/harness.test.js": {
-      "ast": "d428e092c972a554d30de15c95323750",
+      "ast": "fd5624b7547fd4bf2c42df3822680e60",
       "semantic": null
     },
     "test/icebreaker.test.js": {
@@ -218,6 +226,10 @@
     },
     "test/tray.test.js": {
       "ast": "c8af52e8c6fbd01c0ef3395369c75698",
+      "semantic": null
+    },
+    "tests/e2e/cups-solo.spec.js": {
+      "ast": "a0560dd66e3ff0ba57debfe30f45936f",
       "semantic": null
     }
   }
