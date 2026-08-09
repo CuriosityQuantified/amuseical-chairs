@@ -215,7 +215,21 @@ for (const key of controlKeys) {
   }
 }
 
-// ---- 7. the knowledge graph gets refreshed with the code --------------------
+// ---- 7. reduced-motion helper is client-only --------------------------------
+// prefersReducedMotion() reads a browser media query and must never reach
+// server/ or shared/ code. If it did, the seeded round content, deadlines, or
+// scoring paths would implicitly depend on the player's OS accessibility
+// setting — breaking the anti-cheat guarantee that every player's game is
+// deterministically identical. This rule mirrors test/reduced-motion.test.js
+// (c) as a static CI guardrail so the boundary is visible at check time.
+for (const file of files.filter((f) => f.startsWith('server/') || f.startsWith('shared/'))) {
+  const src = read(file);
+  if (src.includes('/js/motion.js') || src.includes("'motion.js'") || src.includes('"motion.js"') || src.includes('prefersReducedMotion')) {
+    fail(file, 'server/shared code must not import or reference the client-only reduced-motion helper (public/js/motion.js)');
+  }
+}
+
+// ---- 8. the knowledge graph gets refreshed with the code --------------------
 // graphify-out/graph.json is committed so a fresh clone can query the codebase
 // without rebuilding it. That only holds while it is current, and a stale graph
 // is the same failure mode as the host config panel: it looks right from every

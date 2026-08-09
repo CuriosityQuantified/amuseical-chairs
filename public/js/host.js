@@ -7,6 +7,7 @@
 import { syncClock } from '/js/sync.js';
 import { startChairs, startChairsSeated } from '/js/chairs.js';
 import { startTutorialAnim } from '/js/tutorials.js';
+import { prefersReducedMotion } from '/js/motion.js';
 
 const socket = io();
 const $ = (id) => document.getElementById(id);
@@ -682,16 +683,21 @@ function confetti() {
     col: ['#00e5ff', '#ff2d95', '#ffd23d', '#3dff9e'][Math.floor(Math.random() * 4)],
     w: Math.random() * 2 - 1,
   }));
+  const reduced = prefersReducedMotion();
   let frames = 0;
   const tick = () => {
     g.clearRect(0, 0, c.width, c.height);
     for (const p of parts) {
-      p.y += p.v; p.x += p.w;
-      if (p.y > c.height) p.y = -10;
+      if (!reduced) {
+        p.y += p.v;
+        p.x += p.w;
+        if (p.y > c.height) p.y = -10;
+      }
       g.fillStyle = p.col;
       g.fillRect(p.x, p.y, p.r, p.r * 1.6);
     }
-    if (++frames < 60 * 12 && state.phase === 'winner') requestAnimationFrame(tick);
+    if (!reduced && ++frames < 60 * 12 && state.phase === 'winner') requestAnimationFrame(tick);
+    else if (reduced) setTimeout(() => c.remove(), 4000);
     else c.remove();
   };
   tick();

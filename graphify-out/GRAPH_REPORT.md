@@ -1,22 +1,22 @@
 # Graph Report - amuseical-chairs  (2026-08-09)
 
 ## Corpus Check
-- 64 files · ~99,351 words
+- 67 files · ~101,015 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 540 nodes · 1262 edges · 32 communities (26 shown, 6 thin omitted)
+- 555 nodes · 1285 edges · 38 communities (33 shown, 5 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 6 edges (avg confidence: 0.57)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `426e3b95`
+- Built from commit: `7ced72eb`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - Room
-- caption.test.js
+- server/games.js
 - room.js
 - Host UI Lobby Setup
 - Player Client Sync UI
@@ -39,18 +39,24 @@
 - ciede2000.js
 - graphify runbook
 - balance.test.js
-- app.js
-- server/games.js
+- harness.test.js
+- seededRng
 - cups.test.js
-- Bot
+- computeMetric
 - feedback.js
+- metronome.test.js
+- reduced-motion.test.js
+- formatRaw
 - feedback.spec.js
+- anagram.test.js
+- stroop.test.js
+- Reduced Motion Accessibility (issue #52)
 
 ## God Nodes (most connected - your core abstractions)
 1. `Room` - 66 edges
-2. `seededRng()` - 51 edges
-3. `buildGameData()` - 40 edges
-4. `computeMetric()` - 29 edges
+2. `seededRng()` - 52 edges
+3. `buildGameData()` - 41 edges
+4. `computeMetric()` - 30 edges
 5. `attachSockets()` - 23 edges
 6. `el()` - 19 edges
 7. `ROSTER_BY_KEY` - 19 edges
@@ -59,29 +65,29 @@
 10. `clearAll()` - 14 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `onlyCups()` --references--> `ROSTER_BY_KEY`  [EXTRACTED]
-  test/cups-ten-level.test.js → server/games.js
-- `onlyCups()` --references--> `ROSTER_BY_KEY`  [EXTRACTED]
-  test/cups.test.js → server/games.js
-- `score()` --calls--> `computeMetric()`  [EXTRACTED]
-  test/balance.test.js → server/games.js
 - `score()` --calls--> `computeMetric()`  [EXTRACTED]
   test/cups-ten-level.test.js → server/games.js
 - `score()` --calls--> `computeMetric()`  [EXTRACTED]
-  test/cups.test.js → server/games.js
+  test/metronome.test.js → server/games.js
+- `rng()` --calls--> `seededRng()`  [EXTRACTED]
+  test/caption.test.js → shared/rng.js
+- `rng()` --calls--> `seededRng()`  [EXTRACTED]
+  test/icebreaker.test.js → shared/rng.js
+- `README` --conceptually_related_to--> `Railway Deployment`  [INFERRED]
+  README.md → .claude-progress.md
 
 ## Import Cycles
 - None detected.
 
-## Communities (32 total, 6 thin omitted)
+## Communities (38 total, 5 thin omitted)
 
 ### Community 0 - "Room"
 Cohesion: 0.10
 Nodes (5): COMPLETION_MODE, makeRoomCode(), Room, sanitizeConfig(), attachSockets()
 
-### Community 1 - "caption.test.js"
-Cohesion: 0.13
-Nodes (18): aggregateCaption(), aggregateGame(), aggregateIcebreaker(), buildReveal(), buildStages(), icebreakerTally(), votesForPool(), cleanEntryText() (+10 more)
+### Community 1 - "server/games.js"
+Cohesion: 0.12
+Nodes (25): aggregateCaption(), aggregateGame(), aggregateIcebreaker(), buildReveal(), buildStages(), CAPTION_PROMPTS, clamp(), ICEBREAKER_PROMPTS (+17 more)
 
 ### Community 2 - "room.js"
 Cohesion: 0.06
@@ -112,8 +118,8 @@ Cohesion: 0.24
 Nodes (15): availHeight(), canvasPos(), clamp(), GameClients, h(), makeCanvas(), polygonPath(), SHAPE_CORNERS (+7 more)
 
 ### Community 9 - "tutorials.js"
-Cohesion: 0.16
-Nodes (13): box(), C, clamp01(), cursor(), drawPolyline(), ease(), rr(), SCATTER (+5 more)
+Cohesion: 0.17
+Nodes (14): box(), C, clamp01(), cursor(), drawPolyline(), ease(), rr(), SCATTER (+6 more)
 
 ### Community 10 - "Musical Chairs Game"
 Cohesion: 0.36
@@ -148,48 +154,76 @@ Cohesion: 0.12
 Nodes (15): 0. Quickstart, 1. Install, 2. Write `.graphifyignore` before you extract, 3. Build the graph, 4. Decide what to commit, 5. Make it get used: MCP, not bash, 6. Keep it current, 7. The freshness gate (+7 more)
 
 ### Community 23 - "balance.test.js"
-Cohesion: 0.40
-Nodes (8): balanceControl(), balanceSchedule(), balanceState(), balanceStep(), CONFIG, play(), score(), steerTowardFall()
+Cohesion: 0.47
+Nodes (7): balanceControl(), balanceSchedule(), balanceState(), balanceStep(), CONFIG, play(), steerTowardFall()
 
-### Community 24 - "app.js"
-Cohesion: 0.36
-Nodes (5): createServer(), __dirname, { httpServer }, ROOT, withServer()
+### Community 24 - "harness.test.js"
+Cohesion: 0.14
+Nodes (11): createServer(), __dirname, { httpServer }, letters(), solveScramble(), Bot, botPayload(), sleep() (+3 more)
 
-### Community 27 - "server/games.js"
-Cohesion: 0.06
-Nodes (72): buildGameData(), CAPTION_PROMPTS, clamp(), computeMetric(), formatRaw(), ICEBREAKER_PROMPTS, METRONOME_INTERVALS, MULTI_STAGE (+64 more)
+### Community 27 - "seededRng"
+Cohesion: 0.18
+Nodes (21): buildGameData(), MULTI_STAGE, pickContent(), areaRatio(), areaTrials(), RATIOS, SHAPES, shuffled() (+13 more)
 
 ### Community 28 - "cups.test.js"
 Cohesion: 0.11
-Nodes (22): cupsCount(), cupsLevel(), cupsSwapMs(), pairsFor(), correct(), EXPECTED_MS, FAST, onlyCups() (+14 more)
+Nodes (21): cupsCount(), cupsLevel(), cupsSwapMs(), pairsFor(), build(), correct(), EXPECTED_MS, FAST (+13 more)
+
+### Community 29 - "computeMetric"
+Cohesion: 0.21
+Nodes (13): computeMetric(), buildGrid(), DICE, gridHasPath(), scoreWord(), solveGrid(), WORDLIST, score() (+5 more)
 
 ### Community 30 - "feedback.js"
-Cohesion: 0.38
-Nodes (11): anagramFeedback(), areaFeedback(), bisectFeedback(), blank(), clamp(), dotsFeedback(), fractionsFeedback(), gridflashFeedback() (+3 more)
+Cohesion: 0.35
+Nodes (12): anagramFeedback(), areaFeedback(), bisectFeedback(), blank(), clamp(), dotsFeedback(), fractionsFeedback(), gridflashFeedback() (+4 more)
+
+### Community 31 - "metronome.test.js"
+Cohesion: 0.18
+Nodes (9): ROSTER_BY_KEY, onlyCups(), onlyCups(), build(), FAST, onlyMetronome(), score(), sleep() (+1 more)
+
+### Community 32 - "reduced-motion.test.js"
+Cohesion: 0.31
+Nodes (6): prefersReducedMotion(), setReducedMotionOverride(), ROOT, SERVER_AND_SHARED_FILES, SIMPLE_KEYS, withFakeWindow()
+
+### Community 33 - "formatRaw"
+Cohesion: 0.28
+Nodes (7): formatRaw(), findPair(), fractionsPairs(), MAGNITUDE_POOL, POWER_POOL, CONFIG, round()
 
 ### Community 34 - "feedback.spec.js"
 Cohesion: 0.48
 Nodes (4): assertFeedbackShown(), continueTurn(), nextBtn(), panel()
 
+### Community 35 - "anagram.test.js"
+Cohesion: 0.36
+Nodes (6): anagramRounds(), isTrivialRotation(), scrambleWord(), WORDS_BY_LENGTH, CONFIG, round()
+
+### Community 36 - "stroop.test.js"
+Cohesion: 0.33
+Nodes (6): assertLabelParity(), COLOR_NAMES, PALETTE, stroopSequence(), CONFIG, round()
+
+### Community 37 - "Reduced Motion Accessibility (issue #52)"
+Cohesion: 0.33
+Nodes (5): Decorative animations (gated on `prefersReducedMotion()`), Detection point, Essential motion (NOT gated — motion IS the mechanic or is functional), Guarantee, Reduced Motion Accessibility (issue #52)
+
 ## Knowledge Gaps
-- **109 isolated node(s):** `graphify-mcp`, `name`, `version`, `description`, `type` (+104 more)
+- **116 isolated node(s):** `graphify-mcp`, `name`, `version`, `description`, `type` (+111 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **6 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **5 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Room` connect `Room` to `room.js`, `server/games.js`, `cups.test.js`, `multistage.test.js`?**
-  _High betweenness centrality (0.091) - this node is a cross-community bridge._
-- **Why does `attachSockets()` connect `Room` to `app.js`, `room.js`, `package.json`, `multistage.test.js`?**
-  _High betweenness centrality (0.077) - this node is a cross-community bridge._
+- **Why does `Room` connect `Room` to `room.js`, `anagram.test.js`, `stroop.test.js`, `multistage.test.js`, `cups.test.js`, `computeMetric`, `metronome.test.js`?**
+  _High betweenness centrality (0.088) - this node is a cross-community bridge._
+- **Why does `attachSockets()` connect `Room` to `harness.test.js`, `room.js`, `package.json`, `multistage.test.js`?**
+  _High betweenness centrality (0.074) - this node is a cross-community bridge._
 - **Why does `qrcode` connect `package.json` to `Room`?**
-  _High betweenness centrality (0.067) - this node is a cross-community bridge._
+  _High betweenness centrality (0.065) - this node is a cross-community bridge._
 - **What connects `graphify-mcp`, `name`, `version` to the rest of the system?**
-  _109 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _116 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Room` be split into smaller, more focused modules?**
   _Cohesion score 0.10344827586206896 - nodes in this community are weakly interconnected._
-- **Should `caption.test.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._
+- **Should `server/games.js` be split into smaller, more focused modules?**
+  _Cohesion score 0.11553030303030302 - nodes in this community are weakly interconnected._
 - **Should `room.js` be split into smaller, more focused modules?**
   _Cohesion score 0.058673469387755105 - nodes in this community are weakly interconnected._

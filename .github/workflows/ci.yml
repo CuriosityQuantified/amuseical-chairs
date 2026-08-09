@@ -100,6 +100,8 @@ jobs:
       - run: npm ci
       - name: Named regression suites (issue #46 + #51 wordhunt + #50 stroop + harness + roster)
         run: node --test test/cups-ten-level.test.js test/cups.test.js test/harness.test.js test/roster.test.js test/wordhunt.test.js test/stroop.test.js
+      - name: Reduced-motion regression (#52)
+        run: node --test test/reduced-motion.test.js
       - name: Full test suite
         run: npm test
 
