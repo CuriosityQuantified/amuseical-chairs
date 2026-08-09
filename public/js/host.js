@@ -348,9 +348,13 @@ function stageLabel(p) {
 
 function renderMinigame(p) {
   const title = (p.test ? '🔧 TEST: ' : '') + p.gameName + stageLabel(p);
+  const untimed = p.completion === 'all-levels';
+  const levelCount = p.clientData?.maxLevels || 10;
   const parts = [
     el('h1', {}, title),
-    el('p', { class: 'muted', style: 'font-size:20px' }, `${Math.round(p.duration / 1000)}s`),
+    el('p', { class: 'muted', style: 'font-size:20px' }, untimed
+      ? `Complete all ${levelCount} levels — waiting for everyone.`
+      : `${Math.round(p.duration / 1000)}s`),
   ];
   // Icebreaker projects ONE player-authored fact at a time — the same
   // moderation control as a pool, on a pool of one.
@@ -374,10 +378,13 @@ function renderMinigame(p) {
   parts.push(
     el('div', { class: 'progress-count', id: 'prog' }, '0'),
     el('p', { class: 'muted', style: 'font-size:22px' }, fact ? 'guessed' : poolData ? 'voted' : 'submitted'),
-    el('div', { class: 'countdown' }, el('div', { id: 'host-bar' }))
+    untimed
+      ? el('p', { class: 'muted' }, 'Press Next ▸ after everyone has completed the run.')
+      : el('div', { class: 'countdown' }, el('div', { id: 'host-bar' }))
   );
   content().replaceChildren(...parts);
   renderPool();
+  if (untimed) return;
   const localDeadline = p.deadline - state.offset;
   const tick = () => {
     const left = Math.max(0, localDeadline - Date.now());

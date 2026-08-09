@@ -263,11 +263,13 @@ function startMinigame(payload) {
     el('h2', {}, (payload.test ? '🔧 TEST — ' : '') + payload.gameName + stageLabel(payload)),
     el('p', { class: 'muted' }, intro || '')
   );
-  // Convert the server deadline to local time via the sync offset, then run
-  // the countdown off performance.now().
-  const localDeadline = payload.deadline - state.offset;
-  const perfDeadline = performance.now() + (localDeadline - Date.now());
-  showCountdown(perfDeadline, payload.duration);
+  // Deadline games run a synchronized countdown. Completion-mode games (such
+  // as Follow the Cup) have no shell timer: the game submits when its own
+  // required interaction is complete.
+  const untimed = payload.completion === 'all-levels';
+  const localDeadline = untimed ? null : payload.deadline - state.offset;
+  const perfDeadline = untimed ? null : performance.now() + (localDeadline - Date.now());
+  if (!untimed) showCountdown(perfDeadline, payload.duration);
 
   let submitted = false;
   const submit = (data) => {
@@ -295,14 +297,17 @@ function startMinigame(payload) {
     ? client.startStage(stage, gameRoot(), gameCtx)
     : client.start(gameRoot(), gameCtx);
   state.game = { key: payload.key, stage, handle, submitted: () => submitted };
-  // Auto-collect partial progress just before the server closes the game.
-  const msLeft = Math.max(0, localDeadline - Date.now() - 250);
-  autoTimer = setTimeout(() => {
-    if (!submitted && handle && typeof handle.collect === 'function') {
-      const data = handle.collect();
-      if (data) submit(data);
-    }
-  }, msLeft);
+  // Auto-collect partial progress just before a deadline game closes. An
+  // all-levels game has no deadline and must wait for its own completion.
+  if (!untimed) {
+    const msLeft = Math.max(0, localDeadline - Date.now() - 250);
+    autoTimer = setTimeout(() => {
+      if (!submitted && handle && typeof handle.collect === 'function') {
+        const data = handle.collect();
+        if (data) submit(data);
+      }
+    }, msLeft);
+  }
 }
 
 // ---- between-stages reveal (Icebreaker) ------------------------------------
