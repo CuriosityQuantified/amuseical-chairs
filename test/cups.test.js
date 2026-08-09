@@ -24,6 +24,7 @@ import {
   CUPS_MAX_LEVELS,
   CUPS_MIN_SWAP_MS,
   CUPS_GAME_SPEED_DECAY,
+  CUPS_ADDITIONAL_SPEED_GROWTH,
   cupsLevel,
 } from '../shared/cups.js';
 import { Room } from '../server/room.js';
@@ -184,17 +185,19 @@ test('the shuffle actually moves the ball around, level over level', () => {
   assert.ok(moved > total * 0.5, `the ball leaves its starting cup most rounds (${moved}/${total})`);
 });
 
-test('the level speed increases by 25% until the readability floor', () => {
+test('the level speed includes the extra 1.2^n factor until the readability floor', () => {
   const plans = [...Array(6)].map((_, i) => cupsLevel('speed-ramp', i + 1, {}));
-  // Levels 1–5 are above the floor, so their duration ratios expose the
-  // intended 1.25x speed progression without floor interference.
-  for (let i = 1; i < 5; i++) {
+  // Levels 1–3 are above the floor. The prior 1.25x ramp combined with
+  // the requested 1.2^n factor gives 1.5x speed between those levels.
+  const expectedSpeedRatio = 1.25 * CUPS_ADDITIONAL_SPEED_GROWTH;
+  for (let i = 1; i < 3; i++) {
     const speedRatio = plans[i - 1].swapMs / plans[i].swapMs;
-    assert.ok(Math.abs(speedRatio - 1.25) < 0.01,
-      `level ${i + 1}: expected 1.25x speed, got ${speedRatio.toFixed(4)}x`);
+    assert.ok(Math.abs(speedRatio - expectedSpeedRatio) < 0.01,
+      `level ${i + 1}: expected ${expectedSpeedRatio}x speed, got ${speedRatio.toFixed(4)}x`);
   }
-  assert.equal(plans[5].swapMs, CUPS_MIN_SWAP_MS,
-    'the readability floor still caps the accelerated ramp');
+  assert.deepEqual(plans.map(({ swapMs }) => swapMs), [517, 344, 230, 220, 220, 220]);
+  assert.equal(plans[3].swapMs, CUPS_MIN_SWAP_MS,
+    'the readability floor engages after the extra acceleration');
 });
 
 // ---- speedMultiplier (issue #35: 10% faster each subsequent game) ----------
