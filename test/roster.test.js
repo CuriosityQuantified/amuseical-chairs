@@ -19,6 +19,7 @@ import { cupsLevel } from '../shared/cups.js';
 import { trayLevel } from '../shared/tray.js';
 import { parseValue } from '../shared/fractions.js';
 import { solveScramble } from '../shared/anagram.js';
+import { solveGrid } from '../shared/wordhunt.js';
 import { areaRatio } from '../shared/area.js';
 import {
   ROSTER,
@@ -52,6 +53,7 @@ const PAYLOADS = {
   }),
   typing: (cd) => ({ typed: cd.sentence.slice(0, 24), elapsedMs: 20000 }),
   anagram: (cd) => ({ solved: cd.scrambles.map((scramble, index) => ({ index, word: solveScramble(scramble) })) }),
+  wordhunt: (cd) => ({ words: solveGrid(cd.grid) }),
   spacemash: () => ({ count: 55, flagged: false }),
   slingshot: () => ({ best: 12.5 }),
   balance: () => ({ survivedMs: 12000 }),

@@ -686,6 +686,47 @@ const TUTORIALS = {
       } },
   ],
 
+  wordhunt: [
+    { ok: true, dur: 4200, label: 'Trace connected letters (any direction) to spell a real word',
+      draw(g, w, h, p) {
+        const board = [['C', 'X', 'M'], ['R', 'A', 'O'], ['B', 'T', 'E']];
+        const cell = 44;
+        const ox = w / 2 - (cell * 3) / 2;
+        const oy = h - 66 - cell * 2;
+        const pathCells = [[0, 0], [1, 1], [2, 1]]; // C, A, T — a real adjacency path
+        const lit = Math.min(3, Math.floor(seg(p, 0.1, 0.85) * 4));
+        for (let r = 0; r < 3; r++) {
+          for (let c = 0; c < 3; c++) {
+            const idx = pathCells.findIndex(([pr, pc]) => pr === r && pc === c);
+            const on = idx >= 0 && idx < lit;
+            const x = ox + c * cell;
+            const y = oy + r * cell;
+            box(g, x, y, cell - 6, cell - 6, on ? C.accent : C.panel, C.line);
+            text(g, board[r][c], x + (cell - 6) / 2, y + (cell - 6) / 2, { size: 18, bold: true, color: on ? '#fff' : C.cyan });
+          }
+        }
+        if (p > 0.6) text(g, 'CAT ✓  longer words score more', w / 2, oy - 18, { size: 15, bold: true, color: C.good });
+      } },
+    { ok: false, dur: 3600, label: 'Letters that do not touch — or are not real words — score nothing',
+      draw(g, w, h, p) {
+        const board = [['C', 'X', 'M'], ['R', 'A', 'O'], ['B', 'T', 'E']];
+        const cell = 44;
+        const ox = w / 2 - (cell * 3) / 2;
+        const oy = h - 66 - cell * 2;
+        const badCells = [[0, 0], [0, 2]]; // C and M are not adjacent — no path
+        for (let r = 0; r < 3; r++) {
+          for (let c = 0; c < 3; c++) {
+            const bad = badCells.some(([pr, pc]) => pr === r && pc === c);
+            const x = ox + c * cell;
+            const y = oy + r * cell;
+            box(g, x, y, cell - 6, cell - 6, bad ? C.bad : C.panel, C.line);
+            text(g, board[r][c], x + (cell - 6) / 2, y + (cell - 6) / 2, { size: 18, bold: true, color: bad ? '#fff' : C.cyan });
+          }
+        }
+        if (p > 0.5) text(g, 'letters must touch — rejected', w / 2, oy - 18, { size: 15, bold: true, color: C.bad });
+      } },
+  ],
+
   typing: [
     { ok: true, dur: 4200, label: 'Type the sentence exactly — accuracy earns the speed',
       draw(g, w, h, p) {

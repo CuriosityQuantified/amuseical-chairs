@@ -22,9 +22,13 @@
   "20": "Player Join/Play Screen",
   "21": "ciede2000.js",
   "22": "graphify runbook",
+  "23": "balance.test.js",
+  "24": "app.js",
   "25": "cups-solo.spec.js",
   "26": "playwright.config.js",
   "27": "server/games.js",
-  "30": "harness.test.js",
+  "28": "room.test.js",
+  "29": "Bot",
+  "30": "feedback.js",
   "34": "feedback.spec.js"
 }

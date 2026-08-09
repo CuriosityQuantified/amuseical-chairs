@@ -16,6 +16,7 @@ import {
 } from '../shared/balance.js';
 import { FRACTIONS_PENALTY, fractionsPairs } from '../shared/fractions.js';
 import { anagramRounds } from '../shared/anagram.js';
+import { buildGrid, WORDLIST, gridHasPath, scoreWord } from '../shared/wordhunt.js';
 import { areaTrials, areaRatio } from '../shared/area.js';
 
 const SENTENCES = [
@@ -228,6 +229,7 @@ export const ROSTER = [
   { key: 'icebreaker', name: 'Icebreaker', category: 'social', type: 'score', stages: 'variable' },
   { key: 'typing', name: 'Typing Sprint', category: 'motor', type: 'score', keyboardOnly: true },
   { key: 'anagram', name: 'Anagram Rush', category: 'language', type: 'score', defaultEnabled: false },
+  { key: 'wordhunt', name: 'Word Hunt', category: 'language', type: 'score', defaultEnabled: false },
   { key: 'spacemash', name: 'Space Mash', category: 'motor', type: 'score' },
   { key: 'slingshot', name: 'Slingshot', category: 'motor', type: 'error' },
   { key: 'balance', name: 'Balance the Beam', category: 'motor', type: 'score' },
@@ -407,6 +409,19 @@ export function buildGameData(key, ctx) {
       return {
         clientData: { scrambles: rounds.map((round) => round.scramble) },
         secret: { answers: rounds.map((round) => round.word) },
+      };
+    }
+    case 'wordhunt': {
+      // The grid is PUBLIC — every player must see the same letters to hunt on.
+      // Only the seed is derived server-side; the grid itself is a pure function
+      // of it, so two clients that receive this grid are looking at identical
+      // boards. The secret keeps the seed and a copy of the grid the scorer
+      // trusts, so a client cannot smuggle in an altered board.
+      const seed = `round-${Math.floor(rng() * 1e9)}`;
+      const grid = buildGrid(seed);
+      return {
+        clientData: { grid, size: grid.length },
+        secret: { seed, grid },
       };
     }
     case 'spacemash':
@@ -827,6 +842,40 @@ export function computeMetric(key, payload, secret, clientData, config) {
       }
       return solved;
     }
+    case 'wordhunt': {
+      // A word scores only if it is BOTH in the curated offline WORDLIST and
+      // forms a real 8-directional adjacency path on THIS grid. That two-part
+      // gate is the blanket-input defence: submitting the whole dictionary or a
+      // pile of random strings scores nothing extra, because non-path words are
+      // rejected regardless of the list. Work is bounded — the array is capped
+      // and each word must be short enough to fit the board.
+      if (!Array.isArray(payload.words)) return null;
+      const grid = Array.isArray(secret?.grid) ? secret.grid : [];
+      if (!grid.length) return 0;
+      const area = grid.length * grid[0].length;
+      // Bound the work per submission. The cap is deliberately above the
+      // curated wordlist size so an honest player who somehow submits every
+      // real word is still fully credited, while a client dumping hundreds of
+      // thousands of junk strings is truncated. The real spam defence is the
+      // two-part gate below (listed AND pathing), not this ceiling — each word
+      // is also length-capped to the board, so per-word DFS is cheap.
+      const CAP = 5000; // most words considered from one submission
+      const counted = new Set();
+      let total = 0;
+      for (const raw of payload.words.slice(0, CAP)) {
+        if (typeof raw !== 'string') continue;
+        // Normalize: lowercase, strip anything but a–z. Dedup is case-insensitive
+        // and by normalized spelling, so the same word never scores twice.
+        const word = raw.toLowerCase().replace(/[^a-z]/g, '');
+        if (word.length < 3 || word.length > area) continue;
+        if (counted.has(word)) continue;
+        counted.add(word);
+        if (!WORDLIST.has(word)) continue;
+        if (!gridHasPath(grid, word)) continue;
+        total += scoreWord(word);
+      }
+      return total;
+    }
     case 'spacemash': {
       const c = num(payload.count);
       if (c == null) return null;
@@ -1014,6 +1063,7 @@ export function formatRaw(key, metric, payload) {
     case 'icebreaker': return `${metric} right`;
     case 'typing': return `${Math.round(metric)} net cpm`;
     case 'anagram': return `${metric} word${metric === 1 ? '' : 's'}`;
+    case 'wordhunt': return `${metric} pt${metric === 1 ? '' : 's'}`;
     case 'spacemash': return `${metric} presses${payload?.flagged ? ' ⚠' : ''}`;
     case 'slingshot': return `${metric.toFixed(1)} ft`;
     case 'balance': return `${(metric / 1000).toFixed(1)}s upright`;
