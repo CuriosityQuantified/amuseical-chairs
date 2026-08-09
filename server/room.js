@@ -224,7 +224,6 @@ export class Room {
       this.broadcastPlayers();
       return { ok: true, playerId: p.id, name: p.name, snapshot: this.snapshot(p.id) };
     }
-    if (this.phase !== 'lobby') return { error: 'Game already started — ask the host for a rematch.' };
     if (this.players.size >= 30) return { error: 'Room is full (30 players max).' };
     let cleanName = String(name || '').replace(/\s+/g, ' ').trim().slice(0, 20) || 'Player';
     const names = new Set([...this.players.values()].map((p) => p.name.toLowerCase()));
@@ -241,6 +240,11 @@ export class Room {
       joinedAt: Date.now(),
     };
     this.players.set(p.id, p);
+    // Late join (issue #54): a player admitted after the lobby is a full
+    // player, not a spectator. Seed a 0 total so scoreGame/leaderboard show
+    // an explicit zero row for the games they missed (each missed game
+    // already scores 0 for non-submitters, so cumulative back-fill is 0).
+    if (this.phase !== 'lobby') this.totals.set(p.id, 0);
     socket.join(`room:${this.code}`);
     socket.data.roomCode = this.code;
     socket.data.playerId = p.id;

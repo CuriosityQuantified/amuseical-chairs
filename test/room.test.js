@@ -270,3 +270,86 @@ test('2-player finale: one round, placement bonus (3000 / 0) can flip the lead',
     room.destroy();
   }
 });
+
+test('late join: mid-session joiner scores subsequent games and 0 for missed', async () => {
+  // Two pre-existing players, two games. The latecomer joins after game 1
+  // has been scored, plays game 2, and should have 0 for game 1 and
+  // non-zero for game 2. Normalization for game 2 must be unaffected.
+  const room = new Room(stubIo(), 'LATE', {
+    ...FAST,
+    enabled: onlyGames('spacemash', 'stopclock'),
+  });
+  try {
+    addPlayer(room, 'p1', 'Player1');
+    addPlayer(room, 'p2', 'Player2');
+    assert.equal(room.start().ok, true);
+
+    const submitFor = (key, id, quality) => {
+      if (key === 'spacemash') room.handleSubmit(id, { count: 100 - quality * 20, flagged: false });
+      else room.handleSubmit(id, { best: 100 + quality * 150 });
+    };
+
+    // ---- game 1: play without the latecomer ----
+    await waitFor(() => room.phase === 'minigame', 3000, 'first minigame');
+    const game1Key = room.round.games[0].key;
+    submitFor(game1Key, 'p1', 0); // p1 best
+    submitFor(game1Key, 'p2', 1);
+    await waitFor(() => room.phase === 'scores', 3000, 'first scores');
+
+    const board1 = room.lastScores;
+    assert.equal(board1.find((r) => r.id === 'p1').points, 1000, 'p1 gets 1000 in game 1');
+
+    // ---- admit the latecomer mid-session ----
+    const fakeSocket = { id: 'sock-late', join() {}, data: {} };
+    const joinResult = room.join(fakeSocket, { name: 'Late', playerId: undefined });
+
+    assert.equal(joinResult.ok, true, 'late join succeeds — not an error');
+    const lateId = joinResult.playerId;
+    assert.ok(lateId, 'joinResult includes a playerId');
+    assert.ok(room.players.has(lateId), 'latecomer is in room.players');
+
+    // Back-fill: latecomer must be in totals with 0
+    assert.ok(room.totals.has(lateId), 'latecomer back-filled into room.totals');
+    assert.equal(room.totals.get(lateId), 0, 'latecomer back-fill total is 0');
+
+    // Existing player totals are preserved
+    const p1TotalAfterGame1 = room.totals.get('p1');
+    assert.ok(p1TotalAfterGame1 > 0, 'p1 total unchanged after late join');
+
+    // Reconnect guard: an existing player can still reconnect unchanged
+    const rcSocket = { id: 'sock-rc', join() {}, data: {} };
+    const rcResult = room.join(rcSocket, { name: 'x', playerId: 'p1' });
+    assert.equal(rcResult.ok, true, 'reconnect for existing player still works');
+    assert.equal(room.totals.get('p1'), p1TotalAfterGame1, 'reconnect does not change totals');
+
+    // ---- game 2: everyone including the latecomer submits ----
+    room.hostNext();
+    await waitFor(() => room.phase === 'minigame', 3000, 'second minigame');
+    const game2Key = room.round.games[0].key;
+    submitFor(game2Key, 'p1', 2); // p1 worst in game 2
+    submitFor(game2Key, 'p2', 1);
+    submitFor(game2Key, lateId, 0); // latecomer is best
+    await waitFor(() => room.phase === 'scores', 3000, 'second scores');
+
+    const board2 = room.lastScores;
+
+    // Normalization for game 2 is unaffected — best submitter gets 1000
+    const lateRow = board2.find((r) => r.id === lateId);
+    assert.ok(lateRow, 'latecomer appears in game-2 scores');
+    assert.equal(lateRow.points, 1000, 'latecomer (best submitter) gets 1000 in game 2');
+
+    // Latecomer total = game-1 contribution (0) + game-2 points (1000)
+    assert.equal(lateRow.total, 1000,
+      "latecomer total == game-2 points only (0 from missed game 1)");
+
+    // Existing players' totals accumulated across both games correctly
+    const p1Row = board2.find((r) => r.id === 'p1');
+    const p2Row = board2.find((r) => r.id === 'p2');
+    assert.equal(p1Row.total, board1.find((r) => r.id === 'p1').total + p1Row.points,
+      'p1 total accumulates across games');
+    assert.equal(p2Row.total, board1.find((r) => r.id === 'p2').total + p2Row.points,
+      'p2 total accumulates across games');
+  } finally {
+    room.destroy();
+  }
+});
