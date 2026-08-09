@@ -1,6 +1,6 @@
 // Follow the Cup (issue #10): a ball goes under one of three to five cups, the
-// cups shuffle, and you tap the one still holding it. Complete all ten levels;
-// misses cost that level's weighted points but do not end the run.
+// cups shuffle, and you tap the one still holding it. Clear a level and the
+// next one is faster with more cups; miss one and the game is over.
 //
 // It is the first game on the roster that measures sustained visual TRACKING
 // rather than search, and the only one whose whole state is on screen the
@@ -11,7 +11,7 @@
 //      derivable by the server, or two people are playing different games and
 //      neither answer can be checked. shared/cups.js is that single source —
 //      the client animates the plan, the server re-derives it to score.
-//   2. The metric is weighted level points walked from an untrusted array.
+//   2. The metric is a level count walked from an untrusted array. Nothing in
 //      the payload may be taken at face value: not the pick, not the cup index,
 //      and not the level number the client claims to have been on.
 
@@ -41,7 +41,6 @@ const build = (seed = 'cups-seed') =>
 
 const score = (picks, clientData) =>
   computeMetric('cups', { picks }, {}, clientData, {});
-const MAX_CUPS_POINTS = 100 * CUPS_MAX_LEVELS * (CUPS_MAX_LEVELS + 1) / 2;
 
 // A run that clears exactly `upTo` levels: the real ball position for each one,
 // re-derived from the same seed the client would animate from.
@@ -54,28 +53,14 @@ const clearsThenMiss = (cd, upTo) => {
   return [...clears(cd, upTo), { level: upTo + 1, cupIndex: (plan.ball + 1) % plan.cups }];
 };
 
-// A full ten-level run, with optional levels deliberately answered wrong.
-const plays = (cd, wrongLevels = []) => {
-  const wrong = new Set(wrongLevels);
-  return [...Array(cd.maxLevels)].map((_, i) => {
-    const level = i + 1;
-    const plan = cupsLevel(cd.seed, level, cd);
-    return {
-      level,
-      cupIndex: wrong.has(level) ? (plan.ball + 1) % plan.cups : plan.ball,
-    };
-  });
-};
-
 // ---- roster wiring ---------------------------------------------------------
 
-test('cups is a single-stage attention game scored by weighted level points', () => {
+test('cups is a single-stage attention game scored as a level count', () => {
   const meta = ROSTER_BY_KEY.get('cups');
   assert.ok(meta, 'cups is on the roster');
   assert.equal(meta.category, 'attention');
-  assert.equal(meta.type, 'score', 'higher correct count is better');
-  assert.equal(meta.completion, 'all-levels');
-  assert.equal(meta.stages, undefined, 'one payload, one completion');
+  assert.equal(meta.type, 'score', 'higher level reached is better');
+  assert.equal(meta.stages, undefined, 'one payload, one deadline');
   assert.ok(!MULTI_STAGE.has('cups'));
   assert.ok(!NEEDS_AGGREGATION.has('cups'),
     'the metric is per-player: nothing about it depends on the rest of the room');
@@ -199,18 +184,6 @@ test('the shuffle actually moves the ball around, level over level', () => {
   assert.ok(moved > total * 0.5, `the ball leaves its starting cup most rounds (${moved}/${total})`);
 });
 
-test('the level speed is evenly linear from 400ms to 150ms', () => {
-  const plans = [...Array(CUPS_MAX_LEVELS)].map((_, i) => cupsLevel('speed-ramp', i + 1, {}));
-  const stepMs = (400 - 150) / (CUPS_MAX_LEVELS - 1);
-  const expected = plans.map((_, i) => Math.round(400 - i * stepMs));
-  assert.equal(plans[0].swapMs, 400, 'level 1 starts at 400ms');
-  assert.equal(plans.at(-1).swapMs, 150, 'level 10 ends at 150ms');
-  assert.deepEqual(plans.map(({ swapMs }) => swapMs), expected,
-    'every level follows the same linear duration schedule');
-  assert.ok(cupsLevel('speed-ramp', CUPS_MAX_LEVELS + 1, {}).swapMs >= CUPS_MIN_SWAP_MS,
-    'levels beyond the ten-level run stay at the readable endpoint');
-});
-
 // ---- speedMultiplier (issue #35: 10% faster each subsequent game) ----------
 
 test('speedMultiplier is 1.0 when cups is the first game (queueIndex 0)', () => {
@@ -259,29 +232,29 @@ test('speedMultiplier=1 is backward-compatible — cupsLevel behaves identically
 
 // ---- the scorer ------------------------------------------------------------
 
-test('the metric awards 100 points times the level for each correct pick', () => {
+test('the metric is the number of levels cleared in a row', () => {
   const cd = build();
   assert.equal(score(clears(cd, 0), cd), 0);
-  assert.equal(score(clears(cd, 1), cd), 100);
-  assert.equal(score(plays(cd), cd), MAX_CUPS_POINTS);
+  assert.equal(score(clears(cd, 1), cd), 1);
+  assert.equal(score(clears(cd, 6), cd), 6);
 });
 
-test('a miss costs that level but the player continues through the run', () => {
+test('a miss ends the game — nothing after it counts', () => {
   const cd = build();
-  const picks = plays(cd, [6]);
-  assert.equal(score(picks, cd), MAX_CUPS_POINTS - 600,
-    'the level-six miss costs 600 points while later levels still count');
+  // Cleared five, missed the sixth, and then (impossibly) got the seventh.
+  const past = [...clearsThenMiss(cd, 5), ...clears(cd, 8).slice(6)];
+  assert.equal(score(past, cd), 5, 'the walk stops at the first wrong pick');
 });
 
 test('a perfect run tops out at the level cap and cannot be pushed past it', () => {
   const cd = build();
-  assert.equal(score(clears(cd, CUPS_MAX_LEVELS), cd), MAX_CUPS_POINTS);
+  assert.equal(score(clears(cd, CUPS_MAX_LEVELS), cd), CUPS_MAX_LEVELS);
   // 500 picks, every one of them naming a level that does not exist.
   const overrun = [
     ...clears(cd, CUPS_MAX_LEVELS),
     ...[...Array(500)].map((_, i) => ({ level: CUPS_MAX_LEVELS + i + 1, cupIndex: 0 })),
   ];
-  assert.equal(score(overrun, cd), MAX_CUPS_POINTS, 'the cap is the cap');
+  assert.equal(score(overrun, cd), CUPS_MAX_LEVELS, 'the cap is the cap');
 });
 
 test('an empty run is a real zero, not a non-submission', () => {
@@ -307,13 +280,13 @@ test('the level number is checked, not believed', () => {
     { level: 1, cupIndex: cupsLevel(cd.seed, 1, cd).ball },
     { level: 3, cupIndex: cupsLevel(cd.seed, 3, cd).ball },
   ];
-  assert.equal(score(skipped, cd), 100, 'a gap in the ladder ends the walk');
+  assert.equal(score(skipped, cd), 1, 'a gap in the ladder ends the walk');
 });
 
 test('replaying one cleared level does not clear the room', () => {
   const cd = build();
   const first = { level: 1, cupIndex: cupsLevel(cd.seed, 1, cd).ball };
-  assert.equal(score([...Array(20)].map(() => ({ ...first })), cd), 100,
+  assert.equal(score([...Array(20)].map(() => ({ ...first })), cd), 1,
     'the second pick is judged against level 2, whatever it says it is');
 });
 
@@ -341,8 +314,8 @@ test('the ball is not under the cup a guesser would tap', () => {
       cd
     );
   }
-  assert.ok(alwaysZero / runs < 1800, `tapping cup 0 averages ${(alwaysZero / runs).toFixed(2)} points`);
-  assert.ok(alwaysStart / runs < 1800, `tapping the starting cup averages ${(alwaysStart / runs).toFixed(2)} points`);
+  assert.ok(alwaysZero / runs < 1.5, `tapping cup 0 averages ${(alwaysZero / runs).toFixed(2)} levels`);
+  assert.ok(alwaysStart / runs < 1.5, `tapping the starting cup averages ${(alwaysStart / runs).toFixed(2)} levels`);
 });
 
 test('payloads that are not an attempt are non-submissions, never a crash', () => {
@@ -360,16 +333,16 @@ test('junk inside a real run ends the walk where it appears', () => {
   const good = clears(cd, 4);
   for (const rubbish of [null, undefined, 'level 3', 5, [], { cupIndex: 0 }, { level: 3 }]) {
     const dirty = [...good.slice(0, 2), rubbish, ...good.slice(2)];
-    assert.equal(computeMetric('cups', { picks: dirty }, {}, cd, {}), 300,
-      `${JSON.stringify(rubbish) ?? String(rubbish)} stops the run after the first two levels without throwing`);
+    assert.equal(computeMetric('cups', { picks: dirty }, {}, cd, {}), 2,
+      `${JSON.stringify(rubbish) ?? String(rubbish)} stops the walk at 2 without throwing`);
   }
 });
 
 // ---- reveal ----------------------------------------------------------------
 
-test('the raw reveal names weighted points', () => {
-  assert.equal(formatRaw('cups', 700), '700 pts');
-  assert.equal(formatRaw('cups', 0), '0 pts');
+test('the raw reveal names the level reached', () => {
+  assert.equal(formatRaw('cups', 7), 'level 7');
+  assert.equal(formatRaw('cups', 0), 'level 0');
   assert.equal(formatRaw('cups', null), 'no submission');
 });
 
@@ -406,7 +379,7 @@ const FAST = {
   postGreenTimeout: 800, hardTimeout: 1500, closeGraceMs: 200,
 };
 
-test('a room waits for every player to finish all ten levels before scoring', async () => {
+test('a room plays it: one shuffle for everyone, and points follow the level reached', async () => {
   const room = new Room(stubIo(), 'CUPS', { ...FAST, enabled: onlyCups() });
   try {
     ['sharp', 'ok', 'lost', 'silent'].forEach((id) => addPlayer(room, id, id));
@@ -415,37 +388,33 @@ test('a room waits for every player to finish all ten levels before scoring', as
 
     const g = room.round.games[0];
     assert.equal(g.key, 'cups');
-    assert.equal(g.completion, 'all-levels');
-    assert.equal(g.deadline, null, 'the all-levels game has no deadline');
-    assert.equal(room.timers.has('game'), false, 'the server does not start a game timer');
     const cd = g.clientData;
     assert.equal(typeof cd.seed, 'string');
     assert.deepEqual(g.secret, {}, 'nothing is withheld from the players');
 
-    room.handleSubmit('sharp', { picks: plays(cd, [9, 10]) });
-    room.handleSubmit('ok', { picks: plays(cd, [5, 6, 7, 8, 9, 10]) });
-    room.handleSubmit('lost', { picks: plays(cd, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) });
-    await sleep(50);
-    assert.equal(room.phase, 'minigame', 'three finished players do not score before the fourth finishes');
-    room.handleSubmit('silent', { picks: plays(cd, [1, 2, 3, 4, 5, 6, 7, 8]) });
+    room.handleSubmit('sharp', { picks: clearsThenMiss(cd, 8) });
+    room.handleSubmit('ok', { picks: clearsThenMiss(cd, 4) });
+    room.handleSubmit('lost', { picks: clearsThenMiss(cd, 0) });
+    // 'silent' never submits.
 
     await waitFor(() => room.phase === 'scores', 3000, 'scores');
     const board = room.lastScores;
     const row = (id) => board.find((r) => r.id === id);
 
-    assert.equal(row('sharp').raw, '3600 pts', 'levels 1–8 total 3600 points');
-    assert.ok(row('sharp').points > row('silent').points, 'lower levels do not beat a late-level run');
-    assert.ok(row('silent').points > row('ok').points, 'levels 9–10 beat levels 1–4');
-    assert.ok(row('ok').points > row('lost').points, 'some correct levels beat none');
-    assert.equal(row('lost').raw, '0 pts', 'all misses are a played game, not a missing one');
-    assert.equal(row('silent').raw, '1900 pts');
+    assert.equal(row('sharp').points, 1000, 'the deepest run in the room takes the game');
+    assert.ok(row('sharp').points > row('ok').points, 'eight levels beats four');
+    assert.ok(row('ok').points > row('lost').points, 'four levels beats none');
+    assert.equal(row('sharp').raw, 'level 8');
+    assert.equal(row('lost').raw, 'level 0', 'a first-level miss is a played game, not a missing one');
+    assert.equal(row('silent').points, 0, 'a non-submitter scores 0');
     assert.ok(room.players.has('silent'), 'and stays in the game');
+    assert.equal(row('silent').raw, 'no submission');
   } finally {
     room.destroy();
   }
 });
 
-test('the host can manually commence scoring if an untimed run stalls', async () => {
+test('in a room, a partial run collected at the deadline still scores', async () => {
   const room = new Room(stubIo(), 'CUPD', { ...FAST, enabled: onlyCups() });
   try {
     ['deadline', 'guesser'].forEach((id) => addPlayer(room, id, id));
@@ -453,14 +422,18 @@ test('the host can manually commence scoring if an untimed run stalls', async ()
     await waitFor(() => room.phase === 'minigame', 3000, 'the cups round');
     const cd = room.round.games[0].clientData;
 
-    room.handleSubmit('deadline', { picks: plays(cd) });
-    assert.equal(room.phase, 'minigame', 'one player finishing does not start scoring alone');
-    room.hostNext();
+    // Still tracking level 4 when time ran out: collect() sends the three
+    // levels already cleared, with no miss on the end.
+    room.handleSubmit('deadline', { picks: clears(cd, 3) });
+    // Tapped cup 0 on every level from the start.
+    room.handleSubmit('guesser', {
+      picks: [...Array(CUPS_MAX_LEVELS)].map((_, l) => ({ level: l + 1, cupIndex: 0 })),
+    });
 
     await waitFor(() => room.phase === 'scores', 3000, 'scores');
-    const row = (id) => room.lastScores.find((r) => r.id === id);
-    assert.equal(row('deadline').raw, '5500 pts');
-    assert.equal(row('guesser').raw, 'no submission');
+    const points = (id) => room.lastScores.find((r) => r.id === id).points;
+    assert.ok(points('deadline') > points('guesser'),
+      'running out of time three levels in beats guessing your way out of level 1');
   } finally {
     room.destroy();
   }

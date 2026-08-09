@@ -222,7 +222,7 @@ export const ROSTER = [
   { key: 'metronome', name: 'Metronome Blackout', category: 'timing', type: 'error' },
   { key: 'gridflash', name: 'Grid Flash', category: 'memory', type: 'error' },
   { key: 'tray', name: 'Vanishing Tray', category: 'memory', type: 'error' },
-  { key: 'cups', name: 'Follow the Cup', category: 'attention', type: 'score', completion: 'all-levels' },
+  { key: 'cups', name: 'Follow the Cup', category: 'attention', type: 'score' },
   { key: 'readroom', name: 'Read the Room', category: 'social', type: 'error' },
   { key: 'caption', name: 'Caption Battle', category: 'social', type: 'score', stages: 2 },
   { key: 'icebreaker', name: 'Icebreaker', category: 'social', type: 'score', stages: 'variable' },
@@ -759,25 +759,35 @@ export function computeMetric(key, payload, secret, clientData, config) {
       return diff;
     }
     case 'cups': {
-      // payload.picks: [{ level, cupIndex }] for all ten levels, in order.
-      // A miss costs that level but does not end the run: every player gets the
-      // same ten-level opportunity, and each correct level awards 100 × level.
+      // payload.picks: [{ level, cupIndex }] in the order they were tapped.
+      //
+      // The walk re-derives every level from the round seed and stops at the
+      // first pick that is not a correct answer to the level it is standing on.
+      // Three things are checked rather than believed, because all three are
+      // free to forge in a payload: that the run starts at level 1 and climbs
+      // one at a time (so no ladder can be skipped), that the cup index is a
+      // real cup on THAT level's table (3–5 of them, and it grows), and that it
+      // is the cup the ball is actually under. Anything else — junk, a gap, a
+      // repeat — ends the walk exactly where a miss would.
       if (!Array.isArray(payload.picks)) return null;
       const { seed, maxLevels, baseCups } = clientData;
-      let points = 0;
-      const count = Math.min(payload.picks.length, maxLevels);
-      for (let i = 0; i < count; i++) {
-        const entry = payload.picks[i];
-        const level = i + 1;
-        if (!entry || typeof entry !== 'object' || entry.level !== level) break;
+      let cleared = 0;
+      for (const entry of payload.picks) {
+        if (cleared >= maxLevels) break;
+        if (!entry || typeof entry !== 'object') break;
+        const level = cleared + 1;
+        if (entry.level !== level) break;
         const plan = cupsLevel(seed, level, { baseCups });
         const idx = entry.cupIndex;
         if (!Number.isInteger(idx) || idx < 0 || idx >= plan.cups) break;
-        if (idx === plan.ball) points += level * 100;
+        if (idx !== plan.ball) break;
+        cleared++;
       }
-      // Zero is a real score: a player who completes the run without a correct
-      // pick still played the game and belongs in normalization.
-      return points;
+      // Zero is a real score, not a non-submission: a wrong tap on level 1 and
+      // never tapping at all are the same outcome — no level cleared — and
+      // there is no partial credit inside a level for one of them to have more
+      // of than the other. Same convention as oddoneout's `{ cleared: 0 }`.
+      return cleared;
     }
     case 'typing': {
       const typed = typeof payload.typed === 'string' ? payload.typed.slice(0, 500) : null;
@@ -989,7 +999,7 @@ export function formatRaw(key, metric, payload) {
     case 'metronome': return `${Math.round(metric)} ms avg off`;
     case 'gridflash': return `${metric} cells off`;
     case 'tray': return `${metric} wrong`;
-    case 'cups': return `${metric} pts`;
+    case 'cups': return `level ${metric}`;
     case 'readroom': return `${metric.toFixed(0)} pts off`;
     case 'caption': return `${metric} vote${metric === 1 ? '' : 's'}`;
     case 'icebreaker': return `${metric} right`;

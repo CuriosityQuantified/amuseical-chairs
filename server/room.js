@@ -437,8 +437,7 @@ export class Room {
   }
 
   gamePayload(g, duration) {
-    const untimed = g.completion === 'all-levels';
-    const dur = duration !== undefined ? duration : (untimed ? null : this.stageDuration(g));
+    const dur = duration ?? this.stageDuration(g);
     return {
       gameNumber: this.queueIndex + 1,
       key: g.key,
@@ -446,11 +445,8 @@ export class Room {
       gameType: g.type,
       category: g.category,
       clientData: g.clientData,
-      completion: g.completion || 'deadline',
       duration: dur,
-      deadline: g.deadline !== undefined
-        ? g.deadline
-        : (dur == null ? null : Date.now() + dur),
+      deadline: g.deadline ?? Date.now() + dur,
       // Multi-stage games label themselves the way the chairs rounds do.
       stage: g.stage || 1,
       totalStages: g.totalStages || 1,
@@ -539,13 +535,11 @@ export class Room {
     const g = this.round.games[idx];
     if (!g) return;
     this.round.gameIndex = idx;
-    const untimed = g.completion === 'all-levels';
-    const duration = untimed ? null : this.stageDuration(g);
-    g.deadline = untimed ? null : Date.now() + duration;
+    const duration = this.stageDuration(g);
+    g.deadline = Date.now() + duration;
     this.setPhase('minigame', this.gamePayload(g, duration));
     this.emitHost('host:progress', { submitted: 0, total: this.players.size });
-    this.clearTimer('game');
-    if (!untimed) this.setTimer('game', () => this.closeGame(g.token), duration + this.config.closeGraceMs);
+    this.setTimer('game', () => this.closeGame(g.token), duration + this.config.closeGraceMs);
   }
 
   // Queue every stage that follows stage one — built out of what the room
