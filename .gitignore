@@ -1,8 +1,6 @@
 node_modules/
 npm-debug.log*
 .DS_Store
-playwright-report/
-test-results/
 
 # graphify: graph.json, graph.html, GRAPH_REPORT.md and graph-lock.json are
 # committed on purpose — graph.json is what `graphify query` reads, so a fresh

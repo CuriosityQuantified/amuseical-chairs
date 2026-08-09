@@ -104,13 +104,17 @@ function botPayload(key, data, rnd, stage = 1, bot = null) {
       }
       return { picks };
     }
-    // Plays every level. A miss is an ordinary wrong answer now, so it does
-    // not shorten the payload or the player's opportunity to reach level 10.
+    // Tracks the ball for a while and then loses it, like a person: every level
+    // up to a random one is correct, the next is a neighbouring cup. Derived
+    // from the round seed through the same module the real client animates —
+    // a bot that guessed blindly would clear ~0 levels and the whole room would
+    // tie at the floor, which would tell us nothing about scoring.
     case 'cups': {
+      const lost = 1 + Math.floor(rnd() * data.maxLevels);
       return {
-        picks: [...Array(data.maxLevels)].map((_, i) => {
+        picks: [...Array(lost)].map((_, i) => {
           const plan = cupsLevel(data.seed, i + 1, data);
-          const wrong = rnd() < 0.25;
+          const wrong = i + 1 === lost;
           return { level: i + 1, cupIndex: wrong ? (plan.ball + 1) % plan.cups : plan.ball };
         }),
       };
@@ -232,8 +236,6 @@ test('20 bots: every game once, per-game scores, chairs finale, winner by total'
   const scoreboards = [];
   let chairsSeen = 0;
   let winnerPayload = null;
-  let currentPhase = 'lobby';
-  let untimedAdvanceTimer = null;
 
   try {
     // ---- host creates the room ----
@@ -248,19 +250,6 @@ test('20 bots: every game once, per-game scores, chairs finale, winner by total'
 
     const winnerReached = new Promise((resolve) => {
       host.on('phase', (p) => {
-        currentPhase = p.name;
-        if (untimedAdvanceTimer) {
-          clearTimeout(untimedAdvanceTimer);
-          untimedAdvanceTimer = null;
-        }
-        if (p.name === 'minigame' && p.completion === 'all-levels') {
-          // The production host can press Next as a safety override. Exercise
-          // that path here for the two deliberate non-submitters; normal bots
-          // finish and close the run before this fallback fires.
-          untimedAdvanceTimer = setTimeout(() => {
-            if (currentPhase === 'minigame') host.emit('host:next', {}, () => {});
-          }, 600);
-        }
         if (p.name === 'minigame') {
           stagesSeen.push({ key: p.key, stage: p.stage || 1, totalStages: p.totalStages || 1 });
         }

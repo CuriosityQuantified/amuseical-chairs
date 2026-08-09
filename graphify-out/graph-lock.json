@@ -5,7 +5,7 @@
       "semantic": null
     },
     ".github/workflows/ci.yml": {
-      "ast": "d6847466a26b8018a5654d07fc147c4b",
+      "ast": "b3a977ecc3acf97f5d4ab556d09a07c6",
       "semantic": null
     },
     ".mcp.json": {
@@ -21,12 +21,8 @@
       "semantic": null
     },
     "package.json": {
-      "ast": "11bfd68d7db93de0790e38b497bfbae9",
-      "semantic": null
-    },
-    "playwright.config.js": {
-      "ast": "c0747e76ff8c28988b9770ffdc7eee58",
-      "semantic": null
+      "ast": "78a566a0da4d3553bc4465e2366a3224",
+      "semantic": "78a566a0da4d3553bc4465e2366a3224"
     },
     "public/host.html": {
       "ast": "89b91b83d6e6f5356b2edd93b3cb66aa",
@@ -41,16 +37,16 @@
       "semantic": "f8ab4b1157d4b0554ae6cbe0c08f8a84"
     },
     "public/js/games.js": {
-      "ast": "b780872892be0e93a6187c908cbdb0a0",
+      "ast": "d80add42368ce65e0e2ad626e12def79",
       "semantic": null
     },
     "public/js/host.js": {
-      "ast": "d8cf8c0a454972bec59ab5c03a280ca0",
+      "ast": "7449072ddb3c2f3c85b3c58c7d14530a",
       "semantic": null
     },
     "public/js/player.js": {
-      "ast": "45620c86d5f9c066b5cd10085d1d0a81",
-      "semantic": null
+      "ast": "ee270d24997029ca7729da28033a0be1",
+      "semantic": "ee270d24997029ca7729da28033a0be1"
     },
     "public/js/sync.js": {
       "ast": "3d9aa8d2aabb42cdc226c0dc852c93f2",
@@ -73,7 +69,7 @@
       "semantic": "24c1b81e5113a5aa4edaa98f2ffce2c1"
     },
     "server/games.js": {
-      "ast": "5cbfa15749ed102f84438e5019e01313",
+      "ast": "81f269a660101bb60fdf704b70b39c56",
       "semantic": null
     },
     "server/index.js": {
@@ -81,7 +77,7 @@
       "semantic": "f9bcb5a92468425b887f7d6ed3da4eb4"
     },
     "server/room.js": {
-      "ast": "97795dd9b11a36dad46c272d6190e309",
+      "ast": "6c76893ae0460c1979f5125a8ed03d5f",
       "semantic": null
     },
     "server/sockets.js": {
@@ -109,7 +105,7 @@
       "semantic": "2e5c2576f55f9b2973872e41e508e3d6"
     },
     "shared/cups.js": {
-      "ast": "b4239a663705f3ddac25890ed2ba8546",
+      "ast": "da6d829d0baef40c491ea0b76e8ef05a",
       "semantic": null
     },
     "shared/fractions.js": {
@@ -165,11 +161,7 @@
       "semantic": "c1a78e9382ffdab8c72dc66cd83dfcad"
     },
     "test/cups.test.js": {
-      "ast": "e33bea1571ad548e3bfc36bbe344f129",
-      "semantic": null
-    },
-    "test/e2e/follow-the-cup.spec.js": {
-      "ast": "53285a09aae5a7712deabdbfb2c05140",
+      "ast": "a40876698018a555c5d36852a3fd4b73",
       "semantic": null
     },
     "test/fakeclock.js": {
@@ -181,7 +173,7 @@
       "semantic": null
     },
     "test/harness.test.js": {
-      "ast": "22a8ddbdecc651e2d7e549a8672b80f2",
+      "ast": "d428e092c972a554d30de15c95323750",
       "semantic": null
     },
     "test/icebreaker.test.js": {
@@ -213,7 +205,7 @@
       "semantic": "090730fd5bd50643cea6369ab4e5c184"
     },
     "test/roster.test.js": {
-      "ast": "9005c4ff5b88dceb6da32c8ee5b19f25",
+      "ast": "a2b7d38522e2ee4b3fbeaf8d8684f892",
       "semantic": null
     },
     "test/smoke.test.js": {

@@ -853,12 +853,13 @@ GameClients.tray = {
 // the slow device is playing an easier game and the metric is about hardware.
 
 GameClients.cups = {
-  intro: 'Watch which cup the ball goes under, then tap that cup after the shuffle. Complete all 10 levels; misses count wrong but do not end the run.',
+  intro: 'Watch which cup the ball goes under, then tap that cup after the shuffle. Every level adds speed — one miss ends the run.',
   start(root, ctx) {
     const { seed, maxLevels, baseCups, speedMultiplier = 1 } = ctx.data;
-    // There is no round deadline: each player owns their pace through all ten
-    // levels. The fixed beats keep each reveal readable without making the
-    // time between decisions depend on frame rate or network timing.
+    // Everything that is not shuffle is overhead against a 45s round, so the
+    // fixed beats are as short as they can be and still be read. The reveal is
+    // the exception: it is the only moment the ball is ever on show, and
+    // rushing it makes the game unfair rather than harder.
     const BEAT_MS = 650;                                   // the "LEVEL n" card
     const LIFT_MS = 280, HOLD_MS = 580, DROP_MS = 260;     // ball on show
     const REVEAL_MS = LIFT_MS + HOLD_MS + DROP_MS;
@@ -1012,7 +1013,7 @@ GameClients.cups = {
       else if (phase === 'reveal' && t >= REVEAL_MS) enter('shuffle', now, 'Follow it.');
       else if (phase === 'shuffle' && t >= plan.shuffleMs) enter('choose', now, 'Where is it? Tap a cup.');
       else if (phase === 'verdict' && t >= VERDICT_MS) {
-        if (level >= maxLevels) return finish();
+        if (tapped !== plan.ball || level >= maxLevels) return finish();
         return startLevel(level + 1);
       }
       draw(now);
@@ -1033,10 +1034,6 @@ GameClients.cups = {
       phaseAt = performance.now();
       tag.textContent = `LEVEL ${n}`;
       note.textContent = `${plan.cups} cups, ${plan.swaps.length} swaps.`;
-      // Paint the initial frame synchronously. A throttled/background tab may
-      // delay its first rAF; without this, level 1 is an empty canvas and looks
-      // like the game never started.
-      draw(phaseAt);
       if (raf == null && !stopped) raf = requestAnimationFrame(frame);
     }
 
@@ -1056,9 +1053,8 @@ GameClients.cups = {
       const right = best === plan.ball;
       tag.textContent = `LEVEL ${level} ${right ? '✓' : '✗'}`;
       enter('verdict', performance.now(), right
-        ? (level >= maxLevels ? 'Cleared the last level.' : 'Correct — continue to the next level.')
-        : (level >= maxLevels ? `Missed — the ball was under cup ${plan.ball + 1}. Run complete.`
-          : `Missed — the ball was under cup ${plan.ball + 1}. Continue to the next level.`));
+        ? (level >= maxLevels ? 'Cleared the last level.' : 'Still on it — the next one is faster.')
+        : `Lost it — the ball was under cup ${plan.ball + 1}.`);
     }
 
     function finish() {
