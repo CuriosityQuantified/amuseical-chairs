@@ -482,3 +482,28 @@ canvas.game {
   touch-action: manipulation;
 }
 .fractions-side.flash { background: var(--accent2); color: #060b12; }
+
+/* Per-turn answer feedback panel (issue #48). Shown after each committed turn
+   with the player's own answer, the correct answer, correct/incorrect state,
+   turn progress, and a Next control before the next turn is drawn. */
+.turn-feedback {
+  margin: 14px auto;
+  max-width: 460px;
+  padding: 16px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--bg2);
+  text-align: center;
+}
+.turn-feedback.fb-ok { border-color: #1f7a4d; box-shadow: 0 0 0 1px #1f7a4d inset; }
+.turn-feedback.fb-bad { border-color: #7a2f3a; box-shadow: 0 0 0 1px #7a2f3a inset; }
+.turn-feedback .fb-state { font-size: 20px; font-weight: 800; margin-bottom: 10px; }
+.turn-feedback.fb-ok .fb-state { color: #46d38a; }
+.turn-feedback.fb-bad .fb-state { color: #ff8ea0; }
+.turn-feedback .fb-row {
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 6px 4px; border-top: 1px solid var(--line);
+}
+.turn-feedback .fb-label { color: var(--muted); }
+.turn-feedback .fb-your, .turn-feedback .fb-correct { font-size: 18px; }
+.turn-feedback .fb-progress { margin: 10px 0 12px; }

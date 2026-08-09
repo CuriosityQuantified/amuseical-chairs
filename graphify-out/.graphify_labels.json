@@ -1,11 +1,11 @@
 {
   "0": "Room",
-  "1": "server/games.js",
+  "1": "caption.test.js",
   "2": "room.js",
   "3": "Host UI Lobby Setup",
   "4": "Player Client Sync UI",
   "5": "package.json",
-  "6": "Bot",
+  "6": "cups.test.js",
   "7": "multistage.test.js",
   "8": "js/games.js",
   "9": "tutorials.js",
@@ -22,8 +22,16 @@
   "20": "Player Join/Play Screen",
   "21": "ciede2000.js",
   "22": "graphify runbook",
-  "23": "check.mjs",
-  "24": "cups.test.js",
+  "23": "computeMetric",
+  "24": "cups-ten-level.test.js",
   "25": "cups-solo.spec.js",
-  "26": "playwright.config.js"
+  "26": "playwright.config.js",
+  "27": "server/games.js",
+  "28": "seededRng",
+  "29": "roster.test.js",
+  "30": "harness.test.js",
+  "31": "formatRaw",
+  "32": "anagram.test.js",
+  "33": "balance.test.js",
+  "34": "feedback.spec.js"
 }

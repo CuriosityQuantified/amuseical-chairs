@@ -289,11 +289,30 @@ function startMinigame(payload) {
       el('p', { class: 'muted', id: 'spec-progress' }, '')
     );
   };
+  // Server-authoritative per-turn feedback (issue #48). Only games whose
+  // correct answer is a server secret (Anagram) use this; it returns THIS
+  // player's own turn answer and never another player's. Resolves null if the
+  // reveal is unavailable, so the game never blocks on it.
+  const reveal = (index, word) => new Promise((resolve) => {
+    let settled = false;
+    const done = (v) => { if (!settled) { settled = true; resolve(v); } };
+    try {
+      // Send the player's own answer WITH the request: the server locks it
+      // before returning the correct answer, so feedback only ever appears
+      // after the answer is committed.
+      socket.emit('player:reveal', { index, word: typeof word === 'string' ? word : '' },
+        (res) => done(res && !res.error ? res : null));
+    } catch { done(null); }
+    // Never hang a turn on a lost ack; the feedback falls back to an unknown
+    // correct answer rather than freezing the player's device.
+    setTimeout(() => done(null), 1500);
+  });
   const gameCtx = {
     data: payload.clientData,
     duration: payload.duration,
     deadline: perfDeadline,
     submit,
+    reveal,
     rng: null,
     stage,
     totalStages,
