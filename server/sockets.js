@@ -105,11 +105,11 @@ export function attachSockets(io) {
     // Per-turn answer feedback for games whose correct answer is a server
     // secret (Anagram, issue #48). The ack goes back to THIS socket only, so a
     // player only ever learns their own current game's turn answer.
-    socket.on('player:reveal', ({ index } = {}, cb) => {
+    socket.on('player:reveal', ({ index, word } = {}, cb) => {
       if (typeof cb !== 'function') return;
       try {
         const r = room();
-        if (r && socket.data.playerId) cb(r.revealTurn(socket.data.playerId, index));
+        if (r && socket.data.playerId) cb(r.revealTurn(socket.data.playerId, index, word));
         else cb({ error: 'Not in a room.' });
       } catch (err) {
         // A reveal is advisory feedback — never let it escape as an unhandled

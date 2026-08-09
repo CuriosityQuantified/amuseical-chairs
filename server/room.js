@@ -378,6 +378,12 @@ export class Room {
       secret,
       submissions: new Map(),
       metrics: new Map(),
+      // Per-player per-turn feedback state for server-secret games (issue #48):
+      // { next: cursor, locked: Map<index, word> }. A turn's answer is revealed
+      // only once the player has locked their own answer for it, and the locked
+      // answers — not a re-submittable final payload — are what get scored, so
+      // learning an answer via the reveal is useless for inflating a score.
+      reveals: new Map(),
       token: crypto.randomUUID(),
       stage,
       // A game whose length depends on what the room submitted does not know
@@ -738,7 +744,15 @@ export class Room {
     if (!g || g.submissions.has(playerId)) return;
     g.submissions.set(playerId, payload ?? {});
     if (!NEEDS_AGGREGATION.has(g.key)) {
-      const metric = computeMetric(g.key, payload, g.secret, g.clientData, this.config);
+      // For a server-secret game, score the answers the player LOCKED before
+      // each reveal, not a re-submittable final payload — so a client that used
+      // reveals to peek at answers cannot then claim turns it locked blank.
+      let scoringPayload = payload;
+      if (PER_TURN_SECRET.has(g.key)) {
+        const locked = this.lockedSolved(g, playerId);
+        if (locked) scoringPayload = { ...(payload && typeof payload === 'object' ? payload : {}), solved: locked };
+      }
+      const metric = computeMetric(g.key, scoringPayload, g.secret, g.clientData, this.config);
       if (metric != null) g.metrics.set(playerId, metric);
     }
     const total = this.players.size;
@@ -754,7 +768,7 @@ export class Room {
   // answer is a server secret. Every input is validated: an unknown player, a
   // non-secret game, a wrong phase, or a bad/out-of-range index yields an error
   // object, never a crash and never another player's data.
-  revealTurn(playerId, index) {
+  revealTurn(playerId, index, word) {
     if (!this.players.has(playerId)) return { error: 'Not in this room.' };
     if (this.phase !== 'minigame' || !this.round) return { error: 'No active turn.' };
     const g = this.round.games[this.round.gameIndex];
@@ -764,7 +778,30 @@ export class Room {
     // Require a real integer — no string/null coercion — so a hostile client
     // cannot smuggle a non-index value that happens to coerce into range.
     if (!Number.isInteger(index) || index < 0 || index >= answers.length) return { error: 'Bad turn index.' };
+    let st = g.reveals.get(playerId);
+    if (!st) { st = { next: 0, locked: new Map() }; g.reveals.set(playerId, st); }
+    // Forward-only: a player may reveal the turn they have reached, never a
+    // future one. This blocks enumerating the whole hidden answer stream by
+    // jumping ahead; a client can only walk turns in order.
+    if (index > st.next) return { error: 'Turn not reached.' };
+    // Lock this player's own answer for the turn the FIRST time it is revealed;
+    // a later re-request (e.g. after a reconnect) is idempotent and never lets
+    // them relock a better answer once they have seen the correct one.
+    // Cap the stored word: no real answer needs more, and it stops a hostile
+    // client amplifying memory by locking megabyte strings on every turn.
+    if (!st.locked.has(index)) st.locked.set(index, (typeof word === 'string' ? word : '').slice(0, 64));
+    if (index === st.next) st.next = index + 1;
     return { index, answer: answers[index] };
+  }
+
+  // The server-authoritative per-turn answers a player locked in via reveals,
+  // as a scoring payload. Only used for server-secret games (Anagram) and only
+  // when the player actually used the reveal path; otherwise scoring falls back
+  // to the submitted payload (e.g. the bot harness, which never reveals).
+  lockedSolved(g, playerId) {
+    const st = g.reveals && g.reveals.get(playerId);
+    if (!st || st.locked.size === 0) return null;
+    return [...st.locked.entries()].map(([index, word]) => ({ index, word }));
   }
 
   closeGame(token) {

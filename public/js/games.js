@@ -105,7 +105,7 @@ const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 // deadline auto-collect that clears the game root simply detaches the panel;
 // its pending timer then fires harmlessly (remove() on a detached node is a
 // no-op and submit() is idempotent).
-function turnFeedback(root, fb, onContinue, { progress = '', autoMs = 2200 } = {}) {
+function turnFeedback(root, fb, onContinue, { progress = '', autoMs = 3000 } = {}) {
   const stateText = fb.ok ? '✓ Correct' : (fb.answered ? '✗ Not quite' : '✗ No answer');
   const panel = h('div', {
     class: `turn-feedback ${fb.ok ? 'fb-ok' : 'fb-bad'}`,
@@ -1432,7 +1432,7 @@ GameClients.anagram = {
       // answer as unknown rather than fabricating one.
       let answer = null;
       try {
-        const rev = typeof ctx.reveal === 'function' ? await ctx.reveal(i) : null;
+        const rev = typeof ctx.reveal === 'function' ? await ctx.reveal(i, word) : null;
         if (rev && typeof rev.answer === 'string') answer = rev.answer;
       } catch { /* reveal is advisory — never block advancing on it */ }
       turnFeedback(root, anagramFeedback(answer, word),

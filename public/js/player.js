@@ -293,11 +293,15 @@ function startMinigame(payload) {
   // correct answer is a server secret (Anagram) use this; it returns THIS
   // player's own turn answer and never another player's. Resolves null if the
   // reveal is unavailable, so the game never blocks on it.
-  const reveal = (index) => new Promise((resolve) => {
+  const reveal = (index, word) => new Promise((resolve) => {
     let settled = false;
     const done = (v) => { if (!settled) { settled = true; resolve(v); } };
     try {
-      socket.emit('player:reveal', { index }, (res) => done(res && !res.error ? res : null));
+      // Send the player's own answer WITH the request: the server locks it
+      // before returning the correct answer, so feedback only ever appears
+      // after the answer is committed.
+      socket.emit('player:reveal', { index, word: typeof word === 'string' ? word : '' },
+        (res) => done(res && !res.error ? res : null));
     } catch { done(null); }
     // Never hang a turn on a lost ack; the feedback falls back to an unknown
     // correct answer rather than freezing the player's device.

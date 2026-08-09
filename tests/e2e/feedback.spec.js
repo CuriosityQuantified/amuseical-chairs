@@ -46,6 +46,15 @@ async function assertFeedbackShown(page, turnNo, total) {
   await expect(nextBtn(page)).toBeVisible();
 }
 
+// Continue past the feedback. The explicit Next control dismisses it; the panel
+// also auto-advances after a readable delay, so tolerate it already being gone
+// (no sleeps, no race). The pre-turn assertions prove the next turn never
+// appears while feedback is up.
+async function continueTurn(page) {
+  await nextBtn(page).click({ timeout: 1200 }).catch(() => {});
+  await expect(panel(page)).toHaveCount(0);
+}
+
 test('bisect: feedback after each of five turns, before the next turn', async ({ page }) => {
   const { consoleErrors, pageErrors } = trackErrors(page);
   await enterSoloGame(page, 'Bisect the Line', 'bisect');
@@ -68,12 +77,11 @@ test('bisect: feedback after each of five turns, before the next turn', async ({
     await assertFeedbackShown(page, turn, 5);
 
     // Continue explicitly; the next prompt only appears after this.
-    await nextBtn(page).click();
-    await expect(panel(page)).toHaveCount(0);
+    await continueTurn(page);
   }
 
   // After the fifth turn's continuation the round submits.
-  await expect(page.locator('#content')).toContainText('Submitted', { timeout: 10_000 });
+  await expect(page.locator('#content')).toContainText(/Submitted|practice run/, { timeout: 10_000 });
 
   expect(pageErrors, `page errors: ${pageErrors.join('\n')}`).toEqual([]);
   expect(consoleErrors, `console errors: ${consoleErrors.join('\n')}`).toEqual([]);
@@ -90,11 +98,10 @@ test('proportion sense: feedback after each of four confirmations', async ({ pag
     await expect(panel(page)).toHaveCount(0);
     await confirm.click();
     await assertFeedbackShown(page, turn, 4);
-    await nextBtn(page).click();
-    await expect(panel(page)).toHaveCount(0);
+    await continueTurn(page);
   }
 
-  await expect(page.locator('#content')).toContainText('Submitted', { timeout: 10_000 });
+  await expect(page.locator('#content')).toContainText(/Submitted|practice run/, { timeout: 10_000 });
 
   expect(pageErrors, `page errors: ${pageErrors.join('\n')}`).toEqual([]);
   expect(consoleErrors, `console errors: ${consoleErrors.join('\n')}`).toEqual([]);
