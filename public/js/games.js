@@ -335,7 +335,10 @@ GameClients.area = {
 // ---- 5. Trace the Shape ----------------------------------------------------
 
 GameClients.trace = {
-  intro: 'Trace the outline with your finger or cursor. Cover the whole shape.',
+  // Issue #53 (colorblind support): the target outline (solid, thick) and the
+  // player's trace (dashed, thin) are distinguished by BOTH line texture AND
+  // color so red-green colorblind players can tell them apart without hue.
+  intro: 'Trace the outline with your finger or cursor. Cover the whole shape. Your trace is a dashed line; the shape to follow is a solid line.',
   start(root, ctx) {
     const { canvas, ctx: g, w, hgt } = makeCanvas(root, 360);
     const path = shapePath(ctx.data.shape, w, hgt);
@@ -350,6 +353,7 @@ GameClients.trace = {
       g.strokeStyle = 'rgba(255,45,149,0.85)';
       g.lineWidth = 8;
       g.lineJoin = g.lineCap = 'round';
+      g.setLineDash([]);
       g.beginPath();
       path.forEach((p, i) => (i ? g.lineTo(p.x, p.y) : g.moveTo(p.x, p.y)));
       g.stroke();
@@ -357,6 +361,7 @@ GameClients.trace = {
       g.shadowBlur = 10;
       g.strokeStyle = '#3dff9e';
       g.lineWidth = 3;
+      g.setLineDash([8, 5]);
       g.beginPath();
       let started = false;
       for (const p of strokes) {
@@ -365,6 +370,7 @@ GameClients.trace = {
         else g.lineTo(p.x, p.y);
       }
       g.stroke();
+      g.setLineDash([]); // reset so future draws (e.g. next frame's outline) stay solid
     }
     canvas.addEventListener('pointerdown', (e) => {
       drawing = true;
@@ -396,6 +402,7 @@ GameClients.trace = {
       for (const q of path) if (nearestDist(q, pts) <= covThresh) covered++;
       return { deviation, coverage: covered / path.length };
     }
+    root.append(h('p', { class: 'trial-note center' }, 'Solid line = shape to trace · Dashed line = your trace'));
     root.append(h('button', {
       // Sticky: on short viewports (landscape phones) the canvas's 160px
       // height floor can overflow the fold, and the canvas swallows touch
