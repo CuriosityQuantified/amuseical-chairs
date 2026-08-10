@@ -136,6 +136,9 @@ export function attachSockets(io) {
     // Moderation: pull a player-authored entry off the projector mid-stage.
     socket.on('host:hide', hostOnly((r, payload, cb) => cb?.(r.hideEntry(payload?.entryId))));
     socket.on('host:config', hostOnly((r, payload, cb) => cb?.(r.updateConfig(payload || {}))));
+    // Live host actions (issue #55) — mid-game, host-only, NOT lobby config.
+    socket.on('host:skip', hostOnly((r, _p, cb) => cb?.(r.skipGame())));
+    socket.on('host:extend', hostOnly((r, _p, cb) => cb?.(r.extendTimer())));
 
     socket.on('disconnect', () => {
       const r = room();
