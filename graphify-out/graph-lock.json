@@ -5,7 +5,7 @@
       "semantic": null
     },
     ".github/workflows/ci.yml": {
-      "ast": "adaa7e09c13a8cc1cb479ce5ddbe0487",
+      "ast": "9b6e5f067bf1aa83aeb84b7d3062ecf2",
       "semantic": null
     },
     ".mcp.json": {
@@ -14,6 +14,10 @@
     },
     "README.md": {
       "ast": "524e9e2bb379fee3ffd115935f2e0a70",
+      "semantic": null
+    },
+    "docs/color-cue-audit-issue-53.md": {
+      "ast": "73e8a58a585a500a34030a9830c8dfe9",
       "semantic": null
     },
     "docs/feature-ideation-issue-36.md": {
@@ -49,7 +53,7 @@
       "semantic": null
     },
     "public/js/games.js": {
-      "ast": "acf2fc267e88c0322d7153e5f03174e7",
+      "ast": "ac2e1c855f1b9de3d6bce6cb9db4f918",
       "semantic": null
     },
     "public/js/host.js": {
@@ -187,6 +191,10 @@
     "test/cluster.test.js": {
       "ast": "c1a78e9382ffdab8c72dc66cd83dfcad",
       "semantic": "c1a78e9382ffdab8c72dc66cd83dfcad"
+    },
+    "test/color-cues.test.js": {
+      "ast": "e19c18958fec0c22c48037fd429d6d38",
+      "semantic": null
     },
     "test/cups-ten-level.test.js": {
       "ast": "a5339bff521d25181650a77e4244e23e",

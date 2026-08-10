@@ -102,6 +102,11 @@ jobs:
         run: node --test test/cups-ten-level.test.js test/cups.test.js test/harness.test.js test/roster.test.js test/wordhunt.test.js test/stroop.test.js test/room.test.js
       - name: Reduced-motion regression (#52)
         run: node --test test/reduced-motion.test.js
+      - name: Color-cue regression (#53)
+        # Asserts non-color cues for trace (dashed texture), area (BIG/SMALL labels),
+        # chairs avatars (name/initial), and stroop label parity. Seed/scoring invariance
+        # is also checked. Lives in test/color-cues.test.js.
+        run: node --test test/color-cues.test.js
       - name: Full test suite
         run: npm test
 
