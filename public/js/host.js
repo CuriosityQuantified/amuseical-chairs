@@ -189,6 +189,8 @@ $('start-btn').addEventListener('click', () => {
   });
 });
 $('next-btn').addEventListener('click', () => socket.emit('host:next', {}, () => {}));
+$('skip-btn').addEventListener('click', () => socket.emit('host:skip', {}, () => {}));
+$('extend-btn').addEventListener('click', () => socket.emit('host:extend', {}, () => {}));
 
 // ---- phases ----------------------------------------------------------------
 
@@ -198,6 +200,10 @@ let hostTut = null;
 
 socket.on('phase', (p) => {
   state.phase = p.name;
+  // Show skip/extend only during a live timed minigame (issue #55).
+  const showMidGameControls = p.name === 'minigame' && !p.completion;
+  $('skip-btn').classList.toggle('hidden', !showMidGameControls);
+  $('extend-btn').classList.toggle('hidden', !showMidGameControls);
   hostTut?.stop();
   hostTut = null;
   if (p.name !== 'lobby') {
@@ -347,7 +353,15 @@ function stageLabel(p) {
   return total > 1 ? ` — stage ${p.stage || 1} of ${total}` : '';
 }
 
+let miniPayload = null;
+let hostCountdownRaf = null;
+
 function renderMinigame(p) {
+  miniPayload = p;
+  // Cancel any in-flight countdown RAF before re-rendering (issue #55 re-runs
+  // this on extend) so exactly one loop drives the bar, matching the
+  // player-side hideCountdown/showCountdown discipline.
+  if (hostCountdownRaf) { cancelAnimationFrame(hostCountdownRaf); hostCountdownRaf = null; }
   const title = (p.test ? '🔧 TEST: ' : '') + p.gameName + stageLabel(p);
   const parts = [
     el('h1', {}, title),
@@ -385,7 +399,7 @@ function renderMinigame(p) {
     const bar = $('host-bar');
     if (!bar) return;
     bar.style.width = `${(left / p.duration) * 100}%`;
-    if (left > 0 && state.phase === 'minigame') requestAnimationFrame(tick);
+    if (left > 0 && state.phase === 'minigame') hostCountdownRaf = requestAnimationFrame(tick);
   };
   tick();
 }
@@ -400,6 +414,17 @@ socket.on('game:data', ({ clientData }) => {
   if (!poolData || !next) return;
   poolData = next;
   renderPool();
+});
+
+// Host countdown resync on extend (issue #55). Re-render the minigame view
+// against the new deadline/duration so the host bar advances from the
+// correct position. renderMinigame uses content().replaceChildren so it is
+// safe to call again.
+socket.on('game:extend', ({ deadline, duration }) => {
+  if (!miniPayload) return;
+  miniPayload.deadline = deadline;
+  miniPayload.duration = duration;
+  if (state.phase === 'minigame') renderMinigame(miniPayload);
 });
 
 // ---- between-facts reveal (Icebreaker) --------------------------------------

@@ -5,7 +5,7 @@
       "semantic": null
     },
     ".github/workflows/ci.yml": {
-      "ast": "9b6e5f067bf1aa83aeb84b7d3062ecf2",
+      "ast": "24eb1f02714e242bcbdf6178d0cef93e",
       "semantic": null
     },
     ".mcp.json": {
@@ -41,8 +41,8 @@
       "semantic": null
     },
     "public/host.html": {
-      "ast": "89b91b83d6e6f5356b2edd93b3cb66aa",
-      "semantic": "89b91b83d6e6f5356b2edd93b3cb66aa"
+      "ast": "46e0a1972e566e448444ee3595eab245",
+      "semantic": null
     },
     "public/index.html": {
       "ast": "a275c5b81046ca7131cb19076b2dce52",
@@ -57,7 +57,7 @@
       "semantic": null
     },
     "public/js/host.js": {
-      "ast": "83caeba988d0e9bf0c3ae11ae4ed477b",
+      "ast": "b93f410ae848a4aaf86df9733c9b2e0e",
       "semantic": null
     },
     "public/js/motion.js": {
@@ -65,7 +65,7 @@
       "semantic": null
     },
     "public/js/player.js": {
-      "ast": "4af65946c8db82cce43ead98761d7b42",
+      "ast": "74e688d415d273cd1d2d056f6601d0bb",
       "semantic": null
     },
     "public/js/sync.js": {
@@ -97,11 +97,11 @@
       "semantic": "f9bcb5a92468425b887f7d6ed3da4eb4"
     },
     "server/room.js": {
-      "ast": "e84486a7731948f9d74e80a9d1b18854",
+      "ast": "1733bbb604c4c71c25ee68a2372c4e90",
       "semantic": null
     },
     "server/sockets.js": {
-      "ast": "9fc0c65c592004579627afac43b5e2bd",
+      "ast": "67d04b1dc76d3a7f98ed5af9e38b1be6",
       "semantic": null
     },
     "shared/anagram.js": {
@@ -253,7 +253,7 @@
       "semantic": null
     },
     "test/room.test.js": {
-      "ast": "a29bb3b500cfb70871f2bafc652a72b0",
+      "ast": "d1c3ff3a14148665f8a795750d3d7c4d",
       "semantic": null
     },
     "test/roster.test.js": {

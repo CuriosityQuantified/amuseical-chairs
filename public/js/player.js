@@ -320,19 +320,35 @@ function startMinigame(payload) {
   const handle = client.startStage
     ? client.startStage(stage, gameRoot(), gameCtx)
     : client.start(gameRoot(), gameCtx);
-  state.game = { key: payload.key, stage, handle, submitted: () => submitted };
+  state.game = { key: payload.key, stage, handle, submitted: () => submitted, completion: !!payload.completion };
   // Auto-collect partial progress just before the server closes the game.
   // Completion-mode games submit themselves when the player finishes, so there
   // is no deadline to race — their `collect()` stays only as the host-close
   // safety path and is not armed on a timer here.
   if (!payload.completion) {
-    const msLeft = Math.max(0, localDeadline - Date.now() - 250);
-    autoTimer = setTimeout(() => {
-      if (!submitted && handle && typeof handle.collect === 'function') {
-        const data = handle.collect();
-        if (data) submit(data);
-      }
-    }, msLeft);
+    const scheduleAutoCollect = (ms) => {
+      if (autoTimer) clearTimeout(autoTimer);
+      autoTimer = setTimeout(() => {
+        if (!submitted && handle && typeof handle.collect === 'function') {
+          const data = handle.collect();
+          if (data) submit(data);
+        }
+      }, ms);
+    };
+    scheduleAutoCollect(Math.max(0, localDeadline - Date.now() - 250));
+
+    // Resync function for host extend (issue #55). Updates the shared deadline
+    // and re-arms both the countdown bar and the auto-collect timer.
+    const resync = (newDeadline, newDuration) => {
+      const newLocalDeadline = newDeadline - state.offset;
+      const newPerfDeadline = performance.now() + (newLocalDeadline - Date.now());
+      gameCtx.deadline = newPerfDeadline;
+      gameCtx.duration = newDuration;
+      hideCountdown();
+      showCountdown(newPerfDeadline, newDuration);
+      scheduleAutoCollect(Math.max(0, newLocalDeadline - Date.now() - 250));
+    };
+    state.game.resync = resync;
   }
 }
 
@@ -502,6 +518,13 @@ socket.on('game:data', ({ key, stage, clientData }) => {
   const g = state.game;
   if (!g || g.key !== key || g.stage !== (stage || 1)) return;
   g.handle?.update?.(clientData);
+});
+
+// Host extended the current game's deadline (issue #55). Resync countdown and
+// auto-collect timer to the new shared deadline so all players advance together.
+socket.on('game:extend', ({ deadline, duration }) => {
+  const g = state.game;
+  if (g && !g.completion && typeof g.resync === 'function') g.resync(deadline, duration);
 });
 
 // Personal score after each attempt (also fires for the chairs finale just

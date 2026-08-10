@@ -6,7 +6,7 @@
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { Room } from '../server/room.js';
+import { Room, EXTEND_MS } from '../server/room.js';
 import { ROSTER } from '../server/games.js';
 
 const stubIo = () => ({ to: () => ({ emit: () => {} }) });
@@ -349,6 +349,147 @@ test('late join: mid-session joiner scores subsequent games and 0 for missed', a
       'p1 total accumulates across games');
     assert.equal(p2Row.total, board1.find((r) => r.id === 'p2').total + p2Row.points,
       'p2 total accumulates across games');
+  } finally {
+    room.destroy();
+  }
+});
+
+// ---- issue #55: host mid-session controls -----------------------------------
+
+// A recording io captures room-level emits so we can assert the single
+// synced broadcast that extendTimer must produce. The hostOnly wrapper in
+// sockets.js enforces non-host rejection at the socket layer; tests call
+// Room methods directly and rely on the phase guard for the same effect.
+const recordingIo = () => {
+  const events = [];
+  return { events, to: (room) => ({ emit: (event, data) => events.push({ room, event, data }) }) };
+};
+
+test('host skip: ends current game immediately, scoring exactly like a natural deadline (submitters keep results, non-submitters 0, session advances)', async () => {
+  const room = new Room(stubIo(), 'TEST', {
+    ...FAST,
+    enabled: onlyGames('spacemash', 'stopclock'),
+  });
+  try {
+    addPlayer(room, 'p1', 'Player1');
+    addPlayer(room, 'p2', 'Player2');
+    addPlayer(room, 'p3', 'Player3');
+    assert.equal(room.start().ok, true);
+
+    await waitFor(() => room.phase === 'minigame', 3000, 'first minigame');
+    const g = room.round.games[room.round.gameIndex];
+    const key = g.key;
+
+    // p1 best, p2 worse, p3 does NOT submit
+    if (key === 'spacemash') {
+      room.handleSubmit('p1', { count: 100, flagged: false });
+      room.handleSubmit('p2', { count: 60, flagged: false });
+    } else {
+      room.handleSubmit('p1', { best: 100 });
+      room.handleSubmit('p2', { best: 400 });
+    }
+
+    // Skip must not throw and must return {ok:true}
+    const result = room.skipGame();
+    assert.equal(result.ok, true, 'skipGame returns {ok:true}');
+
+    // Scores must arrive well before the natural gameDuration elapses
+    await waitFor(() => room.phase === 'scores', 3000, 'scores after skip');
+
+    const board = room.lastScores;
+    const row = (id) => board.find((r) => r.id === id);
+    assert.equal(row('p1').points, 1000, 'best submitter keeps 1000');
+    assert.equal(row('p3').points, 0, 'non-submitter scores 0');
+    assert.ok(room.players.has('p3'), 'non-submitter is still in the room');
+    // queueIndex advanced: queued second game still pending
+    assert.ok(room.queue.length > 0, 'session has not ended — a second game is queued');
+
+    // Calling skipGame when NOT in minigame must return an error, not throw
+    assert.equal(room.phase, 'scores', 'sanity: currently in scores phase');
+    const errResult = room.skipGame();
+    assert.ok(errResult && typeof errResult.error === 'string', 'skipGame outside minigame returns an error object');
+  } finally {
+    room.destroy();
+  }
+});
+
+test('host extend: moves the shared deadline once by EXTEND_MS, broadcast identically to all clients, and rejects a second extend', async () => {
+  const io = recordingIo();
+  const room = new Room(io, 'TEST', {
+    ...FAST,
+    gameDuration: 5000,  // large enough that the deadline won't fire mid-test
+    enabled: onlyGames('spacemash'),
+  });
+  try {
+    addPlayer(room, 'p1', 'Player1');
+    addPlayer(room, 'p2', 'Player2');
+    assert.equal(room.start().ok, true);
+
+    await waitFor(() => room.phase === 'minigame', 3000, 'minigame');
+
+    const g = room.round.games[0];
+    const before = g.deadline;
+
+    // Snapshot config and clientData before extend
+    const configSnapshot = JSON.stringify(room.config);
+    const clientDataSnapshot = JSON.stringify(g.clientData);
+
+    // Clear any prior events and call extendTimer
+    io.events.length = 0;
+    const extResult = room.extendTimer();
+    assert.equal(extResult.ok, true, 'extendTimer returns {ok:true}');
+    assert.equal(g.deadline, before + EXTEND_MS, 'deadline moved by exactly EXTEND_MS');
+
+    // Exactly one game:extend event, targeting the whole room
+    const extendEvents = io.events.filter((e) => e.event === 'game:extend');
+    assert.equal(extendEvents.length, 1, 'exactly one game:extend broadcast (not per-player)');
+    assert.equal(extendEvents[0].room, 'room:TEST', 'broadcast targets the room channel');
+    assert.equal(extendEvents[0].data.deadline, g.deadline, 'broadcast deadline matches server deadline');
+
+    // Second extend must be rejected (one-shot)
+    const secondResult = room.extendTimer();
+    assert.ok(secondResult && typeof secondResult.error === 'string', 'second extend returns an error');
+    assert.equal(g.deadline, before + EXTEND_MS, 'deadline unchanged after rejected second extend');
+
+    // Extend must not mutate config or seeded clientData
+    assert.equal(JSON.stringify(room.config), configSnapshot, 'config unchanged after extend');
+    assert.equal(JSON.stringify(g.clientData), clientDataSnapshot, 'clientData unchanged after extend');
+
+    // Extend when not in active game must return error
+    const freshRoom = new Room(stubIo(), 'FRESH', {});
+    try {
+      const lobbyErr = freshRoom.extendTimer();
+      assert.ok(lobbyErr && typeof lobbyErr.error === 'string', 'extendTimer in lobby returns an error');
+    } finally {
+      freshRoom.destroy();
+    }
+  } finally {
+    room.destroy();
+  }
+});
+
+test('host extend: every player receives the same single deadline (no per-client nudge)', async () => {
+  const io = recordingIo();
+  const room = new Room(io, 'TEST', {
+    ...FAST,
+    gameDuration: 5000,
+    enabled: onlyGames('spacemash'),
+  });
+  try {
+    addPlayer(room, 'p1', 'Player1');
+    addPlayer(room, 'p2', 'Player2');
+    addPlayer(room, 'p3', 'Player3');
+    assert.equal(room.start().ok, true);
+
+    await waitFor(() => room.phase === 'minigame', 3000, 'minigame');
+
+    io.events.length = 0;
+    room.extendTimer();
+
+    const extendEvents = io.events.filter((e) => e.event === 'game:extend');
+    // One room-level emit regardless of player count — not per-player
+    assert.equal(extendEvents.length, 1, 'single room-level emit for 3 players');
+    assert.equal(extendEvents[0].room, 'room:TEST', 'targets whole room, not individual sockets');
   } finally {
     room.destroy();
   }

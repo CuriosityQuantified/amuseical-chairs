@@ -109,6 +109,12 @@ function sanitizeConfig(raw = {}) {
 // both have to change together.
 export const HOST_EDITABLE_CONFIG = new Set(['gameDuration', 'enabled']);
 
+// One-shot mid-game deadline extension (issue #55). A live host ACTION, not a
+// lobby config key — deliberately kept OUT of HOST_EDITABLE_CONFIG so it
+// bypasses the lobby config allowlist. Fixed increment so a host cannot use it
+// to tilt scoring toward specific players.
+export const EXTEND_MS = 15000;
+
 export class Room {
   constructor(io, code, config, onEmpty = () => {}) {
     this.io = io;
@@ -565,6 +571,8 @@ export class Room {
     this.round.gameIndex = idx;
     const duration = this.stageDuration(g);
     g.deadline = Date.now() + duration;
+    g.duration = duration;
+    g.extended = false;
     this.setPhase('minigame', this.gamePayload(g, duration));
     this.emitHost('host:progress', { submitted: 0, total: this.players.size });
     if (COMPLETION_MODE.has(g.key)) {
@@ -707,6 +715,41 @@ export class Room {
     // is spread straight into one.
     if ('playerId' in extra) out.authorName = nameOf(extra.playerId);
     return out;
+  }
+
+  // Host action (issue #55): end the current timed game immediately, taking the
+  // EXACT same path a natural deadline would — closeGame(token) — so scoring,
+  // non-submitters scoring 0, and multi-stage progression are all identical.
+  // Host-only + active-game authorization is enforced by the caller (sockets.js).
+  // Completion-mode games (cups) are skippable too — closeGame handles their
+  // safety-timer close — the host UI simply hides the button for them by choice.
+  skipGame() {
+    if (this.phase !== 'minigame' || !this.round) return { error: 'No active game to skip.' };
+    const g = this.round.games[this.round.gameIndex];
+    if (!g || g.closed) return { error: 'No active game to skip.' };
+    this.closeGame(g.token);
+    return { ok: true };
+  }
+
+  // Host action (issue #55): add a fixed increment to the CURRENT game's shared
+  // deadline, once, and re-broadcast ONE synced deadline to every client so all
+  // countdowns move together. Not a per-client nudge and not a config change:
+  // only the shared deadline, the derived duration, and the server close timer
+  // move. Completion-mode games have no shared deadline and are rejected.
+  extendTimer() {
+    if (this.phase !== 'minigame' || !this.round) return { error: 'No active game to extend.' };
+    const g = this.round.games[this.round.gameIndex];
+    if (!g || g.closed) return { error: 'No active game to extend.' };
+    if (COMPLETION_MODE.has(g.key)) return { error: 'This game has no timer to extend.' };
+    if (g.extended) return { error: 'Timer already extended.' };
+    g.extended = true;
+    g.deadline += EXTEND_MS;
+    g.duration += EXTEND_MS;   // always numeric: startGame set it before minigame phase
+    // Reschedule the single server close timer to the new deadline.
+    this.setTimer('game', () => this.closeGame(g.token), Math.max(0, g.deadline - Date.now()) + this.config.closeGraceMs);
+    // One synced re-broadcast: identical deadline/duration for every client.
+    this.emitAll('game:extend', { key: g.key, stage: g.stage || 1, deadline: g.deadline, duration: g.duration });
+    return { ok: true, deadline: g.deadline, duration: g.duration };
   }
 
   // Host moderation for pooled player text. The host screen is projected in a
