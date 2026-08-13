@@ -19,3 +19,6 @@ package-lock.json
 # codebase is a graph of the code this repo is responsible for.
 public/vendor/
 
+# Generated assessment output is evidence, not a code concept map.
+docs/security/assessment-latest.*
+

@@ -1,0 +1,425 @@
+{
+  "target": "https://amuseical.com",
+  "startedAt": "2026-08-13T16:46:17.550Z",
+  "finishedAt": "2026-08-13T16:46:28.287Z",
+  "scope": "low-impact external assessment and unauthenticated Socket.IO authorization checks",
+  "checks": [
+    {
+      "id": "SRC-UNSAFE-DOM-SINK",
+      "status": "pass",
+      "title": "Application source avoids direct HTML/code sinks",
+      "evidence": "No matches in the checked browser application modules."
+    },
+    {
+      "id": "DEP-AUDIT",
+      "status": "pass",
+      "title": "Production dependency audit has no high/critical advisories",
+      "evidence": "{\"total\":0,\"high\":0,\"critical\":0}"
+    },
+    {
+      "id": "SRC-ROOM-CODE-ONLINE-ENUMERATION",
+      "status": "warn",
+      "title": "Room-code join attempts have server-side throttling",
+      "evidence": "Source review: 4-character code over 24 symbols (331776 combinations); no explicit rate-limit or failed-attempt control found in server/sockets.js or server/app.js."
+    },
+    {
+      "id": "SRC-SOCKET-EVENT-RATE-LIMITS",
+      "status": "warn",
+      "title": "Socket.IO player events have explicit rate and schema limits",
+      "evidence": "Source review found direct forwarding of submit/report payloads and sync-triggered roster broadcasts without an explicit rate-control layer."
+    },
+    {
+      "id": "BROWSER-PLAYER",
+      "status": "pass",
+      "title": "Player page renders its public join controls in a real browser",
+      "evidence": "{\"status\":200,\"controls\":2}"
+    },
+    {
+      "id": "BROWSER-HOST",
+      "status": "pass",
+      "title": "Host page renders its public create control in a real browser",
+      "evidence": "{\"status\":200,\"controls\":1}"
+    },
+    {
+      "id": "BROWSER-CONSOLE",
+      "status": "pass",
+      "title": "Public player/host page smoke flow has no browser errors",
+      "evidence": "{\"consoleErrors\":0,\"pageErrors\":0}"
+    },
+    {
+      "id": "TLS-CERT",
+      "status": "pass",
+      "title": "TLS certificate validates for the target hostname",
+      "evidence": "{\"authorized\":true,\"authorizationError\":null,\"protocol\":\"TLSv1.3\",\"validTo\":\"Oct 18 14:38:34 2026 GMT\"}"
+    },
+    {
+      "id": "TLS-PROTOCOL",
+      "status": "pass",
+      "title": "Negotiated TLS protocol is TLS 1.2 or newer",
+      "evidence": "Protocol: TLSv1.3"
+    },
+    {
+      "id": "HTTP-ROOT",
+      "status": "pass",
+      "title": "Public home page responds",
+      "evidence": "200 OK"
+    },
+    {
+      "id": "HTTP-CONTENT-TYPE",
+      "status": "pass",
+      "title": "Home page declares an HTML content type",
+      "evidence": "text/html; charset=UTF-8"
+    },
+    {
+      "id": "HTTP-HOST.HTML",
+      "status": "pass",
+      "title": "Host page responds",
+      "evidence": "200 body_bytes=3493; sha256_16=0b0a25bbc13f7790"
+    },
+    {
+      "id": "HTTP-HEALTHZ",
+      "status": "pass",
+      "title": "Health endpoint responds",
+      "evidence": "200 body_bytes=11; sha256_16=4062edaf750fb807"
+    },
+    {
+      "id": "HTTP-SOCKET.IO",
+      "status": "pass",
+      "title": "Socket.IO handshake responds",
+      "evidence": "200 body_bytes=118; sha256_16=8fe01461feb2e8c8"
+    },
+    {
+      "id": "HDR-STRICT_TRANSPORT_SECURITY",
+      "status": "warn",
+      "title": "Strict-Transport-Security (HSTS)",
+      "evidence": "(missing)"
+    },
+    {
+      "id": "HDR-CONTENT_SECURITY_POLICY",
+      "status": "warn",
+      "title": "Content-Security-Policy (CSP)",
+      "evidence": "(missing)"
+    },
+    {
+      "id": "HDR-X_CONTENT_TYPE_OPTIONS",
+      "status": "warn",
+      "title": "X-Content-Type-Options",
+      "evidence": "(missing)"
+    },
+    {
+      "id": "HDR-X_FRAME_OPTIONS",
+      "status": "warn",
+      "title": "Clickjacking protection (X-Frame-Options or frame-ancestors)",
+      "evidence": "(missing)"
+    },
+    {
+      "id": "HDR-REFERRER_POLICY",
+      "status": "warn",
+      "title": "Referrer-Policy",
+      "evidence": "(missing)"
+    },
+    {
+      "id": "HDR-PERMISSIONS_POLICY",
+      "status": "warn",
+      "title": "Permissions-Policy",
+      "evidence": "(missing)"
+    },
+    {
+      "id": "HDR-DISCLOSURE",
+      "status": "warn",
+      "title": "Response does not unnecessarily disclose platform details",
+      "evidence": "server: cloudflare; x-powered-by: Express; x-railway-edge: jfk1"
+    },
+    {
+      "id": "TLS-HTTP-REDIRECT",
+      "status": "pass",
+      "title": "HTTP redirects to the canonical HTTPS origin",
+      "evidence": "301 Location: https://amuseical.com (path/query redacted)"
+    },
+    {
+      "id": "CORS-UNTRUSTED-ORIGIN",
+      "status": "pass",
+      "title": "Untrusted origin is not granted permissive CORS access",
+      "evidence": "Access-Control-Allow-Origin: (missing)"
+    },
+    {
+      "id": "CORS-SOCKETIO-UNTRUSTED-ORIGIN",
+      "status": "pass",
+      "title": "Socket.IO handshake does not grant permissive access to an untrusted origin",
+      "evidence": "Access-Control-Allow-Origin: (missing)"
+    },
+    {
+      "id": "CORS-SOCKETIO-WEBSOCKET-ORIGIN",
+      "status": "warn",
+      "title": "Socket.IO WebSocket rejects an untrusted Origin",
+      "evidence": "Connected with Origin: https://evil.example"
+    },
+    {
+      "id": "HTTP-TRACE",
+      "status": "pass",
+      "title": "TRACE is not enabled as an HTTP echo",
+      "evidence": "405 body_bytes=155; sha256_16=c230ff18e2faaf6a"
+    },
+    {
+      "id": "EXPOSURE-ENV",
+      "status": "pass",
+      "title": "Sensitive path is not publicly exposed: /.env",
+      "evidence": "404 body_bytes=143; sha256_16=88ceef28b7079ede"
+    },
+    {
+      "id": "EXPOSURE-GIT_CONFIG",
+      "status": "pass",
+      "title": "Sensitive path is not publicly exposed: /.git/config",
+      "evidence": "404 body_bytes=150; sha256_16=b1183fead1817b3b"
+    },
+    {
+      "id": "EXPOSURE-PACKAGE_JSON",
+      "status": "pass",
+      "title": "Sensitive path is not publicly exposed: /package.json",
+      "evidence": "404 body_bytes=151; sha256_16=ffc372a6ce855e15"
+    },
+    {
+      "id": "EXPOSURE-PACKAGE_LOCK_JSON",
+      "status": "pass",
+      "title": "Sensitive path is not publicly exposed: /package-lock.json",
+      "evidence": "404 body_bytes=156; sha256_16=27694ba8b9f154e8"
+    },
+    {
+      "id": "EXPOSURE-SERVER_INDEX_JS",
+      "status": "pass",
+      "title": "Sensitive path is not publicly exposed: /server/index.js",
+      "evidence": "404 body_bytes=154; sha256_16=937fad4fd4bf009b"
+    },
+    {
+      "id": "EXPOSURE-SERVER_APP_JS",
+      "status": "pass",
+      "title": "Sensitive path is not publicly exposed: /server/app.js",
+      "evidence": "404 body_bytes=152; sha256_16=d770d5274a02330c"
+    },
+    {
+      "id": "EXPOSURE-2E_2E_SERVER_APP_JS",
+      "status": "pass",
+      "title": "Sensitive path is not publicly exposed: /%2e%2e/server/app.js",
+      "evidence": "404 body_bytes=152; sha256_16=d770d5274a02330c"
+    },
+    {
+      "id": "EXPOSURE-SHARED_2E_2E_SERVER_APP_JS",
+      "status": "pass",
+      "title": "Sensitive path is not publicly exposed: /shared/%2e%2e/server/app.js",
+      "evidence": "404 body_bytes=152; sha256_16=d770d5274a02330c"
+    },
+    {
+      "id": "EXPOSURE-2E_2E_2E_2E_ETC_PASSWD",
+      "status": "pass",
+      "title": "Sensitive path is not publicly exposed: /%2e%2e/%2e%2e/etc/passwd",
+      "evidence": "404 body_bytes=149; sha256_16=142ac34354696ff9"
+    },
+    {
+      "id": "EXPOSURE-NPMRC",
+      "status": "pass",
+      "title": "Sensitive path is not publicly exposed: /.npmrc",
+      "evidence": "404 body_bytes=145; sha256_16=0068c55fb026184b"
+    },
+    {
+      "id": "SOCKET-CREATE",
+      "status": "pass",
+      "title": "Create one temporary assessment room",
+      "evidence": "Room created; identifier redacted."
+    },
+    {
+      "id": "SOCKET-CODE",
+      "status": "pass",
+      "title": "Room code uses the documented four-letter format",
+      "evidence": "Four-letter format matched; identifier redacted."
+    },
+    {
+      "id": "SOCKET-HOST-KEY",
+      "status": "pass",
+      "title": "Host rejoin credential is present as a UUID-shaped value",
+      "evidence": "UUID-shaped"
+    },
+    {
+      "id": "SOCKET-JOIN",
+      "status": "pass",
+      "title": "Two test players can join the assessment room",
+      "evidence": "{\"one\":{\"ok\":true,\"error\":false,\"nameLength\":16,\"playerId\":\"[redacted]\",\"snapshot\":{\"phase\":\"lobby\",\"solo\":false,\"playerCount\":1,\"configKeys\":[\"enabled\",\"gameDuration\",\"maxDelay\",\"minDelay\",\"roster\"]}},\"two\":{\"ok\":true,\"error\":false,\"nameLength\":20,\"playerId\":\"[redacted]\",\"snapshot\":{\"phase\":\"lobby\",\"solo\":false,\"playerCount\":2,\"configKeys\":[\"enabled\",\"gameDuration\",\"maxDelay\",\"minDelay\",\"roster\"]}}}"
+    },
+    {
+      "id": "SOCKET-NAME-BOUND",
+      "status": "pass",
+      "title": "Player display names are bounded server-side",
+      "evidence": "returned length=20"
+    },
+    {
+      "id": "SOCKET-PLAYER-RECONNECT-AUTH",
+      "status": "fail",
+      "title": "A different socket cannot rebind an existing player identity",
+      "evidence": "Existing player identity accepted from a different socket; identifiers redacted."
+    },
+    {
+      "id": "SOCKET-HOST-REJOIN-AUTH",
+      "status": "pass",
+      "title": "Incorrect host rejoin credential is rejected",
+      "evidence": "{\"ok\":false,\"error\":true}"
+    },
+    {
+      "id": "SOCKET-HOST-ONLY",
+      "status": "pass",
+      "title": "Player sockets cannot invoke host-only actions",
+      "evidence": "{\"unauthorizedStart\":true,\"unauthorizedConfig\":true,\"phaseEvents\":0,\"configEvents\":0}"
+    }
+  ],
+  "findings": [
+    {
+      "id": "SOCKET-PLAYER-IDENTITY-REBIND",
+      "severity": "high",
+      "status": "open",
+      "title": "Player identity can be rebound using a broadcast player ID",
+      "category": "authentication / session management",
+      "description": "The player:join handler accepted an existing playerId from a different socket and rebound the existing player identity without proof of possession. The room roster/snapshot also exposes player IDs to room participants. A participant who learns another player ID can impersonate that player and submit game data on their behalf or disrupt their connection.",
+      "evidence": [
+        "A second socket supplied the first test player’s playerId and received ok=true with the original player name.",
+        "Source: server/room.js:219-231 accepts playerId and rebinds the socket without a second credential.",
+        "Source: server/room.js:203-214 broadcasts player IDs in room:players summaries.",
+        "All identifiers were redacted from this report."
+      ],
+      "recommendation": "Use a separate unguessable reconnect credential that is never broadcast in room roster data; require that credential for reconnects and treat player IDs as non-secret identifiers only."
+    },
+    {
+      "id": "SRC-ROOM-CODE-ONLINE-ENUMERATION",
+      "severity": "medium",
+      "status": "source-confirmed; dynamic rate test not performed",
+      "title": "Short room codes have no evident online-guessing throttle",
+      "category": "session management / abuse resistance",
+      "description": "The player:join endpoint uses a 4-character room code drawn from 24 symbols (331776 possible combinations), returns a distinguishable room-not-found response, and has no explicit server-side rate-limit or failed-attempt control in the reviewed HTTP/Socket.IO wiring. This creates an online room-existence oracle; practical enumeration speed and edge protections were not stress-tested.",
+      "evidence": [
+        "Source: server/room.js defines CODE_ALPHABET (24 symbols) and a 4-character generator.",
+        "Source: server/sockets.js handles player:join with a direct room lookup and distinguishable error.",
+        "Source review found no explicit rate-limit, throttle, quota, or failed-attempt control in server/sockets.js or server/app.js."
+      ],
+      "recommendation": "Add edge and application rate limits for failed joins, consider longer/high-entropy invite tokens, and avoid exposing a highly distinguishable room-existence oracle. Validate with an approved bounded rate-limit test."
+    },
+    {
+      "id": "SRC-SOCKET-EVENT-RATE-LIMITS",
+      "severity": "medium",
+      "status": "source-confirmed; dynamic flood test not performed",
+      "title": "Socket.IO player events lack an evident application rate-control layer",
+      "category": "availability / input validation",
+      "description": "The reviewed Socket.IO handlers forward player:submit and redemption:report payloads into room logic and allow sync:report to trigger roster broadcasts. No explicit per-socket rate limit, event quota, or shared schema/serialized-size guard was found in the reviewed wiring. A connected client may therefore cause disproportionate CPU, memory, or broadcast work; sustained impact was not tested.",
+      "evidence": [
+        "Source: server/sockets.js forwards player:submit and redemption:report payloads directly to room methods.",
+        "Source: server/sockets.js forwards sync:report; server/room.js recordSync broadcasts player summaries.",
+        "Source review found no explicit rate-limit, throttle, or quota control in server/sockets.js or server/app.js."
+      ],
+      "recommendation": "Add per-socket and per-room event budgets, validate each payload against strict schemas and serialized-size limits, and add bounded local flood tests before exposing the service to untrusted clients."
+    },
+    {
+      "id": "CORS-SOCKETIO-WEBSOCKET-ORIGIN",
+      "severity": "low",
+      "status": "open",
+      "title": "Socket.IO WebSocket accepts an untrusted Origin",
+      "category": "cross-origin access control",
+      "description": "A WebSocket-only Socket.IO connection succeeded while sending Origin: https://evil.example. WebSocket handshakes are not governed by browser CORS headers, so an explicit Socket.IO origin allowRequest policy is needed if cross-origin connections should be blocked.",
+      "evidence": [
+        "WebSocket connection succeeded with Origin: https://evil.example",
+        "No application event or room data was sent during this probe."
+      ],
+      "recommendation": "Configure Socket.IO allowRequest (or an equivalent edge policy) to allow only the exact application origins required, then verify both polling and WebSocket transports."
+    },
+    {
+      "id": "HDR-CONTENT_SECURITY_POLICY-MISSING",
+      "severity": "low",
+      "status": "open",
+      "title": "Missing Content-Security-Policy (CSP)",
+      "category": "security headers",
+      "description": "The response from https://amuseical.com/ did not include Content-Security-Policy (CSP). This is a defense-in-depth configuration gap, not proof of an exploitable vulnerability by itself.",
+      "evidence": [
+        "GET / → 200",
+        "Content-Security-Policy (CSP): missing"
+      ],
+      "recommendation": "Deploy a tested CSP appropriate for the external font and Socket.IO resources."
+    },
+    {
+      "id": "HDR-REFERRER_POLICY-MISSING",
+      "severity": "low",
+      "status": "open",
+      "title": "Missing Referrer-Policy",
+      "category": "security headers",
+      "description": "The response from https://amuseical.com/ did not include Referrer-Policy. This is a defense-in-depth configuration gap, not proof of an exploitable vulnerability by itself.",
+      "evidence": [
+        "GET / → 200",
+        "Referrer-Policy: missing"
+      ],
+      "recommendation": "Send a restrictive policy such as strict-origin-when-cross-origin."
+    },
+    {
+      "id": "HDR-STRICT_TRANSPORT_SECURITY-MISSING",
+      "severity": "low",
+      "status": "open",
+      "title": "Missing Strict-Transport-Security (HSTS)",
+      "category": "security headers",
+      "description": "The response from https://amuseical.com/ did not include Strict-Transport-Security (HSTS). This is a defense-in-depth configuration gap, not proof of an exploitable vulnerability by itself.",
+      "evidence": [
+        "GET / → 200",
+        "Strict-Transport-Security (HSTS): missing"
+      ],
+      "recommendation": "Enable HSTS after confirming every production subdomain is HTTPS-only."
+    },
+    {
+      "id": "HDR-X_CONTENT_TYPE_OPTIONS-MISSING",
+      "severity": "low",
+      "status": "open",
+      "title": "Missing X-Content-Type-Options",
+      "category": "security headers",
+      "description": "The response from https://amuseical.com/ did not include X-Content-Type-Options. This is a defense-in-depth configuration gap, not proof of an exploitable vulnerability by itself.",
+      "evidence": [
+        "GET / → 200",
+        "X-Content-Type-Options: missing"
+      ],
+      "recommendation": "Send X-Content-Type-Options: nosniff."
+    },
+    {
+      "id": "HDR-X_FRAME_OPTIONS-MISSING",
+      "severity": "low",
+      "status": "open",
+      "title": "Missing Clickjacking protection (X-Frame-Options or frame-ancestors)",
+      "category": "security headers",
+      "description": "The response from https://amuseical.com/ did not include Clickjacking protection (X-Frame-Options or frame-ancestors). This is a defense-in-depth configuration gap, not proof of an exploitable vulnerability by itself.",
+      "evidence": [
+        "GET / → 200",
+        "Clickjacking protection (X-Frame-Options or frame-ancestors): missing"
+      ],
+      "recommendation": "Send X-Frame-Options or a CSP frame-ancestors directive appropriate for the host/player pages."
+    },
+    {
+      "id": "HDR-PERMISSIONS_POLICY-MISSING",
+      "severity": "informational",
+      "status": "open",
+      "title": "Missing Permissions-Policy",
+      "category": "security headers",
+      "description": "The response from https://amuseical.com/ did not include Permissions-Policy. This is a defense-in-depth configuration gap, not proof of an exploitable vulnerability by itself.",
+      "evidence": [
+        "GET / → 200",
+        "Permissions-Policy: missing"
+      ],
+      "recommendation": "Restrict browser capabilities not needed by the application."
+    },
+    {
+      "id": "HDR-PLATFORM-DISCLOSURE",
+      "severity": "informational",
+      "status": "open",
+      "title": "Platform/framework response headers are exposed",
+      "category": "information disclosure",
+      "description": "The edge response identifies deployment or framework details. This is normally low risk but gives reconnaissance information to an attacker.",
+      "evidence": [
+        "server: cloudflare",
+        "x-powered-by: Express",
+        "x-railway-edge: jfk1"
+      ],
+      "recommendation": "Remove or minimize nonessential framework/platform headers at the edge where operationally safe."
+    }
+  ],
+  "notes": [
+    "The TLS probe enforces a TLSv1.2 minimum; it verifies the negotiated protocol but does not independently test whether the endpoint accepts TLS 1.0 or 1.1."
+  ]
+}

@@ -8,12 +8,16 @@
       "ast": "24eb1f02714e242bcbdf6178d0cef93e",
       "semantic": null
     },
+    ".github/workflows/security-assessment.yml": {
+      "ast": "52b8e5d24e4a71b83d78514ffad2a4ec",
+      "semantic": null
+    },
     ".mcp.json": {
       "ast": "1537a1504800a15fb24708220ea31081",
       "semantic": "1537a1504800a15fb24708220ea31081"
     },
     "README.md": {
-      "ast": "524e9e2bb379fee3ffd115935f2e0a70",
+      "ast": "951e6d6d0ad4691c381e351c47bb4517",
       "semantic": null
     },
     "docs/color-cue-audit-issue-53.md": {
@@ -32,8 +36,12 @@
       "ast": "872ea66a250cf3517b0a84bf0033b845",
       "semantic": null
     },
+    "docs/security/README.md": {
+      "ast": "b5ff5292112bf28e141b90452a8ae2bd",
+      "semantic": null
+    },
     "package.json": {
-      "ast": "11bfd68d7db93de0790e38b497bfbae9",
+      "ast": "d845959e10736b31899610cc8e8950dd",
       "semantic": null
     },
     "playwright.config.js": {
@@ -82,6 +90,10 @@
     },
     "scripts/graph-lock.mjs": {
       "ast": "43afb726a4cc1ae7db786249cc2e9b35",
+      "semantic": null
+    },
+    "scripts/security-assessment.mjs": {
+      "ast": "c59dedffefa487e6ee8ceadef4b5479f",
       "semantic": null
     },
     "server/app.js": {
@@ -258,6 +270,10 @@
     },
     "test/roster.test.js": {
       "ast": "c701ab7634f98f2678abaddd28d33982",
+      "semantic": null
+    },
+    "test/security.test.js": {
+      "ast": "a602b6ffb966043715261d7db8409ac7",
       "semantic": null
     },
     "test/smoke.test.js": {

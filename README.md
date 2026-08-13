@@ -23,7 +23,25 @@ npm start          # http://localhost:3000
 ```bash
 npm test           # unit tests + 20-bot end-to-end harness
 npm run check      # static checks the test suite can't do (see CI below)
+npm run security:assess -- --target https://amuseical.com \
+  --report docs/security/assessment-latest.md \
+  --json docs/security/assessment-latest.json
 ```
+
+## Security assessment
+
+The repository includes a repeatable, low-impact external assessment in
+[`scripts/security-assessment.mjs`](scripts/security-assessment.mjs), focused on
+TLS, HTTP security headers, CORS, TRACE, sensitive-path exposure, client-side
+HTML/code sinks, and Socket.IO host authorization. Its regression coverage lives
+in [`test/security.test.js`](test/security.test.js); the latest reviewed output is
+[`docs/security/assessment-latest.md`](docs/security/assessment-latest.md).
+
+It intentionally does not brute-force, load-test, access accounts, upload files,
+or perform destructive actions. A clean run is evidence about the checked scope
+at that time, not proof that the site has no vulnerabilities. See
+[`docs/security/README.md`](docs/security/README.md) for limitations and the
+manual workflow required for credentialed or authenticated testing.
 
 ## How a game works
 
