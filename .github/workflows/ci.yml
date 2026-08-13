@@ -184,15 +184,30 @@ jobs:
         run: |
           npx playwright install --with-deps chromium
           npm install --global @railway/cli
-      - name: Deploy this exact reviewed SHA
+      - name: Upload this exact reviewed SHA
         id: deploy
         run: |
           test -n "$RAILWAY_API_TOKEN"
-          railway up --ci \
+          railway up --detach --json \
             --project "$RAILWAY_PROJECT_ID" \
             --environment "$RAILWAY_ENVIRONMENT_ID" \
             --service "$RAILWAY_SERVICE_ID" \
             --message "PR #63 security remediation $GITHUB_SHA"
+          for attempt in $(seq 1 30); do
+            latest=$(railway deployment list --json \
+              --project "$RAILWAY_PROJECT_ID" \
+              --environment "$RAILWAY_ENVIRONMENT_ID" \
+              --service "$RAILWAY_SERVICE_ID" )
+            state=$(printf '%s' "$latest" | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const d=JSON.parse(s);const x=Array.isArray(d)?d[0]:(d.deployments||[])[0];process.stdout.write((x&&x.status)||'')})")
+            echo "latest deployment status: ${state:-unknown}"
+            case "$state" in
+              DONE|SUCCESS) exit 0 ;;
+              FAILED|ERROR) echo 'Deployment failed.' >&2; exit 1 ;;
+              *) sleep 10 ;;
+            esac
+          done
+          echo 'Deployment did not finish in time.' >&2
+          exit 1
       - name: Verify production cutover
         id: cutover
         run: |
@@ -221,11 +236,11 @@ jobs:
           name: security-remediation-assessment-${{ github.sha }}
           path: security-artifact/
           retention-days: 30
-      - name: Roll back to main if the assessment blocks
+      - name: Roll back to main if deployment or assessment fails
         if: always() && steps.deploy.outcome == 'success' && (steps.cutover.outcome != 'success' || steps.assessment.outcome != 'success')
         run: |
           git checkout --detach origin/main
-          railway up --ci \
+          railway up --detach --json \
             --project "$RAILWAY_PROJECT_ID" \
             --environment "$RAILWAY_ENVIRONMENT_ID" \
             --service "$RAILWAY_SERVICE_ID" \
