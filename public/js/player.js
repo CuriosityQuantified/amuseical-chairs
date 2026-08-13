@@ -14,6 +14,7 @@ const $ = (id) => document.getElementById(id);
 const state = {
   code: null,
   playerId: null,
+  reconnectToken: null,
   name: null,
   offset: 0,
   game: null,          // { key, submitted }
@@ -40,7 +41,17 @@ function join() {
   if (!name) return showJoinError('Enter your name.');
   localStorage.setItem('mc_name', name);
   const storedPid = localStorage.getItem(`mc_pid_${code}`);
-  socket.emit('player:join', { code, name, playerId: storedPid }, (res) => enterRoom(res, code));
+  const storedToken = localStorage.getItem(`mc_reconnect_${code}`);
+  // Legacy PID-only storage is intentionally not accepted as proof of
+  // identity. Join fresh rather than trapping an upgraded browser in an
+  // insecure/failed reconnect loop.
+  const canReconnect = Boolean(storedPid && storedToken);
+  socket.emit('player:join', {
+    code,
+    name,
+    playerId: canReconnect ? storedPid : null,
+    reconnectToken: canReconnect ? storedToken : null,
+  }, (res) => enterRoom(res, code));
 }
 
 function soloStart() {
@@ -53,8 +64,10 @@ async function enterRoom(res, code) {
   if (res.error) return showJoinError(res.error);
   state.code = code;
   state.playerId = res.playerId;
+  state.reconnectToken = res.reconnectToken;
   state.name = res.name;
   localStorage.setItem(`mc_pid_${code}`, res.playerId);
+  localStorage.setItem(`mc_reconnect_${code}`, res.reconnectToken);
   $('screen-join').classList.add('hidden');
   $('screen-play').classList.remove('hidden');
   $('me-name').textContent = res.name;
@@ -72,10 +85,18 @@ async function doSync() {
 }
 
 socket.on('connect', () => {
-  // Transparent reconnect: rejoin with the stored playerId.
-  if (state.code && state.playerId) {
-    socket.emit('player:join', { code: state.code, name: state.name, playerId: state.playerId }, (res) => {
+  // Transparent reconnect: the public player ID identifies the record; the
+  // private room-lifetime token proves this device owns it.
+  if (state.code && state.playerId && state.reconnectToken) {
+    socket.emit('player:join', {
+      code: state.code,
+      name: state.name,
+      playerId: state.playerId,
+      reconnectToken: state.reconnectToken,
+    }, (res) => {
       if (res && res.ok) {
+        state.reconnectToken = res.reconnectToken;
+        localStorage.setItem(`mc_reconnect_${state.code}`, res.reconnectToken);
         applySnapshot(res.snapshot);
         doSync();
       }

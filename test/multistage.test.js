@@ -36,6 +36,7 @@ async function waitFor(fn, ms = 5000, label = 'condition') {
 function addPlayer(room, id, name) {
   room.players.set(id, {
     id, name, socketId: `sock-${id}`, connected: true,
+    reconnectToken: `test-reconnect-${id}`,
     disconnectedAt: null, sync: null, joinedAt: Date.now(),
   });
 }
@@ -232,7 +233,8 @@ test('reconnect between stages: identity, running total, and a clean stage-two l
 
     // p3 comes back mid-vote with its stored playerId.
     const socket = { id: 'sock-new', join() {}, data: {} };
-    const res = room.join(socket, { name: 'ignored', playerId: 'p3' });
+    const reconnectToken = room.players.get('p3').reconnectToken;
+    const res = room.join(socket, { name: 'ignored', playerId: 'p3', reconnectToken });
     assert.equal(res.ok, true);
     assert.equal(res.playerId, 'p3', 'identity survives the reconnect');
     assert.equal(res.name, 'Player3');
@@ -512,7 +514,8 @@ test('reconnect mid-game lands on the fact the room is actually on', async () =>
     await throughReveal(room, 'minigame');
 
     const socket = { id: 'sock-new', join() {}, data: {} };
-    const res = room.join(socket, { name: 'ignored', playerId: 'p3' });
+    const reconnectToken = room.players.get('p3').reconnectToken;
+    const res = room.join(socket, { name: 'ignored', playerId: 'p3', reconnectToken });
     assert.equal(res.ok, true);
     assert.equal(res.snapshot.game.key, 'icebreaker');
     assert.equal(res.snapshot.game.stage, 3);
@@ -525,9 +528,13 @@ test('reconnect mid-game lands on the fact the room is actually on', async () =>
     // the host has it.
     guessAll(room, { p1: 'right', p2: 'right', p3: 'right' });
     await waitFor(() => room.phase === 'reveal', 3000, 'reveal');
-    assert.equal(room.join(socket, { playerId: 'p3' }).snapshot.reveal.answered, false);
+    let rotatingToken = res.reconnectToken;
+    const beforeReveal = room.join(socket, { playerId: 'p3', reconnectToken: rotatingToken });
+    assert.equal(beforeReveal.reconnectToken, rotatingToken,
+      'a reconnect keeps the room-lifetime credential stable');
+    assert.equal(beforeReveal.snapshot.reveal.answered, false);
     room.hostNext();
-    const back = room.join(socket, { playerId: 'p3' }).snapshot.reveal;
+    const back = room.join(socket, { playerId: 'p3', reconnectToken: rotatingToken }).snapshot.reveal;
     assert.equal(back.answered, true);
     assert.ok(back.authorName);
   } finally {

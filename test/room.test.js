@@ -25,6 +25,7 @@ async function waitFor(fn, ms = 5000, label = 'condition') {
 function addPlayer(room, id, name) {
   room.players.set(id, {
     id, name, socketId: `sock-${id}`, connected: true,
+    reconnectToken: `test-reconnect-${id}`,
     disconnectedAt: null, sync: null, joinedAt: Date.now(),
   });
 }
@@ -318,7 +319,7 @@ test('late join: mid-session joiner scores subsequent games and 0 for missed', a
 
     // Reconnect guard: an existing player can still reconnect unchanged
     const rcSocket = { id: 'sock-rc', join() {}, data: {} };
-    const rcResult = room.join(rcSocket, { name: 'x', playerId: 'p1' });
+    const rcResult = room.join(rcSocket, { name: 'x', playerId: 'p1', reconnectToken: 'test-reconnect-p1' });
     assert.equal(rcResult.ok, true, 'reconnect for existing player still works');
     assert.equal(room.totals.get('p1'), p1TotalAfterGame1, 'reconnect does not change totals');
 

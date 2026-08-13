@@ -193,6 +193,7 @@ class Bot {
     this.name = name;
     this.behavior = behavior; // 'normal' | 'nosubmit' | 'masher' | 'flaky'
     this.playerId = null;
+    this.reconnectToken = null;
     this.reconnected = false;
     this.scoreCards = [];     // every you:score payload received
     this.myCaption = null;    // what this bot wrote in a two-stage game
@@ -205,10 +206,16 @@ class Bot {
     this.wire(this.socket);
     await new Promise((resolve, reject) => {
       const to = setTimeout(() => reject(new Error(`${this.name} join timeout`)), 5000);
-      this.socket.emit('player:join', { code, name: this.name, playerId: this.playerId }, (res) => {
+      this.socket.emit('player:join', {
+        code,
+        name: this.name,
+        playerId: this.playerId,
+        reconnectToken: this.reconnectToken,
+      }, (res) => {
         clearTimeout(to);
         if (res.error) return reject(new Error(res.error));
         this.playerId = res.playerId;
+        this.reconnectToken = res.reconnectToken;
         resolve();
       });
     });
@@ -310,7 +317,7 @@ test('20 bots: every game once, per-game scores, chairs finale, winner by total'
     const startRes = await new Promise((resolve) => host.emit('host:start', {}, resolve));
     assert.equal(startRes.ok, true);
 
-    await withDeadline(winnerReached, 90000, 'game never reached a winner');
+    await withDeadline(winnerReached, 90000, `game never reached a winner (phase=${rooms.get(created.code)?.phase}; queueIndex=${rooms.get(created.code)?.queueIndex}; game=${rooms.get(created.code)?.round?.games?.[rooms.get(created.code)?.round?.gameIndex]?.key || 'none'})`);
     // The host's winner event doesn't guarantee every bot has drained its own
     // socket queue (the finale you:score) yet.
     await sleep(500);

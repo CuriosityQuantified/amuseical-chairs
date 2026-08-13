@@ -115,6 +115,17 @@ export const HOST_EDITABLE_CONFIG = new Set(['gameDuration', 'enabled']);
 // to tilt scoring toward specific players.
 export const EXTEND_MS = 15000;
 
+function newReconnectToken() {
+  return crypto.randomBytes(32).toString('base64url');
+}
+
+function reconnectTokenMatches(expected, supplied) {
+  if (typeof expected !== 'string' || typeof supplied !== 'string') return false;
+  const a = Buffer.from(expected);
+  const b = Buffer.from(supplied);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+
 export class Room {
   constructor(io, code, config, onEmpty = () => {}) {
     this.io = io;
@@ -215,20 +226,42 @@ export class Room {
 
   // ---- join / reconnect ---------------------------------------------------
 
-  join(socket, { name, playerId }) {
+  join(socket, { name, playerId, reconnectToken }) {
     if (playerId && this.players.has(playerId)) {
-      // Reconnect: rebind socket — nobody loses their identity or score for
-      // a wifi hiccup; they simply may have missed submissions.
       const p = this.players.get(playerId);
+      if (!reconnectTokenMatches(p.reconnectToken, reconnectToken)) {
+        return { error: 'Reconnect credential is invalid or expired.' };
+      }
+      // Keep the room-lifetime credential stable so a lost reconnect ACK can
+      // be retried safely. The public player ID remains suitable for roster
+      // and score references, never proof of identity on its own.
+      const previousSocketId = p.socketId;
       p.socketId = socket.id;
       p.connected = true;
       p.disconnectedAt = null;
+      // Evict the previous socket from this room's trust boundary. The old
+      // transport may still be alive (Socket.IO reconnects), so it must not
+      // retain room state after the identity moves.
+      if (previousSocketId && previousSocketId !== socket.id) {
+        const previous = this.io.sockets?.sockets?.get(previousSocketId);
+        if (previous) {
+          previous.data.roomCode = null;
+          previous.data.playerId = null;
+          previous.leave?.(`room:${this.code}`);
+        }
+      }
       this.clearTimer(`kick:${p.id}`);
       socket.join(`room:${this.code}`);
       socket.data.roomCode = this.code;
       socket.data.playerId = p.id;
       this.broadcastPlayers();
-      return { ok: true, playerId: p.id, name: p.name, snapshot: this.snapshot(p.id) };
+      return {
+        ok: true,
+        playerId: p.id,
+        reconnectToken: p.reconnectToken,
+        name: p.name,
+        snapshot: this.snapshot(p.id),
+      };
     }
     if (this.players.size >= 30) return { error: 'Room is full (30 players max).' };
     let cleanName = String(name || '').replace(/\s+/g, ' ').trim().slice(0, 20) || 'Player';
@@ -238,6 +271,7 @@ export class Room {
     while (names.has(finalName.toLowerCase())) finalName = `${cleanName} ${i++}`;
     const p = {
       id: crypto.randomUUID(),
+      reconnectToken: newReconnectToken(),
       name: finalName,
       socketId: socket.id,
       connected: true,
@@ -255,7 +289,13 @@ export class Room {
     socket.data.roomCode = this.code;
     socket.data.playerId = p.id;
     this.broadcastPlayers();
-    return { ok: true, playerId: p.id, name: p.name, snapshot: this.snapshot(p.id) };
+    return {
+      ok: true,
+      playerId: p.id,
+      reconnectToken: p.reconnectToken,
+      name: p.name,
+      snapshot: this.snapshot(p.id),
+    };
   }
 
   handleDisconnect(socket) {
