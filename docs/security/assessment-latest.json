@@ -1,7 +1,7 @@
 {
   "target": "https://amuseical.com",
-  "startedAt": "2026-08-13T16:46:17.550Z",
-  "finishedAt": "2026-08-13T16:46:28.287Z",
+  "startedAt": "2026-08-13T19:14:35.718Z",
+  "finishedAt": "2026-08-13T19:14:44.951Z",
   "scope": "low-impact external assessment and unauthenticated Socket.IO authorization checks",
   "checks": [
     {
@@ -18,15 +18,15 @@
     },
     {
       "id": "SRC-ROOM-CODE-ONLINE-ENUMERATION",
-      "status": "warn",
-      "title": "Room-code join attempts have server-side throttling",
-      "evidence": "Source review: 4-character code over 24 symbols (331776 combinations); no explicit rate-limit or failed-attempt control found in server/sockets.js or server/app.js."
+      "status": "pass",
+      "title": "Room-code join attempts have server-side throttling or a larger code space",
+      "evidence": "Source-confirmed failed-join throttle is present."
     },
     {
       "id": "SRC-SOCKET-EVENT-RATE-LIMITS",
-      "status": "warn",
-      "title": "Socket.IO player events have explicit rate and schema limits",
-      "evidence": "Source review found direct forwarding of submit/report payloads and sync-triggered roster broadcasts without an explicit rate-control layer."
+      "status": "pass",
+      "title": "Socket.IO player events have explicit rate and payload-size limits",
+      "evidence": "Source-confirmed per-event quotas and transport/application payload limits are present."
     },
     {
       "id": "BROWSER-PLAYER",
@@ -62,13 +62,13 @@
       "id": "HTTP-ROOT",
       "status": "pass",
       "title": "Public home page responds",
-      "evidence": "200 OK"
+      "evidence": "HTTP 200"
     },
     {
       "id": "HTTP-CONTENT-TYPE",
       "status": "pass",
       "title": "Home page declares an HTML content type",
-      "evidence": "text/html; charset=UTF-8"
+      "evidence": "HTML content type present"
     },
     {
       "id": "HTTP-HOST.HTML",
@@ -86,49 +86,49 @@
       "id": "HTTP-SOCKET.IO",
       "status": "pass",
       "title": "Socket.IO handshake responds",
-      "evidence": "200 body_bytes=118; sha256_16=8fe01461feb2e8c8"
+      "evidence": "200 body_bytes=116; sha256_16=394162a157d2435f"
     },
     {
       "id": "HDR-STRICT_TRANSPORT_SECURITY",
-      "status": "warn",
+      "status": "pass",
       "title": "Strict-Transport-Security (HSTS)",
-      "evidence": "(missing)"
+      "evidence": "present and effective for the checked policy"
     },
     {
       "id": "HDR-CONTENT_SECURITY_POLICY",
-      "status": "warn",
+      "status": "pass",
       "title": "Content-Security-Policy (CSP)",
-      "evidence": "(missing)"
+      "evidence": "present and effective for the checked policy"
     },
     {
       "id": "HDR-X_CONTENT_TYPE_OPTIONS",
-      "status": "warn",
+      "status": "pass",
       "title": "X-Content-Type-Options",
-      "evidence": "(missing)"
+      "evidence": "present and effective for the checked policy"
     },
     {
       "id": "HDR-X_FRAME_OPTIONS",
-      "status": "warn",
+      "status": "pass",
       "title": "Clickjacking protection (X-Frame-Options or frame-ancestors)",
-      "evidence": "(missing)"
+      "evidence": "present and effective for the checked policy"
     },
     {
       "id": "HDR-REFERRER_POLICY",
-      "status": "warn",
+      "status": "pass",
       "title": "Referrer-Policy",
-      "evidence": "(missing)"
+      "evidence": "present and effective for the checked policy"
     },
     {
       "id": "HDR-PERMISSIONS_POLICY",
-      "status": "warn",
+      "status": "pass",
       "title": "Permissions-Policy",
-      "evidence": "(missing)"
+      "evidence": "present and effective for the checked policy"
     },
     {
       "id": "HDR-DISCLOSURE",
       "status": "warn",
       "title": "Response does not unnecessarily disclose platform details",
-      "evidence": "server: cloudflare; x-powered-by: Express; x-railway-edge: jfk1"
+      "evidence": "server: edge-managed; x-railway-edge: edge-managed"
     },
     {
       "id": "TLS-HTTP-REDIRECT",
@@ -140,19 +140,19 @@
       "id": "CORS-UNTRUSTED-ORIGIN",
       "status": "pass",
       "title": "Untrusted origin is not granted permissive CORS access",
-      "evidence": "Access-Control-Allow-Origin: (missing)"
+      "evidence": "(missing)"
     },
     {
       "id": "CORS-SOCKETIO-UNTRUSTED-ORIGIN",
       "status": "pass",
       "title": "Socket.IO handshake does not grant permissive access to an untrusted origin",
-      "evidence": "Access-Control-Allow-Origin: (missing)"
+      "evidence": "(missing)"
     },
     {
       "id": "CORS-SOCKETIO-WEBSOCKET-ORIGIN",
-      "status": "warn",
+      "status": "pass",
       "title": "Socket.IO WebSocket rejects an untrusted Origin",
-      "evidence": "Connected with Origin: https://evil.example"
+      "evidence": "WebSocket origin rejected"
     },
     {
       "id": "HTTP-TRACE",
@@ -242,7 +242,7 @@
       "id": "SOCKET-JOIN",
       "status": "pass",
       "title": "Two test players can join the assessment room",
-      "evidence": "{\"one\":{\"ok\":true,\"error\":false,\"nameLength\":16,\"playerId\":\"[redacted]\",\"snapshot\":{\"phase\":\"lobby\",\"solo\":false,\"playerCount\":1,\"configKeys\":[\"enabled\",\"gameDuration\",\"maxDelay\",\"minDelay\",\"roster\"]}},\"two\":{\"ok\":true,\"error\":false,\"nameLength\":20,\"playerId\":\"[redacted]\",\"snapshot\":{\"phase\":\"lobby\",\"solo\":false,\"playerCount\":2,\"configKeys\":[\"enabled\",\"gameDuration\",\"maxDelay\",\"minDelay\",\"roster\"]}}}"
+      "evidence": "{\"one\":{\"ok\":true,\"error\":false,\"nameLength\":16,\"playerId\":\"[redacted]\",\"reconnectToken\":\"[redacted]\",\"snapshot\":{\"phasePresent\":true,\"solo\":false,\"playerCount\":1,\"configKeyCount\":5}},\"two\":{\"ok\":true,\"error\":false,\"nameLength\":20,\"playerId\":\"[redacted]\",\"reconnectToken\":\"[redacted]\",\"snapshot\":{\"phasePresent\":true,\"solo\":false,\"playerCount\":2,\"configKeyCount\":5}}}"
     },
     {
       "id": "SOCKET-NAME-BOUND",
@@ -252,9 +252,9 @@
     },
     {
       "id": "SOCKET-PLAYER-RECONNECT-AUTH",
-      "status": "fail",
+      "status": "pass",
       "title": "A different socket cannot rebind an existing player identity",
-      "evidence": "Existing player identity accepted from a different socket; identifiers redacted."
+      "evidence": "{\"error\":true}"
     },
     {
       "id": "SOCKET-HOST-REJOIN-AUTH",
@@ -271,152 +271,17 @@
   ],
   "findings": [
     {
-      "id": "SOCKET-PLAYER-IDENTITY-REBIND",
-      "severity": "high",
-      "status": "open",
-      "title": "Player identity can be rebound using a broadcast player ID",
-      "category": "authentication / session management",
-      "description": "The player:join handler accepted an existing playerId from a different socket and rebound the existing player identity without proof of possession. The room roster/snapshot also exposes player IDs to room participants. A participant who learns another player ID can impersonate that player and submit game data on their behalf or disrupt their connection.",
-      "evidence": [
-        "A second socket supplied the first test player’s playerId and received ok=true with the original player name.",
-        "Source: server/room.js:219-231 accepts playerId and rebinds the socket without a second credential.",
-        "Source: server/room.js:203-214 broadcasts player IDs in room:players summaries.",
-        "All identifiers were redacted from this report."
-      ],
-      "recommendation": "Use a separate unguessable reconnect credential that is never broadcast in room roster data; require that credential for reconnects and treat player IDs as non-secret identifiers only."
-    },
-    {
-      "id": "SRC-ROOM-CODE-ONLINE-ENUMERATION",
-      "severity": "medium",
-      "status": "source-confirmed; dynamic rate test not performed",
-      "title": "Short room codes have no evident online-guessing throttle",
-      "category": "session management / abuse resistance",
-      "description": "The player:join endpoint uses a 4-character room code drawn from 24 symbols (331776 possible combinations), returns a distinguishable room-not-found response, and has no explicit server-side rate-limit or failed-attempt control in the reviewed HTTP/Socket.IO wiring. This creates an online room-existence oracle; practical enumeration speed and edge protections were not stress-tested.",
-      "evidence": [
-        "Source: server/room.js defines CODE_ALPHABET (24 symbols) and a 4-character generator.",
-        "Source: server/sockets.js handles player:join with a direct room lookup and distinguishable error.",
-        "Source review found no explicit rate-limit, throttle, quota, or failed-attempt control in server/sockets.js or server/app.js."
-      ],
-      "recommendation": "Add edge and application rate limits for failed joins, consider longer/high-entropy invite tokens, and avoid exposing a highly distinguishable room-existence oracle. Validate with an approved bounded rate-limit test."
-    },
-    {
-      "id": "SRC-SOCKET-EVENT-RATE-LIMITS",
-      "severity": "medium",
-      "status": "source-confirmed; dynamic flood test not performed",
-      "title": "Socket.IO player events lack an evident application rate-control layer",
-      "category": "availability / input validation",
-      "description": "The reviewed Socket.IO handlers forward player:submit and redemption:report payloads into room logic and allow sync:report to trigger roster broadcasts. No explicit per-socket rate limit, event quota, or shared schema/serialized-size guard was found in the reviewed wiring. A connected client may therefore cause disproportionate CPU, memory, or broadcast work; sustained impact was not tested.",
-      "evidence": [
-        "Source: server/sockets.js forwards player:submit and redemption:report payloads directly to room methods.",
-        "Source: server/sockets.js forwards sync:report; server/room.js recordSync broadcasts player summaries.",
-        "Source review found no explicit rate-limit, throttle, or quota control in server/sockets.js or server/app.js."
-      ],
-      "recommendation": "Add per-socket and per-room event budgets, validate each payload against strict schemas and serialized-size limits, and add bounded local flood tests before exposing the service to untrusted clients."
-    },
-    {
-      "id": "CORS-SOCKETIO-WEBSOCKET-ORIGIN",
-      "severity": "low",
-      "status": "open",
-      "title": "Socket.IO WebSocket accepts an untrusted Origin",
-      "category": "cross-origin access control",
-      "description": "A WebSocket-only Socket.IO connection succeeded while sending Origin: https://evil.example. WebSocket handshakes are not governed by browser CORS headers, so an explicit Socket.IO origin allowRequest policy is needed if cross-origin connections should be blocked.",
-      "evidence": [
-        "WebSocket connection succeeded with Origin: https://evil.example",
-        "No application event or room data was sent during this probe."
-      ],
-      "recommendation": "Configure Socket.IO allowRequest (or an equivalent edge policy) to allow only the exact application origins required, then verify both polling and WebSocket transports."
-    },
-    {
-      "id": "HDR-CONTENT_SECURITY_POLICY-MISSING",
-      "severity": "low",
-      "status": "open",
-      "title": "Missing Content-Security-Policy (CSP)",
-      "category": "security headers",
-      "description": "The response from https://amuseical.com/ did not include Content-Security-Policy (CSP). This is a defense-in-depth configuration gap, not proof of an exploitable vulnerability by itself.",
-      "evidence": [
-        "GET / → 200",
-        "Content-Security-Policy (CSP): missing"
-      ],
-      "recommendation": "Deploy a tested CSP appropriate for the external font and Socket.IO resources."
-    },
-    {
-      "id": "HDR-REFERRER_POLICY-MISSING",
-      "severity": "low",
-      "status": "open",
-      "title": "Missing Referrer-Policy",
-      "category": "security headers",
-      "description": "The response from https://amuseical.com/ did not include Referrer-Policy. This is a defense-in-depth configuration gap, not proof of an exploitable vulnerability by itself.",
-      "evidence": [
-        "GET / → 200",
-        "Referrer-Policy: missing"
-      ],
-      "recommendation": "Send a restrictive policy such as strict-origin-when-cross-origin."
-    },
-    {
-      "id": "HDR-STRICT_TRANSPORT_SECURITY-MISSING",
-      "severity": "low",
-      "status": "open",
-      "title": "Missing Strict-Transport-Security (HSTS)",
-      "category": "security headers",
-      "description": "The response from https://amuseical.com/ did not include Strict-Transport-Security (HSTS). This is a defense-in-depth configuration gap, not proof of an exploitable vulnerability by itself.",
-      "evidence": [
-        "GET / → 200",
-        "Strict-Transport-Security (HSTS): missing"
-      ],
-      "recommendation": "Enable HSTS after confirming every production subdomain is HTTPS-only."
-    },
-    {
-      "id": "HDR-X_CONTENT_TYPE_OPTIONS-MISSING",
-      "severity": "low",
-      "status": "open",
-      "title": "Missing X-Content-Type-Options",
-      "category": "security headers",
-      "description": "The response from https://amuseical.com/ did not include X-Content-Type-Options. This is a defense-in-depth configuration gap, not proof of an exploitable vulnerability by itself.",
-      "evidence": [
-        "GET / → 200",
-        "X-Content-Type-Options: missing"
-      ],
-      "recommendation": "Send X-Content-Type-Options: nosniff."
-    },
-    {
-      "id": "HDR-X_FRAME_OPTIONS-MISSING",
-      "severity": "low",
-      "status": "open",
-      "title": "Missing Clickjacking protection (X-Frame-Options or frame-ancestors)",
-      "category": "security headers",
-      "description": "The response from https://amuseical.com/ did not include Clickjacking protection (X-Frame-Options or frame-ancestors). This is a defense-in-depth configuration gap, not proof of an exploitable vulnerability by itself.",
-      "evidence": [
-        "GET / → 200",
-        "Clickjacking protection (X-Frame-Options or frame-ancestors): missing"
-      ],
-      "recommendation": "Send X-Frame-Options or a CSP frame-ancestors directive appropriate for the host/player pages."
-    },
-    {
-      "id": "HDR-PERMISSIONS_POLICY-MISSING",
-      "severity": "informational",
-      "status": "open",
-      "title": "Missing Permissions-Policy",
-      "category": "security headers",
-      "description": "The response from https://amuseical.com/ did not include Permissions-Policy. This is a defense-in-depth configuration gap, not proof of an exploitable vulnerability by itself.",
-      "evidence": [
-        "GET / → 200",
-        "Permissions-Policy: missing"
-      ],
-      "recommendation": "Restrict browser capabilities not needed by the application."
-    },
-    {
       "id": "HDR-PLATFORM-DISCLOSURE",
       "severity": "informational",
-      "status": "open",
+      "status": "partially mitigated; edge-managed headers require hosting-provider configuration",
       "title": "Platform/framework response headers are exposed",
       "category": "information disclosure",
-      "description": "The edge response identifies deployment or framework details. This is normally low risk but gives reconnaissance information to an attacker.",
+      "description": "Edge-managed platform headers remain observable. The application layer no longer discloses Express; any remaining platform headers are set by the hosting edge and can only be removed there. This is normally low risk but gives reconnaissance information to an attacker.",
       "evidence": [
-        "server: cloudflare",
-        "x-powered-by: Express",
-        "x-railway-edge: jfk1"
+        "server: edge-managed",
+        "x-railway-edge: edge-managed"
       ],
-      "recommendation": "Remove or minimize nonessential framework/platform headers at the edge where operationally safe."
+      "recommendation": "Keep x-powered-by removed in the application; configure Cloudflare/Railway to strip or minimize edge-managed headers (server, x-railway-edge) where operationally safe, and re-run this assessment after any edge change."
     }
   ],
   "notes": [
