@@ -5,7 +5,7 @@
       "semantic": null
     },
     ".github/workflows/ci.yml": {
-      "ast": "b6a80751ffb8573757e0a8d907f5f263",
+      "ast": "8e5ebe53a4338bcb583d9e170d1bbd28",
       "semantic": null
     },
     ".github/workflows/security-assessment.yml": {
