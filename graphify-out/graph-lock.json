@@ -5,7 +5,7 @@
       "semantic": null
     },
     ".github/workflows/ci.yml": {
-      "ast": "24eb1f02714e242bcbdf6178d0cef93e",
+      "ast": "b6a80751ffb8573757e0a8d907f5f263",
       "semantic": null
     },
     ".github/workflows/security-assessment.yml": {
@@ -37,7 +37,7 @@
       "semantic": null
     },
     "docs/security/README.md": {
-      "ast": "b5ff5292112bf28e141b90452a8ae2bd",
+      "ast": "ffa04f3852eabd8daa6748250eb7598d",
       "semantic": null
     },
     "package.json": {
@@ -73,7 +73,7 @@
       "semantic": null
     },
     "public/js/player.js": {
-      "ast": "74e688d415d273cd1d2d056f6601d0bb",
+      "ast": "ec3acdc6a271274f0309915601f7c39f",
       "semantic": null
     },
     "public/js/sync.js": {
@@ -93,12 +93,12 @@
       "semantic": null
     },
     "scripts/security-assessment.mjs": {
-      "ast": "c59dedffefa487e6ee8ceadef4b5479f",
+      "ast": "31981515ecec8a0669f562de45c9ff10",
       "semantic": null
     },
     "server/app.js": {
-      "ast": "24c1b81e5113a5aa4edaa98f2ffce2c1",
-      "semantic": "24c1b81e5113a5aa4edaa98f2ffce2c1"
+      "ast": "b03c80f821817d7326e0f067e3c19ebf",
+      "semantic": null
     },
     "server/games.js": {
       "ast": "276faed937e8ed59b08fd956df31f865",
@@ -109,11 +109,11 @@
       "semantic": "f9bcb5a92468425b887f7d6ed3da4eb4"
     },
     "server/room.js": {
-      "ast": "1733bbb604c4c71c25ee68a2372c4e90",
+      "ast": "2a8ad2bd34bfbe90b6fe789b03f599c6",
       "semantic": null
     },
     "server/sockets.js": {
-      "ast": "67d04b1dc76d3a7f98ed5af9e38b1be6",
+      "ast": "1b3d32561c51d2a8743e0b720c5683c2",
       "semantic": null
     },
     "shared/anagram.js": {
@@ -229,7 +229,7 @@
       "semantic": null
     },
     "test/harness.test.js": {
-      "ast": "30c06bfab4723798bc56bd9092e2eba2",
+      "ast": "868c95e21a7abfe9c383de0d125fa2d7",
       "semantic": null
     },
     "test/icebreaker.test.js": {
@@ -241,8 +241,8 @@
       "semantic": null
     },
     "test/multistage.test.js": {
-      "ast": "ee1ec4cc31c22fab2242e28887114a2e",
-      "semantic": "ee1ec4cc31c22fab2242e28887114a2e"
+      "ast": "f3f117968d942a07c4ea68486cc3dfde",
+      "semantic": null
     },
     "test/normalize.test.js": {
       "ast": "2b51657d6554e84ea82dd84ebfab9e69",
@@ -265,7 +265,7 @@
       "semantic": null
     },
     "test/room.test.js": {
-      "ast": "d1c3ff3a14148665f8a795750d3d7c4d",
+      "ast": "ce526a5174632b581ee8e4911f0274ef",
       "semantic": null
     },
     "test/roster.test.js": {
@@ -273,7 +273,7 @@
       "semantic": null
     },
     "test/security.test.js": {
-      "ast": "a602b6ffb966043715261d7db8409ac7",
+      "ast": "998c160828bfc9f1ea35baef5dde2e71",
       "semantic": null
     },
     "test/smoke.test.js": {

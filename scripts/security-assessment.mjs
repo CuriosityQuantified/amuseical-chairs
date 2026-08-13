@@ -66,15 +66,15 @@ const allowedHosts = new Set((process.env.SECURITY_ALLOWED_HOSTS || '')
 if (allowedHosts.size && !allowedHosts.has(target.hostname.toLowerCase())) {
   throw new Error(`Target hostname ${target.hostname} is not in SECURITY_ALLOWED_HOSTS.`);
 }
+if (process.env.SECURITY_REQUIRE_HTTPS === 'true' && target.protocol !== 'https:') {
+  throw new Error('This assessment requires an HTTPS target.');
+}
 const allowedOrigins = new Set((process.env.SECURITY_ALLOWED_ORIGINS || '')
   .split(',')
   .map((origin) => origin.trim().replace(/\/$/, ''))
   .filter(Boolean));
 if (allowedOrigins.size && !allowedOrigins.has(target.origin)) {
   throw new Error(`Target origin ${target.origin} is not in SECURITY_ALLOWED_ORIGINS.`);
-}
-if (process.env.SECURITY_REQUIRE_HTTPS === 'true' && target.protocol !== 'https:') {
-  throw new Error('This assessment requires an HTTPS target.');
 }
 if (target.port && target.port !== '443') {
   throw new Error('Only the default HTTPS port is permitted for an allowlisted assessment target.');
@@ -155,7 +155,7 @@ async function request(urlOrPath, options = {}) {
     const body = await readLimitedBody(response);
     return {
       ok: true,
-      url: url.toString(),
+      url: url.origin,
       status: response.status,
       statusText: response.statusText,
       headers: Object.fromEntries(response.headers.entries()),
@@ -163,7 +163,7 @@ async function request(urlOrPath, options = {}) {
       truncated: body.truncated,
     };
   } catch (error) {
-    return { ok: false, url: url.toString(), error: `${error.name || 'Error'}: request failed` };
+    return { ok: false, url: url.origin, error: `${error.name || 'Error'}: request failed` };
   } finally {
     clearTimeout(timer);
   }
@@ -179,8 +179,10 @@ function safeBodyPreview(text) {
 }
 
 function safeFailure(error) {
-  const value = String(error || 'request failed');
-  return value.split(':', 1)[0] || 'request failed';
+  if (error && typeof error === 'object') {
+    return String(error.code || error.name || 'operation failed').replace(/[^A-Za-z0-9_-]/g, '') || 'operation failed';
+  }
+  return 'operation failed';
 }
 
 function safeLocation(location, base) {
@@ -218,11 +220,12 @@ function summarizeJoin(value) {
     error: Boolean(value.error),
     nameLength: typeof value.name === 'string' ? value.name.length : undefined,
     playerId: value.playerId ? '[redacted]' : undefined,
+    reconnectToken: value.reconnectToken ? '[redacted]' : undefined,
     snapshot: snapshot ? {
-      phase: snapshot.phase,
-      solo: snapshot.solo,
+      phasePresent: typeof snapshot.phase === 'string',
+      solo: snapshot.solo === true,
       playerCount: Array.isArray(snapshot.players) ? snapshot.players.length : undefined,
-      configKeys: snapshot.config ? Object.keys(snapshot.config).sort() : undefined,
+      configKeyCount: snapshot.config && typeof snapshot.config === 'object' ? Object.keys(snapshot.config).length : 0,
     } : undefined,
   };
 }
@@ -435,7 +438,7 @@ async function runDependencyAudit() {
     stdout = error.stdout || '';
     stderr = error.stderr || '';
     if (!stdout) {
-      check('DEP-AUDIT', 'error', 'Production dependency audit completes', `${error.code || error.name}: ${String(stderr || error.message).trim()}`);
+      check('DEP-AUDIT', 'error', 'Production dependency audit completes', safeFailure(error));
       notes.push('Dependency audit could not complete; rerun npm audit --omit=dev --audit-level=high with network access.');
       return;
     }
@@ -460,8 +463,8 @@ async function runDependencyAudit() {
       });
     }
   } catch (error) {
-    check('DEP-AUDIT', 'error', 'Production dependency audit completes', `Could not parse npm audit JSON: ${error.message}`);
-    notes.push(`npm audit returned output that could not be parsed: ${String(stderr).trim()}`);
+    check('DEP-AUDIT', 'error', 'Production dependency audit completes', 'Audit output could not be parsed');
+    notes.push(`npm audit returned output that could not be parsed (${safeFailure(error)}).`);
   }
 }
 
@@ -473,14 +476,17 @@ async function sourceBoundaryReview() {
   ]);
 
   const joinHandlerPresent = /socket\.on\(['"]player:join['"]/.test(socketSource);
+  const hasFailedJoinThrottle = /failedJoinAllowed\(failedJoins,\s*socket\)/.test(socketSource);
+  const hasEventGuards = /guarded\(socket,\s*['"]player:submit['"]/.test(socketSource)
+    && /MAX_EVENT_BYTES/.test(socketSource)
+    && /maxHttpBufferSize\s*:/.test(appSource);
   const codeMatch = roomSource.match(/CODE_ALPHABET\s*=\s*['"]([^'"]+)['"]/);
   const codeLengthMatch = roomSource.match(/for\s*\(let\s+i\s*=\s*0;\s*i\s*<\s*(\d+)\s*;\s*i\+\+\)/);
   const codeAlphabet = codeMatch?.[1] || '';
   const codeLength = Number(codeLengthMatch?.[1] || 0);
   const codeSpace = codeAlphabet && codeLength ? codeAlphabet.length ** codeLength : null;
-  const hasRateControl = /rate.?limit|throttl|quota|failedAttempts|attemptsBy/i.test(`${socketSource}\n${appSource}`);
 
-  if (joinHandlerPresent && codeSpace && codeLength <= 4 && !hasRateControl) {
+  if (joinHandlerPresent && codeSpace && codeLength <= 4 && !hasFailedJoinThrottle) {
     check('SRC-ROOM-CODE-ONLINE-ENUMERATION', 'warn', 'Room-code join attempts have server-side throttling', `Source review: ${codeLength}-character code over ${codeAlphabet.length} symbols (${codeSpace} combinations); no explicit rate-limit or failed-attempt control found in server/sockets.js or server/app.js.`);
     finding({
       id: 'SRC-ROOM-CODE-ONLINE-ENUMERATION',
@@ -497,15 +503,15 @@ async function sourceBoundaryReview() {
       recommendation: 'Add edge and application rate limits for failed joins, consider longer/high-entropy invite tokens, and avoid exposing a highly distinguishable room-existence oracle. Validate with an approved bounded rate-limit test.',
     });
   } else {
-    check('SRC-ROOM-CODE-ONLINE-ENUMERATION', 'pass', 'Room-code join attempts have server-side throttling or a larger code space', 'No short-code/no-throttle condition matched in the source review.');
+    check('SRC-ROOM-CODE-ONLINE-ENUMERATION', 'pass', 'Room-code join attempts have server-side throttling or a larger code space', hasFailedJoinThrottle ? 'Source-confirmed failed-join throttle is present.' : 'No short-code/no-throttle condition matched in the source review.');
   }
 
   const rawEventForwarding = /r\.handleSubmit\(socket\.data\.playerId,\s*payload\)/.test(socketSource)
     && /r\.handleRedemptionReport\(socket\.data\.playerId,\s*report\)/.test(socketSource);
   const syncBroadcasts = /recordSync\(socket\.data\.playerId,\s*sync\)/.test(socketSource)
     && /broadcastPlayers\(\)/.test(roomSource);
-  if (rawEventForwarding && syncBroadcasts && !hasRateControl) {
-    check('SRC-SOCKET-EVENT-RATE-LIMITS', 'warn', 'Socket.IO player events have explicit rate and schema limits', 'Source review found direct forwarding of submit/report payloads and sync-triggered roster broadcasts without an explicit rate-control layer.');
+  if (rawEventForwarding && syncBroadcasts && !hasEventGuards) {
+    check('SRC-SOCKET-EVENT-RATE-LIMITS', 'warn', 'Socket.IO player events have explicit rate and payload-size limits', 'Source review found direct forwarding of submit/report payloads and sync-triggered roster broadcasts without an explicit rate-control layer.');
     finding({
       id: 'SRC-SOCKET-EVENT-RATE-LIMITS',
       severity: 'medium',
@@ -521,7 +527,7 @@ async function sourceBoundaryReview() {
       recommendation: 'Add per-socket and per-room event budgets, validate each payload against strict schemas and serialized-size limits, and add bounded local flood tests before exposing the service to untrusted clients.',
     });
   } else {
-    check('SRC-SOCKET-EVENT-RATE-LIMITS', 'pass', 'Socket.IO player events have explicit rate and schema limits', 'No direct-forwarding/no-rate-control condition matched in the source review.');
+    check('SRC-SOCKET-EVENT-RATE-LIMITS', 'pass', 'Socket.IO player events have explicit rate and payload-size limits', hasEventGuards ? 'Source-confirmed per-event quotas and transport/application payload limits are present.' : 'No direct-forwarding/no-rate-control condition matched in the source review.');
   }
 }
 
@@ -551,7 +557,7 @@ async function runBrowserSmoke() {
     check('BROWSER-CONSOLE', clean ? 'pass' : 'warn', 'Public player/host page smoke flow has no browser errors', JSON.stringify({ consoleErrors: consoleErrors.length, pageErrors: pageErrors.length }));
     if (!clean) notes.push(`Browser smoke observed ${consoleErrors.length} console error(s) and ${pageErrors.length} page error(s); raw browser messages were not retained in the report.`);
   } catch (error) {
-    check('BROWSER-SMOKE', 'error', 'Headless browser smoke checks', safeFailure(error));
+    check('BROWSER-SMOKE', 'error', 'Headless browser smoke checks', 'Browser smoke failed');
     notes.push('Browser smoke checks could not complete; install the Playwright Chromium browser or rerun with --no-browser to make the omission explicit.');
   } finally {
     await browser?.close();
@@ -561,11 +567,11 @@ async function runBrowserSmoke() {
 async function runHttpChecks() {
   const root = await request('/');
   if (!root.ok) {
-    check('HTTP-ROOT', 'error', 'Fetch the public home page', root.error);
-    notes.push(`HTTP checks could not continue from ${target.origin}: ${root.error}`);
+    check('HTTP-ROOT', 'error', 'Fetch the public home page', safeFailure(root.error));
+    notes.push(`HTTP checks could not continue from ${target.origin} (${safeFailure(root.error)}).`);
     return { root };
   }
-  check('HTTP-ROOT', root.status === 200 ? 'pass' : 'fail', 'Public home page responds', `${root.status} ${root.statusText}`);
+  check('HTTP-ROOT', root.status === 200 ? 'pass' : 'fail', 'Public home page responds', `HTTP ${root.status}`);
   if (root.status !== 200) {
     finding({
       id: 'HTTP-ROOT-UNAVAILABLE',
@@ -573,13 +579,13 @@ async function runHttpChecks() {
       category: 'availability',
       title: 'Public home page did not return HTTP 200',
       description: 'The assessment could not establish the expected public application entry point.',
-      evidence: [`${root.status} ${root.statusText}`],
+      evidence: [`HTTP ${root.status}`],
       recommendation: 'Investigate deployment and edge/origin health before relying on a whitelist decision.',
     });
   }
 
   const contentType = header(root, 'content-type');
-  check('HTTP-CONTENT-TYPE', contentType.toLowerCase().includes('text/html') ? 'pass' : 'fail', 'Home page declares an HTML content type', contentType || '(missing)');
+  check('HTTP-CONTENT-TYPE', contentType.toLowerCase().includes('text/html') ? 'pass' : 'fail', 'Home page declares an HTML content type', contentType ? 'HTML content type present' : '(missing)');
 
   const routes = [
     ['/host.html', 'Host page'],
@@ -588,48 +594,59 @@ async function runHttpChecks() {
   ];
   for (const [route, title] of routes) {
     const response = await request(route);
-    check(`HTTP-${route.split(/[/?]/)[1]?.toUpperCase() || 'ROUTE'}`, response.ok && response.status >= 200 && response.status < 400 ? 'pass' : 'fail', `${title} responds`, response.ok ? `${response.status} ${safeBodyPreview(response.text)}` : response.error);
+    check(`HTTP-${route.split(/[/?]/)[1]?.toUpperCase() || 'ROUTE'}`, response.ok && response.status >= 200 && response.status < 400 ? 'pass' : 'fail', `${title} responds`, response.ok ? `${response.status} ${safeBodyPreview(response.text)}` : safeFailure(response.error));
   }
 
-  const expectedHeaders = [
-    ['strict-transport-security', 'low', 'Strict-Transport-Security (HSTS)', 'Enable HSTS after confirming every production subdomain is HTTPS-only.'],
-    ['content-security-policy', 'low', 'Content-Security-Policy (CSP)', 'Deploy a tested CSP appropriate for the external font and Socket.IO resources.'],
-    ['x-content-type-options', 'low', 'X-Content-Type-Options', 'Send X-Content-Type-Options: nosniff.'],
-    ['x-frame-options', 'low', 'Clickjacking protection (X-Frame-Options or frame-ancestors)', 'Send X-Frame-Options or a CSP frame-ancestors directive appropriate for the host/player pages.'],
-    ['referrer-policy', 'low', 'Referrer-Policy', 'Send a restrictive policy such as strict-origin-when-cross-origin.'],
-    ['permissions-policy', 'informational', 'Permissions-Policy', 'Restrict browser capabilities not needed by the application.'],
-  ];
   const csp = header(root, 'content-security-policy');
-  const frameProtected = Boolean(header(root, 'x-frame-options') || /(^|;)\s*frame-ancestors\s+/i.test(csp));
-  for (const [name, severity, title, recommendation] of expectedHeaders) {
-    const present = name === 'x-frame-options' ? frameProtected : Boolean(header(root, name));
-    const value = name === 'x-frame-options' ? (header(root, name) || (frameProtected ? 'CSP frame-ancestors present' : '')) : header(root, name);
-    check(`HDR-${name.toUpperCase().replaceAll('-', '_')}`, present ? 'pass' : 'warn', title, value || '(missing)');
-    if (!present) {
+  const hsts = header(root, 'strict-transport-security');
+  const xcto = header(root, 'x-content-type-options');
+  const xfo = header(root, 'x-frame-options');
+  const referrer = header(root, 'referrer-policy');
+  const permissions = header(root, 'permissions-policy');
+  const headerRules = [
+    ['strict-transport-security', 'low', 'Strict-Transport-Security (HSTS)', /^max-age=(?:\d{7,})(?:;|$)/i.test(hsts), hsts, 'Enable HSTS with a substantial max-age after confirming every production subdomain is HTTPS-only.'],
+    ['content-security-policy', 'low', 'Content-Security-Policy (CSP)', /(^|;)\s*default-src\s+'none'(?:;|$)/i.test(csp) && /(^|;)\s*object-src\s+'none'(?:;|$)/i.test(csp) && /(^|;)\s*frame-ancestors\s+'none'(?:;|$)/i.test(csp) && /(^|;)\s*script-src\s+(?![^;]*'unsafe-eval')[^;]*'self'/i.test(csp), csp, 'Deploy a tested CSP with restrictive default, object, frame, and script directives appropriate for the app resources.'],
+    ['x-content-type-options', 'low', 'X-Content-Type-Options', xcto.toLowerCase() === 'nosniff', xcto, 'Send X-Content-Type-Options: nosniff.'],
+    ['x-frame-options', 'low', 'Clickjacking protection (X-Frame-Options or frame-ancestors)', xfo.toUpperCase() === 'DENY' || /(^|;)\s*frame-ancestors\s+'none'(?:;|$)/i.test(csp), xfo || (/frame-ancestors/i.test(csp) ? 'CSP frame-ancestors present' : ''), 'Send X-Frame-Options: DENY or CSP frame-ancestors none for the host/player pages.'],
+    ['referrer-policy', 'low', 'Referrer-Policy', /^(?:no-referrer|same-origin|strict-origin|strict-origin-when-cross-origin)$/i.test(referrer), referrer, 'Send a restrictive policy such as strict-origin-when-cross-origin.'],
+    ['permissions-policy', 'informational', 'Permissions-Policy', /camera=\(\)/i.test(permissions) && /microphone=\(\)/i.test(permissions) && /geolocation=\(\)/i.test(permissions), permissions, 'Restrict browser capabilities not needed by the application.'],
+  ];
+  for (const [name, severity, title, effective, value, recommendation] of headerRules) {
+    check(`HDR-${name.toUpperCase().replaceAll('-', '_')}`, effective ? 'pass' : 'warn', title, value ? 'present and effective for the checked policy' : '(missing)');
+    if (!effective) {
       finding({
         id: `HDR-${name.toUpperCase().replaceAll('-', '_')}-MISSING`,
         severity,
         category: 'security headers',
         title: `Missing ${title}`,
-        description: `The response from ${target.origin}/ did not include ${title}. This is a defense-in-depth configuration gap, not proof of an exploitable vulnerability by itself.`,
-        evidence: [`GET / → ${root.status}`, `${title}: missing`],
+        description: `The response from ${target.origin}/ did not include an effective checked ${title} value. This is a defense-in-depth configuration gap, not proof of an exploitable vulnerability by itself.`,
+        evidence: [`GET / → ${root.status}`, `${title}: ${value ? 'present but ineffective for the checked policy' : 'missing'}`],
         recommendation,
       });
     }
   }
 
   const disclosureHeaders = ['server', 'x-powered-by', 'x-railway-edge'];
-  const disclosures = disclosureHeaders.filter((name) => header(root, name)).map((name) => `${name}: ${header(root, name)}`);
+  const fixedByName = {
+    server: 'edge-managed',
+    'x-railway-edge': 'edge-managed',
+    'x-powered-by': 'removed at the application layer',
+  };
+  const disclosures = disclosureHeaders
+    .filter((name) => header(root, name))
+    .map((name) => `${name}: ${fixedByName[name] || 'present'}`);
   check('HDR-DISCLOSURE', disclosures.length ? 'warn' : 'pass', 'Response does not unnecessarily disclose platform details', disclosures.join('; ') || 'No checked disclosure headers present.');
   if (disclosures.length) {
+    const edgeOnly = disclosures.filter((line) => /edge-managed/.test(line));
     finding({
       id: 'HDR-PLATFORM-DISCLOSURE',
       severity: 'informational',
+      status: `${edgeOnly.length ? 'partially mitigated' : 'open'}; edge-managed headers require hosting-provider configuration`,
       category: 'information disclosure',
       title: 'Platform/framework response headers are exposed',
-      description: 'The edge response identifies deployment or framework details. This is normally low risk but gives reconnaissance information to an attacker.',
+      description: `${edgeOnly.length ? 'Edge-managed platform headers remain observable.' : ''} The application layer no longer discloses Express; any remaining platform headers are set by the hosting edge and can only be removed there. This is normally low risk but gives reconnaissance information to an attacker.`,
       evidence: disclosures,
-      recommendation: 'Remove or minimize nonessential framework/platform headers at the edge where operationally safe.',
+      recommendation: 'Keep x-powered-by removed in the application; configure Cloudflare/Railway to strip or minimize edge-managed headers (server, x-railway-edge) where operationally safe, and re-run this assessment after any edge change.',
     });
   }
 
@@ -641,7 +658,7 @@ async function runHttpChecks() {
     let redirectUrl;
     try { redirectUrl = location ? new URL(location, insecure) : null; } catch { redirectUrl = null; }
     const redirectsToCanonicalHttps = redirectUrl?.protocol === 'https:' && redirectUrl.origin === target.origin;
-    const redirectEvidence = response.ok ? `${response.status} Location: ${safeLocation(location, insecure)}` : response.error;
+    const redirectEvidence = response.ok ? `${response.status} Location: ${safeLocation(location, insecure)}` : safeFailure(response.error);
     check('TLS-HTTP-REDIRECT', redirectsToCanonicalHttps ? 'pass' : response.ok ? 'warn' : 'error', 'HTTP redirects to the canonical HTTPS origin', redirectEvidence);
     if (response.ok && !redirectsToCanonicalHttps) {
       finding({
@@ -659,7 +676,8 @@ async function runHttpChecks() {
   const cors = await request('/healthz', { headers: { origin: 'https://evil.example' } });
   const allowOrigin = header(cors, 'access-control-allow-origin');
   const corsOpen = allowOrigin === '*' || allowOrigin === 'https://evil.example';
-  check('CORS-UNTRUSTED-ORIGIN', corsOpen ? 'fail' : 'pass', 'Untrusted origin is not granted permissive CORS access', `Access-Control-Allow-Origin: ${allowOrigin || '(missing)'}`);
+  const corsEvidence = corsOpen ? 'untrusted origin reflected' : allowOrigin === '*' ? 'wildcard origin' : allowOrigin ? 'other origin' : '(missing)';
+  check('CORS-UNTRUSTED-ORIGIN', corsOpen ? 'fail' : 'pass', 'Untrusted origin is not granted permissive CORS access', corsEvidence);
   if (corsOpen) {
     finding({
       id: 'CORS-REFLECTIVE-ORIGIN',
@@ -667,7 +685,7 @@ async function runHttpChecks() {
       category: 'cross-origin access control',
       title: 'Health/API response grants access to an untrusted origin',
       description: 'The response grants CORS access to a deliberately untrusted origin. If credentials or sensitive responses are exposed under the same policy, this can enable cross-origin data theft.',
-      evidence: [`Origin: https://evil.example`, `Access-Control-Allow-Origin: ${allowOrigin}`],
+      evidence: ['Origin: untrusted test origin', 'Access-Control-Allow-Origin: untrusted origin reflected'],
       recommendation: 'Allow only the exact production origins required by the application; never combine wildcard origins with credentials.',
     });
   }
@@ -677,7 +695,8 @@ async function runHttpChecks() {
   });
   const socketAllowOrigin = header(socketCors, 'access-control-allow-origin');
   const socketCorsOpen = socketAllowOrigin === '*' || socketAllowOrigin === 'https://evil.example';
-  check('CORS-SOCKETIO-UNTRUSTED-ORIGIN', socketCorsOpen ? 'fail' : socketCors.ok ? 'pass' : 'error', 'Socket.IO handshake does not grant permissive access to an untrusted origin', socketCors.ok ? `Access-Control-Allow-Origin: ${socketAllowOrigin || '(missing)'}` : socketCors.error);
+  const socketCorsEvidence = socketCorsOpen ? 'untrusted origin reflected' : socketAllowOrigin === '*' ? 'wildcard origin' : socketAllowOrigin ? 'other origin' : '(missing)';
+  check('CORS-SOCKETIO-UNTRUSTED-ORIGIN', socketCorsOpen ? 'fail' : socketCors.ok ? 'pass' : 'error', 'Socket.IO handshake does not grant permissive access to an untrusted origin', socketCors.ok ? socketCorsEvidence : safeFailure(socketCors.error));
   if (socketCorsOpen) {
     finding({
       id: 'CORS-SOCKETIO-REFLECTIVE-ORIGIN',
@@ -685,13 +704,13 @@ async function runHttpChecks() {
       category: 'cross-origin access control',
       title: 'Socket.IO handshake grants access to an untrusted origin',
       description: 'The Socket.IO polling handshake grants CORS access to a deliberately untrusted origin. Cross-origin clients could then attempt to establish application sessions unless an explicit origin policy or equivalent edge control blocks them.',
-      evidence: [`Origin: https://evil.example`, `Access-Control-Allow-Origin: ${socketAllowOrigin}`],
+      evidence: ['Origin: untrusted test origin', 'Access-Control-Allow-Origin: untrusted origin reflected'],
       recommendation: 'Configure Socket.IO CORS with an exact allowlist of required production origins and verify the WebSocket upgrade path at the edge.',
     });
   }
 
   const websocketOrigin = await probeSocketOrigin();
-  check('CORS-SOCKETIO-WEBSOCKET-ORIGIN', websocketOrigin.connected ? 'warn' : 'pass', 'Socket.IO WebSocket rejects an untrusted Origin', websocketOrigin.connected ? 'Connected with Origin: https://evil.example' : (websocketOrigin.error || 'Connection rejected'));
+  check('CORS-SOCKETIO-WEBSOCKET-ORIGIN', websocketOrigin.connected ? 'warn' : 'pass', 'Socket.IO WebSocket rejects an untrusted Origin', websocketOrigin.connected ? 'Untrusted test origin accepted' : (websocketOrigin.error || 'Connection rejected'));
   if (websocketOrigin.connected) {
     finding({
       id: 'CORS-SOCKETIO-WEBSOCKET-ORIGIN',
@@ -706,7 +725,7 @@ async function runHttpChecks() {
 
   const trace = await probeTrace(new URL('/', target));
   const traceEchoes = trace.ok && trace.status >= 200 && trace.status < 300 && /TRACE\s+\//i.test(trace.text);
-  check('HTTP-TRACE', traceEchoes ? 'fail' : trace.ok ? 'pass' : 'error', 'TRACE is not enabled as an HTTP echo', trace.ok ? `${trace.status} ${safeBodyPreview(trace.text)}` : trace.error);
+  check('HTTP-TRACE', traceEchoes ? 'fail' : trace.ok ? 'pass' : 'error', 'TRACE is not enabled as an HTTP echo', trace.ok ? `${trace.status} ${safeBodyPreview(trace.text)}` : safeFailure(trace.error));
   if (traceEchoes) {
     finding({
       id: 'HTTP-TRACE-ENABLED',
@@ -735,7 +754,7 @@ async function runHttpChecks() {
     const response = await request(route);
     const exposed = response.ok && response.status >= 200 && response.status < 300;
     const id = `EXPOSURE-${route.replace(/[^A-Za-z0-9]+/g, '_').replace(/^_+|_+$/g, '').toUpperCase()}`;
-    check(id, exposed ? 'fail' : response.ok ? 'pass' : 'error', `Sensitive path is not publicly exposed: ${route}`, response.ok ? `${response.status} ${safeBodyPreview(response.text)}` : response.error);
+    check(id, exposed ? 'fail' : response.ok ? 'pass' : 'error', `Sensitive path is not publicly exposed: ${route}`, response.ok ? `${response.status} ${safeBodyPreview(response.text)}` : safeFailure(response.error));
     if (exposed) {
       finding({
         id,
@@ -804,8 +823,9 @@ async function runSocketChecks() {
     const joinsValid = joinOne.value?.ok && joinTwo.value?.ok;
     check('SOCKET-JOIN', joinsValid ? 'pass' : 'error', 'Two test players can join the assessment room', JSON.stringify({ one: summarizeJoin(joinOne.value), two: summarizeJoin(joinTwo.value) }));
     if (joinsValid) {
-      const bounded = String(joinTwo.value.name || '').length <= 20;
-      check('SOCKET-NAME-BOUND', bounded ? 'pass' : 'fail', 'Player display names are bounded server-side', `returned length=${String(joinTwo.value.name || '').length}`);
+      const returnedNameLength = typeof joinTwo.value.name === 'string' ? joinTwo.value.name.length : 0;
+      const bounded = returnedNameLength <= 20;
+      check('SOCKET-NAME-BOUND', bounded ? 'pass' : 'fail', 'Player display names are bounded server-side', `returned length=${returnedNameLength}`);
       if (!bounded) {
         finding({
           id: 'SOCKET-NAME-UNBOUNDED',
@@ -813,7 +833,7 @@ async function runSocketChecks() {
           category: 'input validation',
           title: 'Player display name was not bounded server-side',
           description: 'A deliberately oversized display name was accepted without the documented length cap.',
-          evidence: [`Returned length=${String(joinTwo.value.name || '').length}`],
+          evidence: [`Returned length=${returnedNameLength}`],
           recommendation: 'Enforce a small server-side display-name limit before broadcasting the value.',
         });
       }
@@ -824,6 +844,7 @@ async function runSocketChecks() {
         code: room.code,
         name: 'not-the-original-player',
         playerId: joinOne.value.playerId,
+        reconnectToken: 'invalid-reconnect-credential',
       });
       const identityRebound = impersonated.value?.ok === true
         && impersonated.value.playerId === joinOne.value.playerId

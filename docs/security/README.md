@@ -15,6 +15,8 @@ node scripts/security-assessment.mjs \
 
 The live assessment performs safe HTTP/TLS checks, a headless player/host browser smoke check, static client-sink checks, a production dependency audit, sensitive-path/traversal probes, CORS and TRACE inspection, and one short-lived Socket.IO room to verify host-only authorization. It does **not** brute-force, load-test, access accounts, upload files, or perform destructive actions.
 
+Application-controlled protections shipped with this repository: CSP (`default-src 'none'`, `frame-ancestors 'none'`), HSTS, `X-Content-Type-Options`, clickjacking protection, strict `Referrer-Policy`, a restrictive `Permissions-Policy`, `x-powered-by` removal, Socket.IO `allowRequest` origin enforcement, a transport/application payload limit, per-socket event quotas, a failed-join throttle, and a high-entropy per-player room-lifetime reconnect credential that is never broadcast. Edge-managed headers (`server`, `x-railway-edge`) must be configured at the host (Cloudflare/Railway) and are re-checked by the live assessment.
+
 Use `--no-socket` when only the public HTTP surface should be assessed. Set `SECURITY_TARGET` instead of `--target` for CI or another approved deployment. CI should set `SECURITY_ALLOWED_HOSTS`, `SECURITY_ALLOWED_ORIGINS`, and `SECURITY_REQUIRE_HTTPS=true`; the checked-in workflow allows only the exact origin `https://amuseical.com`.
 
 ## Interpretation
