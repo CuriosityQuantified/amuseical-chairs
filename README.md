@@ -1,427 +1,158 @@
-# 🎵 Musical Chairs
+# Amuse-ical Chairs
 
-A hybrid-meeting party game: classic musical chairs with the scramble for a
-seat replaced by a **skill scramble**. One projected host screen, every player
-on their own phone or laptop. 2–30 players, ~20 minutes including rules.
+A browser party game for meetings, classrooms, and groups. One person projects the host screen; everyone else plays on a phone or laptop. The room competes through simultaneous skill games, then finishes with a clock-synced musical-chairs reaction tournament.
 
-Every scoring round is played by **all surviving players simultaneously** —
-nothing is turn-based.
+**Play:** [amuseical.com](https://amuseical.com)
 
-## Quick start
+**Host:** [amuseical.com/host.html](https://amuseical.com/host.html)
 
-```bash
-npm install
-npm start          # http://localhost:3000
-```
+## How it works
 
-- **Host:** open `/host.html`, create a room, project the screen.
-- **Players:** scan the QR / open `/?code=XXXX`, enter a name.
-- Host config lives in the lobby screen and is deliberately one knob —
-  **minigame duration** — plus the per-game toggles and the solo-test
-  buttons. See *Host config* below before adding a second one.
+1. The host creates a room and projects the QR code
+2. Up to 30 players join with the four-letter code
+3. The host chooses a round length and enables the games they want
+4. Everyone plays each enabled game at the same time
+5. Scores are normalized to 0–1000 within each game, so different skills can share one leaderboard
+6. The session ends with musical chairs: the slowest reaction loses a chair each round, and final placement earns up to 3000 bonus points
 
-```bash
-npm test           # unit tests + 20-bot end-to-end harness
-npm run check      # static checks the test suite can't do (see CI below)
-npm run security:assess -- --target https://amuseical.com \
-  --report docs/security/assessment-latest.md \
-  --json docs/security/assessment-latest.json
-```
+There are no accounts or permanent profiles. Rooms live in memory and disappear after the session.
 
-## Security assessment
+### Solo practice
 
-The repository includes a repeatable, low-impact external assessment in
-[`scripts/security-assessment.mjs`](scripts/security-assessment.mjs), focused on
-TLS, HTTP security headers, CORS, TRACE, sensitive-path exposure, client-side
-HTML/code sinks, and Socket.IO host authorization. Its regression coverage lives
-in [`test/security.test.js`](test/security.test.js); the latest reviewed output is
-[`docs/security/assessment-latest.md`](docs/security/assessment-latest.md).
+Open the player page and choose **Practice solo** to try any game without creating a hosted room. The host lobby can also launch an unscored test with whoever has joined.
 
-It intentionally does not brute-force, load-test, access accounts, upload files,
-or perform destructive actions. A clean run is evidence about the checked scope
-at that time, not proof that the site has no vulnerabilities. See
-[`docs/security/README.md`](docs/security/README.md) for limitations and the
-manual workflow required for credentialed or authenticated testing.
+## Games
 
-## How a game works
+The current roster has 22 games across perception, timing, memory, attention, social play, language, motor control, and numerical reasoning.
 
-Score attack — no elimination:
+| Category | Games |
+|---|---|
+| Perceptual | RGB Color Match, Odd One Out, Bisect the Line, Proportion Sense, Trace the Shape |
+| Numerical | Dots in the Jar, Fraction Face-Off |
+| Timing | Stop the Clock, Metronome Blackout |
+| Memory | Grid Flash, Vanishing Tray |
+| Attention | Follow the Cup, Stroop Rush |
+| Social | Read the Room, Caption Battle, Icebreaker |
+| Language | Anagram Rush, Word Hunt |
+| Motor | Typing Sprint, Space Mash, Slingshot, Balance the Beam |
 
-1. Games are drawn from a 15-game roster across 7 categories and played by
-   **all players simultaneously**, in a seeded-shuffled order. Every enabled
-   game is played exactly once — to shorten a session, turn games off. Music +
-   circling avatars play between games.
-2. Before each game (and the finale), everyone sees an **animated how-to
-   tutorial**: looping ✓ DO / ✗ AVOID demos of the game. It loops until the
-   host's Next — or the solo player's Skip — jumps straight in.
-3. Most games are one payload with one deadline. **Caption Battle** and
-   **Icebreaker** are multi-stage: the room submits, and what it submitted
-   becomes the stages that follow. Every stage is still played by all players
-   at once — see *Multi-stage games* below.
-4. Raw metrics are normalized per game to 0–1000 **across only the players
-   who played it** (P90/P10 outlier clamps; no rank-summing). Non-submitters
-   score 0 for that game but stay in.
-5. After every game, each player sees their raw result, points earned,
-   running total, and rank; a **live leaderboard strip** stays pinned to the
-   top of every player screen and the host screen for the whole session.
-6. The finale is **musical chairs** — a bonus elimination tournament of
-   clock-synced reaction rounds. With N players there are N−1 rounds; every
-   round shows one chair fewer than the players still in (players − 1), the
-   slowest reaction is eliminated, and everyone else's avatar visibly takes
-   a chair. Play continues until one player holds the last chair. Final
-   placement pays **3× bonus points** (1st = 3000 … last = 0, linear).
-7. Highest cumulative total wins.
+Anagram Rush and Word Hunt are off by default. The other 20 games start enabled and can be switched off in the host lobby.
 
-Round content is randomized **server-side** with a seeded RNG and broadcast
-to every player, so everyone always plays the identical configuration:
-Stop the Clock draws a random 6–10s target, Metronome Blackout draws a
-400–900ms beat that is never a whole number of BPM, Follow the Cup draws a
-seed every level's shuffle script is derived from, Grid Flash varies pattern
-sizes (6–9 cells), Slingshot jitters the distance ±25%, Trace picks from 15
-shapes, and Read the Room draws from an **80-question humorous bank**
-(Typing Sprint from 30 sentences, Caption Battle from 30 prompts, Icebreaker
-from 16) with no repeats within a session. Icebreaker's fact order and its
-candidate list are drawn the same way, so the room walks the same list in the
-same order on every screen.
+Caption Battle and Icebreaker are multi-stage games built from the room's own submissions. Player-authored text is normalized server-side, displayed anonymously where appropriate, and can be removed from every screen by the host.
 
-## Multi-stage games
+## Scoring and fairness
 
-A minigame is normally one payload with one deadline. A **multi-stage** game
-collects from everyone, builds the stages that follow out of what the room
-submitted, then collects from everyone again and scores at the end. Every
-stage is played by every player at once — nothing here is turn-based.
+- Each game uses a seeded server-generated round, so every player receives the same content
+- Raw results are normalized against only the players who attempted that game
+- Missing a game scores 0 but does not remove the player
+- The musical-chairs finale uses server-time synchronization so network latency does not become reaction time
+- Reconnecting restores identity and score through a private room-lifetime credential; the public player ID is never accepted as proof of ownership
+- Color-dependent interactions include labels, textures, initials, or other non-color cues
+- Reduced-motion preferences are supported without changing seeds or scoring
 
-Two rules hold for every one of them. **Degenerate pools are defined, not
-accidental**: fewer than two usable submissions means there is nothing to
-choose or guess between, so the later stages are skipped and stage 1 is
-scored — the room always reaches a scores screen. And **reconnects between
-stages** land on whatever stage the room is actually on, keep their identity
-and running total, and score 0 for the stage they missed, the same as any
-other missed submission.
+## Run locally
 
-### Caption Battle
-
-Stage 1: everyone answers the same seeded prompt. Stage 2: everyone reads the
-**anonymized** pool and spends 3 votes. Score = votes received; authorship is
-revealed only at the score reveal.
-
-- **Why 3 votes and not 1.** Vote-based scoring concentrates: a room of 20
-  puts its votes on 3–4 answers, and everyone else ties at the floor for a
-  whole game. Multiple votes per player flattens the distribution so mid-tier
-  answers separate from zero. The budget clamps to *pool size − 1*, so it can
-  never be spent on yourself.
-- **Self-votes** are rejected server-side by `playerId`. The client greys out
-  your own entry as a courtesy; it is not the enforcement.
-- **2 players works** — each can vote only for the other.
-- **Pacing.** Two deadlines plus time for the room to *read* costs roughly
-  double a normal slot. The lobby marks it `⏱⏱`.
-
-### Icebreaker
-
-As long as the room. Stage 1: everyone writes one true fun fact about
-themselves. Then the room is served those facts **one at a time** — same
-fact, same order, same candidate list on every screen — and everyone picks
-who they think wrote it. Nobody sees the next fact until the current one
-closes for everybody. Between facts the room stops: the host screen invites
-the discussion (*"who wrote it?"*, everyone says their pick out loud), the
-host's **Next** puts the answer on the projector, and **Next** again starts
-the next fact. Score = facts matched to the right person.
-
-- **Every player is an option on every fact**, including yourself and
-  including anyone who never wrote one, in one order that never moves. The
-  same name can be picked as often as you like; only the correct picks score.
-- **Your own fact is a free point**, by design. Everyone in the room has
-  exactly one, so it cancels out — and it beats greying out your own name
-  mid-game, which would tell the room something. Your screen quietly notes
-  *"this one's yours"* so you aren't left wondering.
-- **The answer is never broadcast early.** Until the host presses Next the
-  server has not sent authorship to any device — the discussion half of the
-  reveal carries the fact and a count of locked-in guesses, nothing more.
-- **Pacing.** One guessing stage per fun fact, each on half a normal slot, so
-  the game costs roughly *players ÷ 2* slots on top of the writing stage. The
-  lobby marks it `⏱×players`, the way Caption Battle is marked `⏱⏱` — a big
-  room should know what it is enabling before it plans a meeting around it.
-
-### Moderation
-
-Player-authored text reaches a projector in a work meeting, and there is no
-undo on a room full of people reading something. Every string is normalized
-once, server-side, on the way into the pool (`shared/textclean.js`): length
-capped by code point, control and format characters stripped (including the
-bidi overrides that render text in an order it wasn't typed in), newlines and
-tabs collapsed, Zalgo mark stacks capped. The host screen has a **hide this
-entry** control that removes an entry from every screen immediately and voids
-every vote or guess cast for it — for Caption Battle one entry out of the
-pool, for Icebreaker the single fun fact currently on the projector, which
-then scores nobody and is not attributed to anyone at the reveal.
-
-The host screen shows what the room has to read — Caption Battle's pool
-during the vote, Icebreaker's one fact during the guess — plus a count of how
-many players have answered. Per-entry tallies and running scores stay off the
-projector until the moment they are the point: **live scores never appear on
-the host screen**, for these games or any other. Icebreaker's between-facts
-reveal shows who wrote the fact and how the room voted on *that fact*; it
-never shows anyone's running total.
-
-## Anti-cheat details worth knowing
-
-- **Redemption mashing:** any press before green silently redraws the delay
-  and reschedules green from the moment of the press. A masher never sees
-  green, hits the 25s hard timeout, and takes last place. A single
-  anticipatory press costs a fair 10% penalty.
-- **Clock sync:** NTP-style offset estimation on join and again before every
-  redemption round; green is scheduled at absolute server time, timed on the
-  client from the rendered frame to `keydown` — network latency never touches
-  the measurement. The host screen shows a per-player sync-confidence dot.
-- **Space Mash:** counting requires a `keyup` between `keydown`s (holding the
-  spacebar scores 1, not 300), plus a rolling 20 presses/sec anti-macro cap.
-- **Color match** is scored with CIEDE2000 (perceptual), not RGB distance.
-- **Metronome Blackout:** taps are consumed *in order* against the beat grid,
-  never matched to whichever beat they landed nearest — so filling the window
-  with taps buys a worse average, never a better one, and a missed beat costs
-  exactly what the most wrong possible tap costs. The beat is a whole number of
-  milliseconds that is never a whole number of BPM (`60000 % intervalMs !== 0`),
-  which makes a metronome app impractical — you would still have to match phase
-  inside one round — rather than impossible. That trade is accepted knowingly;
-  the airtight version is a mid-round tempo change, at the cost of a harder
-  game. Unlike the finale, none of this needs clock sync: the grid is scheduled
-  and the taps are timed on the same device, so network latency never enters
-  the metric.
-- **Follow the Cup** hides nothing, on purpose. Every level's swap script comes
-  from `shared/cups.js`, seeded per round — the client animates it, the server
-  re-derives it to score, and the ball's whole path is on screen while it runs.
-  Putting the answer in the round's `secret` half would hide it from nobody
-  (the client has to animate the ball to draw the game) so it is not pretended
-  otherwise. What the server does refuse to take on trust is the *payload*: a
-  run is walked from level 1 upward, each pick checked against the re-derived
-  ball position and against that level's cup count, and the walk stops at the
-  first pick that is not a correct answer to the level it is standing on. A
-  claimed level number buys nothing, a repeat clears one level, and a gap in
-  the ladder ends the run. Each level's animation is driven by elapsed
-  milliseconds, never by frame count, so a phone at half the frame rate gets
-  exactly the same shuffle at exactly the same speed as a laptop.
-
-## Host config
-
-The lobby's config panel is **minigame duration**, the per-game toggles, and
-the solo-test buttons. That is the whole host-facing surface, and it is
-enforced rather than remembered:
-
-- `HOST_EDITABLE_CONFIG` in `server/room.js` is the only set of config keys
-  `updateConfig` accepts from the lobby; anything else in a `host:config`
-  patch is dropped.
-- `publicConfig()` publishes no value the host is not allowed to change, so a
-  control has nothing to render from either.
-- `npm run check` fails on any `cfg-*` control in `public/host.html` or
-  `public/js/host.js` that is not on its allowlist, and on the two ends of
-  that allowlist disagreeing.
-- `test/room.test.js` asserts the published keys and that a patch carrying
-  `gamesPerSession` changes nothing.
-
-Everything else — `gamesPerSession`, the tutorial and pacing knobs, the
-early-press penalty, the slingshot distance — is an internal default. A room
-can be constructed with them (the bot harness runs a full session in seconds
-that way), but no host screen shows them. `Games this session` and `Practice
-round first` were both host controls once and both grew back with a later
-feature; the checks above exist because nothing failed when they did. Adding a
-host option on purpose means changing the control, the allowlist in
-`scripts/check.mjs`, and `HOST_EDITABLE_CONFIG` together.
-
-**There is no practice round.** A session opens on game one, for points —
-`practice` is not a config key, `startPractice()` and the `practice_done`
-phase are gone, and `test/room.test.js` fails if a room ever enters one.
-Anyone who wants to shake a game out beforehand runs it from the lobby's
-**Solo test** buttons, which is what they are for. Every enabled game is
-played; to shorten a session, turn games off.
-
-## Architecture
-
-- Node 20 + Express + **Socket.IO** (persistent websockets — the clock sync
-  depends on them). Client is vanilla JS + Canvas, no build step.
-- **All state in memory. No database.** Sessions are ephemeral by design.
-- Reconnects: `playerId` persists in `localStorage`; a dropped player never
-  loses their identity or score for a wifi hiccup — missed submissions
-  simply score 0 for that game.
-- `shared/` holds pure logic (normalization, redemption state machine,
-  press counter, CIEDE2000) served unmodified to the
-  browser and imported directly by server + tests.
-
-```
-server/   express + socket wiring, room state machine, game metrics
-shared/   pure logic used by server, client, and tests
-public/   host screen, player screen, 14 minigame clients
-test/     unit tests + room integration + 20-headless-bot harness
-scripts/  static checks run in CI
-graphify-out/  knowledge graph of this repo (see below)
-```
-
-## Knowledge graph
-
-This repo carries a [graphify](https://github.com/Graphify-Labs/graphify) map of
-itself in `graphify-out/`, so a question about the codebase can be *asked*
-rather than grepped:
+Requires Node.js 20 or newer.
 
 ```bash
-graphify query "how does clock sync and redemption scoring work?"
-graphify path "Room" "seededRng()"     # how two things connect
-graphify explain "Room"                # one concept and its 57 neighbours
-graphify affected "seededRng()"        # what breaks if this changes
-npm run graph:report                   # the god nodes, quickest look
+git clone https://github.com/CuriosityQuantified/amuseical-chairs.git
+cd amuseical-chairs
+npm ci
+npm start
 ```
 
-`graphify-out/graph.html` is the same graph as a clickable force-directed map.
-`GRAPH_REPORT.md` is the prose version: god nodes, communities, the connections
-worth knowing, and the questions the graph is best placed to answer.
+Open:
 
-One caveat on `graph.html`: it loads `vis-network` from unpkg, so unlike the
-rest of this repo it wants a network to render. That is graphify's output, not
-ours — `graph.json` and `GRAPH_REPORT.md` are entirely self-contained, and every
-`graphify` command works offline.
+- Player: [http://localhost:3000](http://localhost:3000)
+- Host: [http://localhost:3000/host.html](http://localhost:3000/host.html)
+- Health check: [http://localhost:3000/healthz](http://localhost:3000/healthz)
 
-`affected` earns its place here. This codebase has a standing rule that round
-content comes from the seeded RNG and never from `Math.random()`, enforced by
-`npm run check` — and `graphify affected "seededRng()"` lists the eight call
-sites in `server/room.js` plus the tests and `scripts/check.mjs` that depend on
-it, 20 nodes in all: the blast radius that rule exists to protect.
+The server respects `PORT` in hosted environments.
 
-### Setup
+## Development
+
+The application has no frontend build step. Express serves vanilla ES modules, CSS, Canvas/WebGL game clients, and shared deterministic game logic directly to the browser. Socket.IO carries room state, submissions, host controls, reconnects, and clock synchronization.
+
+```text
+server/       Express, Socket.IO handlers, room state machine, scoring
+shared/       deterministic logic shared by server, browser, and tests
+public/       host UI, player UI, tutorials, and game clients
+test/         unit, integration, security, accessibility, and bot tests
+tests/e2e/    Playwright browser flows
+docs/         design audits, security evidence, and graphify runbook
+scripts/      repository checks, graph lock, and security assessment
+graphify-out/ committed codebase knowledge graph
+```
+
+All room state is process-local and ephemeral. Run one application instance unless you add shared state and a Socket.IO adapter.
+
+### Commands
 
 ```bash
-uv tool install "graphifyy[mcp]"   # or: pipx install "graphifyy[mcp]"
-npm run graph:setup                # skill, hooks, post-commit rebuild, merge driver
+npm test             # unit/integration suite and 20-bot session harness
+npm run test:e2e     # Playwright flows in Chromium
+npm run check        # source, roster, config, accessibility, and graph checks
+npm run graph        # refresh the committed AST knowledge graph
+npm run graph:report # show the graph's highest-connectivity nodes
+npm run security:assess -- --target https://amuseical.com
 ```
 
-`graph:setup` is `graphify install --project && graphify hook install`, and it is
-the whole per-machine story. Take the `[mcp]` extra: without it the MCP server
-below cannot start.
+CI runs syntax/server smoke tests, graph freshness checks, the full suite on Node 20/22/24, Playwright, and a production dependency audit.
 
-Committed, so it is there on clone: `.claude/skills/graphify/` (the `/graphify`
-skill), `.mcp.json`, and `.gitattributes`. Deliberately **not** committed: the
-`PreToolUse` hooks and the post-commit rebuild, because `graphify install` and
-`graphify hook install` both embed the absolute path of the interpreter that ran
-them — correct on one machine, a broken hook on every other. Those land in the
-gitignored `.claude/settings.local.json` and in `.git/hooks/`, which is why you
-run the setup yourself rather than inheriting someone else's paths.
+## Security
 
-### The graph as tools, not commands
+The server applies a restrictive Content Security Policy, HSTS, clickjacking and MIME protections, a strict referrer policy, a restrictive permissions policy, Socket.IO origin checks, application and transport payload limits, per-event quotas, and failed-join throttling. Player reconnect credentials are generated server-side and never broadcast in room snapshots.
 
-`.mcp.json` registers graphify as a project MCP server, so an assistant working
-in this repo gets the graph as **native tools** — `query_graph`, `shortest_path`,
-`get_node`, `get_neighbors`, `get_community`, `god_nodes`, `graph_stats` — rather
-than a bash incantation it has to remember. That is the difference between a
-graph that gets used and a graph that gets documented.
+The repository also includes a bounded external assessment harness. It checks TLS, HTTP headers, CORS, sensitive-path exposure, browser errors, Socket.IO authorization, and production dependencies without brute force, load testing, or destructive actions.
 
-The soft `PreToolUse` nudge stays advisory on top of it: it reminds, it never
-blocks. Nothing in this repo denies you a plain `grep`.
+- [Assessment methodology](docs/security/README.md)
+- [Latest deployed assessment](docs/security/assessment-latest.md)
 
-### Why merges don't rot it
-
-`.gitattributes` assigns `graphify-out/graph.json` a union merge driver, because
-that file is ~13k lines of JSON that two branches will both touch. Without the
-driver every branch merge is a conflict in a generated file, and the realistic
-outcome of that is not careful conflict resolution — it is somebody deleting the
-graph. `npm run graph:setup` registers the driver half in your git config; git
-falls back to an ordinary text merge if you skipped it, so the committed
-`.gitattributes` is safe either way.
-
-### Keeping it current
-
-```bash
-npm run graph            # graphify update .  — AST only, no API key, no cost
-npm run graph:rebuild    # graphify extract . — also re-reads docs, needs a backend
-```
-
-- **The code half is deterministic and free.** Every code node and edge comes
-  from a local tree-sitter parse: no API calls, nothing leaves the machine, same
-  input same output. That is the half `npm run graph` refreshes, and it is the
-  half that matters after a normal change.
-- **Two things here did use an LLM:** the semantic pass over the 5 non-code
-  files (`README.md`, `.claude-progress.md`, both HTML screens, the CI
-  workflow), and the community names. Neither is needed to query the graph.
-- **Community names drift.** Leiden clustering is not perfectly stable, so a
-  rebuild can shuffle communities and fall back to naming a few after their hub
-  node. `graphify label .` renames them; nothing else is affected.
-- **`npm run check` fails on a stale graph, and CI runs it.** Rule 7 compares
-  every indexed file against the content hash the graph was built from, kept in
-  `graphify-out/graph-lock.json`. Edit a module, delete one, or add one without
-  refreshing, and the build tells you to run `npm run graph`. This is the same
-  bet as the host-config allowlist: a stale graph looks right from every angle
-  and answers wrong, so something has to say otherwise.
-- **Freshness is checked by hash, not by commit.** Two tempting versions of that
-  rule are both broken, and it is worth knowing why before rewriting it.
-  `GRAPH_REPORT.md` records the commit the graph was built from and *cannot*
-  record the commit that adds it, so comparing against `HEAD` always reads one
-  behind. Requiring `graph.json` in the same diff as the code is worse: it is
-  satisfied by whichever commit first added the graph and then passes forever —
-  the rule was written that way first, and the mutation test caught it. And
-  rebuilding inside CI to diff would be flaky, because clustering isn't stable.
-- **The post-commit hook does the refresh for you.** `npm run graph:setup`
-  installs it; after each commit the code half rebuilds and you commit the
-  result. Rule 7 looks at the working tree, not a commit range, so it does not
-  care whether the graph rides along in the same commit or the next one.
-
-### What is deliberately not in the graph
-
-`.graphifyignore` holds the exclusions, and one is worth explaining.
-`public/vendor/` is 2MB of vendored three.js against roughly 300KB of this
-project. Indexed, it wins outright: the god nodes come back `Vector3`,
-`WebGLRenderer`, `Object3D`, `Matrix4`, and `Room` — the actual centre of this
-system — places third. A graph of this codebase is a graph of the code this repo
-is answerable for, so the vendored library, graphify's own 124KB of skill
-documentation, and `package-lock.json` all stay out. What remains is a few
-hundred nodes across a couple dozen communities, and `Room` sits at the top of it
-where it belongs. `GRAPH_REPORT.md` carries the exact counts — quoting them in
-prose is a losing game, since editing this paragraph changes the graph that
-describes it.
-
-### Doing this to another repo
-
-`docs/graphify-runbook.md` is the portable version of everything above: install,
-what to exclude and how to tell you got it wrong, what to commit, the MCP wiring,
-and the freshness gate — including the two designs for that gate that look right
-and are not. Written to be dropped into a repo that is not this one.
-
-## CI
-
-`.github/workflows/ci.yml` runs on every pull request and every push to
-`main`; the same checks run locally with `npm run check` and `npm test`.
-(The workflow spent two branches parked at `docs/ci-workflow.yml`, because
-the token that wrote it could not push to `.github/workflows/`. It is
-installed now — that file is gone, and there is one copy.)
-
-The workflow runs:
-
-- **Static checks** (`npm run check`) — the browser half of this app has no
-  build step, so `node --test` never parses `public/js/*.js` at all. The
-  checker parses every source file, verifies client modules only import
-  absolute paths (there is no bundler, so a bare specifier is a 404 on a
-  player's phone), verifies every roster game has both a client and a
-  tutorial and that multi-stage games are wired end to end, rejects
-  `Math.random()` in server or shared code — round content must come from the
-  seeded RNG or the room silently desyncs — holds the host config panel to
-  its one knob (see *Host config* above), and fails when the committed knowledge
-  graph has gone stale against the code it describes (see *Knowledge graph*).
-  That last rule compares file hashes rather than git history, so it needs no
-  extra checkout depth and holds in a shallow clone.
-- **Tests** on Node 20, 22 and 24. Every bug in this system is a 20-player
-  concurrency bug, and those surface differently across Node's timer and
-  socket behaviour.
-- **Dependency audit** on the production tree.
-
-`test/smoke.test.js` boots the real server and fetches every absolute import
-found in the client modules — an unserved `/shared/*.js` is a 404 in the
-browser and green in every other test.
+The latest committed assessment observed 43 passing checks, one informational edge-managed header disclosure, and no critical, high, medium, or low findings. That result describes a limited point-in-time scope, not proof that the application has no vulnerabilities.
 
 ## Deployment
 
-Deploy anywhere that holds a long-lived websocket: **Railway, Render, or
-Fly.io** (`npm start`, port from `$PORT`). Vercel serverless is a poor fit —
-it won't hold websockets and the clock sync degrades; if you must, swap in a
-dedicated realtime service. Simplest fallback: run on the host's laptop
-behind a Cloudflare Tunnel.
+Deploy with:
 
-## Out of scope (by design)
+```bash
+npm ci
+npm start
+```
 
-Accounts, persistence, cross-session leaderboards, native apps, spectators,
-anything requiring pre-gathered player data, and
-any turn-based mechanic whatsoever.
+Use a host that supports long-lived WebSocket connections, such as Railway, Render, or Fly.io. Set `PORT` if the platform does not inject it. Serverless request handlers are a poor fit because active rooms and clock synchronization require a persistent process.
+
+Production currently runs at [amuseical.com](https://amuseical.com).
+
+## Repository knowledge graph
+
+This repository commits a [Graphify](https://github.com/Graphify-Labs/graphify) graph under `graphify-out/`. After changing indexed files, refresh it before committing:
+
+```bash
+uv tool install "graphifyy[mcp]"   # once per machine
+npm run graph:setup                 # install project integration and hooks
+npm run graph                       # refresh code nodes and the freshness lock
+```
+
+Useful queries:
+
+```bash
+graphify query "how does player reconnect authentication work?"
+graphify explain "Room"
+graphify affected "seededRng()"
+```
+
+See [docs/graphify-runbook.md](docs/graphify-runbook.md) for setup and maintenance details.
+
+## Contributing
+
+1. Branch from `main`
+2. Add regression coverage for behavior changes
+3. Run `npm test`, `npm run test:e2e`, and `npm run check`
+4. Run `npm run graph` after changing indexed files
+5. Open a pull request and wait for every CI job to pass
+
+When adding a game, update the server roster, browser implementation, tutorial, scoring tests, and repository checks together. Hosted game settings are intentionally limited to duration and per-game toggles.
+
+## License
+
+MIT
