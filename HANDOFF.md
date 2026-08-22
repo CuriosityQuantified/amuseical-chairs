@@ -38,6 +38,7 @@ The graphify MCP tools were not available in this Hermes session. The repository
 - `npm test` — **passed: 289 tests, 0 failures**.
 - `npm run graph` — **passed**; refreshed tracked graph artifacts and graph lock.
 - `npm run check` — **passed**; checked 60 files and 22 roster games.
+- Initial PR CI graph check failed because the local graph had indexed untracked `strix_runs/` files that are excluded from the PR; those files were moved aside, `npm run graph` was rerun, and `npm run check` passed again without them.
 - `git diff --check` — **passed**.
 - `node --check` over `server/*.js`, `shared/*.js`, `scripts/*.mjs`, and `test/*.js` — **passed**.
 - `npm start` plus `curl --fail http://127.0.0.1:3000/healthz` — **passed: {"ok":true}**.
