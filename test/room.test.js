@@ -139,6 +139,63 @@ test('score attack: every game once, totals accumulate, chairs finale, highest t
   }
 });
 
+test('repeating join on the same socket returns the existing player instead of minting a second identity', () => {
+  const room = new Room(stubIo(), 'ONES', {});
+  try {
+    const socket = { id: 'sock-one', join() {}, data: {} };
+    const first = room.join(socket, { name: 'Alpha' });
+    const second = room.join(socket, { name: 'Bravo' });
+
+    assert.equal(first.ok, true);
+    assert.equal(second.ok, true);
+    assert.equal(second.playerId, first.playerId);
+    assert.equal(room.players.size, 1);
+    assert.equal(room.players.get(first.playerId).name, 'Alpha');
+  } finally {
+    room.destroy();
+  }
+});
+
+test('a socket already bound to one player cannot reconnect as a different player', () => {
+  const room = new Room(stubIo(), 'SWAP', {});
+  try {
+    addPlayer(room, 'p1', 'Alpha');
+    addPlayer(room, 'p2', 'Bravo');
+    room.players.get('p1').socketId = 'sock-shared';
+    room.players.get('p2').socketId = 'sock-other';
+
+    const socket = { id: 'sock-shared', join() {}, data: { playerId: 'p1' } };
+    const attempt = room.join(socket, { playerId: 'p2', reconnectToken: 'test-reconnect-p2' });
+
+    assert.equal(attempt.error, 'This connection is already bound to another player.');
+    assert.equal(room.players.get('p1').socketId, 'sock-shared');
+    assert.equal(room.players.get('p2').socketId, 'sock-other');
+  } finally {
+    room.destroy();
+  }
+});
+
+test('disconnect clears every player record still attached to the socket', () => {
+  const room = new Room(stubIo(), 'GHST', {});
+  try {
+    addPlayer(room, 'p1', 'Ghost A');
+    addPlayer(room, 'p2', 'Ghost B');
+    room.players.get('p1').socketId = 'sock-ghost';
+    room.players.get('p2').socketId = 'sock-ghost';
+
+    room.handleDisconnect({ id: 'sock-ghost', data: { playerId: 'p2' } });
+
+    assert.equal(room.players.get('p1').connected, false);
+    assert.equal(room.players.get('p2').connected, false);
+    assert.equal(room.players.get('p1').socketId, null);
+    assert.equal(room.players.get('p2').socketId, null);
+    assert.ok(room.players.get('p1').disconnectedAt);
+    assert.ok(room.players.get('p2').disconnectedAt);
+  } finally {
+    room.destroy();
+  }
+});
+
 // gamesPerSession is an internal default, not a host option: every hosted
 // session plays all of its enabled games (0), and the K-of-N draw stays here
 // as the pacing lever a room can be constructed with.
@@ -267,6 +324,36 @@ test('2-player finale: one round, placement bonus (3000 / 0) can flip the lead',
     assert.equal(room.finalStandings.length, 2);
     assert.equal(room.finalStandings[0].total, 3000, 'Ben: 0 from games + 3000 bonus');
     assert.equal(room.finalStandings[1].total, 1000, 'Anna: 1000 from games + 0 bonus');
+  } finally {
+    room.destroy();
+  }
+});
+
+test('host cannot skip a chairs redemption round before player reports arrive', async () => {
+  const room = new Room(stubIo(), 'SKIP', {
+    ...FAST,
+    enabled: onlyGames('stopclock'),
+  });
+  try {
+    addPlayer(room, 'a', 'Alpha');
+    addPlayer(room, 'b', 'Bravo');
+    room.start();
+    await waitFor(() => room.phase === 'minigame', 3000, 'minigame');
+    room.handleSubmit('a', { best: 100 });
+    room.handleSubmit('b', { best: 200 });
+    await waitFor(() => room.phase === 'scores', 3000, 'scores');
+    room.hostNext();
+    await waitFor(() => room.phase === 'redemption', 3000, 'finale');
+
+    assert.deepEqual(room.hostNext(), { ok: false, error: 'pending_reports' });
+    assert.equal(room.phase, 'redemption', 'host skip is rejected until chairs reports arrive');
+    assert.equal(room.redemption.reports.size, 0, 'no synthetic results are created');
+
+    await waitFor(() => room.redemption && room.redemption.tGreen, 3000, 'go');
+    room.handleRedemptionReport('a', { status: 'ok', rawMs: 210, earlyPresses: 0 });
+    room.handleRedemptionReport('b', { status: 'ok', rawMs: 320, earlyPresses: 0 });
+    await waitFor(() => room.phase === 'chairs_result', 3000, 'result');
+    assert.equal(room.chairs.eliminated[0], 'b', 'actual slowest reporter is eliminated');
   } finally {
     room.destroy();
   }

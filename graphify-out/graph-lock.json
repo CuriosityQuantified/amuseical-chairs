@@ -16,6 +16,10 @@
       "ast": "1537a1504800a15fb24708220ea31081",
       "semantic": "1537a1504800a15fb24708220ea31081"
     },
+    "HANDOFF.md": {
+      "ast": "de65de2bf33232e5b971200318be5d2a",
+      "semantic": null
+    },
     "README.md": {
       "ast": "1885852532e2d94acf4137e953c54702",
       "semantic": null
@@ -109,7 +113,7 @@
       "semantic": "f9bcb5a92468425b887f7d6ed3da4eb4"
     },
     "server/room.js": {
-      "ast": "2a8ad2bd34bfbe90b6fe789b03f599c6",
+      "ast": "452d0503342562746efe0d352d26fd0c",
       "semantic": null
     },
     "server/sockets.js": {
@@ -178,6 +182,62 @@
     },
     "shared/wordhunt.js": {
       "ast": "039afc4f174bdfa0a7624a37f8a4bf20",
+      "semantic": null
+    },
+    "strix_runs/amuseical-chairs_cf9e/.state/agents.json": {
+      "ast": "db10df0879f19d5958f64441400915d8",
+      "semantic": null
+    },
+    "strix_runs/amuseical-chairs_cf9e/.state/notes.json": {
+      "ast": "fdcae443ab554334c7b4f8c4df1aa600",
+      "semantic": null
+    },
+    "strix_runs/amuseical-chairs_cf9e/.state/todos.json": {
+      "ast": "9511289db18e8fd2669b800e979ecd70",
+      "semantic": null
+    },
+    "strix_runs/amuseical-chairs_cf9e/penetration_test_report.md": {
+      "ast": "494d12fbacee42ff0212b570ad697466",
+      "semantic": null
+    },
+    "strix_runs/amuseical-chairs_cf9e/run.json": {
+      "ast": "e253fd5a30ec2c5ecb1548a3271e5d72",
+      "semantic": null
+    },
+    "strix_runs/amuseical-chairs_cf9e/vulnerabilities.json": {
+      "ast": "20001dd19c790a05ffcb78eb3be86d86",
+      "semantic": null
+    },
+    "strix_runs/amuseical-chairs_cf9e/vulnerabilities/vuln-0001.md": {
+      "ast": "ef08357b0f4061c653d6b6f36e9686f1",
+      "semantic": null
+    },
+    "strix_runs/amuseical-chairs_cf9e/vulnerabilities/vuln-0002.md": {
+      "ast": "a36dbe27c7cf159436cd516fb20073df",
+      "semantic": null
+    },
+    "strix_runs/amuseical-chairs_cf9e/vulnerabilities/vuln-0003.md": {
+      "ast": "ef1220bccae9bd9549ee5fe48f004535",
+      "semantic": null
+    },
+    "strix_runs/amuseical-chairs_cf9e/vulnerabilities/vuln-0004.md": {
+      "ast": "7f8f8a41f4679e333a114474f37e8ec5",
+      "semantic": null
+    },
+    "strix_runs/amuseical-chairs_cf9e/vulnerabilities/vuln-0005.md": {
+      "ast": "f99f3aa1c859c8c91806646076073ab7",
+      "semantic": null
+    },
+    "strix_runs/amuseical-chairs_cf9e/vulnerabilities/vuln-0006.md": {
+      "ast": "e7b8ce7a94022665d6820dc9fe370da7",
+      "semantic": null
+    },
+    "strix_runs/minigame_score_validator_d95133dd.json": {
+      "ast": "b66d54342bc3411a434eac49464946b7",
+      "semantic": null
+    },
+    "strix_runs/minigame_score_validator_d95133dd.mjs": {
+      "ast": "75e2ac380946433360ed5f84f0a8def3",
       "semantic": null
     },
     "test/anagram.test.js": {
@@ -265,7 +325,7 @@
       "semantic": null
     },
     "test/room.test.js": {
-      "ast": "ce526a5174632b581ee8e4911f0274ef",
+      "ast": "3675a267f5bce191469ce12eba66412c",
       "semantic": null
     },
     "test/roster.test.js": {
