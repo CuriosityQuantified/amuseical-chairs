@@ -7817,7 +7817,7 @@
       "node_kind": "heading",
       "norm_label": "files for the pr",
       "source_file": "HANDOFF.md",
-      "source_location": "L47"
+      "source_location": "L48"
     },
     {
       "id": "handoff_handoff_issue_65_security_session_integrity",
@@ -7841,7 +7841,7 @@
       "node_kind": "heading",
       "norm_label": "remaining ordered actions",
       "source_file": "HANDOFF.md",
-      "source_location": "L56"
+      "source_location": "L57"
     },
     {
       "id": "handoff_review_phases",
@@ -19819,7 +19819,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "HANDOFF.md",
-      "source_location": "L47",
+      "source_location": "L48",
       "weight": 1.0
     },
     {
@@ -19830,7 +19830,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "HANDOFF.md",
-      "source_location": "L56",
+      "source_location": "L57",
       "weight": 1.0
     },
     {
@@ -26509,5 +26509,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "d43f8fa99d281995f1fa301febcead36fbc6f727"
+  "built_at_commit": "cb2ff9c5449e758471e268ba37ab9f47f52b4a8b"
 }
