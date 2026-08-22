@@ -224,10 +224,52 @@ export class Room {
     this.emitAll('room:players', { players: this.playerSummaries() });
   }
 
+  playersForSocket(socketId) {
+    if (!socketId) return [];
+    return [...this.players.values()].filter((p) => p.socketId === socketId);
+  }
+
+  scheduleLobbyKick(playerId) {
+    if (this.phase !== 'lobby') return;
+    this.setTimer(`kick:${playerId}`, () => {
+      const p = this.players.get(playerId);
+      if (this.phase === 'lobby' && p && !p.connected && !p.socketId) {
+        this.players.delete(playerId);
+        this.broadcastPlayers();
+      }
+    }, 60000);
+  }
+
+  disconnectPlayer(playerId, at = Date.now()) {
+    const p = this.players.get(playerId);
+    if (!p) return false;
+    this.clearTimer(`kick:${playerId}`);
+    const changed = p.connected || p.disconnectedAt == null || p.socketId != null;
+    p.connected = false;
+    p.socketId = null;
+    p.disconnectedAt = at;
+    this.scheduleLobbyKick(playerId);
+    return changed;
+  }
+
+  disconnectSocketPlayers(socketId, keepPlayerId = null) {
+    let changed = false;
+    const at = Date.now();
+    for (const p of this.playersForSocket(socketId)) {
+      if (p.id === keepPlayerId) continue;
+      changed = this.disconnectPlayer(p.id, at) || changed;
+    }
+    return changed;
+  }
+
   // ---- join / reconnect ---------------------------------------------------
 
   join(socket, { name, playerId, reconnectToken }) {
+    const socketPlayers = this.playersForSocket(socket.id);
     if (playerId && this.players.has(playerId)) {
+      if (socketPlayers.length && !socketPlayers.some((p) => p.id === playerId)) {
+        return { error: 'This connection is already bound to another player.' };
+      }
       const p = this.players.get(playerId);
       if (!reconnectTokenMatches(p.reconnectToken, reconnectToken)) {
         return { error: 'Reconnect credential is invalid or expired.' };
@@ -236,6 +278,10 @@ export class Room {
       // be retried safely. The public player ID remains suitable for roster
       // and score references, never proof of identity on its own.
       const previousSocketId = p.socketId;
+      if (previousSocketId && previousSocketId !== socket.id) {
+        this.disconnectSocketPlayers(previousSocketId, p.id);
+      }
+      this.disconnectSocketPlayers(socket.id, p.id);
       p.socketId = socket.id;
       p.connected = true;
       p.disconnectedAt = null;
@@ -251,6 +297,25 @@ export class Room {
         }
       }
       this.clearTimer(`kick:${p.id}`);
+      socket.join(`room:${this.code}`);
+      socket.data.roomCode = this.code;
+      socket.data.playerId = p.id;
+      this.broadcastPlayers();
+      return {
+        ok: true,
+        playerId: p.id,
+        reconnectToken: p.reconnectToken,
+        name: p.name,
+        snapshot: this.snapshot(p.id),
+      };
+    }
+    if (socketPlayers.length) {
+      const p = socketPlayers.find((candidate) => candidate.id === socket.data.playerId) || socketPlayers[0];
+      this.disconnectSocketPlayers(socket.id, p.id);
+      this.clearTimer(`kick:${p.id}`);
+      p.socketId = socket.id;
+      p.connected = true;
+      p.disconnectedAt = null;
       socket.join(`room:${this.code}`);
       socket.data.roomCode = this.code;
       socket.data.playerId = p.id;
@@ -299,26 +364,9 @@ export class Room {
   }
 
   handleDisconnect(socket) {
-    const pid = socket.data.playerId;
     if (socket.id === this.hostSocketId) this.hostSocketId = null;
-    if (pid && this.players.has(pid)) {
-      const p = this.players.get(pid);
-      if (p.socketId === socket.id) {
-        p.connected = false;
-        p.disconnectedAt = Date.now();
-        // In the lobby a vanished player is removed after 60s; mid-game they
-        // are kept (missed submissions score 0, identity survives).
-        if (this.phase === 'lobby') {
-          this.setTimer(`kick:${pid}`, () => {
-            if (this.phase === 'lobby' && this.players.get(pid) && !this.players.get(pid).connected) {
-              this.players.delete(pid);
-              this.broadcastPlayers();
-            }
-          }, 60000);
-        }
-        this.broadcastPlayers();
-      }
-    }
+    const changed = this.disconnectSocketPlayers(socket.id);
+    if (changed) this.broadcastPlayers();
     const anyConnected =
       this.hostSocketId || [...this.players.values()].some((p) => p.connected);
     if (!anyConnected) {
@@ -1067,7 +1115,7 @@ export class Room {
         postGreenTimeout: c.postGreenTimeout,
         hardTimeout: c.hardTimeout,
       });
-      this.setTimer('redemption', () => this.finishRedemption(),
+      this.setTimer('redemption', () => this.finishRedemption({ allowMissing: true }),
         c.redemptionLeadMs + c.hardTimeout + 5000);
     }, c.redemptionPrepMs);
   }
@@ -1090,9 +1138,11 @@ export class Room {
     if (red.reports.size >= red.participants.length) this.finishRedemption();
   }
 
-  finishRedemption() {
+  finishRedemption({ allowMissing = false } = {}) {
     const red = this.redemption;
     if (!red) return;
+    const allReported = red.reports.size >= red.participants.length;
+    if (red.mode === 'chairs' && !allowMissing && !allReported) return { ok: false, error: 'pending_reports' };
     this.redemption = null;
     this.clearTimer('redemption');
     const results = red.participants.map((id, i) => {
@@ -1242,9 +1292,10 @@ export class Room {
       case 'scores':
         this.nextGame();
         return { ok: true };
-      case 'redemption':
-        this.finishRedemption();
-        return { ok: true };
+      case 'redemption': {
+        const result = this.finishRedemption();
+        return result || { ok: true };
+      }
       case 'chairs_result':
         if (this.chairs && this.chairs.active.length > 1) this.startChairsRound();
         else this.scoreChairsTournament();

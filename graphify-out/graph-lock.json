@@ -16,6 +16,10 @@
       "ast": "1537a1504800a15fb24708220ea31081",
       "semantic": "1537a1504800a15fb24708220ea31081"
     },
+    "HANDOFF.md": {
+      "ast": "e5d4736741c0969e4a02485ba6ed564a",
+      "semantic": null
+    },
     "README.md": {
       "ast": "1885852532e2d94acf4137e953c54702",
       "semantic": null
@@ -109,7 +113,7 @@
       "semantic": "f9bcb5a92468425b887f7d6ed3da4eb4"
     },
     "server/room.js": {
-      "ast": "2a8ad2bd34bfbe90b6fe789b03f599c6",
+      "ast": "452d0503342562746efe0d352d26fd0c",
       "semantic": null
     },
     "server/sockets.js": {
@@ -265,7 +269,7 @@
       "semantic": null
     },
     "test/room.test.js": {
-      "ast": "ce526a5174632b581ee8e4911f0274ef",
+      "ast": "3675a267f5bce191469ce12eba66412c",
       "semantic": null
     },
     "test/roster.test.js": {
