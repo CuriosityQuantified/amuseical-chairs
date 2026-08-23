@@ -11,6 +11,8 @@
     "check": "node scripts/check.mjs",
     "test": "node --test test/*.test.js",
     "test:e2e": "playwright test",
+    "flags:verify": "node scripts/scrape-flags.mjs --verify",
+    "flags:update": "node scripts/scrape-flags.mjs",
     "security:assess": "node scripts/security-assessment.mjs",
     "graph": "graphify update . && node scripts/graph-lock.mjs",
     "graph:rebuild": "graphify extract . && node scripts/graph-lock.mjs",

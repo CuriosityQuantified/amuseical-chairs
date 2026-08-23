@@ -483,6 +483,15 @@ canvas.game {
 }
 .fractions-side.flash { background: var(--accent2); color: #060b12; }
 
+/* Flag Finder: fixed 2 × 4 answer grid on the player viewport. */
+.flags-progress { margin: 10px 0; text-align: center; color: var(--accent2); font-weight: 700; }
+.flag-image { display: block; width: min(100%, 360px); height: 150px; object-fit: contain; margin: 8px auto 14px; background: #081018; border: 1px solid var(--line); border-radius: 8px; }
+.flags-options { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(54px, auto)); gap: 8px; width: 100%; }
+.flag-option { min-width: 0; min-height: 54px; padding: 8px 5px; font-size: clamp(11px, 2.4vw, 16px); overflow-wrap: anywhere; }
+.flag-option.selected { border-color: var(--accent2); background: var(--accent2); color: #061018; }
+.flags-feedback { min-height: 24px; }
+@media (max-width: 420px) { .flag-image { height: 120px; } .flag-option { min-height: 48px; } }
+
 /* Per-turn answer feedback panel (issue #48). Shown after each committed turn
    with the player's own answer, the correct answer, correct/incorrect state,
    turn progress, and a Next control before the next turn is drawn. */

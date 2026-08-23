@@ -19,6 +19,8 @@ import { anagramRounds } from '../shared/anagram.js';
 import { buildGrid, WORDLIST, gridHasPath, scoreWord } from '../shared/wordhunt.js';
 import { stroopSequence, PALETTE } from '../shared/stroop.js';
 import { areaTrials, areaRatio } from '../shared/area.js';
+import { flagRounds, validFlagChoices } from '../shared/flags.js';
+import flagsManifest from '../data/flags-manifest.json' with { type: 'json' };
 
 const SENTENCES = [
   'The quick brown fox jumps over the lazy dog while the band plays on.',
@@ -236,6 +238,7 @@ export const ROSTER = [
   { key: 'slingshot', name: 'Slingshot', category: 'motor', type: 'error' },
   { key: 'balance', name: 'Balance the Beam', category: 'motor', type: 'score' },
   { key: 'fractions', name: 'Fraction Face-Off', category: 'numerical', type: 'score' },
+  { key: 'flags', name: 'Flag Finder', category: 'perceptual', type: 'score', completion: 'all-rounds' },
 ];
 
 export const ROSTER_BY_KEY = new Map(ROSTER.map((g) => [g.key, g]));
@@ -252,7 +255,7 @@ export const MULTI_STAGE = new Set(['caption', 'icebreaker']);
 // when everyone has submitted rather than when a shared clock runs out. The
 // room suppresses the countdown/auto-submit for these and relies on all-submit
 // close, host advance, and a long server-side safety backstop. (Issue #46.)
-export const COMPLETION_MODE = new Set(['cups']);
+export const COMPLETION_MODE = new Set(['cups', 'flags']);
 
 // A guessing stage is "which of these 20 names is it" — it does not need a
 // whole minigame slot, and Icebreaker runs one per player in the room.
@@ -376,6 +379,10 @@ export function buildGameData(key, ctx) {
         },
         secret: {},
       };
+    }
+    case 'flags': {
+      const rounds = flagRounds(flagsManifest.flags, rng);
+      return { clientData: { rounds: rounds.map(({ image, options }) => ({ image, options })) }, secret: { rounds, answers: rounds.map((round) => round.target) } };
     }
     case 'readroom': {
       const idx = pickContent(rng, ROOM_QUESTIONS.length, usedSet('readroom'));
@@ -827,6 +834,11 @@ export function computeMetric(key, payload, secret, clientData, config) {
       // tapping at all both score zero. Non-submission is the null above.
       return score;
     }
+    case 'flags': {
+      const choices = validFlagChoices(payload);
+      if (!choices) return null;
+      return choices.reduce((score, choice, i) => score + (choice >= 0 && secret.rounds[i].options[choice] === secret.rounds[i].target ? 1 : 0), 0);
+    }
     case 'typing': {
       const typed = typeof payload.typed === 'string' ? payload.typed.slice(0, 500) : null;
       if (typed == null || !typed.length) return null;
@@ -1096,6 +1108,7 @@ export function formatRaw(key, metric, payload) {
     case 'readroom': return `${metric.toFixed(0)} pts off`;
     case 'caption': return `${metric} vote${metric === 1 ? '' : 's'}`;
     case 'icebreaker': return `${metric} right`;
+    case 'flags': return `${metric}/10 flags`;
     case 'typing': return `${Math.round(metric)} net cpm`;
     case 'anagram': return `${metric} word${metric === 1 ? '' : 's'}`;
     case 'wordhunt': return `${metric} pt${metric === 1 ? '' : 's'}`;
