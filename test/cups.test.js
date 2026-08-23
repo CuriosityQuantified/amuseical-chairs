@@ -396,8 +396,14 @@ const FAST = {
   completionSafetyMs: 400,
 };
 
+// cups is in COMPETITIVE_CLIENT_SCORING_DISABLED (Strix 2026-08-23), so these
+// room-level tests opt in through the server/constructor test flag.
+function cupsRoom(code, overrides = {}) {
+  return new Room(stubIo(), code, { ...FAST, completionSafetyMs: 60000, enabled: onlyCups(), ...overrides }, undefined, { allowClientScoredCompetitive: true });
+}
+
 test('a room plays it with no deadline auto-submit; all-submit closes it and points follow the total', async () => {
-  const room = new Room(stubIo(), 'CUPS', { ...FAST, completionSafetyMs: 60000, enabled: onlyCups() });
+  const room = cupsRoom('CUPS');
   try {
     ['sharp', 'ok', 'lost'].forEach((id) => addPlayer(room, id, id));
     assert.equal(room.start().ok, true);
@@ -438,7 +444,7 @@ test('a room plays it with no deadline auto-submit; all-submit closes it and poi
 });
 
 test('a non-submitter scores 0 and stays; the safety backstop closes a stalled game', async () => {
-  const room = new Room(stubIo(), 'CUPN', { ...FAST, completionSafetyMs: 300, enabled: onlyCups() });
+  const room = cupsRoom('CUPN', { completionSafetyMs: 300 });
   try {
     ['done', 'silent'].forEach((id) => addPlayer(room, id, id));
     assert.equal(room.start().ok, true);
@@ -460,7 +466,7 @@ test('a non-submitter scores 0 and stays; the safety backstop closes a stalled g
 });
 
 test('the host can advance a stalled completion game (hostNext → closeGame)', async () => {
-  const room = new Room(stubIo(), 'CUPH', { ...FAST, completionSafetyMs: 60000, enabled: onlyCups() });
+  const room = cupsRoom('CUPH');
   try {
     ['fast', 'afk'].forEach((id) => addPlayer(room, id, id));
     assert.equal(room.start().ok, true);

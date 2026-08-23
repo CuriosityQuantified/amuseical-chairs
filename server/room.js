@@ -41,6 +41,7 @@ const PER_TURN_SECRET = new Set(['anagram']);
 const COMPETITIVE_CLIENT_SCORING_DISABLED = new Set([
   'trace', 'stopclock', 'slingshot', 'balance',
   'oddoneout', 'typing', 'spacemash',
+  'cups',
 ]);
 
 // Whether a game may be queued in a competitive session. Solo rooms and a
@@ -180,7 +181,7 @@ export class Room {
     // sessions. Server/constructor-sourced only — no client payload can set
     // it, so a remote participant cannot un-block the vulnerable games.
     this.allowClientScoredCompetitive = !!options.allowClientScoredCompetitive;
-    this.sessionStartedAt = null; // when the competitive queue began
+    this.sessionStartedAt = null; // when the competitive queue began (finale gate)
     this.soloOwnerId = null;      // the single player allowed in a solo room
     this.testCounter = 0;
     this.destroyed = false;
@@ -394,6 +395,12 @@ export class Room {
       // into the finale and change the outcome (Strix re-scan 2026-08-23).
       return { error: 'Room is no longer accepting new players.' };
     }
+    if (this.phase === 'minigame' && this.queueIndex >= this.queue.length - 1) {
+      // The last queued competitive minigame is the finale's door: joining
+      // here would put a fresh entrant straight into the musical-chairs
+      // finale without playing the regular games (Strix 2026-08-23, HIGH).
+      return { error: 'Room is no longer accepting new players.' };
+    }
     if (this.players.size >= 30) return { error: 'Room is full (30 players max).' };
     let cleanName = String(name || '').replace(/\s+/g, ' ').trim().slice(0, 20) || 'Player';
     const names = new Set([...this.players.values()].map((p) => p.name.toLowerCase()));
@@ -536,6 +543,9 @@ export class Room {
     this.queue = k > 0 && k < drawn.length ? drawn.slice(0, k) : drawn;
     this.queueIndex = 0;
     this.totals = new Map([...this.players.keys()].map((id) => [id, 0]));
+    // The finale gate needs the moment the competitive queue began: anyone who
+    // joins later is a mid-session entrant, not a finale participant.
+    this.sessionStartedAt = Date.now();
     // Straight into game one: there is no practice round. Anyone who wants to
     // shake a game out before the session runs it from the lobby's solo test.
     this.nextGame();
@@ -1134,7 +1144,14 @@ export class Room {
 
   startChairsFinale() {
     this.round = null;
-    const ids = [...this.players.keys()];
+    // Defensive finale gate (Strix 2026-08-23, HIGH): only players who were
+    // in the room when the competitive queue began may enter the finale. The
+    // join gate rejects late fresh entrants at the door, but this keeps a
+    // late-join hole from ever reseeding the finale participants.
+    const sessionStart = this.sessionStartedAt || 0;
+    const ids = [...this.players.entries()]
+      .filter(([, p]) => (p.joinedAt || 0) <= sessionStart)
+      .map(([id]) => id);
     this.chairs = {
       active: ids,              // still holding a chair
       eliminated: [],           // elimination order: first out first

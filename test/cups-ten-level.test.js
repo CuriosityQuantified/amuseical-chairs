@@ -174,8 +174,15 @@ const FAST = {
   postGreenTimeout: 800, hardTimeout: 1500, closeGraceMs: 200,
 };
 
+function cupsRoom(code, overrides = {}) {
+  // cups is in COMPETITIVE_CLIENT_SCORING_DISABLED (Strix 2026-08-23: the
+  // seed-derivable answer is forgeable), so these unit tests opt in through
+  // the server/constructor test flag.
+  return new Room(stubIo(), code, { ...FAST, completionSafetyMs: 60000, enabled: onlyCups(), ...overrides }, undefined, { allowClientScoredCompetitive: true });
+}
+
 test('#46: room closes on all-submit with no deadline; points follow the total', async () => {
-  const room = new Room(stubIo(), 'RG01', { ...FAST, completionSafetyMs: 60000, enabled: onlyCups() });
+  const room = cupsRoom('RG01');
   try {
     ['a', 'b'].forEach((id) => addPlayer(room, id));
     assert.equal(room.start().ok, true);
@@ -194,7 +201,7 @@ test('#46: room closes on all-submit with no deadline; points follow the total',
 });
 
 test('#46: a non-submitter cannot hang the room — safety backstop closes it, scores 0', async () => {
-  const room = new Room(stubIo(), 'RG02', { ...FAST, completionSafetyMs: 300, enabled: onlyCups() });
+  const room = cupsRoom('RG02', { completionSafetyMs: 300 });
   try {
     ['done', 'silent'].forEach((id) => addPlayer(room, id));
     assert.equal(room.start().ok, true);
@@ -213,7 +220,7 @@ test('#46: a non-submitter cannot hang the room — safety backstop closes it, s
 });
 
 test('#46: host advance closes a stalled completion game before the backstop', async () => {
-  const room = new Room(stubIo(), 'RG03', { ...FAST, completionSafetyMs: 60000, enabled: onlyCups() });
+  const room = cupsRoom('RG03');
   try {
     ['fast', 'afk'].forEach((id) => addPlayer(room, id));
     assert.equal(room.start().ok, true);

@@ -395,25 +395,27 @@ test('a pre-green redemption report is disqualified; an honest post-green report
   }
 });
 
+const ALL_BLOCKED = ['trace', 'stopclock', 'slingshot', 'balance', 'oddoneout', 'typing', 'spacemash', 'cups'];
 test('client-scored games are blocked from hosted competitive sessions', () => {
   const room = new Room(stubIo(), 'BLK1', {
     ...FAST,
-    enabled: { ...onlyGames('trace', 'stopclock', 'slingshot', 'balance'), rgb: true },
+    enabled: { ...onlyGames(...ALL_BLOCKED.slice(0, 4)), rgb: true },
   });
   try {
     addPlayer(room, 'p1', 'Anna');
     addPlayer(room, 'p2', 'Ben');
     // Not advertised, and reported as disabled to the lobby.
     const cfg = room.publicConfig();
-    for (const key of ['trace', 'stopclock', 'slingshot', 'balance']) {
+    for (const key of ALL_BLOCKED.slice(0, 4)) {
       assert.equal(cfg.roster.some((g) => g.key === key), false, `${key} hidden from the hosted lobby`);
       assert.equal(cfg.enabled[key], false, `${key} reported disabled`);
     }
+    assert.equal(cfg.enabled.cups, false, 'cups is blocked too (seed-derivable answers, Strix 2026-08-23)');
     assert.ok(cfg.roster.some((g) => g.key === 'rgb'), 'unaffected games are still advertised');
     assert.equal(cfg.enabled.rgb, true, 'unaffected games keep their configured state');
     // Blocked games never enter the competitive queue even when configured on.
     assert.equal(room.start().ok, true);
-    for (const key of ['trace', 'stopclock', 'slingshot', 'balance']) {
+    for (const key of ALL_BLOCKED) {
       assert.ok(!room.queue.includes(key), `${key} never queued`);
     }
     assert.ok(room.queue.includes('rgb'));
@@ -421,7 +423,7 @@ test('client-scored games are blocked from hosted competitive sessions', () => {
     room.destroy();
   }
   // A session with ONLY blocked games enabled cannot start.
-  const only = new Room(stubIo(), 'BLK1B', { ...FAST, enabled: onlyGames('trace', 'stopclock', 'slingshot', 'balance') });
+  const only = new Room(stubIo(), 'BLK1B', { ...FAST, enabled: onlyGames(...ALL_BLOCKED) });
   try {
     addPlayer(only, 'p1', 'Anna');
     addPlayer(only, 'p2', 'Ben');
@@ -495,6 +497,45 @@ test('a new player cannot join once the session has left the lobby and the minig
     room.hostNext();
     await waitFor(() => room.phase === 'redemption', 3000, 'finale');
     assert.equal(room.redemption.participants.length, 2, 'only the original players reach the finale');
+  } finally {
+    room.destroy();
+  }
+});
+
+test('a new player cannot join during the final queued minigame and reach the finale', async () => {
+  // Strix 2026-08-23 HIGH: joining the last regular game puts a fresh entrant
+  // straight into the 3000-point musical-chairs finale. The join gate must
+  // reject fresh players once the last queued competitive minigame begins,
+  // while reconnects for existing players still work.
+  const room = new Room(stubIo(), 'FINAL', { ...FAST, enabled: onlyGames('rgb') });
+  try {
+    addPlayer(room, 'p1', 'Player1');
+    addPlayer(room, 'p2', 'Player2');
+    assert.equal(room.start().ok, true);
+    assert.equal(room.queue.length, 1, 'rgb is the only queued game — it is the last one');
+    await waitFor(() => room.phase === 'minigame', 3000, 'the final minigame');
+
+    // Fresh stranger is rejected mid-final-game.
+    const stranger = { id: 'sock-fresh', join() {}, data: {} };
+    const res = room.join(stranger, { name: 'Stranger', playerId: undefined });
+    assert.equal(res.ok, undefined, 'fresh join rejected during the last queued minigame');
+    assert.equal(res.error, 'Room is no longer accepting new players.');
+    assert.equal(room.players.size, 2, 'roster unchanged');
+
+    // An existing player can still reconnect.
+    const p1 = room.players.get('p1');
+    const rc = room.join({ id: 'sock-rc', join() {}, data: {} }, {
+      name: 'ignored', playerId: 'p1', reconnectToken: p1.reconnectToken,
+    });
+    assert.equal(rc.ok, true, 'reconnect for an existing player still succeeds');
+
+    room.handleSubmit('p1', { r: 0, g: 0, b: 0 });
+    room.handleSubmit('p2', { r: 255, g: 255, b: 255 });
+    await waitFor(() => room.phase === 'scores', 3000, 'scores');
+    room.hostNext(); // close the last game → the finale begins
+    await waitFor(() => room.phase === 'redemption', 3000, 'finale');
+    assert.equal(room.redemption.participants.length, 2,
+      'the stranger never becomes a finale participant');
   } finally {
     room.destroy();
   }
