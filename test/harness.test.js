@@ -249,10 +249,14 @@ class Bot {
         await sleep(30);
         this.socket.emit('redemption:report', { status: 'hardTimeout', rawMs: null, earlyPresses: 812 });
       } else {
-        await sleep(30 + Math.random() * 100);
+        const rawMs = 180 + Math.random() * 350;
+        // Press at the claimed reaction time, then report after processing
+        // latency. A report that claims rawMs but arrives immediately would be
+        // an impossible pre-green timing and is disqualified server-side.
+        await sleep(Math.max(0, p.tGreen - Date.now()) + rawMs + 30 + Math.random() * 80);
         this.socket.emit('redemption:report', {
           status: 'ok',
-          rawMs: 180 + Math.random() * 350,
+          rawMs,
           earlyPresses: Math.random() < 0.25 ? 1 : 0,
         });
       }
@@ -263,7 +267,7 @@ class Bot {
 }
 
 test('20 bots: every game once, per-game scores, chairs finale, winner by total', async () => {
-  const { httpServer, io, rooms } = createServer();
+  const { httpServer, io, rooms } = createServer({ allowClientScoredCompetitive: true });
   await new Promise((r) => httpServer.listen(0, r));
   const url = `http://localhost:${httpServer.address().port}`;
 
@@ -413,7 +417,7 @@ test('20 bots: every game once, per-game scores, chairs finale, winner by total'
 });
 
 test('2-player game runs to a winner', async () => {
-  const { httpServer, io, rooms } = createServer();
+  const { httpServer, io, rooms } = createServer({ allowClientScoredCompetitive: true });
   await new Promise((r) => httpServer.listen(0, r));
   const url = `http://localhost:${httpServer.address().port}`;
   const host = connect(url, { transports: ['websocket'], forceNew: true });

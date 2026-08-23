@@ -110,3 +110,41 @@ test('honest ~280ms beats a masher and a one-time flincher beats a spammer', () 
   assert.ok(honest.finalMs < masher.finalMs);
   assert.ok(flinch.finalMs < masher.finalMs);
 });
+
+test('server scoring: pre-green and physically-impossible reports are disqualified', () => {
+  const tGreen = 10_000;
+  // No timing context → unchanged behavior (backward compatible).
+  const plain = scoreRedemptionReport({ status: 'ok', rawMs: 280, earlyPresses: 0 });
+  assert.equal(plain.status, 'ok');
+  assert.equal(plain.finalMs, 280);
+
+  // Arrived before the green signal: the pre-green forgery class.
+  const preGreen = scoreRedemptionReport(
+    { status: 'ok', rawMs: 100, earlyPresses: 0 },
+    { tGreen, receivedAt: tGreen - 3000, earliestArrivalSlackMs: 25 });
+  assert.equal(preGreen.status, 'tooFast');
+  assert.equal(preGreen.flagged, true);
+  assert.equal(preGreen.finalMs, 999999);
+
+  // Arrived before the claimed reaction time could have elapsed (even with
+  // the jitter slack).
+  const tooEarly = scoreRedemptionReport(
+    { status: 'ok', rawMs: 400, earlyPresses: 0 },
+    { tGreen, receivedAt: tGreen + 100, earliestArrivalSlackMs: 25 });
+  assert.equal(tooEarly.status, 'tooFast');
+  assert.equal(tooEarly.flagged, true);
+
+  // Within the jitter slack of the claimed time is still honest.
+  const boundary = scoreRedemptionReport(
+    { status: 'ok', rawMs: 400, earlyPresses: 0 },
+    { tGreen, receivedAt: tGreen + 350, earliestArrivalSlackMs: 150 });
+  assert.equal(boundary.status, 'ok');
+  assert.equal(boundary.finalMs, 400);
+
+  // Honest: press at green + rawMs, report arrives after network latency.
+  const honest = scoreRedemptionReport(
+    { status: 'ok', rawMs: 280, earlyPresses: 0 },
+    { tGreen, receivedAt: tGreen + 280 + 50, earliestArrivalSlackMs: 25 });
+  assert.equal(honest.status, 'ok');
+  assert.equal(honest.finalMs, 280);
+});

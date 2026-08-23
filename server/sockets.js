@@ -93,7 +93,7 @@ function guarded(socket, event, { limit, windowMs = 60_000, ack = false }, handl
   };
 }
 
-export function attachSockets(io) {
+export function attachSockets(io, { allowClientScoredCompetitive = false } = {}) {
   const rooms = new Map();
   // Shared across sockets for this server instance so reconnecting does not
   // reset a source's failed-code budget; isolated across test/server instances.
@@ -118,7 +118,7 @@ export function attachSockets(io) {
       try {
         let code;
         do { code = makeRoomCode(); } while (rooms.has(code));
-        const r = new Room(io, code, payload?.config || {}, destroyRoom);
+        const r = new Room(io, code, payload?.config || {}, destroyRoom, { allowClientScoredCompetitive });
         rooms.set(code, r);
         r.hostSocketId = socket.id;
         socket.join(`room:${code}`);
@@ -172,7 +172,7 @@ export function attachSockets(io) {
       if (typeof cb !== 'function') return;
       let code;
       do { code = makeRoomCode(); } while (rooms.has(code));
-      const r = new Room(io, code, {}, destroyRoom);
+      const r = new Room(io, code, {}, destroyRoom, { allowClientScoredCompetitive });
       r.solo = true;
       rooms.set(code, r);
       cb(r.join(socket, { name }));
