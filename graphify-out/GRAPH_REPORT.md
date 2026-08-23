@@ -1,16 +1,16 @@
 # Graph Report - amuseical-chairs  (2026-08-22)
 
 ## Corpus Check
-- 73 files · ~112,909 words
+- 73 files · ~113,540 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 705 nodes · 1575 edges · 38 communities (33 shown, 5 thin omitted)
-- Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 46 edges (avg confidence: 0.82)
+- 707 nodes · 1581 edges · 40 communities (35 shown, 5 thin omitted)
+- Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 47 edges (avg confidence: 0.82)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `9be39175`
+- Built from commit: `8bd51f99`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -41,7 +41,9 @@
 - Color-cue audit — issue #53 (colorblind support)
 - reveal.test.js
 - cups-solo.spec.js
+- feedback.js
 - cups.test.js
+- ciede2000.js
 - harness.test.js
 - reduced-motion.test.js
 - feedback.spec.js
@@ -66,8 +68,6 @@
 10. `clearAll()` - 14 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `buildGameData()` --indirect_call--> `areaRatio()`  [INFERRED]
-  server/games.js → shared/area.js
 - `score()` --calls--> `computeMetric()`  [EXTRACTED]
   test/cups-ten-level.test.js → server/games.js
 - `rng()` --calls--> `seededRng()`  [EXTRACTED]
@@ -76,11 +76,13 @@
   test/icebreaker.test.js → shared/rng.js
 - `README` --conceptually_related_to--> `Railway Deployment`  [INFERRED]
   README.md → .claude-progress.md
+- `withServer()` --calls--> `createServer()`  [EXTRACTED]
+  test/smoke.test.js → server/app.js
 
 ## Import Cycles
 - None detected.
 
-## Communities (38 total, 5 thin omitted)
+## Communities (40 total, 5 thin omitted)
 
 ### Community 0 - "Room"
 Cohesion: 0.08
@@ -166,13 +168,21 @@ Nodes (4): Change set (bounded), Classification, Color-cue audit — issue #53 (
 Cohesion: 0.38
 Nodes (4): ROSTER, addPlayer(), anagramRoom(), stubIo()
 
+### Community 27 - "feedback.js"
+Cohesion: 0.26
+Nodes (16): anagramFeedback(), AREA_TOL, areaFeedback(), BISECT_TOL, bisectFeedback(), blank(), clamp(), DOTS_TOL (+8 more)
+
 ### Community 28 - "cups.test.js"
 Cohesion: 0.10
 Nodes (25): COMPLETION_MODE, CUPS_BASE_CUPS, CUPS_FIRST_SWAP_MS, CUPS_LAST_SWAP_MS, CUPS_MAX_CUPS, CUPS_MAX_LEVELS, cupsCount(), cupsLevel() (+17 more)
 
+### Community 29 - "ciede2000.js"
+Cohesion: 0.50
+Nodes (5): ciede2000(), ciede2000Rgb(), deg(), rad(), rgbToLab()
+
 ### Community 30 - "harness.test.js"
-Cohesion: 0.08
-Nodes (29): allowedSocketOrigin(), CONTENT_SECURITY_POLICY, createServer(), __dirname, { httpServer }, areaRatio(), anagramFeedback(), AREA_TOL (+21 more)
+Cohesion: 0.11
+Nodes (15): allowedSocketOrigin(), CONTENT_SECURITY_POLICY, createServer(), __dirname, { httpServer }, Bot, sleep(), TEST_CONFIG (+7 more)
 
 ### Community 32 - "reduced-motion.test.js"
 Cohesion: 0.31
@@ -195,8 +205,8 @@ Cohesion: 0.50
 Nodes (3): Interpretation, Run locally, Security assessment harness
 
 ### Community 41 - "balance.test.js"
-Cohesion: 0.14
-Nodes (21): BALANCE_CTRL_D, BALANCE_CTRL_K, BALANCE_DAMPING, BALANCE_DT, BALANCE_FIRST_NUDGE_MS, BALANCE_GRAVITY, BALANCE_LENGTH, BALANCE_MAX_ANGLE (+13 more)
+Cohesion: 0.22
+Nodes (16): BALANCE_CTRL_D, BALANCE_CTRL_K, BALANCE_DAMPING, BALANCE_DT, BALANCE_FIRST_NUDGE_MS, BALANCE_GRAVITY, BALANCE_LENGTH, BALANCE_MAX_ANGLE (+8 more)
 
 ### Community 42 - "room.js"
 Cohesion: 0.27
@@ -204,7 +214,7 @@ Nodes (9): COMPETITIVE_CLIENT_SCORING_DISABLED, DEFAULTS, HOST_EDITABLE_CONFIG, 
 
 ### Community 43 - "server/games.js"
 Cohesion: 0.06
-Nodes (76): buildGameData(), CAPTION_PROMPTS, clamp(), computeMetric(), formatRaw(), ICEBREAKER_PROMPTS, METRONOME_INTERVALS, MULTI_STAGE (+68 more)
+Nodes (78): buildGameData(), CAPTION_PROMPTS, clamp(), computeMetric(), formatRaw(), ICEBREAKER_PROMPTS, METRONOME_INTERVALS, MULTI_STAGE (+70 more)
 
 ### Community 51 - "HANDOFF — issue #65 security session integrity"
 Cohesion: 0.29
@@ -222,7 +232,7 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.068) - this node is a cross-community bridge._
 - **Why does `seededRng()` connect `server/games.js` to `Room`, `caption.test.js`, `reduced-motion.test.js`, `balance.test.js`, `room.js`, `reveal.test.js`, `cups.test.js`?**
   _High betweenness centrality (0.034) - this node is a cross-community bridge._
-- **Why does `buildGameData()` connect `server/games.js` to `Room`, `reduced-motion.test.js`, `balance.test.js`, `room.js`, `reveal.test.js`, `cups.test.js`, `harness.test.js`?**
+- **Why does `buildGameData()` connect `server/games.js` to `Room`, `reduced-motion.test.js`, `balance.test.js`, `room.js`, `reveal.test.js`, `cups.test.js`?**
   _High betweenness centrality (0.015) - this node is a cross-community bridge._
 - **Are the 5 inferred relationships involving `start()` (e.g. with `frame()` and `confirm()`) actually correct?**
   _`start()` has 5 INFERRED edges - model-reasoned connections that need verification._

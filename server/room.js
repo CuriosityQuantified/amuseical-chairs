@@ -33,12 +33,15 @@ import {
 // game stage as `secret.answers` (one entry per turn/round).
 const PER_TURN_SECRET = new Set(['anagram']);
 
-// Temporary competitive-integrity mitigation (Strix pentest 2026-08-22): these
-// games submit client-computed summary metrics that the server only
+// Temporary competitive-integrity mitigation (Strix pentest 2026-08-22/23):
+// these games submit client-computed summary metrics that the server only
 // sanity-clamps, so hosted competitive sessions must not queue them until
 // scoring is recomputed server-side from authoritative interaction data.
 // Solo practice and the lobby's unscored solo test run stay available.
-const COMPETITIVE_CLIENT_SCORING_DISABLED = new Set(['trace', 'stopclock', 'slingshot', 'balance']);
+const COMPETITIVE_CLIENT_SCORING_DISABLED = new Set([
+  'trace', 'stopclock', 'slingshot', 'balance',
+  'oddoneout', 'typing', 'spacemash',
+]);
 
 // Whether a game may be queued in a competitive session. Solo rooms and a
 // test-only server/constructor opt-in (never settable from a client payload)
@@ -169,6 +172,8 @@ export class Room {
     // sessions. Server/constructor-sourced only — no client payload can set
     // it, so a remote participant cannot un-block the vulnerable games.
     this.allowClientScoredCompetitive = !!options.allowClientScoredCompetitive;
+    this.sessionStartedAt = null; // when the competitive queue began
+    this.soloOwnerId = null;      // the single player allowed in a solo room
     this.testCounter = 0;
     this.destroyed = false;
     this.createdAt = Date.now();
@@ -345,6 +350,20 @@ export class Room {
         name: p.name,
         snapshot: this.snapshot(p.id),
       };
+    }
+    if (this.solo && this.soloOwnerId && this.players.size > 0) {
+      // Solo practice rooms are single-occupant. A second user who knows the
+      // room code must not be able to join or reset the owner's session
+      // (Strix re-scan 2026-08-23: solo-room takeover).
+      return { error: 'Solo rooms are private to their owner.' };
+    }
+    if (this.phase !== 'lobby' && this.phase !== 'minigame') {
+      // Fresh players may join during the lobby or an active minigame (the
+      // issue #54 late-join feature: they score 0 for missed games and play
+      // the rest). Joining once the queue is exhausted — scores, the chairs
+      // finale, redemption, or the winner reveal — would let a stranger sit
+      // into the finale and change the outcome (Strix re-scan 2026-08-23).
+      return { error: 'Room is no longer accepting new players.' };
     }
     if (this.players.size >= 30) return { error: 'Room is full (30 players max).' };
     let cleanName = String(name || '').replace(/\s+/g, ' ').trim().slice(0, 20) || 'Player';
