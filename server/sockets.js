@@ -122,6 +122,7 @@ export function attachSockets(io, { allowClientScoredCompetitive = false } = {})
         socket.join(`host:${code}`);
         socket.data.roomCode = code;
         socket.data.isHost = true;
+        socket.data.playerId = null;
         const joinUrl = `${publicOrigin(socket)}/?code=${code}`;
         let qr = null;
         try {
@@ -150,6 +151,7 @@ export function attachSockets(io, { allowClientScoredCompetitive = false } = {})
       socket.join(`host:${r.code}`);
       socket.data.roomCode = r.code;
       socket.data.isHost = true;
+      socket.data.playerId = null;
       cb?.({ ok: true, code: r.code, snapshot: r.snapshot(null), config: r.publicConfig() });
     }));
 
@@ -159,7 +161,12 @@ export function attachSockets(io, { allowClientScoredCompetitive = false } = {})
       if (!r) return cb(failedJoinResponse(failedJoins, socket));
       const result = r.join(socket, { name, playerId, reconnectToken });
       if (result.error && playerId) return cb(failedJoinResponse(failedJoins, socket));
-      if (result.ok) r.clearTimer('empty');
+      if (result.ok) {
+        r.clearTimer('empty');
+        // A player is never a host: drop any host role this transport carried
+        // from a previous room so host authority cannot leak across rooms.
+        socket.data.isHost = false;
+      }
       cb(result);
     }));
 
@@ -228,7 +235,12 @@ export function attachSockets(io, { allowClientScoredCompetitive = false } = {})
 
     const hostOnly = (fn) => (...args) => {
       const r = room();
-      if (!r || !socket.data.isHost) return;
+      const cb = args.find((a) => typeof a === 'function');
+      // Authoritative check: only the socket the room records as its host may
+      // act. Mutable socket flags alone are not enough — a socket that hosted
+      // one room and then joined another as a player must not inherit host
+      // authority there (Strix 2026-08-23, cross-room state reuse, CVSS 8.2).
+      if (!r || r.hostSocketId !== socket.id) return;
       fn(r, ...args);
     };
 

@@ -353,3 +353,44 @@ test('Socket.IO enforces host-only actions and host rejoin credentials', async (
     for (const socket of sockets) socket.disconnect();
   }
 });
+
+test('host authority does not leak across rooms via socket state reuse', async () => {
+  // An attacker who hosts their own room must not inherit host control over a
+  // victim room by joining it as a player on the same socket (Strix 2026-08-23,
+  // cross-room state reuse, CVSS 8.2).
+  await withServer(async ({ openSocket, emitAck }) => {
+    const sockets = [];
+    try {
+      const victimHost = await openSocket();
+      const attacker = await openSocket();
+      sockets.push(victimHost, attacker);
+
+      // Victim room with its own host.
+      const victim = await emitAck(victimHost, 'host:create', { config: { gameDuration: 30000 } });
+      assert.equal(victim.value?.ok, true);
+      const victimCode = victim.value.code;
+
+      // Attacker becomes host of their own room…
+      const own = await emitAck(attacker, 'host:create', { config: {} });
+      assert.equal(own.value?.ok, true);
+      const ownCode = own.value.code;
+      assert.notEqual(ownCode, victimCode);
+
+      // …then joins the victim room as a plain player on the same socket.
+      const joined = await emitAck(attacker, 'player:join', { code: victimCode, name: 'Sneak' });
+      assert.equal(joined.value?.ok, true, 'attacker can join the victim room as a player');
+
+      // Host actions against the victim room must NOT be authorized.
+      const config = await emitAck(attacker, 'host:config', { gameDuration: 120000 }, 500);
+      const start = await emitAck(attacker, 'host:start', {}, 500);
+      assert.equal(config.timedOut, true, 'host:config on the victim room times out');
+      assert.equal(start.timedOut, true, 'host:start on the victim room times out');
+
+      // The real host of the victim room is unaffected.
+      const legitConfig = await emitAck(victimHost, 'host:config', { gameDuration: 45000 });
+      assert.equal(legitConfig.value?.ok, true, 'the recorded victim host still controls the room');
+    } finally {
+      for (const socket of sockets) socket.disconnect();
+    }
+  });
+});
