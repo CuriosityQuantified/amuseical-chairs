@@ -3,7 +3,7 @@
 
 import QRCode from 'qrcode';
 import crypto from 'node:crypto';
-import { Room, makeRoomCode, pickHostEditableConfig } from './room.js';
+import { Room, makeRoomCode, pickHostEditableConfig, RECONNECT_ROTATION_GRACE_MS } from './room.js';
 
 const MAX_EVENT_BYTES = 32 * 1024;
 const JOIN_FAILURE = 'Room or reconnect credential not found.';
@@ -197,7 +197,18 @@ export function attachSockets(io, {
 
     socket.on('host:rejoin', guarded(socket, 'host:rejoin', { limit: 10, ack: true }, ({ code, hostKey } = {}, cb) => {
       const r = rooms.get(String(code || '').toUpperCase());
-      if (!r || r.hostKey !== hostKey) return cb?.(failedJoinResponse(failedJoins, socket));
+      if (!r) return cb?.(failedJoinResponse(failedJoins, socket));
+      // Host credentials rotate on every successful rejoin (Strix 2026-08-23,
+      // CWE-294): a copied hostKey must not grant indefinite replay. The
+      // previous key remains valid for a short transition window so a lost
+      // rejoin ACK can be retried, then only the rotated key works.
+      const withinGrace = r.prevHostKey && Date.now() <= (r.prevHostKeyExpiresAt || 0);
+      if (r.hostKey !== hostKey && !(withinGrace && r.prevHostKey === hostKey)) {
+        return cb?.(failedJoinResponse(failedJoins, socket));
+      }
+      r.prevHostKey = r.hostKey;
+      r.prevHostKeyExpiresAt = Date.now() + RECONNECT_ROTATION_GRACE_MS;
+      r.hostKey = crypto.randomUUID();
       const previousCode = socket.data.roomCode;
       if (previousCode && previousCode !== r.code) {
         detachFromRoom(previousCode);
@@ -221,7 +232,7 @@ export function attachSockets(io, {
       socket.data.roomCode = r.code;
       socket.data.isHost = true;
       socket.data.playerId = null;
-      cb?.({ ok: true, code: r.code, snapshot: r.snapshot(null), config: r.publicConfig() });
+      cb?.({ ok: true, code: r.code, snapshot: r.snapshot(null), config: r.publicConfig(), hostKey: r.hostKey });
     }));
 
     socket.on('player:join', guarded(socket, 'player:join', { limit: 20, ack: true }, ({ code, name, playerId, reconnectToken } = {}, cb) => {

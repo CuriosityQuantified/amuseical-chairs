@@ -561,8 +561,9 @@ test('reconnect mid-game lands on the fact the room is actually on', async () =>
     await waitFor(() => room.phase === 'reveal', 3000, 'reveal');
     let rotatingToken = res.reconnectToken;
     const beforeReveal = room.join(socket, { playerId: 'p3', reconnectToken: rotatingToken });
-    assert.equal(beforeReveal.reconnectToken, rotatingToken,
-      'a reconnect keeps the room-lifetime credential stable');
+    assert.notEqual(beforeReveal.reconnectToken, rotatingToken,
+      'a reconnect rotates the bearer credential');
+    rotatingToken = beforeReveal.reconnectToken;
     assert.equal(beforeReveal.snapshot.reveal.answered, false);
     room.hostNext();
     const back = room.join(socket, { playerId: 'p3', reconnectToken: rotatingToken }).snapshot.reveal;

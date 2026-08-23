@@ -225,7 +225,7 @@ const FAST = {
 };
 
 test('a room plays it: the grid is broadcast, and points follow the beat', async () => {
-  const room = new Room(stubIo(), 'METR', { ...FAST, enabled: onlyMetronome() });
+  const room = new Room(stubIo(), 'METR', { ...FAST, enabled: onlyMetronome() }, undefined, { allowClientScoredCompetitive: true });
   try {
     ['steady', 'drifter', 'masher', 'silent'].forEach((id) => addPlayer(room, id, id));
     assert.equal(room.start().ok, true);
@@ -260,7 +260,7 @@ test('a room plays it: the grid is broadcast, and points follow the beat', async
 });
 
 test('in a room, half an attempt still outscores mashing', async () => {
-  const room = new Room(stubIo(), 'METP', { ...FAST, enabled: onlyMetronome() });
+  const room = new Room(stubIo(), 'METP', { ...FAST, enabled: onlyMetronome() }, undefined, { allowClientScoredCompetitive: true });
   try {
     ['partial', 'masher'].forEach((id) => addPlayer(room, id, id));
     assert.equal(room.start().ok, true);

@@ -48,6 +48,10 @@
       "ast": "b7e50ceaf568436d6daad04ae841f3c1",
       "semantic": null
     },
+    "docs/security/strix-bac3-report.md": {
+      "ast": "4bcc8dfc6c12ea6b3cae8d06374aacf6",
+      "semantic": null
+    },
     "package.json": {
       "ast": "d845959e10736b31899610cc8e8950dd",
       "semantic": null
@@ -73,7 +77,7 @@
       "semantic": null
     },
     "public/js/host.js": {
-      "ast": "b93f410ae848a4aaf86df9733c9b2e0e",
+      "ast": "c039ba9ee30f7ecf9c187906eb19d7d9",
       "semantic": null
     },
     "public/js/motion.js": {
@@ -117,11 +121,11 @@
       "semantic": "f9bcb5a92468425b887f7d6ed3da4eb4"
     },
     "server/room.js": {
-      "ast": "2ab311dfe1b6daaced7394de234414be",
+      "ast": "f9ec6ec50ff2cb6d054223a80b77f967",
       "semantic": null
     },
     "server/sockets.js": {
-      "ast": "f4c3e7e242a0e4fa5ba39281a0a62305",
+      "ast": "3be972cc3740360a876bdce191337806",
       "semantic": null
     },
     "shared/anagram.js": {
@@ -245,11 +249,11 @@
       "semantic": "958da69ee3fd132739084c56db6257a0"
     },
     "test/metronome.test.js": {
-      "ast": "8536b335f7e46d0c677ef33162e53774",
+      "ast": "179d0d343961bdc41cf13cc063e9de16",
       "semantic": null
     },
     "test/multistage.test.js": {
-      "ast": "3a6025765de1c9c8f62c958cde209c0c",
+      "ast": "95b0e437287665607286a0c9b11e0340",
       "semantic": null
     },
     "test/normalize.test.js": {
@@ -273,7 +277,7 @@
       "semantic": null
     },
     "test/room.test.js": {
-      "ast": "6d993a71d90961878495900d52aaaa0a",
+      "ast": "f177d0100cbfa5cabc1f709f07473650",
       "semantic": null
     },
     "test/roster.test.js": {
@@ -281,7 +285,7 @@
       "semantic": null
     },
     "test/security.test.js": {
-      "ast": "1ea331e1758ba9372aaecaf823833965",
+      "ast": "5c32fbc8544f6abb04056c56bcde3937",
       "semantic": null
     },
     "test/smoke.test.js": {

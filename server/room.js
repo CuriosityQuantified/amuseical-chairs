@@ -41,7 +41,7 @@ const PER_TURN_SECRET = new Set(['anagram']);
 const COMPETITIVE_CLIENT_SCORING_DISABLED = new Set([
   'trace', 'stopclock', 'slingshot', 'balance',
   'oddoneout', 'typing', 'spacemash',
-  'cups',
+  'cups', 'metronome',
 ]);
 
 // Whether a game may be queued in a competitive session. Solo rooms and a
@@ -158,6 +158,13 @@ function reconnectTokenMatches(expected, supplied) {
 // for a quarter of an hour (Strix 2026-08-23, CWE-770, HIGH).
 export const EMPTY_ROOM_RETENTION_MS = 15 * 60 * 1000;
 export const EMPTY_UNSTARTED_RETENTION_MS = 2 * 60 * 1000;
+
+// Reconnect-credential rotation (Strix 2026-08-23, CWE-294, MEDIUM): a room
+// reconnect secret must not be a replayable room-lifetime bearer token. After
+// a successful rejoin the secret rotates and the PREVIOUS secret stays valid
+// only inside this bounded transition window, so a lost acknowledgement can
+// be retried without turning a copied token into indefinite takeover.
+export const RECONNECT_ROTATION_GRACE_MS = 30 * 1000;
 
 export class Room {
   constructor(io, code, config, onEmpty = () => {}, options = {}) {
@@ -331,12 +338,19 @@ export class Room {
         return { error: 'This connection is already bound to another player.' };
       }
       const p = this.players.get(playerId);
-      if (!reconnectTokenMatches(p.reconnectToken, reconnectToken)) {
+      const withinGrace = p.prevReconnectToken && Date.now() <= (p.prevReconnectExpiresAt || 0);
+      if (!reconnectTokenMatches(p.reconnectToken, reconnectToken) &&
+          !(withinGrace && reconnectTokenMatches(p.prevReconnectToken, reconnectToken))) {
         return { error: 'Reconnect credential is invalid or expired.' };
       }
-      // Keep the room-lifetime credential stable so a lost reconnect ACK can
-      // be retried safely. The public player ID remains suitable for roster
-      // and score references, never proof of identity on its own.
+      // Rotate the reconnect credential on every successful rejoin so a copied
+      // token cannot be replayed for the room's lifetime (Strix 2026-08-23,
+      // CWE-294). The previous token stays valid for a short transition window
+      // (RECONNECT_ROTATION_GRACE_MS) so a lost reconnect ACK can be retried;
+      // after that, only the freshly returned token works.
+      p.prevReconnectToken = p.reconnectToken;
+      p.prevReconnectExpiresAt = Date.now() + RECONNECT_ROTATION_GRACE_MS;
+      p.reconnectToken = newReconnectToken();
       const previousSocketId = p.socketId;
       if (previousSocketId && previousSocketId !== socket.id) {
         this.disconnectSocketPlayers(previousSocketId, p.id);

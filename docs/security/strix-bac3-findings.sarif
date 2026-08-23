@@ -1,0 +1,246 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Strix",
+          "informationUri": "https://strix.ai",
+          "rules": [
+            {
+              "id": "CWE-770",
+              "name": "Anonymous room creation resource exhaustion via Socket.IO reconnect bypass",
+              "shortDescription": {
+                "text": "Anonymous room creation resource exhaustion via Socket.IO reconnect bypass"
+              },
+              "fullDescription": {
+                "text": "The anonymous `host:create` and `solo:create` Socket.IO events enforce their create budget only on a single socket, not on the originating source. An attacker can open fresh connections to bypass the nominal `3/minute` limit, create large numbers of rooms, and keep those rooms resident long enough to cause meaningful memory growth and availability impact."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "help": {
+                "text": "The anonymous `host:create` and `solo:create` Socket.IO events enforce their create budget only on a single socket, not on the originating source. An attacker can open fresh connections to bypass the nominal `3/minute` limit, create large numbers of rooms, and keep those rooms resident long enough to cause meaningful memory growth and availability impact.\n\nAn unauthenticated remote attacker can create thousands of concurrent in-memory rooms from one source and retain them for long enough to degrade or exhaust the Node.js process. Local validation showed linear heap growth and persistent room retention after disconnect, and the live target reproduced the same per-socket bypass behavior for both room-creation events.\n\n1. Enforce anonymous room-creation quotas with a process-wide source key derived from the server-observed client address, rather than from `socket.data`, so reconnecting or opening parallel transports does not reset the budget.\n2. Share the quota across both `host:create` and `solo:create`, and bound the backing tracker with expiry and hard caps so the mitigation does not itself become an unbounded map.\n3. Shorten eviction for empty never-started rooms, especially solo and lobby-only rooms, so disconnecting immediately after creation does not reserve memory for fifteen minutes.\n4. Keep the longer reconnect grace only for rooms that have already started or still contain connected participants, and reject or tear down room creation bursts before allocating full room state.",
+                "markdown": "The anonymous `host:create` and `solo:create` Socket.IO events enforce their create budget only on a single socket, not on the originating source. An attacker can open fresh connections to bypass the nominal `3/minute` limit, create large numbers of rooms, and keep those rooms resident long enough to cause meaningful memory growth and availability impact.\n\nAn unauthenticated remote attacker can create thousands of concurrent in-memory rooms from one source and retain them for long enough to degrade or exhaust the Node.js process. Local validation showed linear heap growth and persistent room retention after disconnect, and the live target reproduced the same per-socket bypass behavior for both room-creation events.\n\n1. Enforce anonymous room-creation quotas with a process-wide source key derived from the server-observed client address, rather than from `socket.data`, so reconnecting or opening parallel transports does not reset the budget.\n2. Share the quota across both `host:create` and `solo:create`, and bound the backing tracker with expiry and hard caps so the mitigation does not itself become an unbounded map.\n3. Shorten eviction for empty never-started rooms, especially solo and lobby-only rooms, so disconnecting immediately after creation does not reserve memory for fifteen minutes.\n4. Keep the longer reconnect grace only for rooms that have already started or still contain connected participants, and reject or tear down room creation bursts before allocating full room state."
+              },
+              "properties": {
+                "security-severity": "7.5",
+                "tags": [
+                  "security",
+                  "CWE-770",
+                  "stride:D"
+                ]
+              },
+              "helpUri": "https://cwe.mitre.org/data/definitions/770.html"
+            }
+          ],
+          "version": "1.5.3"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CWE-770",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Anonymous room creation resource exhaustion via Socket.IO reconnect bypass\n\nThe anonymous `host:create` and `solo:create` Socket.IO events enforce their create budget only on a single socket, not on the originating source. An attacker can open fresh connections to bypass the nominal `3/minute` limit, create large numbers of rooms, and keep those rooms resident long enough to cause meaningful memory growth and availability impact."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/sockets.js"
+                },
+                "region": {
+                  "startLine": 41,
+                  "endLine": 64
+                }
+              },
+              "message": {
+                "text": "Introduce a process-wide source-based token bucket helper"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/sockets.js"
+                },
+                "region": {
+                  "startLine": 93,
+                  "endLine": 97
+                }
+              },
+              "message": {
+                "text": "Track room creation attempts across sockets for this server instance"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/sockets.js"
+                },
+                "region": {
+                  "startLine": 123,
+                  "endLine": 149
+                }
+              },
+              "message": {
+                "text": "Apply a source-based budget before allocating host rooms"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/sockets.js"
+                },
+                "region": {
+                  "startLine": 215,
+                  "endLine": 229
+                }
+              },
+              "message": {
+                "text": "Apply the same source-based budget before allocating solo rooms"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/room.js"
+                },
+                "region": {
+                  "startLine": 439,
+                  "endLine": 447
+                }
+              },
+              "message": {
+                "text": "Shorten eviction for empty never-started rooms"
+              }
+            },
+            {
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "/socket.io",
+                  "kind": "endpoint"
+                }
+              ]
+            }
+          ],
+          "fixes": [
+            {
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "server/sockets.js"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "startLine": 41,
+                        "endLine": 64
+                      },
+                      "insertedContent": {
+                        "text": "function takeSourceToken(store, socket, name, limit, windowMs, { softCap = 10_000, trimTo = 8_000, hardCap = 12_000 } = {}) {\n  const now = Date.now();\n  const key = `${crypto.createHash('sha256').update(clientAddress(socket)).digest('hex')}:${name}`;\n  const recent = (store.get(key) || []).filter((at) => now - at < windowMs);\n  if (recent.length >= limit) {\n    store.set(key, recent);\n    return false;\n  }\n  recent.push(now);\n  store.set(key, recent);\n  // Bound the process-wide tracker even if many source addresses touch it.\n  // A hard cap (not just expired-entry cleanup) stops address churn from\n  // growing the map without limit.\n  if (store.size > softCap) {\n    for (const [address, attempts] of store) {\n      if (!attempts.some((at) => now - at < windowMs)) store.delete(address);\n      if (store.size <= trimTo) break;\n    }\n  }\n  if (store.size > hardCap) {\n    store.clear();\n  }\n  return true;\n}\n\nfunction failedJoinAllowed(failedJoins, socket) {\n  return takeSourceToken(failedJoins, socket, 'failed-join', 30, 60_000);\n}"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "artifactLocation": {
+                    "uri": "server/sockets.js"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "startLine": 93,
+                        "endLine": 97
+                      },
+                      "insertedContent": {
+                        "text": "export function attachSockets(io, { allowClientScoredCompetitive = false, allowInternalCreateConfig = false } = {}) {\n  const rooms = new Map();\n  // Shared across sockets for this server instance so reconnecting does not\n  // reset a source's failed-code budget; isolated across test/server instances.\n  const failedJoins = new Map();\n  // Anonymous room creation must be budgeted per source address, not per\n  // transport, or a client can reconnect to mint an unlimited number of rooms.\n  const createAttempts = new Map();"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "artifactLocation": {
+                    "uri": "server/sockets.js"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "startLine": 123,
+                        "endLine": 149
+                      },
+                      "insertedContent": {
+                        "text": "socket.on('host:create', guarded(socket, 'host:create', { limit: 3, ack: true }, async (payload, cb) => {\n      if (typeof cb !== 'function') return;\n      try {\n        if (!takeSourceToken(createAttempts, socket, 'room:create', 6, 60_000)) {\n          return cb({ error: 'Too many rooms created from this address — try again shortly.' });\n        }\n        let code;\n        do { code = makeRoomCode(); } while (rooms.has(code));\n        const requestedConfig = allowInternalCreateConfig ? (payload?.config || {}) : pickHostEditableConfig(payload?.config);\n        const r = new Room(io, code, requestedConfig, destroyRoom, { allowClientScoredCompetitive });\n        rooms.set(code, r);\n        const previousCode = socket.data.roomCode;\n        if (previousCode && previousCode !== code) detachFromRoom(previousCode);\n        r.hostSocketId = socket.id;\n        socket.join(`room:${code}`);\n        socket.join(`host:${code}`);\n        socket.data.roomCode = code;\n        socket.data.isHost = true;\n        socket.data.playerId = null;\n        const joinUrl = `${publicOrigin(socket)}/?code=${code}`;\n        let qr = null;\n        try {\n          qr = await QRCode.toDataURL(joinUrl, { margin: 1, width: 480 });\n        } catch { /* QR is decorative — never block room creation on it */ }\n        cb({ ok: true, code, hostKey: r.hostKey, joinUrl, qr, config: r.publicConfig() });\n      } catch (err) {\n        console.error('host:create', err);\n        cb({ error: 'Could not create room.' });\n      }\n    }));"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "artifactLocation": {
+                    "uri": "server/sockets.js"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "startLine": 215,
+                        "endLine": 229
+                      },
+                      "insertedContent": {
+                        "text": "socket.on('solo:create', guarded(socket, 'solo:create', { limit: 3, ack: true }, ({ name } = {}, cb) => {\n      if (typeof cb !== 'function') return;\n      if (!takeSourceToken(createAttempts, socket, 'room:create', 6, 60_000)) {\n        return cb({ error: 'Too many rooms created from this address — try again shortly.' });\n      }\n      let code;\n      do { code = makeRoomCode(); } while (rooms.has(code));\n      const r = new Room(io, code, {}, destroyRoom, { allowClientScoredCompetitive });\n      r.solo = true;\n      rooms.set(code, r);\n      const previousCode = socket.data.roomCode;\n      if (previousCode && previousCode !== code) detachFromRoom(previousCode);\n      const joined = r.join(socket, { name });\n      // The creator is the solo owner: only this player may drive the room\n      // (Strix re-scan 2026-08-23: solo-room takeover).\n      if (joined.ok) r.soloOwnerId = joined.playerId;\n      cb(joined);\n    }));"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "artifactLocation": {
+                    "uri": "server/room.js"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "startLine": 439,
+                        "endLine": 447
+                      },
+                      "insertedContent": {
+                        "text": "handleDisconnect(socket) {\n    if (socket.id === this.hostSocketId) this.hostSocketId = null;\n    const changed = this.disconnectSocketPlayers(socket.id);\n    if (changed) this.broadcastPlayers();\n    const anyConnected =\n      this.hostSocketId || [...this.players.values()].some((p) => p.connected);\n    if (!anyConnected) {\n      const emptyTtlMs = this.phase === 'lobby'\n        ? (this.solo ? 30_000 : 60_000)\n        : 15 * 60 * 1000;\n      this.setTimer('empty', () => this.onEmpty(this), emptyTtlMs);\n    }\n  }"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "description": {
+                "text": "1. Enforce anonymous room-creation quotas with a process-wide source key derived from the server-observed client address, rather than from `socket.data`, so reconnecting or opening parallel transports does not reset the budget.\n2. Share the quota across both `host:create` and `solo:create`, and bound the backing tracker with expiry and hard caps so the mitigation does not itself become an unbounded map.\n3. Shorten eviction for empty never-started rooms, especially solo and lobby-only rooms, so disconnecting immediately after creation does not reserve memory for fifteen minutes.\n4. Keep the longer reconnect grace only for rooms that have already started or still contain connected participants, and reject or tear down room creation bursts before allocating full room state.",
+                "markdown": "1. Enforce anonymous room-creation quotas with a process-wide source key derived from the server-observed client address, rather than from `socket.data`, so reconnecting or opening parallel transports does not reset the budget.\n2. Share the quota across both `host:create` and `solo:create`, and bound the backing tracker with expiry and hard caps so the mitigation does not itself become an unbounded map.\n3. Shorten eviction for empty never-started rooms, especially solo and lobby-only rooms, so disconnecting immediately after creation does not reserve memory for fifteen minutes.\n4. Keep the longer reconnect grace only for rooms that have already started or still contain connected participants, and reject or tear down room creation bursts before allocating full room state."
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "primaryLocationLineHash": "ba7511a8a309e060573bf4cb4e695913e80814e7cdb65b378e5a9655eb541cfa"
+          },
+          "properties": {
+            "security-severity": "7.5",
+            "strix_vuln_class_hash": "31f0a3984ec52ca2bd6a3e0d2435c619f155f8047cb1a5e3eef29bca637e1715",
+            "strix": {
+              "id": "vuln-0001",
+              "severity": "high",
+              "cvss": 7.5,
+              "timestamp": "2026-08-23 04:19:31 UTC",
+              "target": "http://host.docker.internal:3123",
+              "endpoint": "/socket.io",
+              "cwe": "CWE-770",
+              "impact": "An unauthenticated remote attacker can create thousands of concurrent in-memory rooms from one source and retain them for long enough to degrade or exhaust the Node.js process. Local validation showed linear heap growth and persistent room retention after disconnect, and the live target reproduced the same per-socket bypass behavior for both room-creation events.",
+              "technical_analysis": "The Socket.IO guard applies the limit to `socket.data.rateLimits`, so every new transport starts with a fresh counter. The `host:create` and `solo:create` handlers therefore inherit a per-socket limit rather than a source-based limit.\n\n```javascript title=server/sockets.js startLineNumber=20 endLineNumber=30\nfunction takeRateToken(socket, name, limit, windowMs) {\n  const now = Date.now();\n  socket.data.rateLimits ||= new Map();\n  const recent = (socket.data.rateLimits.get(name) || []).filter((at) => now - at < windowMs);\n  if (recent.length >= limit) {\n    socket.data.rateLimits.set(name, recent);\n    return false;\n  }\n  recent.push(now);\n  socket.data.rateLimits.set(name, recent);\n  return true;\n}\n```\n\nThe affected creation handlers both rely on that per-socket guard before allocating a new `Room` object and storing it in the process-wide `rooms` map.\n\n```javascript title=server/sockets.js startLineNumber=123 endLineNumber=145\nsocket.on('host:create', guarded(socket, 'host:create', { limit: 3, ack: true }, async (payload, cb) => {\n  if (typeof cb !== 'function') return;\n  try {\n    let code;\n    do { code = makeRoomCode(); } while (rooms.has(code));\n    const requestedConfig = allowInternalCreateConfig ? (payload?.config || {}) : pickHostEditableConfig(payload?.config);\n    const r = new Room(io, code, requestedConfig, destroyRoom, { allowClientScoredCompetitive });\n    rooms.set(code, r);\n    ...\n```\n\n```javascript title=server/sockets.js startLineNumber=215 endLineNumber=228\nsocket.on('solo:create', guarded(socket, 'solo:create', { limit: 3, ack: true }, ({ name } = {}, cb) => {\n  if (typeof cb !== 'function') return;\n  let code;\n  do { code = makeRoomCode(); } while (rooms.has(code));\n  const r = new Room(io, code, {}, destroyRoom, { allowClientScoredCompetitive });\n  r.solo = true;\n  rooms.set(code, r);\n  ...\n```\n\nRoom destruction is also delayed after the attacker disconnects. When no host or player remains connected, `handleDisconnect()` schedules a fixed `15 * 60 * 1000` empty-room timer. In the lobby, `scheduleLobbyKick()` removes disconnected players after `60000` ms, but that does not destroy the room itself, so empty never-started rooms remain resident.\n\n```javascript title=server/room.js startLineNumber=285 endLineNumber=293\nscheduleLobbyKick(playerId) {\n  if (this.phase !== 'lobby') return;\n  this.setTimer(`kick:${playerId}`, () => {\n    const p = this.players.get(playerId);\n    if (this.phase === 'lobby' && p && !p.connected && !p.socketId) {\n      this.players.delete(playerId);\n      this.broadcastPlayers();\n    }\n  }, 60000);\n}\n```\n\n```javascript title=server/room.js startLineNumber=439 endLineNumber=447\nhandleDisconnect(socket) {\n  if (socket.id === this.hostSocketId) this.hostSocketId = null;\n  const changed = this.disconnectSocketPlayers(socket.id);\n  if (changed) this.broadcastPlayers();\n  const anyConnected =\n    this.hostSocketId || [...this.players.values()].some((p) => p.connected);\n  if (!anyConnected) {\n    this.setTimer('empty', () => this.onEmpty(this), 15 * 60 * 1000);\n  }\n}\n```\n\nValidated behavior matched the code: attempt 4 on the same socket is blocked, while the same client succeeds again by reconnecting and issuing one create per fresh socket. Because each successful call allocates a new room that stays resident long after disconnect, the bypass translates directly into unauthenticated memory and availability pressure.",
+              "remediation_steps": "1. Enforce anonymous room-creation quotas with a process-wide source key derived from the server-observed client address, rather than from `socket.data`, so reconnecting or opening parallel transports does not reset the budget.\n2. Share the quota across both `host:create` and `solo:create`, and bound the backing tracker with expiry and hard caps so the mitigation does not itself become an unbounded map.\n3. Shorten eviction for empty never-started rooms, especially solo and lobby-only rooms, so disconnecting immediately after creation does not reserve memory for fifteen minutes.\n4. Keep the longer reconnect grace only for rooms that have already started or still contain connected participants, and reject or tear down room creation bursts before allocating full room state.",
+              "poc": {
+                "description": "1. Connect a Socket.IO client to `/socket.io` and emit `host:create` four times on the same socket; observe that attempts 1-3 succeed and attempt 4 returns `Too many requests — try again shortly.`.\n2. Open a fresh Socket.IO connection for each request and emit one `host:create` on each new socket; observe that all fresh-socket creates succeed despite the prior rate-limit response.\n3. Repeat the same two checks for `solo:create`; again, attempts 1-3 on one socket succeed, attempt 4 is blocked, and fresh-socket requests continue to succeed.\n4. Against a local instance of the same codebase, automate fresh-socket `solo:create` requests at scale, immediately disconnect each socket, and measure heap usage and `rooms.size` before and after the burst.\n5. Wait 65 seconds and inspect room state; observe that disconnected host and solo rooms are still resident and retain an `empty` timer instead of being destroyed promptly.",
+                "script_available": true
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
