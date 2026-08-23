@@ -129,6 +129,11 @@ function botPayload(key, data, rnd, stage = 1, bot = null) {
         }),
       };
     }
+    case 'flags': {
+      // The harness cannot see the server answer. It submits one safe option
+      // per round and proves that ten ordered choices are accepted.
+      return { choices: data.rounds.map(() => Math.floor(rnd() * 8)) };
+    }
     case 'readroom': return { answer: rnd() < 0.5, prediction: Math.floor(rnd() * 101) };
     case 'typing': return { typed: data.sentence.slice(0, 5 + Math.floor(rnd() * data.sentence.length)), elapsedMs: 15000 + rnd() * 20000 };
     case 'anagram': {

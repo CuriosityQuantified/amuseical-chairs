@@ -293,8 +293,8 @@ function startMinigame(payload) {
   // the countdown off performance.now(). Completion-mode games (cups) have no
   // shared deadline — the player runs the whole thing and submits when done —
   // so their countdown stays hidden.
-  const localDeadline = payload.deadline - state.offset;
-  const perfDeadline = performance.now() + (localDeadline - Date.now());
+  const localDeadline = payload.completion ? null : payload.deadline - state.offset;
+  const perfDeadline = localDeadline == null ? null : performance.now() + (localDeadline - Date.now());
   if (!payload.completion) showCountdown(perfDeadline, payload.duration);
 
   let submitted = false;

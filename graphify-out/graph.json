@@ -22,12 +22,12 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 31,
-      "community_name": "harness.test.js",
+      "community": 27,
+      "community_name": "feedback.js",
       "file_type": "code",
       "norm_label": "bot",
       "source_file": "test/harness.test.js",
-      "source_location": "L190"
+      "source_location": "L195"
     },
     {
       "id": "server_room_clientscoredgameallowed",
@@ -147,7 +147,7 @@
       "file_type": "code",
       "norm_label": ".closegame()",
       "source_file": "server/room.js",
-      "source_location": "L1058"
+      "source_location": "L1066"
     },
     {
       "id": "server_room_room_constructor",
@@ -171,7 +171,7 @@
       "file_type": "code",
       "norm_label": ".declarewinner()",
       "source_file": "server/room.js",
-      "source_location": "L1360"
+      "source_location": "L1368"
     },
     {
       "id": "server_room_room_destroy",
@@ -291,7 +291,7 @@
       "file_type": "code",
       "norm_label": ".finishgame()",
       "source_file": "server/room.js",
-      "source_location": "L1085"
+      "source_location": "L1093"
     },
     {
       "id": "server_room_room_finishredemption",
@@ -303,7 +303,7 @@
       "file_type": "code",
       "norm_label": ".finishredemption()",
       "source_file": "server/room.js",
-      "source_location": "L1273"
+      "source_location": "L1281"
     },
     {
       "id": "server_room_room_gamepayload",
@@ -339,7 +339,19 @@
       "file_type": "code",
       "norm_label": ".handleredemptionreport()",
       "source_file": "server/room.js",
-      "source_location": "L1246"
+      "source_location": "L1254"
+    },
+    {
+      "id": "server_room_room_handlesubmit",
+      "label": ".handleSubmit()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Room",
+      "file_type": "code",
+      "norm_label": ".handlesubmit()",
+      "source_file": "server/room.js",
+      "source_location": "L990"
     },
     {
       "id": "server_room_room_hideentry",
@@ -363,7 +375,7 @@
       "file_type": "code",
       "norm_label": ".hostnext()",
       "source_file": "server/room.js",
-      "source_location": "L1401"
+      "source_location": "L1409"
     },
     {
       "id": "server_room_room_join",
@@ -376,6 +388,18 @@
       "norm_label": ".join()",
       "source_file": "server/room.js",
       "source_location": "L334"
+    },
+    {
+      "id": "server_room_room_lockedsolved",
+      "label": ".lockedSolved()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Room",
+      "file_type": "code",
+      "norm_label": ".lockedsolved()",
+      "source_file": "server/room.js",
+      "source_location": "L1060"
     },
     {
       "id": "server_room_room_makestage",
@@ -495,7 +519,7 @@
       "file_type": "code",
       "norm_label": ".reset()",
       "source_file": "server/room.js",
-      "source_location": "L1377"
+      "source_location": "L1385"
     },
     {
       "id": "server_room_room_revealpayload",
@@ -519,7 +543,7 @@
       "file_type": "code",
       "norm_label": ".revealturn()",
       "source_file": "server/room.js",
-      "source_location": "L1022"
+      "source_location": "L1030"
     },
     {
       "id": "server_room_room_schedulelobbykick",
@@ -543,7 +567,7 @@
       "file_type": "code",
       "norm_label": ".scorechairstournament()",
       "source_file": "server/room.js",
-      "source_location": "L1323"
+      "source_location": "L1331"
     },
     {
       "id": "server_room_room_scoregame",
@@ -555,7 +579,7 @@
       "file_type": "code",
       "norm_label": ".scoregame()",
       "source_file": "server/room.js",
-      "source_location": "L1121"
+      "source_location": "L1129"
     },
     {
       "id": "server_room_room_setphase",
@@ -675,7 +699,7 @@
       "file_type": "code",
       "norm_label": ".startchairsfinale()",
       "source_file": "server/room.js",
-      "source_location": "L1171"
+      "source_location": "L1179"
     },
     {
       "id": "server_room_room_startchairsround",
@@ -687,7 +711,7 @@
       "file_type": "code",
       "norm_label": ".startchairsround()",
       "source_file": "server/room.js",
-      "source_location": "L1196"
+      "source_location": "L1204"
     },
     {
       "id": "server_room_room_startgame",
@@ -711,7 +735,7 @@
       "file_type": "code",
       "norm_label": ".startredemption()",
       "source_file": "server/room.js",
-      "source_location": "L1202"
+      "source_location": "L1210"
     },
     {
       "id": "server_room_room_startredemptiontest",
@@ -911,11 +935,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "aggregatecaption()",
       "source_file": "server/games.js",
-      "source_location": "L992"
+      "source_location": "L1004"
     },
     {
       "id": "server_games_aggregategame",
@@ -923,11 +947,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "aggregategame()",
       "source_file": "server/games.js",
-      "source_location": "L963"
+      "source_location": "L975"
     },
     {
       "id": "server_games_aggregateicebreaker",
@@ -935,11 +959,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "aggregateicebreaker()",
       "source_file": "server/games.js",
-      "source_location": "L1048"
+      "source_location": "L1060"
     },
     {
       "id": "server_games_buildreveal",
@@ -947,11 +971,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "buildreveal()",
       "source_file": "server/games.js",
-      "source_location": "L624"
+      "source_location": "L631"
     },
     {
       "id": "server_games_buildstages",
@@ -959,23 +983,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "buildstages()",
       "source_file": "server/games.js",
-      "source_location": "L497"
-    },
-    {
-      "id": "server_games_clamp",
-      "label": "clamp()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "server/games.js",
-      "file_type": "code",
-      "norm_label": "clamp()",
-      "source_file": "server/games.js",
-      "source_location": "L272"
+      "source_location": "L504"
     },
     {
       "id": "server_games_icebreakertally",
@@ -983,11 +995,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "icebreakertally()",
       "source_file": "server/games.js",
-      "source_location": "L581"
+      "source_location": "L588"
     },
     {
       "id": "server_games_num",
@@ -995,11 +1007,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "num()",
       "source_file": "server/games.js",
-      "source_location": "L271"
+      "source_location": "L274"
     },
     {
       "id": "server_games_votesforpool",
@@ -1007,11 +1019,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "votesforpool()",
       "source_file": "server/games.js",
-      "source_location": "L268"
+      "source_location": "L271"
     },
     {
       "id": "shared_textclean_cleanentrytext",
@@ -1019,7 +1031,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "cleanentrytext()",
       "source_file": "shared/textclean.js",
@@ -1031,7 +1043,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "isusableentry()",
       "source_file": "shared/textclean.js",
@@ -1043,7 +1055,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "ballot()",
       "source_file": "test/caption.test.js",
@@ -1055,7 +1067,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "build()",
       "source_file": "test/caption.test.js",
@@ -1067,7 +1079,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "rng()",
       "source_file": "test/caption.test.js",
@@ -1079,7 +1091,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "score()",
       "source_file": "test/caption.test.js",
@@ -1091,7 +1103,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "stagetwo()",
       "source_file": "test/caption.test.js",
@@ -1103,7 +1115,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "facts()",
       "source_file": "test/icebreaker.test.js",
@@ -1115,7 +1127,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "play()",
       "source_file": "test/icebreaker.test.js",
@@ -1127,7 +1139,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "rng()",
       "source_file": "test/icebreaker.test.js",
@@ -1139,7 +1151,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "stageof()",
       "source_file": "test/icebreaker.test.js",
@@ -1902,6 +1914,18 @@
       "source_location": "L58"
     },
     {
+      "id": "shared_area_arearatio",
+      "label": "areaRatio()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "feedback.js",
+      "file_type": "code",
+      "norm_label": "arearatio()",
+      "source_file": "shared/area.js",
+      "source_location": "L27"
+    },
+    {
       "id": "shared_feedback_anagramfeedback",
       "label": "anagramFeedback()",
       "_callable": true,
@@ -2046,6 +2070,78 @@
       "source_location": "L116"
     },
     {
+      "id": "test_harness_test_bot_close",
+      "label": ".close()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "feedback.js",
+      "file_type": "code",
+      "norm_label": ".close()",
+      "source_file": "test/harness.test.js",
+      "source_location": "L271"
+    },
+    {
+      "id": "test_harness_test_bot_constructor",
+      "label": ".constructor()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "feedback.js",
+      "file_type": "code",
+      "norm_label": ".constructor()",
+      "source_file": "test/harness.test.js",
+      "source_location": "L196"
+    },
+    {
+      "id": "test_harness_test_bot_join",
+      "label": ".join()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "feedback.js",
+      "file_type": "code",
+      "norm_label": ".join()",
+      "source_file": "test/harness.test.js",
+      "source_location": "L208"
+    },
+    {
+      "id": "test_harness_test_bot_wire",
+      "label": ".wire()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "feedback.js",
+      "file_type": "code",
+      "norm_label": ".wire()",
+      "source_file": "test/harness.test.js",
+      "source_location": "L229"
+    },
+    {
+      "id": "test_harness_test_botpayload",
+      "label": "botPayload()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "feedback.js",
+      "file_type": "code",
+      "norm_label": "botpayload()",
+      "source_file": "test/harness.test.js",
+      "source_location": "L61"
+    },
+    {
+      "id": "test_harness_test_sleep",
+      "label": "sleep()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "feedback.js",
+      "file_type": "code",
+      "norm_label": "sleep()",
+      "source_file": "test/harness.test.js",
+      "source_location": "L20"
+    },
+    {
       "id": "shared_cups_cupscount",
       "label": "cupsCount()",
       "_callable": true,
@@ -2104,18 +2200,6 @@
       "norm_label": "addplayer()",
       "source_file": "test/cups-ten-level.test.js",
       "source_location": "L160"
-    },
-    {
-      "id": "test_cups_ten_level_test_build",
-      "label": "build()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 28,
-      "community_name": "cups.test.js",
-      "file_type": "code",
-      "norm_label": "build()",
-      "source_file": "test/cups-ten-level.test.js",
-      "source_location": "L38"
     },
     {
       "id": "test_cups_ten_level_test_correct",
@@ -2224,18 +2308,6 @@
       "norm_label": "addplayer()",
       "source_file": "test/cups.test.js",
       "source_location": "L376"
-    },
-    {
-      "id": "test_cups_test_build",
-      "label": "build()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 28,
-      "community_name": "cups.test.js",
-      "file_type": "code",
-      "norm_label": "build()",
-      "source_file": "test/cups.test.js",
-      "source_location": "L46"
     },
     {
       "id": "test_cups_test_correct",
@@ -2427,7 +2499,7 @@
       "file_type": "code",
       "norm_label": "confetti()",
       "source_file": "public/js/host.js",
-      "source_location": "L708"
+      "source_location": "L711"
     },
     {
       "id": "public_js_host_content",
@@ -2499,7 +2571,7 @@
       "file_type": "code",
       "norm_label": "extrasblock()",
       "source_file": "public/js/host.js",
-      "source_location": "L490"
+      "source_location": "L493"
     },
     {
       "id": "public_js_host_fmtredrow",
@@ -2511,7 +2583,7 @@
       "file_type": "code",
       "norm_label": "fmtredrow()",
       "source_file": "public/js/host.js",
-      "source_location": "L590"
+      "source_location": "L593"
     },
     {
       "id": "public_js_host_playmusic",
@@ -2559,7 +2631,7 @@
       "file_type": "code",
       "norm_label": "renderchairsresult()",
       "source_file": "public/js/host.js",
-      "source_location": "L639"
+      "source_location": "L642"
     },
     {
       "id": "public_js_host_renderhostliveboard",
@@ -2643,7 +2715,7 @@
       "file_type": "code",
       "norm_label": "renderredemption()",
       "source_file": "public/js/host.js",
-      "source_location": "L613"
+      "source_location": "L616"
     },
     {
       "id": "public_js_host_renderredemptiontestdone",
@@ -2655,7 +2727,7 @@
       "file_type": "code",
       "norm_label": "renderredemptiontestdone()",
       "source_file": "public/js/host.js",
-      "source_location": "L602"
+      "source_location": "L605"
     },
     {
       "id": "public_js_host_renderreveal",
@@ -2667,7 +2739,7 @@
       "file_type": "code",
       "norm_label": "renderreveal()",
       "source_file": "public/js/host.js",
-      "source_location": "L445"
+      "source_location": "L448"
     },
     {
       "id": "public_js_host_renderscores",
@@ -2679,7 +2751,7 @@
       "file_type": "code",
       "norm_label": "renderscores()",
       "source_file": "public/js/host.js",
-      "source_location": "L559"
+      "source_location": "L562"
     },
     {
       "id": "public_js_host_rendertestdone",
@@ -2691,7 +2763,7 @@
       "file_type": "code",
       "norm_label": "rendertestdone()",
       "source_file": "public/js/host.js",
-      "source_location": "L573"
+      "source_location": "L576"
     },
     {
       "id": "public_js_host_rendertutorial",
@@ -2715,7 +2787,7 @@
       "file_type": "code",
       "norm_label": "renderwinner()",
       "source_file": "public/js/host.js",
-      "source_location": "L683"
+      "source_location": "L686"
     },
     {
       "id": "public_js_host_scoretable",
@@ -2727,7 +2799,7 @@
       "file_type": "code",
       "norm_label": "scoretable()",
       "source_file": "public/js/host.js",
-      "source_location": "L537"
+      "source_location": "L540"
     },
     {
       "id": "public_js_host_stagelabel",
@@ -2922,18 +2994,6 @@
       "source_location": "L76"
     },
     {
-      "id": "shared_area_arearatio",
-      "label": "areaRatio()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 31,
-      "community_name": "harness.test.js",
-      "file_type": "code",
-      "norm_label": "arearatio()",
-      "source_file": "shared/area.js",
-      "source_location": "L27"
-    },
-    {
       "id": "test_anagram_test_stubio",
       "label": "stubIo()",
       "_callable": true,
@@ -2944,78 +3004,6 @@
       "norm_label": "stubio()",
       "source_file": "test/anagram.test.js",
       "source_location": "L15"
-    },
-    {
-      "id": "test_harness_test_bot_close",
-      "label": ".close()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 31,
-      "community_name": "harness.test.js",
-      "file_type": "code",
-      "norm_label": ".close()",
-      "source_file": "test/harness.test.js",
-      "source_location": "L266"
-    },
-    {
-      "id": "test_harness_test_bot_constructor",
-      "label": ".constructor()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 31,
-      "community_name": "harness.test.js",
-      "file_type": "code",
-      "norm_label": ".constructor()",
-      "source_file": "test/harness.test.js",
-      "source_location": "L191"
-    },
-    {
-      "id": "test_harness_test_bot_join",
-      "label": ".join()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 31,
-      "community_name": "harness.test.js",
-      "file_type": "code",
-      "norm_label": ".join()",
-      "source_file": "test/harness.test.js",
-      "source_location": "L203"
-    },
-    {
-      "id": "test_harness_test_bot_wire",
-      "label": ".wire()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 31,
-      "community_name": "harness.test.js",
-      "file_type": "code",
-      "norm_label": ".wire()",
-      "source_file": "test/harness.test.js",
-      "source_location": "L224"
-    },
-    {
-      "id": "test_harness_test_botpayload",
-      "label": "botPayload()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 31,
-      "community_name": "harness.test.js",
-      "file_type": "code",
-      "norm_label": "botpayload()",
-      "source_file": "test/harness.test.js",
-      "source_location": "L61"
-    },
-    {
-      "id": "test_harness_test_sleep",
-      "label": "sleep()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 31,
-      "community_name": "harness.test.js",
-      "file_type": "code",
-      "norm_label": "sleep()",
-      "source_file": "test/harness.test.js",
-      "source_location": "L20"
     },
     {
       "id": "test_harness_test_withdeadline",
@@ -3078,40 +3066,184 @@
       "source_location": "L74"
     },
     {
-      "id": "shared_stroop_assertlabelparity",
-      "label": "assertLabelParity()",
+      "id": "server_games_buildgamedata",
+      "label": "buildGameData()",
       "_callable": true,
       "_origin": "ast",
       "community": 33,
-      "community_name": "stroop.test.js",
+      "community_name": "seededRng",
       "file_type": "code",
-      "norm_label": "assertlabelparity()",
-      "source_file": "shared/stroop.js",
-      "source_location": "L32"
+      "norm_label": "buildgamedata()",
+      "source_file": "server/games.js",
+      "source_location": "L290"
     },
     {
-      "id": "shared_stroop_stroopsequence",
-      "label": "stroopSequence()",
+      "id": "shared_area_areatrials",
+      "label": "areaTrials()",
       "_callable": true,
       "_origin": "ast",
       "community": 33,
-      "community_name": "stroop.test.js",
+      "community_name": "seededRng",
       "file_type": "code",
-      "norm_label": "stroopsequence()",
-      "source_file": "shared/stroop.js",
-      "source_location": "L47"
+      "norm_label": "areatrials()",
+      "source_file": "shared/area.js",
+      "source_location": "L36"
     },
     {
-      "id": "test_stroop_test_stubio",
-      "label": "stubIo()",
+      "id": "shared_area_shuffled",
+      "label": "shuffled()",
       "_callable": true,
       "_origin": "ast",
       "community": 33,
-      "community_name": "stroop.test.js",
+      "community_name": "seededRng",
       "file_type": "code",
-      "norm_label": "stubio()",
+      "norm_label": "shuffled()",
+      "source_file": "shared/area.js",
+      "source_location": "L15"
+    },
+    {
+      "id": "shared_rng_seededrng",
+      "label": "seededRng()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 33,
+      "community_name": "seededRng",
+      "file_type": "code",
+      "norm_label": "seededrng()",
+      "source_file": "shared/rng.js",
+      "source_location": "L5"
+    },
+    {
+      "id": "test_anagram_test_round",
+      "label": "round()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 33,
+      "community_name": "seededRng",
+      "file_type": "code",
+      "norm_label": "round()",
+      "source_file": "test/anagram.test.js",
+      "source_location": "L12"
+    },
+    {
+      "id": "test_area_test_round",
+      "label": "round()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 33,
+      "community_name": "seededRng",
+      "file_type": "code",
+      "norm_label": "round()",
+      "source_file": "test/area.test.js",
+      "source_location": "L12"
+    },
+    {
+      "id": "test_balance_test_round",
+      "label": "round()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 33,
+      "community_name": "seededRng",
+      "file_type": "code",
+      "norm_label": "round()",
+      "source_file": "test/balance.test.js",
+      "source_location": "L41"
+    },
+    {
+      "id": "test_cups_ten_level_test_build",
+      "label": "build()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 33,
+      "community_name": "seededRng",
+      "file_type": "code",
+      "norm_label": "build()",
+      "source_file": "test/cups-ten-level.test.js",
+      "source_location": "L38"
+    },
+    {
+      "id": "test_cups_test_build",
+      "label": "build()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 33,
+      "community_name": "seededRng",
+      "file_type": "code",
+      "norm_label": "build()",
+      "source_file": "test/cups.test.js",
+      "source_location": "L46"
+    },
+    {
+      "id": "test_fractions_test_round",
+      "label": "round()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 33,
+      "community_name": "seededRng",
+      "file_type": "code",
+      "norm_label": "round()",
+      "source_file": "test/fractions.test.js",
+      "source_location": "L25"
+    },
+    {
+      "id": "test_metronome_test_build",
+      "label": "build()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 33,
+      "community_name": "seededRng",
+      "file_type": "code",
+      "norm_label": "build()",
+      "source_file": "test/metronome.test.js",
+      "source_location": "L30"
+    },
+    {
+      "id": "test_roster_test_rounddata",
+      "label": "roundData()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 33,
+      "community_name": "seededRng",
+      "file_type": "code",
+      "norm_label": "rounddata()",
+      "source_file": "test/roster.test.js",
+      "source_location": "L72"
+    },
+    {
+      "id": "test_stroop_test_round",
+      "label": "round()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 33,
+      "community_name": "seededRng",
+      "file_type": "code",
+      "norm_label": "round()",
       "source_file": "test/stroop.test.js",
-      "source_location": "L17"
+      "source_location": "L14"
+    },
+    {
+      "id": "test_tray_test_round",
+      "label": "round()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 33,
+      "community_name": "seededRng",
+      "file_type": "code",
+      "norm_label": "round()",
+      "source_file": "test/tray.test.js",
+      "source_location": "L30"
+    },
+    {
+      "id": "test_wordhunt_test_round",
+      "label": "round()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 33,
+      "community_name": "seededRng",
+      "file_type": "code",
+      "norm_label": "round()",
+      "source_file": "test/wordhunt.test.js",
+      "source_location": "L16"
     },
     {
       "id": "tests_e2e_feedback_spec_assertfeedbackshown",
@@ -3210,6 +3342,42 @@
       "source_location": "L148"
     },
     {
+      "id": "shared_normalize_normalizeerror",
+      "label": "normalizeError()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 36,
+      "community_name": "room.js",
+      "file_type": "code",
+      "norm_label": "normalizeerror()",
+      "source_file": "shared/normalize.js",
+      "source_location": "L18"
+    },
+    {
+      "id": "shared_normalize_normalizescore",
+      "label": "normalizeScore()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 36,
+      "community_name": "room.js",
+      "file_type": "code",
+      "norm_label": "normalizescore()",
+      "source_file": "shared/normalize.js",
+      "source_location": "L30"
+    },
+    {
+      "id": "shared_normalize_percentile",
+      "label": "percentile()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 36,
+      "community_name": "room.js",
+      "file_type": "code",
+      "norm_label": "percentile()",
+      "source_file": "shared/normalize.js",
+      "source_location": "L6"
+    },
+    {
       "id": "scripts_check_fail",
       "label": "fail()",
       "_callable": true,
@@ -3270,52 +3438,40 @@
       "source_location": "L28"
     },
     {
-      "id": "server_games_buildgamedata",
-      "label": "buildGameData()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 39,
-      "community_name": "seededRng",
-      "file_type": "code",
-      "norm_label": "buildgamedata()",
-      "source_file": "server/games.js",
-      "source_location": "L287"
-    },
-    {
       "id": "server_games_pickcontent",
       "label": "pickContent()",
       "_callable": true,
       "_origin": "ast",
       "community": 39,
-      "community_name": "seededRng",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "pickcontent()",
       "source_file": "server/games.js",
-      "source_location": "L275"
+      "source_location": "L278"
     },
     {
-      "id": "shared_fractions_findpair",
-      "label": "findPair()",
+      "id": "shared_flags_flagrounds",
+      "label": "flagRounds()",
       "_callable": true,
       "_origin": "ast",
       "community": 39,
-      "community_name": "seededRng",
+      "community_name": "server/games.js",
       "file_type": "code",
-      "norm_label": "findpair()",
-      "source_file": "shared/fractions.js",
-      "source_location": "L68"
+      "norm_label": "flagrounds()",
+      "source_file": "shared/flags.js",
+      "source_location": "L6"
     },
     {
-      "id": "shared_fractions_fractionspairs",
-      "label": "fractionsPairs()",
+      "id": "shared_flags_validflagchoices",
+      "label": "validFlagChoices()",
       "_callable": true,
       "_origin": "ast",
       "community": 39,
-      "community_name": "seededRng",
+      "community_name": "server/games.js",
       "file_type": "code",
-      "norm_label": "fractionspairs()",
-      "source_file": "shared/fractions.js",
-      "source_location": "L91"
+      "norm_label": "validflagchoices()",
+      "source_file": "shared/flags.js",
+      "source_location": "L20"
     },
     {
       "id": "shared_rng_pick",
@@ -3323,7 +3479,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 39,
-      "community_name": "seededRng",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "pick()",
       "source_file": "shared/rng.js",
@@ -3335,23 +3491,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 39,
-      "community_name": "seededRng",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "randint()",
       "source_file": "shared/rng.js",
       "source_location": "L23"
-    },
-    {
-      "id": "shared_rng_seededrng",
-      "label": "seededRng()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 39,
-      "community_name": "seededRng",
-      "file_type": "code",
-      "norm_label": "seededrng()",
-      "source_file": "shared/rng.js",
-      "source_location": "L5"
     },
     {
       "id": "shared_rng_shuffle",
@@ -3359,7 +3503,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 39,
-      "community_name": "seededRng",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "shuffle()",
       "source_file": "shared/rng.js",
@@ -3371,7 +3515,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 39,
-      "community_name": "seededRng",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "traylevel()",
       "source_file": "shared/tray.js",
@@ -3383,71 +3527,35 @@
       "_callable": true,
       "_origin": "ast",
       "community": 39,
-      "community_name": "seededRng",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "trayswapped()",
       "source_file": "shared/tray.js",
       "source_location": "L45"
     },
     {
-      "id": "test_anagram_test_round",
-      "label": "round()",
+      "id": "test_flags_test_addplayer",
+      "label": "addPlayer()",
       "_callable": true,
       "_origin": "ast",
       "community": 39,
-      "community_name": "seededRng",
+      "community_name": "server/games.js",
       "file_type": "code",
-      "norm_label": "round()",
-      "source_file": "test/anagram.test.js",
-      "source_location": "L12"
+      "norm_label": "addplayer()",
+      "source_file": "test/flags.test.js",
+      "source_location": "L15"
     },
     {
-      "id": "test_fractions_test_round",
-      "label": "round()",
+      "id": "test_flags_test_stubio",
+      "label": "stubIo()",
       "_callable": true,
       "_origin": "ast",
       "community": 39,
-      "community_name": "seededRng",
+      "community_name": "server/games.js",
       "file_type": "code",
-      "norm_label": "round()",
-      "source_file": "test/fractions.test.js",
-      "source_location": "L25"
-    },
-    {
-      "id": "test_stroop_test_round",
-      "label": "round()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 39,
-      "community_name": "seededRng",
-      "file_type": "code",
-      "norm_label": "round()",
-      "source_file": "test/stroop.test.js",
-      "source_location": "L14"
-    },
-    {
-      "id": "test_tray_test_round",
-      "label": "round()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 39,
-      "community_name": "seededRng",
-      "file_type": "code",
-      "norm_label": "round()",
-      "source_file": "test/tray.test.js",
-      "source_location": "L30"
-    },
-    {
-      "id": "test_wordhunt_test_round",
-      "label": "round()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 39,
-      "community_name": "seededRng",
-      "file_type": "code",
-      "norm_label": "round()",
-      "source_file": "test/wordhunt.test.js",
-      "source_location": "L16"
+      "norm_label": "stubio()",
+      "source_file": "test/flags.test.js",
+      "source_location": "L13"
     },
     {
       "id": "public_js_player_applysnapshot",
@@ -3858,16 +3966,16 @@
       "source_location": "L53"
     },
     {
-      "id": "test_balance_test_round",
-      "label": "round()",
+      "id": "test_balance_test_score",
+      "label": "score()",
       "_callable": true,
       "_origin": "ast",
       "community": 41,
       "community_name": "balance.test.js",
       "file_type": "code",
-      "norm_label": "round()",
+      "norm_label": "score()",
       "source_file": "test/balance.test.js",
-      "source_location": "L41"
+      "source_location": "L44"
     },
     {
       "id": "test_balance_test_steertowardfall",
@@ -3882,6 +3990,18 @@
       "source_location": "L50"
     },
     {
+      "id": "server_games_clamp",
+      "label": "clamp()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 43,
+      "community_name": "computeMetric",
+      "file_type": "code",
+      "norm_label": "clamp()",
+      "source_file": "server/games.js",
+      "source_location": "L275"
+    },
+    {
       "id": "server_games_computemetric",
       "label": "computeMetric()",
       "_callable": true,
@@ -3891,7 +4011,7 @@
       "file_type": "code",
       "norm_label": "computemetric()",
       "source_file": "server/games.js",
-      "source_location": "L663"
+      "source_location": "L670"
     },
     {
       "id": "shared_wordhunt_buildgrid",
@@ -3940,18 +4060,6 @@
       "norm_label": "solvegrid()",
       "source_file": "shared/wordhunt.js",
       "source_location": "L372"
-    },
-    {
-      "id": "test_balance_test_score",
-      "label": "score()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 43,
-      "community_name": "computeMetric",
-      "file_type": "code",
-      "norm_label": "score()",
-      "source_file": "test/balance.test.js",
-      "source_location": "L44"
     },
     {
       "id": "test_cups_ten_level_test_score",
@@ -4026,52 +4134,40 @@
       "source_location": "L19"
     },
     {
-      "id": "server_games_formatraw",
-      "label": "formatRaw()",
+      "id": "shared_stroop_assertlabelparity",
+      "label": "assertLabelParity()",
       "_callable": true,
       "_origin": "ast",
       "community": 44,
-      "community_name": "formatRaw",
+      "community_name": "stroop.test.js",
       "file_type": "code",
-      "norm_label": "formatraw()",
-      "source_file": "server/games.js",
-      "source_location": "L1074"
+      "norm_label": "assertlabelparity()",
+      "source_file": "shared/stroop.js",
+      "source_location": "L32"
     },
     {
-      "id": "shared_area_areatrials",
-      "label": "areaTrials()",
+      "id": "shared_stroop_stroopsequence",
+      "label": "stroopSequence()",
       "_callable": true,
       "_origin": "ast",
       "community": 44,
-      "community_name": "formatRaw",
+      "community_name": "stroop.test.js",
       "file_type": "code",
-      "norm_label": "areatrials()",
-      "source_file": "shared/area.js",
-      "source_location": "L36"
+      "norm_label": "stroopsequence()",
+      "source_file": "shared/stroop.js",
+      "source_location": "L47"
     },
     {
-      "id": "shared_area_shuffled",
-      "label": "shuffled()",
+      "id": "test_stroop_test_stubio",
+      "label": "stubIo()",
       "_callable": true,
       "_origin": "ast",
       "community": 44,
-      "community_name": "formatRaw",
+      "community_name": "stroop.test.js",
       "file_type": "code",
-      "norm_label": "shuffled()",
-      "source_file": "shared/area.js",
-      "source_location": "L15"
-    },
-    {
-      "id": "test_area_test_round",
-      "label": "round()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 44,
-      "community_name": "formatRaw",
-      "file_type": "code",
-      "norm_label": "round()",
-      "source_file": "test/area.test.js",
-      "source_location": "L12"
+      "norm_label": "stubio()",
+      "source_file": "test/stroop.test.js",
+      "source_location": "L17"
     },
     {
       "id": "test_reveal_test_addplayer",
@@ -4134,6 +4230,18 @@
       "source_location": "L23"
     },
     {
+      "id": "server_games_formatraw",
+      "label": "formatRaw()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 46,
+      "community_name": "roster.test.js",
+      "file_type": "code",
+      "norm_label": "formatraw()",
+      "source_file": "server/games.js",
+      "source_location": "L1086"
+    },
+    {
       "id": "test_metronome_test_addplayer",
       "label": "addPlayer()",
       "_callable": true,
@@ -4144,18 +4252,6 @@
       "norm_label": "addplayer()",
       "source_file": "test/metronome.test.js",
       "source_location": "L208"
-    },
-    {
-      "id": "test_metronome_test_build",
-      "label": "build()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 46,
-      "community_name": "roster.test.js",
-      "file_type": "code",
-      "norm_label": "build()",
-      "source_file": "test/metronome.test.js",
-      "source_location": "L30"
     },
     {
       "id": "test_metronome_test_onlymetronome",
@@ -4218,76 +4314,100 @@
       "source_location": "L199"
     },
     {
-      "id": "test_roster_test_rounddata",
-      "label": "roundData()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 46,
-      "community_name": "roster.test.js",
-      "file_type": "code",
-      "norm_label": "rounddata()",
-      "source_file": "test/roster.test.js",
-      "source_location": "L71"
-    },
-    {
-      "id": "shared_normalize_normalizeerror",
-      "label": "normalizeError()",
+      "id": "shared_fractions_findpair",
+      "label": "findPair()",
       "_callable": true,
       "_origin": "ast",
       "community": 47,
-      "community_name": "normalize.js",
+      "community_name": "fractions.js",
       "file_type": "code",
-      "norm_label": "normalizeerror()",
-      "source_file": "shared/normalize.js",
+      "norm_label": "findpair()",
+      "source_file": "shared/fractions.js",
+      "source_location": "L68"
+    },
+    {
+      "id": "shared_fractions_fractionspairs",
+      "label": "fractionsPairs()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 47,
+      "community_name": "fractions.js",
+      "file_type": "code",
+      "norm_label": "fractionspairs()",
+      "source_file": "shared/fractions.js",
+      "source_location": "L91"
+    },
+    {
+      "id": "scripts_scrape_flags_fetchbytes",
+      "label": "fetchBytes()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 49,
+      "community_name": "scrape-flags.mjs",
+      "file_type": "code",
+      "norm_label": "fetchbytes()",
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L72"
+    },
+    {
+      "id": "scripts_scrape_flags_ispng",
+      "label": "isPng()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 49,
+      "community_name": "scrape-flags.mjs",
+      "file_type": "code",
+      "norm_label": "ispng()",
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L38"
+    },
+    {
+      "id": "scripts_scrape_flags_main",
+      "label": "main()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 49,
+      "community_name": "scrape-flags.mjs",
+      "file_type": "code",
+      "norm_label": "main()",
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L83"
+    },
+    {
+      "id": "scripts_scrape_flags_parseflagtable",
+      "label": "parseFlagTable()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 49,
+      "community_name": "scrape-flags.mjs",
+      "file_type": "code",
+      "norm_label": "parseflagtable()",
+      "source_file": "scripts/scrape-flags.mjs",
       "source_location": "L18"
     },
     {
-      "id": "shared_normalize_normalizescore",
-      "label": "normalizeScore()",
+      "id": "scripts_scrape_flags_validaterows",
+      "label": "validateRows()",
       "_callable": true,
       "_origin": "ast",
-      "community": 47,
-      "community_name": "normalize.js",
+      "community": 49,
+      "community_name": "scrape-flags.mjs",
       "file_type": "code",
-      "norm_label": "normalizescore()",
-      "source_file": "shared/normalize.js",
-      "source_location": "L30"
+      "norm_label": "validaterows()",
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L31"
     },
     {
-      "id": "shared_normalize_percentile",
-      "label": "percentile()",
+      "id": "tests_e2e_flags_solo_spec_asserttwobyfour",
+      "label": "assertTwoByFour()",
       "_callable": true,
       "_origin": "ast",
-      "community": 47,
-      "community_name": "normalize.js",
+      "community": 50,
+      "community_name": "flags-solo.spec.js",
       "file_type": "code",
-      "norm_label": "percentile()",
-      "source_file": "shared/normalize.js",
-      "source_location": "L6"
-    },
-    {
-      "id": "server_room_room_handlesubmit",
-      "label": ".handleSubmit()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "multistage.test.js",
-      "file_type": "code",
-      "norm_label": ".handlesubmit()",
-      "source_file": "server/room.js",
-      "source_location": "L990"
-    },
-    {
-      "id": "server_room_room_lockedsolved",
-      "label": ".lockedSolved()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "multistage.test.js",
-      "file_type": "code",
-      "norm_label": ".lockedsolved()",
-      "source_file": "server/room.js",
-      "source_location": "L1052"
+      "norm_label": "asserttwobyfour()",
+      "source_file": "tests/e2e/flags-solo.spec.js",
+      "source_location": "L3"
     },
     {
       "id": "test_multistage_test_addplayer",
@@ -4467,7 +4587,7 @@
       "file_type": "code",
       "norm_label": "availheight()",
       "source_file": "public/js/games.js",
-      "source_location": "L65"
+      "source_location": "L66"
     },
     {
       "id": "public_js_games_canvaspos",
@@ -4479,7 +4599,7 @@
       "file_type": "code",
       "norm_label": "canvaspos()",
       "source_file": "public/js/games.js",
-      "source_location": "L89"
+      "source_location": "L90"
     },
     {
       "id": "public_js_games_clamp",
@@ -4491,7 +4611,7 @@
       "file_type": "code",
       "norm_label": "clamp()",
       "source_file": "public/js/games.js",
-      "source_location": "L94"
+      "source_location": "L95"
     },
     {
       "id": "public_js_games_h",
@@ -4503,7 +4623,7 @@
       "file_type": "code",
       "norm_label": "h()",
       "source_file": "public/js/games.js",
-      "source_location": "L48"
+      "source_location": "L49"
     },
     {
       "id": "public_js_games_makecanvas",
@@ -4515,7 +4635,7 @@
       "file_type": "code",
       "norm_label": "makecanvas()",
       "source_file": "public/js/games.js",
-      "source_location": "L70"
+      "source_location": "L71"
     },
     {
       "id": "public_js_games_nearestdist",
@@ -4527,7 +4647,7 @@
       "file_type": "code",
       "norm_label": "nearestdist()",
       "source_file": "public/js/games.js",
-      "source_location": "L418"
+      "source_location": "L419"
     },
     {
       "id": "public_js_games_polygonpath",
@@ -4539,7 +4659,7 @@
       "file_type": "code",
       "norm_label": "polygonpath()",
       "source_file": "public/js/games.js",
-      "source_location": "L429"
+      "source_location": "L430"
     },
     {
       "id": "public_js_games_shapepath",
@@ -4551,7 +4671,7 @@
       "file_type": "code",
       "norm_label": "shapepath()",
       "source_file": "public/js/games.js",
-      "source_location": "L466"
+      "source_location": "L467"
     },
     {
       "id": "public_js_games_start",
@@ -4563,7 +4683,7 @@
       "file_type": "code",
       "norm_label": "start()",
       "source_file": "public/js/games.js",
-      "source_location": "L144"
+      "source_location": "L145"
     },
     {
       "id": "public_js_games_start_begin",
@@ -4575,7 +4695,7 @@
       "file_type": "code",
       "norm_label": "begin()",
       "source_file": "public/js/games.js",
-      "source_location": "L741"
+      "source_location": "L742"
     },
     {
       "id": "public_js_games_start_buildscene",
@@ -4587,7 +4707,7 @@
       "file_type": "code",
       "norm_label": "buildscene()",
       "source_file": "public/js/games.js",
-      "source_location": "L1829"
+      "source_location": "L1830"
     },
     {
       "id": "public_js_games_start_buildscene_frame",
@@ -4599,7 +4719,7 @@
       "file_type": "code",
       "norm_label": "frame()",
       "source_file": "public/js/games.js",
-      "source_location": "L2003"
+      "source_location": "L2004"
     },
     {
       "id": "public_js_games_start_buildscene_hud",
@@ -4611,7 +4731,7 @@
       "file_type": "code",
       "norm_label": "hud()",
       "source_file": "public/js/games.js",
-      "source_location": "L1979"
+      "source_location": "L1980"
     },
     {
       "id": "public_js_games_start_buildscene_settleshot",
@@ -4623,7 +4743,7 @@
       "file_type": "code",
       "norm_label": "settleshot()",
       "source_file": "public/js/games.js",
-      "source_location": "L1990"
+      "source_location": "L1991"
     },
     {
       "id": "public_js_games_start_confirm",
@@ -4635,7 +4755,7 @@
       "file_type": "code",
       "norm_label": "confirm()",
       "source_file": "public/js/games.js",
-      "source_location": "L597"
+      "source_location": "L598"
     },
     {
       "id": "public_js_games_start_done",
@@ -4647,7 +4767,7 @@
       "file_type": "code",
       "norm_label": "done()",
       "source_file": "public/js/games.js",
-      "source_location": "L1669"
+      "source_location": "L1670"
     },
     {
       "id": "public_js_games_start_draw",
@@ -4659,7 +4779,7 @@
       "file_type": "code",
       "norm_label": "draw()",
       "source_file": "public/js/games.js",
-      "source_location": "L238"
+      "source_location": "L239"
     },
     {
       "id": "public_js_games_start_drawball",
@@ -4671,7 +4791,7 @@
       "file_type": "code",
       "norm_label": "drawball()",
       "source_file": "public/js/games.js",
-      "source_location": "L1013"
+      "source_location": "L1014"
     },
     {
       "id": "public_js_games_start_drawbase",
@@ -4683,7 +4803,7 @@
       "file_type": "code",
       "norm_label": "drawbase()",
       "source_file": "public/js/games.js",
-      "source_location": "L349"
+      "source_location": "L350"
     },
     {
       "id": "public_js_games_start_drawcup",
@@ -4695,7 +4815,7 @@
       "file_type": "code",
       "norm_label": "drawcup()",
       "source_file": "public/js/games.js",
-      "source_location": "L989"
+      "source_location": "L990"
     },
     {
       "id": "public_js_games_start_drawtable",
@@ -4707,7 +4827,7 @@
       "file_type": "code",
       "norm_label": "drawtable()",
       "source_file": "public/js/games.js",
-      "source_location": "L1024"
+      "source_location": "L1025"
     },
     {
       "id": "public_js_games_start_enter",
@@ -4719,7 +4839,7 @@
       "file_type": "code",
       "norm_label": "enter()",
       "source_file": "public/js/games.js",
-      "source_location": "L1119"
+      "source_location": "L1120"
     },
     {
       "id": "public_js_games_start_finish",
@@ -4731,7 +4851,7 @@
       "file_type": "code",
       "norm_label": "finish()",
       "source_file": "public/js/games.js",
-      "source_location": "L773"
+      "source_location": "L774"
     },
     {
       "id": "public_js_games_start_flash",
@@ -4743,7 +4863,7 @@
       "file_type": "code",
       "norm_label": "flash()",
       "source_file": "public/js/games.js",
-      "source_location": "L715"
+      "source_location": "L716"
     },
     {
       "id": "public_js_games_start_frame",
@@ -4755,7 +4875,7 @@
       "file_type": "code",
       "norm_label": "frame()",
       "source_file": "public/js/games.js",
-      "source_location": "L1098"
+      "source_location": "L1099"
     },
     {
       "id": "public_js_games_start_next",
@@ -4767,7 +4887,7 @@
       "file_type": "code",
       "norm_label": "next()",
       "source_file": "public/js/games.js",
-      "source_location": "L189"
+      "source_location": "L190"
     },
     {
       "id": "public_js_games_start_onkeydown",
@@ -4779,7 +4899,7 @@
       "file_type": "code",
       "norm_label": "onkeydown()",
       "source_file": "public/js/games.js",
-      "source_location": "L793"
+      "source_location": "L794"
     },
     {
       "id": "public_js_games_start_ontap",
@@ -4791,7 +4911,7 @@
       "file_type": "code",
       "norm_label": "ontap()",
       "source_file": "public/js/games.js",
-      "source_location": "L1138"
+      "source_location": "L1139"
     },
     {
       "id": "public_js_games_start_pick",
@@ -4803,7 +4923,7 @@
       "file_type": "code",
       "norm_label": "pick()",
       "source_file": "public/js/games.js",
-      "source_location": "L1209"
+      "source_location": "L1210"
     },
     {
       "id": "public_js_games_start_result",
@@ -4815,7 +4935,7 @@
       "file_type": "code",
       "norm_label": "result()",
       "source_file": "public/js/games.js",
-      "source_location": "L389"
+      "source_location": "L390"
     },
     {
       "id": "public_js_games_start_round",
@@ -4827,7 +4947,7 @@
       "file_type": "code",
       "norm_label": "round()",
       "source_file": "public/js/games.js",
-      "source_location": "L846"
+      "source_location": "L847"
     },
     {
       "id": "public_js_games_start_schedulebeat",
@@ -4839,7 +4959,7 @@
       "file_type": "code",
       "norm_label": "schedulebeat()",
       "source_file": "public/js/games.js",
-      "source_location": "L723"
+      "source_location": "L724"
     },
     {
       "id": "public_js_games_start_shape",
@@ -4851,7 +4971,7 @@
       "file_type": "code",
       "norm_label": "shape()",
       "source_file": "public/js/games.js",
-      "source_location": "L293"
+      "source_location": "L294"
     },
     {
       "id": "public_js_games_start_show",
@@ -4863,7 +4983,7 @@
       "file_type": "code",
       "norm_label": "show()",
       "source_file": "public/js/games.js",
-      "source_location": "L254"
+      "source_location": "L255"
     },
     {
       "id": "public_js_games_start_simulate",
@@ -4875,7 +4995,7 @@
       "file_type": "code",
       "norm_label": "simulate()",
       "source_file": "public/js/games.js",
-      "source_location": "L1774"
+      "source_location": "L1775"
     },
     {
       "id": "public_js_games_start_startlevel",
@@ -4887,7 +5007,7 @@
       "file_type": "code",
       "norm_label": "startlevel()",
       "source_file": "public/js/games.js",
-      "source_location": "L1125"
+      "source_location": "L1126"
     },
     {
       "id": "public_js_games_start_stop",
@@ -4899,7 +5019,7 @@
       "file_type": "code",
       "norm_label": "stop()",
       "source_file": "public/js/games.js",
-      "source_location": "L784"
+      "source_location": "L785"
     },
     {
       "id": "public_js_games_start_tap",
@@ -4911,7 +5031,7 @@
       "file_type": "code",
       "norm_label": "tap()",
       "source_file": "public/js/games.js",
-      "source_location": "L756"
+      "source_location": "L757"
     },
     {
       "id": "public_js_games_start_tick",
@@ -4923,7 +5043,7 @@
       "file_type": "code",
       "norm_label": "tick()",
       "source_file": "public/js/games.js",
-      "source_location": "L629"
+      "source_location": "L630"
     },
     {
       "id": "public_js_games_startguess",
@@ -4935,7 +5055,7 @@
       "file_type": "code",
       "norm_label": "startguess()",
       "source_file": "public/js/games.js",
-      "source_location": "L1367"
+      "source_location": "L1368"
     },
     {
       "id": "public_js_games_startstage",
@@ -4947,7 +5067,7 @@
       "file_type": "code",
       "norm_label": "startstage()",
       "source_file": "public/js/games.js",
-      "source_location": "L1233"
+      "source_location": "L1234"
     },
     {
       "id": "public_js_games_startvote",
@@ -4959,7 +5079,7 @@
       "file_type": "code",
       "norm_label": "startvote()",
       "source_file": "public/js/games.js",
-      "source_location": "L1291"
+      "source_location": "L1292"
     },
     {
       "id": "public_js_games_startwrite",
@@ -4971,7 +5091,7 @@
       "file_type": "code",
       "norm_label": "startwrite()",
       "source_file": "public/js/games.js",
-      "source_location": "L1247"
+      "source_location": "L1248"
     },
     {
       "id": "public_js_games_turnfeedback",
@@ -4983,7 +5103,7 @@
       "file_type": "code",
       "norm_label": "turnfeedback()",
       "source_file": "public/js/games.js",
-      "source_location": "L109"
+      "source_location": "L110"
     },
     {
       "id": "public_js_tutorials_ball",
@@ -5139,7 +5259,7 @@
       "file_type": "code",
       "norm_label": "starttutorialanim()",
       "source_file": "public/js/tutorials.js",
-      "source_location": "L989"
+      "source_location": "L1000"
     },
     {
       "id": "public_js_tutorials_starttutorialanim_frame",
@@ -5151,7 +5271,7 @@
       "file_type": "code",
       "norm_label": "frame()",
       "source_file": "public/js/tutorials.js",
-      "source_location": "L1048"
+      "source_location": "L1059"
     },
     {
       "id": "public_js_tutorials_text",
@@ -5200,77 +5320,11 @@
       "source_location": "L1"
     },
     {
-      "id": "server_games",
-      "label": "server/games.js",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "server/games.js",
-      "file_type": "code",
-      "norm_label": "server/games.js",
-      "source_file": "server/games.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "server_games_caption_prompts",
-      "label": "CAPTION_PROMPTS",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "server/games.js",
-      "file_type": "code",
-      "norm_label": "caption_prompts",
-      "source_file": "server/games.js",
-      "source_location": "L142"
-    },
-    {
-      "id": "server_games_icebreaker_prompts",
-      "label": "ICEBREAKER_PROMPTS",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "server/games.js",
-      "file_type": "code",
-      "norm_label": "icebreaker_prompts",
-      "source_file": "server/games.js",
-      "source_location": "L180"
-    },
-    {
-      "id": "server_games_metronome_intervals",
-      "label": "METRONOME_INTERVALS",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "server/games.js",
-      "file_type": "code",
-      "norm_label": "metronome_intervals",
-      "source_file": "server/games.js",
-      "source_location": "L205"
-    },
-    {
-      "id": "server_games_room_questions",
-      "label": "ROOM_QUESTIONS",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "server/games.js",
-      "file_type": "code",
-      "norm_label": "room_questions",
-      "source_file": "server/games.js",
-      "source_location": "L56"
-    },
-    {
-      "id": "server_games_sentences",
-      "label": "SENTENCES",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "server/games.js",
-      "file_type": "code",
-      "norm_label": "sentences",
-      "source_file": "server/games.js",
-      "source_location": "L23"
-    },
-    {
       "id": "shared_textclean",
       "label": "textclean.js",
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "textclean.js",
       "source_file": "shared/textclean.js",
@@ -5281,7 +5335,7 @@
       "label": "ENTRY_MAX_CHARS",
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "entry_max_chars",
       "source_file": "shared/textclean.js",
@@ -5292,7 +5346,7 @@
       "label": "caption.test.js",
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "caption.test.js",
       "source_file": "test/caption.test.js",
@@ -5303,7 +5357,7 @@
       "label": "stageOne",
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "stageone",
       "source_file": "test/caption.test.js",
@@ -5314,7 +5368,7 @@
       "label": "icebreaker.test.js",
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "icebreaker.test.js",
       "source_file": "test/icebreaker.test.js",
@@ -5325,7 +5379,7 @@
       "label": "PLAYERS",
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "players",
       "source_file": "test/icebreaker.test.js",
@@ -5336,7 +5390,7 @@
       "label": "stageOne",
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "stageone",
       "source_file": "test/icebreaker.test.js",
@@ -5347,7 +5401,7 @@
       "label": "textclean.test.js",
       "_origin": "ast",
       "community": 1,
-      "community_name": "server/games.js",
+      "community_name": "caption.test.js",
       "file_type": "code",
       "norm_label": "textclean.test.js",
       "source_file": "test/textclean.test.js",
@@ -6260,7 +6314,7 @@
       "file_type": "code",
       "norm_label": "completion_mode",
       "source_file": "server/games.js",
-      "source_location": "L255"
+      "source_location": "L258"
     },
     {
       "id": "shared_cups",
@@ -6560,6 +6614,17 @@
       "source_location": "L18"
     },
     {
+      "id": "server_games_roster",
+      "label": "ROSTER",
+      "_origin": "ast",
+      "community": 31,
+      "community_name": "harness.test.js",
+      "file_type": "code",
+      "norm_label": "roster",
+      "source_file": "server/games.js",
+      "source_location": "L218"
+    },
+    {
       "id": "shared_anagram",
       "label": "anagram.js",
       "_origin": "ast",
@@ -6681,114 +6746,59 @@
       "source_location": "L109"
     },
     {
-      "id": "server_games_roster_by_key",
-      "label": "ROSTER_BY_KEY",
+      "id": "shared_area",
+      "label": "area.js",
       "_origin": "ast",
       "community": 33,
-      "community_name": "stroop.test.js",
+      "community_name": "seededRng",
       "file_type": "code",
-      "norm_label": "roster_by_key",
-      "source_file": "server/games.js",
-      "source_location": "L241"
-    },
-    {
-      "id": "shared_stroop",
-      "label": "stroop.js",
-      "_origin": "ast",
-      "community": 33,
-      "community_name": "stroop.test.js",
-      "file_type": "code",
-      "norm_label": "stroop.js",
-      "source_file": "shared/stroop.js",
+      "norm_label": "area.js",
+      "source_file": "shared/area.js",
       "source_location": "L1"
     },
     {
-      "id": "shared_stroop_color_names",
-      "label": "COLOR_NAMES",
+      "id": "shared_area_area_trial_count",
+      "label": "AREA_TRIAL_COUNT",
       "_origin": "ast",
       "community": 33,
-      "community_name": "stroop.test.js",
+      "community_name": "seededRng",
       "file_type": "code",
-      "norm_label": "color_names",
-      "source_file": "shared/stroop.js",
-      "source_location": "L25"
+      "norm_label": "area_trial_count",
+      "source_file": "shared/area.js",
+      "source_location": "L10"
     },
     {
-      "id": "shared_stroop_palette",
-      "label": "PALETTE",
+      "id": "shared_area_ratios",
+      "label": "RATIOS",
       "_origin": "ast",
       "community": 33,
-      "community_name": "stroop.test.js",
+      "community_name": "seededRng",
       "file_type": "code",
-      "norm_label": "palette",
-      "source_file": "shared/stroop.js",
-      "source_location": "L17"
+      "norm_label": "ratios",
+      "source_file": "shared/area.js",
+      "source_location": "L12"
     },
     {
-      "id": "test_color_cues_test",
-      "label": "color-cues.test.js",
+      "id": "shared_area_shapes",
+      "label": "SHAPES",
       "_origin": "ast",
       "community": 33,
-      "community_name": "stroop.test.js",
+      "community_name": "seededRng",
       "file_type": "code",
-      "norm_label": "color-cues.test.js",
-      "source_file": "test/color-cues.test.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "test_color_cues_test_chairsjs",
-      "label": "chairsJs",
-      "_origin": "ast",
-      "community": 33,
-      "community_name": "stroop.test.js",
-      "file_type": "code",
-      "norm_label": "chairsjs",
-      "source_file": "test/color-cues.test.js",
-      "source_location": "L23"
-    },
-    {
-      "id": "test_color_cues_test_gamesjs",
-      "label": "gamesJs",
-      "_origin": "ast",
-      "community": 33,
-      "community_name": "stroop.test.js",
-      "file_type": "code",
-      "norm_label": "gamesjs",
-      "source_file": "test/color-cues.test.js",
-      "source_location": "L22"
-    },
-    {
-      "id": "test_color_cues_test_root",
-      "label": "ROOT",
-      "_origin": "ast",
-      "community": 33,
-      "community_name": "stroop.test.js",
-      "file_type": "code",
-      "norm_label": "root",
-      "source_file": "test/color-cues.test.js",
-      "source_location": "L21"
-    },
-    {
-      "id": "test_stroop_test",
-      "label": "stroop.test.js",
-      "_origin": "ast",
-      "community": 33,
-      "community_name": "stroop.test.js",
-      "file_type": "code",
-      "norm_label": "stroop.test.js",
-      "source_file": "test/stroop.test.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "test_stroop_test_config",
-      "label": "CONFIG",
-      "_origin": "ast",
-      "community": 33,
-      "community_name": "stroop.test.js",
-      "file_type": "code",
-      "norm_label": "config",
-      "source_file": "test/stroop.test.js",
+      "norm_label": "shapes",
+      "source_file": "shared/area.js",
       "source_location": "L13"
+    },
+    {
+      "id": "test_area_test",
+      "label": "area.test.js",
+      "_origin": "ast",
+      "community": 33,
+      "community_name": "seededRng",
+      "file_type": "code",
+      "norm_label": "area.test.js",
+      "source_file": "test/area.test.js",
+      "source_location": "L1"
     },
     {
       "id": "tests_e2e_feedback_spec",
@@ -6977,17 +6987,6 @@
       "source_location": "L160"
     },
     {
-      "id": "server_room_host_editable_config",
-      "label": "HOST_EDITABLE_CONFIG",
-      "_origin": "ast",
-      "community": 36,
-      "community_name": "room.js",
-      "file_type": "code",
-      "norm_label": "host_editable_config",
-      "source_file": "server/room.js",
-      "source_location": "L128"
-    },
-    {
       "id": "server_room_per_turn_secret",
       "label": "PER_TURN_SECRET",
       "_origin": "ast",
@@ -6997,6 +6996,28 @@
       "norm_label": "per_turn_secret",
       "source_file": "server/room.js",
       "source_location": "L34"
+    },
+    {
+      "id": "shared_normalize",
+      "label": "normalize.js",
+      "_origin": "ast",
+      "community": 36,
+      "community_name": "room.js",
+      "file_type": "code",
+      "norm_label": "normalize.js",
+      "source_file": "shared/normalize.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "test_normalize_test",
+      "label": "normalize.test.js",
+      "_origin": "ast",
+      "community": 36,
+      "community_name": "room.js",
+      "file_type": "code",
+      "norm_label": "normalize.test.js",
+      "source_file": "test/normalize.test.js",
+      "source_location": "L1"
     },
     {
       "id": "docs_reduced_motion",
@@ -7236,66 +7257,121 @@
       "source_location": "L74"
     },
     {
-      "id": "shared_fractions",
-      "label": "fractions.js",
+      "id": "server_room_host_editable_config",
+      "label": "HOST_EDITABLE_CONFIG",
+      "_origin": "ast",
+      "community": 38,
+      "community_name": "check.mjs",
+      "file_type": "code",
+      "norm_label": "host_editable_config",
+      "source_file": "server/room.js",
+      "source_location": "L128"
+    },
+    {
+      "id": "server_games",
+      "label": "server/games.js",
       "_origin": "ast",
       "community": 39,
-      "community_name": "seededRng",
+      "community_name": "server/games.js",
       "file_type": "code",
-      "norm_label": "fractions.js",
-      "source_file": "shared/fractions.js",
+      "norm_label": "server/games.js",
+      "source_file": "server/games.js",
       "source_location": "L1"
     },
     {
-      "id": "shared_fractions_fractions_count",
-      "label": "FRACTIONS_COUNT",
+      "id": "server_games_caption_prompts",
+      "label": "CAPTION_PROMPTS",
       "_origin": "ast",
       "community": 39,
-      "community_name": "seededRng",
+      "community_name": "server/games.js",
       "file_type": "code",
-      "norm_label": "fractions_count",
-      "source_file": "shared/fractions.js",
-      "source_location": "L26"
+      "norm_label": "caption_prompts",
+      "source_file": "server/games.js",
+      "source_location": "L144"
     },
     {
-      "id": "shared_fractions_fractions_penalty",
-      "label": "FRACTIONS_PENALTY",
+      "id": "server_games_icebreaker_prompts",
+      "label": "ICEBREAKER_PROMPTS",
       "_origin": "ast",
       "community": 39,
-      "community_name": "seededRng",
+      "community_name": "server/games.js",
       "file_type": "code",
-      "norm_label": "fractions_penalty",
-      "source_file": "shared/fractions.js",
-      "source_location": "L27"
+      "norm_label": "icebreaker_prompts",
+      "source_file": "server/games.js",
+      "source_location": "L182"
     },
     {
-      "id": "shared_fractions_magnitude_pool",
-      "label": "MAGNITUDE_POOL",
+      "id": "server_games_metronome_intervals",
+      "label": "METRONOME_INTERVALS",
       "_origin": "ast",
       "community": 39,
-      "community_name": "seededRng",
+      "community_name": "server/games.js",
       "file_type": "code",
-      "norm_label": "magnitude_pool",
-      "source_file": "shared/fractions.js",
-      "source_location": "L35"
+      "norm_label": "metronome_intervals",
+      "source_file": "server/games.js",
+      "source_location": "L207"
     },
     {
-      "id": "shared_fractions_power_pool",
-      "label": "POWER_POOL",
+      "id": "server_games_room_questions",
+      "label": "ROOM_QUESTIONS",
       "_origin": "ast",
       "community": 39,
-      "community_name": "seededRng",
+      "community_name": "server/games.js",
       "file_type": "code",
-      "norm_label": "power_pool",
-      "source_file": "shared/fractions.js",
-      "source_location": "L50"
+      "norm_label": "room_questions",
+      "source_file": "server/games.js",
+      "source_location": "L58"
+    },
+    {
+      "id": "server_games_sentences",
+      "label": "SENTENCES",
+      "_origin": "ast",
+      "community": 39,
+      "community_name": "server/games.js",
+      "file_type": "code",
+      "norm_label": "sentences",
+      "source_file": "server/games.js",
+      "source_location": "L25"
+    },
+    {
+      "id": "shared_flags",
+      "label": "flags.js",
+      "_origin": "ast",
+      "community": 39,
+      "community_name": "server/games.js",
+      "file_type": "code",
+      "norm_label": "flags.js",
+      "source_file": "shared/flags.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "shared_flags_flags_options",
+      "label": "FLAGS_OPTIONS",
+      "_origin": "ast",
+      "community": 39,
+      "community_name": "server/games.js",
+      "file_type": "code",
+      "norm_label": "flags_options",
+      "source_file": "shared/flags.js",
+      "source_location": "L4"
+    },
+    {
+      "id": "shared_flags_flags_rounds",
+      "label": "FLAGS_ROUNDS",
+      "_origin": "ast",
+      "community": 39,
+      "community_name": "server/games.js",
+      "file_type": "code",
+      "norm_label": "flags_rounds",
+      "source_file": "shared/flags.js",
+      "source_location": "L3"
     },
     {
       "id": "shared_rng",
       "label": "rng.js",
       "_origin": "ast",
       "community": 39,
-      "community_name": "seededRng",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "rng.js",
       "source_file": "shared/rng.js",
@@ -7306,7 +7382,7 @@
       "label": "tray.js",
       "_origin": "ast",
       "community": 39,
-      "community_name": "seededRng",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "tray.js",
       "source_file": "shared/tray.js",
@@ -7317,7 +7393,7 @@
       "label": "TRAY_GLYPHS",
       "_origin": "ast",
       "community": 39,
-      "community_name": "seededRng",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "tray_glyphs",
       "source_file": "shared/tray.js",
@@ -7328,40 +7404,29 @@
       "label": "TRAY_SLOTS",
       "_origin": "ast",
       "community": 39,
-      "community_name": "seededRng",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "tray_slots",
       "source_file": "shared/tray.js",
       "source_location": "L28"
     },
     {
-      "id": "test_fractions_test",
-      "label": "fractions.test.js",
+      "id": "test_flags_test",
+      "label": "flags.test.js",
       "_origin": "ast",
       "community": 39,
-      "community_name": "seededRng",
+      "community_name": "server/games.js",
       "file_type": "code",
-      "norm_label": "fractions.test.js",
-      "source_file": "test/fractions.test.js",
+      "norm_label": "flags.test.js",
+      "source_file": "test/flags.test.js",
       "source_location": "L1"
-    },
-    {
-      "id": "test_fractions_test_config",
-      "label": "CONFIG",
-      "_origin": "ast",
-      "community": 39,
-      "community_name": "seededRng",
-      "file_type": "code",
-      "norm_label": "config",
-      "source_file": "test/fractions.test.js",
-      "source_location": "L23"
     },
     {
       "id": "test_tray_test",
       "label": "tray.test.js",
       "_origin": "ast",
       "community": 39,
-      "community_name": "seededRng",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "tray.test.js",
       "source_file": "test/tray.test.js",
@@ -7767,70 +7832,103 @@
       "source_location": "L15"
     },
     {
-      "id": "shared_area",
-      "label": "area.js",
+      "id": "shared_stroop",
+      "label": "stroop.js",
       "_origin": "ast",
       "community": 44,
-      "community_name": "formatRaw",
+      "community_name": "stroop.test.js",
       "file_type": "code",
-      "norm_label": "area.js",
-      "source_file": "shared/area.js",
+      "norm_label": "stroop.js",
+      "source_file": "shared/stroop.js",
       "source_location": "L1"
     },
     {
-      "id": "shared_area_area_trial_count",
-      "label": "AREA_TRIAL_COUNT",
+      "id": "shared_stroop_color_names",
+      "label": "COLOR_NAMES",
       "_origin": "ast",
       "community": 44,
-      "community_name": "formatRaw",
+      "community_name": "stroop.test.js",
       "file_type": "code",
-      "norm_label": "area_trial_count",
-      "source_file": "shared/area.js",
-      "source_location": "L10"
+      "norm_label": "color_names",
+      "source_file": "shared/stroop.js",
+      "source_location": "L25"
     },
     {
-      "id": "shared_area_ratios",
-      "label": "RATIOS",
+      "id": "shared_stroop_palette",
+      "label": "PALETTE",
       "_origin": "ast",
       "community": 44,
-      "community_name": "formatRaw",
+      "community_name": "stroop.test.js",
       "file_type": "code",
-      "norm_label": "ratios",
-      "source_file": "shared/area.js",
-      "source_location": "L12"
+      "norm_label": "palette",
+      "source_file": "shared/stroop.js",
+      "source_location": "L17"
     },
     {
-      "id": "shared_area_shapes",
-      "label": "SHAPES",
+      "id": "test_color_cues_test",
+      "label": "color-cues.test.js",
       "_origin": "ast",
       "community": 44,
-      "community_name": "formatRaw",
+      "community_name": "stroop.test.js",
       "file_type": "code",
-      "norm_label": "shapes",
-      "source_file": "shared/area.js",
+      "norm_label": "color-cues.test.js",
+      "source_file": "test/color-cues.test.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "test_color_cues_test_chairsjs",
+      "label": "chairsJs",
+      "_origin": "ast",
+      "community": 44,
+      "community_name": "stroop.test.js",
+      "file_type": "code",
+      "norm_label": "chairsjs",
+      "source_file": "test/color-cues.test.js",
+      "source_location": "L23"
+    },
+    {
+      "id": "test_color_cues_test_gamesjs",
+      "label": "gamesJs",
+      "_origin": "ast",
+      "community": 44,
+      "community_name": "stroop.test.js",
+      "file_type": "code",
+      "norm_label": "gamesjs",
+      "source_file": "test/color-cues.test.js",
+      "source_location": "L22"
+    },
+    {
+      "id": "test_color_cues_test_root",
+      "label": "ROOT",
+      "_origin": "ast",
+      "community": 44,
+      "community_name": "stroop.test.js",
+      "file_type": "code",
+      "norm_label": "root",
+      "source_file": "test/color-cues.test.js",
+      "source_location": "L21"
+    },
+    {
+      "id": "test_stroop_test",
+      "label": "stroop.test.js",
+      "_origin": "ast",
+      "community": 44,
+      "community_name": "stroop.test.js",
+      "file_type": "code",
+      "norm_label": "stroop.test.js",
+      "source_file": "test/stroop.test.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "test_stroop_test_config",
+      "label": "CONFIG",
+      "_origin": "ast",
+      "community": 44,
+      "community_name": "stroop.test.js",
+      "file_type": "code",
+      "norm_label": "config",
+      "source_file": "test/stroop.test.js",
       "source_location": "L13"
-    },
-    {
-      "id": "test_area_test",
-      "label": "area.test.js",
-      "_origin": "ast",
-      "community": 44,
-      "community_name": "formatRaw",
-      "file_type": "code",
-      "norm_label": "area.test.js",
-      "source_file": "test/area.test.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "server_games_roster",
-      "label": "ROSTER",
-      "_origin": "ast",
-      "community": 45,
-      "community_name": "reveal.test.js",
-      "file_type": "code",
-      "norm_label": "roster",
-      "source_file": "server/games.js",
-      "source_location": "L216"
     },
     {
       "id": "test_reveal_test",
@@ -7852,7 +7950,7 @@
       "file_type": "code",
       "norm_label": "multi_stage",
       "source_file": "server/games.js",
-      "source_location": "L248"
+      "source_location": "L251"
     },
     {
       "id": "server_games_needs_aggregation",
@@ -7863,7 +7961,18 @@
       "file_type": "code",
       "norm_label": "needs_aggregation",
       "source_file": "server/games.js",
-      "source_location": "L242"
+      "source_location": "L245"
+    },
+    {
+      "id": "server_games_roster_by_key",
+      "label": "ROSTER_BY_KEY",
+      "_origin": "ast",
+      "community": 46,
+      "community_name": "roster.test.js",
+      "file_type": "code",
+      "norm_label": "roster_by_key",
+      "source_file": "server/games.js",
+      "source_location": "L244"
     },
     {
       "id": "test_metronome_test",
@@ -7907,7 +8016,7 @@
       "file_type": "code",
       "norm_label": "config",
       "source_file": "test/roster.test.js",
-      "source_location": "L69"
+      "source_location": "L70"
     },
     {
       "id": "test_roster_test_payloads",
@@ -7921,26 +8030,169 @@
       "source_location": "L38"
     },
     {
-      "id": "shared_normalize",
-      "label": "normalize.js",
+      "id": "shared_fractions",
+      "label": "fractions.js",
       "_origin": "ast",
       "community": 47,
-      "community_name": "normalize.js",
+      "community_name": "fractions.js",
       "file_type": "code",
-      "norm_label": "normalize.js",
-      "source_file": "shared/normalize.js",
+      "norm_label": "fractions.js",
+      "source_file": "shared/fractions.js",
       "source_location": "L1"
     },
     {
-      "id": "test_normalize_test",
-      "label": "normalize.test.js",
+      "id": "shared_fractions_fractions_count",
+      "label": "FRACTIONS_COUNT",
       "_origin": "ast",
       "community": 47,
-      "community_name": "normalize.js",
+      "community_name": "fractions.js",
       "file_type": "code",
-      "norm_label": "normalize.test.js",
-      "source_file": "test/normalize.test.js",
+      "norm_label": "fractions_count",
+      "source_file": "shared/fractions.js",
+      "source_location": "L26"
+    },
+    {
+      "id": "shared_fractions_fractions_penalty",
+      "label": "FRACTIONS_PENALTY",
+      "_origin": "ast",
+      "community": 47,
+      "community_name": "fractions.js",
+      "file_type": "code",
+      "norm_label": "fractions_penalty",
+      "source_file": "shared/fractions.js",
+      "source_location": "L27"
+    },
+    {
+      "id": "shared_fractions_magnitude_pool",
+      "label": "MAGNITUDE_POOL",
+      "_origin": "ast",
+      "community": 47,
+      "community_name": "fractions.js",
+      "file_type": "code",
+      "norm_label": "magnitude_pool",
+      "source_file": "shared/fractions.js",
+      "source_location": "L35"
+    },
+    {
+      "id": "shared_fractions_power_pool",
+      "label": "POWER_POOL",
+      "_origin": "ast",
+      "community": 47,
+      "community_name": "fractions.js",
+      "file_type": "code",
+      "norm_label": "power_pool",
+      "source_file": "shared/fractions.js",
+      "source_location": "L50"
+    },
+    {
+      "id": "test_fractions_test",
+      "label": "fractions.test.js",
+      "_origin": "ast",
+      "community": 47,
+      "community_name": "fractions.js",
+      "file_type": "code",
+      "norm_label": "fractions.test.js",
+      "source_file": "test/fractions.test.js",
       "source_location": "L1"
+    },
+    {
+      "id": "test_fractions_test_config",
+      "label": "CONFIG",
+      "_origin": "ast",
+      "community": 47,
+      "community_name": "fractions.js",
+      "file_type": "code",
+      "norm_label": "config",
+      "source_file": "test/fractions.test.js",
+      "source_location": "L23"
+    },
+    {
+      "id": "scripts_scrape_flags",
+      "label": "scrape-flags.mjs",
+      "_origin": "ast",
+      "community": 49,
+      "community_name": "scrape-flags.mjs",
+      "file_type": "code",
+      "norm_label": "scrape-flags.mjs",
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L1"
+    },
+    {
+      "id": "scripts_scrape_flags_assets",
+      "label": "ASSETS",
+      "_origin": "ast",
+      "community": 49,
+      "community_name": "scrape-flags.mjs",
+      "file_type": "code",
+      "norm_label": "assets",
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L16"
+    },
+    {
+      "id": "scripts_scrape_flags_curl",
+      "label": "curl",
+      "_origin": "ast",
+      "community": 49,
+      "community_name": "scrape-flags.mjs",
+      "file_type": "code",
+      "norm_label": "curl",
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L69"
+    },
+    {
+      "id": "scripts_scrape_flags_expected_flags",
+      "label": "EXPECTED_FLAGS",
+      "_origin": "ast",
+      "community": 49,
+      "community_name": "scrape-flags.mjs",
+      "file_type": "code",
+      "norm_label": "expected_flags",
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L11"
+    },
+    {
+      "id": "scripts_scrape_flags_flags_source",
+      "label": "FLAGS_SOURCE",
+      "_origin": "ast",
+      "community": 49,
+      "community_name": "scrape-flags.mjs",
+      "file_type": "code",
+      "norm_label": "flags_source",
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L10"
+    },
+    {
+      "id": "scripts_scrape_flags_manifest",
+      "label": "MANIFEST",
+      "_origin": "ast",
+      "community": 49,
+      "community_name": "scrape-flags.mjs",
+      "file_type": "code",
+      "norm_label": "manifest",
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L14"
+    },
+    {
+      "id": "scripts_scrape_flags_root",
+      "label": "ROOT",
+      "_origin": "ast",
+      "community": 49,
+      "community_name": "scrape-flags.mjs",
+      "file_type": "code",
+      "norm_label": "root",
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L13"
+    },
+    {
+      "id": "scripts_scrape_flags_source_snapshot",
+      "label": "SOURCE_SNAPSHOT",
+      "_origin": "ast",
+      "community": 49,
+      "community_name": "scrape-flags.mjs",
+      "file_type": "code",
+      "norm_label": "source_snapshot",
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L15"
     },
     {
       "id": "package",
@@ -7962,7 +8214,7 @@
       "file_type": "code",
       "norm_label": "dependencies",
       "source_file": "package.json",
-      "source_location": "L20"
+      "source_location": "L22"
     },
     {
       "id": "package_dependencies_express",
@@ -7973,7 +8225,7 @@
       "file_type": "code",
       "norm_label": "express",
       "source_file": "package.json",
-      "source_location": "L21"
+      "source_location": "L23"
     },
     {
       "id": "package_dependencies_qrcode",
@@ -7984,7 +8236,7 @@
       "file_type": "code",
       "norm_label": "qrcode",
       "source_file": "package.json",
-      "source_location": "L22"
+      "source_location": "L24"
     },
     {
       "id": "package_dependencies_socket_io",
@@ -7995,7 +8247,7 @@
       "file_type": "code",
       "norm_label": "socket.io",
       "source_file": "package.json",
-      "source_location": "L23"
+      "source_location": "L25"
     },
     {
       "id": "package_dependencies_three",
@@ -8006,7 +8258,7 @@
       "file_type": "code",
       "norm_label": "three",
       "source_file": "package.json",
-      "source_location": "L24"
+      "source_location": "L26"
     },
     {
       "id": "package_description",
@@ -8028,7 +8280,7 @@
       "file_type": "code",
       "norm_label": "devdependencies",
       "source_file": "package.json",
-      "source_location": "L26"
+      "source_location": "L28"
     },
     {
       "id": "package_devdependencies_playwright_test",
@@ -8039,7 +8291,7 @@
       "file_type": "code",
       "norm_label": "@playwright/test",
       "source_file": "package.json",
-      "source_location": "L27"
+      "source_location": "L29"
     },
     {
       "id": "package_devdependencies_socket_io_client",
@@ -8050,7 +8302,7 @@
       "file_type": "code",
       "norm_label": "socket.io-client",
       "source_file": "package.json",
-      "source_location": "L28"
+      "source_location": "L30"
     },
     {
       "id": "package_engines",
@@ -8083,7 +8335,7 @@
       "file_type": "code",
       "norm_label": "license",
       "source_file": "package.json",
-      "source_location": "L30"
+      "source_location": "L32"
     },
     {
       "id": "package_name",
@@ -8119,6 +8371,28 @@
       "source_location": "L11"
     },
     {
+      "id": "package_scripts_flags_update",
+      "label": "flags:update",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "scripts",
+      "file_type": "code",
+      "norm_label": "flags:update",
+      "source_file": "package.json",
+      "source_location": "L15"
+    },
+    {
+      "id": "package_scripts_flags_verify",
+      "label": "flags:verify",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "scripts",
+      "file_type": "code",
+      "norm_label": "flags:verify",
+      "source_file": "package.json",
+      "source_location": "L14"
+    },
+    {
       "id": "package_scripts_graph",
       "label": "graph",
       "_origin": "ast",
@@ -8127,7 +8401,7 @@
       "file_type": "code",
       "norm_label": "graph",
       "source_file": "package.json",
-      "source_location": "L15"
+      "source_location": "L17"
     },
     {
       "id": "package_scripts_graph_rebuild",
@@ -8138,7 +8412,7 @@
       "file_type": "code",
       "norm_label": "graph:rebuild",
       "source_file": "package.json",
-      "source_location": "L16"
+      "source_location": "L18"
     },
     {
       "id": "package_scripts_graph_report",
@@ -8149,7 +8423,7 @@
       "file_type": "code",
       "norm_label": "graph:report",
       "source_file": "package.json",
-      "source_location": "L17"
+      "source_location": "L19"
     },
     {
       "id": "package_scripts_graph_setup",
@@ -8160,7 +8434,7 @@
       "file_type": "code",
       "norm_label": "graph:setup",
       "source_file": "package.json",
-      "source_location": "L18"
+      "source_location": "L20"
     },
     {
       "id": "package_scripts_security_assess",
@@ -8171,7 +8445,7 @@
       "file_type": "code",
       "norm_label": "security:assess",
       "source_file": "package.json",
-      "source_location": "L14"
+      "source_location": "L16"
     },
     {
       "id": "package_scripts_start",
@@ -8237,7 +8511,7 @@
       "file_type": "concept",
       "norm_label": "express",
       "source_file": "package.json",
-      "source_location": "L21"
+      "source_location": "L23"
     },
     {
       "id": "playwright_test",
@@ -8248,7 +8522,7 @@
       "file_type": "concept",
       "norm_label": "@playwright/test",
       "source_file": "package.json",
-      "source_location": "L27"
+      "source_location": "L29"
     },
     {
       "id": "qrcode",
@@ -8259,7 +8533,7 @@
       "file_type": "concept",
       "norm_label": "qrcode",
       "source_file": "package.json",
-      "source_location": "L22"
+      "source_location": "L24"
     },
     {
       "id": "socket_io",
@@ -8270,7 +8544,7 @@
       "file_type": "concept",
       "norm_label": "socket.io",
       "source_file": "package.json",
-      "source_location": "L23"
+      "source_location": "L25"
     },
     {
       "id": "socket_io_client",
@@ -8281,7 +8555,7 @@
       "file_type": "concept",
       "norm_label": "socket.io-client",
       "source_file": "package.json",
-      "source_location": "L28"
+      "source_location": "L30"
     },
     {
       "id": "three",
@@ -8292,7 +8566,18 @@
       "file_type": "concept",
       "norm_label": "three",
       "source_file": "package.json",
-      "source_location": "L24"
+      "source_location": "L26"
+    },
+    {
+      "id": "tests_e2e_flags_solo_spec",
+      "label": "flags-solo.spec.js",
+      "_origin": "ast",
+      "community": 50,
+      "community_name": "flags-solo.spec.js",
+      "file_type": "code",
+      "norm_label": "flags-solo.spec.js",
+      "source_file": "tests/e2e/flags-solo.spec.js",
+      "source_location": "L1"
     },
     {
       "id": "handoff",
@@ -8539,7 +8824,7 @@
       "file_type": "code",
       "norm_label": "gameclients",
       "source_file": "public/js/games.js",
-      "source_location": "L138"
+      "source_location": "L139"
     },
     {
       "id": "public_js_games_shape_corners",
@@ -8550,7 +8835,7 @@
       "file_type": "code",
       "norm_label": "shape_corners",
       "source_file": "public/js/games.js",
-      "source_location": "L449"
+      "source_location": "L450"
     },
     {
       "id": "public_js_tutorials",
@@ -8910,7 +9195,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L71",
+      "source_location": "L72",
       "weight": 1.0
     },
     {
@@ -8922,7 +9207,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L74",
+      "source_location": "L75",
       "weight": 1.0
     },
     {
@@ -8934,7 +9219,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L471",
+      "source_location": "L472",
       "weight": 1.0
     },
     {
@@ -8946,7 +9231,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L147",
+      "source_location": "L148",
       "weight": 1.0
     },
     {
@@ -8958,7 +9243,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L185",
+      "source_location": "L186",
       "weight": 1.0
     },
     {
@@ -8970,7 +9255,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L233",
+      "source_location": "L234",
       "weight": 1.0
     },
     {
@@ -8982,7 +9267,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L262",
+      "source_location": "L263",
       "weight": 1.0
     },
     {
@@ -8994,7 +9279,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L264",
+      "source_location": "L265",
       "weight": 1.0
     },
     {
@@ -9006,7 +9291,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L266",
+      "source_location": "L267",
       "weight": 1.0
     },
     {
@@ -9018,7 +9303,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L344",
+      "source_location": "L345",
       "weight": 1.0
     },
     {
@@ -9030,7 +9315,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L753",
+      "source_location": "L754",
       "weight": 1.0
     },
     {
@@ -9042,7 +9327,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L1834",
+      "source_location": "L1835",
       "weight": 1.0
     },
     {
@@ -9054,7 +9339,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L1927",
+      "source_location": "L1928",
       "weight": 1.0
     },
     {
@@ -9066,7 +9351,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L1956",
+      "source_location": "L1957",
       "weight": 1.0
     },
     {
@@ -9078,7 +9363,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L1972",
+      "source_location": "L1973",
       "weight": 1.0
     },
     {
@@ -9090,7 +9375,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L2011",
+      "source_location": "L2012",
       "weight": 1.0
     },
     {
@@ -9102,7 +9387,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L1997",
+      "source_location": "L1998",
       "weight": 1.0
     },
     {
@@ -9114,7 +9399,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L605",
+      "source_location": "L606",
       "weight": 1.0
     },
     {
@@ -9126,7 +9411,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L606",
+      "source_location": "L607",
       "weight": 1.0
     },
     {
@@ -9138,7 +9423,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L1042",
+      "source_location": "L1043",
       "weight": 1.0
     },
     {
@@ -9150,7 +9435,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L1049",
+      "source_location": "L1050",
       "weight": 1.0
     },
     {
@@ -9162,7 +9447,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L1050",
+      "source_location": "L1051",
       "weight": 1.0
     },
     {
@@ -9174,7 +9459,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L1056",
+      "source_location": "L1057",
       "weight": 1.0
     },
     {
@@ -9186,7 +9471,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L309",
+      "source_location": "L310",
       "weight": 1.0
     },
     {
@@ -9198,7 +9483,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L775",
+      "source_location": "L776",
       "weight": 1.0
     },
     {
@@ -9210,24 +9495,12 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L1106",
+      "source_location": "L1107",
       "weight": 1.0
     },
     {
       "source": "public_js_games_start_frame",
       "target": "public_js_games_start_finish",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "public/js/games.js",
-      "source_location": "L1112",
-      "weight": 1.0
-    },
-    {
-      "source": "public_js_games_start_frame",
-      "target": "public_js_games_start_startlevel",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -9239,6 +9512,18 @@
     },
     {
       "source": "public_js_games_start_frame",
+      "target": "public_js_games_start_startlevel",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "public/js/games.js",
+      "source_location": "L1114",
+      "weight": 1.0
+    },
+    {
+      "source": "public_js_games_start_frame",
       "target": "public_js_games_start_draw",
       "relation": "calls",
       "_origin": "ast",
@@ -9246,7 +9531,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L1115",
+      "source_location": "L1116",
       "weight": 1.0
     },
     {
@@ -9258,7 +9543,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L200",
+      "source_location": "L201",
       "weight": 1.0
     },
     {
@@ -9270,7 +9555,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L796",
+      "source_location": "L797",
       "weight": 1.0
     },
     {
@@ -9282,7 +9567,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L1141",
+      "source_location": "L1142",
       "weight": 1.0
     },
     {
@@ -9294,7 +9579,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L1152",
+      "source_location": "L1153",
       "weight": 1.0
     },
     {
@@ -9306,7 +9591,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L398",
+      "source_location": "L399",
       "weight": 1.0
     },
     {
@@ -9318,7 +9603,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L726",
+      "source_location": "L727",
       "weight": 1.0
     },
     {
@@ -9330,7 +9615,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L727",
+      "source_location": "L728",
       "weight": 1.0
     },
     {
@@ -9342,7 +9627,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L258",
+      "source_location": "L259",
       "weight": 1.0
     },
     {
@@ -9354,7 +9639,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L757",
+      "source_location": "L758",
       "weight": 1.0
     },
     {
@@ -9366,7 +9651,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L768",
+      "source_location": "L769",
       "weight": 1.0
     },
     {
@@ -9378,7 +9663,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L770",
+      "source_location": "L771",
       "weight": 1.0
     },
     {
@@ -9390,7 +9675,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L710",
+      "source_location": "L711",
       "weight": 1.0
     },
     {
@@ -9402,7 +9687,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L711",
+      "source_location": "L712",
       "weight": 1.0
     },
     {
@@ -9414,7 +9699,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L1370",
+      "source_location": "L1371",
       "weight": 1.0
     },
     {
@@ -9426,7 +9711,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L1235",
+      "source_location": "L1236",
       "weight": 1.0
     },
     {
@@ -9438,7 +9723,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L1236",
+      "source_location": "L1237",
       "weight": 1.0
     },
     {
@@ -9450,7 +9735,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L1363",
+      "source_location": "L1364",
       "weight": 1.0
     },
     {
@@ -9462,7 +9747,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L1294",
+      "source_location": "L1295",
       "weight": 1.0
     },
     {
@@ -9474,7 +9759,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L1251",
+      "source_location": "L1252",
       "weight": 1.0
     },
     {
@@ -9486,7 +9771,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L111",
+      "source_location": "L112",
       "weight": 1.0
     },
     {
@@ -9522,7 +9807,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L709",
+      "source_location": "L712",
       "weight": 1.0
     },
     {
@@ -9570,7 +9855,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L491",
+      "source_location": "L494",
       "weight": 1.0
     },
     {
@@ -9582,7 +9867,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L641",
+      "source_location": "L644",
       "weight": 1.0
     },
     {
@@ -9594,7 +9879,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L643",
+      "source_location": "L646",
       "weight": 1.0
     },
     {
@@ -9606,7 +9891,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L645",
+      "source_location": "L648",
       "weight": 1.0
     },
     {
@@ -9678,7 +9963,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L381",
+      "source_location": "L383",
       "weight": 1.0
     },
     {
@@ -9690,7 +9975,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L402",
+      "source_location": "L404",
       "weight": 1.0
     },
     {
@@ -9702,7 +9987,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L403",
+      "source_location": "L405",
       "weight": 1.0
     },
     {
@@ -9774,7 +10059,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L614",
+      "source_location": "L617",
       "weight": 1.0
     },
     {
@@ -9786,7 +10071,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L617",
+      "source_location": "L620",
       "weight": 1.0
     },
     {
@@ -9798,7 +10083,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L603",
+      "source_location": "L606",
       "weight": 1.0
     },
     {
@@ -9810,7 +10095,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L604",
+      "source_location": "L607",
       "weight": 1.0
     },
     {
@@ -9822,7 +10107,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L606",
+      "source_location": "L609",
       "weight": 1.0
     },
     {
@@ -9834,7 +10119,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L448",
+      "source_location": "L451",
       "weight": 1.0
     },
     {
@@ -9846,7 +10131,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L449",
+      "source_location": "L452",
       "weight": 1.0
     },
     {
@@ -9858,7 +10143,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L560",
+      "source_location": "L563",
       "weight": 1.0
     },
     {
@@ -9870,7 +10155,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L561",
+      "source_location": "L564",
       "weight": 1.0
     },
     {
@@ -9882,7 +10167,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L562",
+      "source_location": "L565",
       "weight": 1.0
     },
     {
@@ -9894,7 +10179,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L563",
+      "source_location": "L566",
       "weight": 1.0
     },
     {
@@ -9906,7 +10191,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L574",
+      "source_location": "L577",
       "weight": 1.0
     },
     {
@@ -9918,7 +10203,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L579",
+      "source_location": "L582",
       "weight": 1.0
     },
     {
@@ -9930,7 +10215,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L585",
+      "source_location": "L588",
       "weight": 1.0
     },
     {
@@ -9966,7 +10251,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L685",
+      "source_location": "L688",
       "weight": 1.0
     },
     {
@@ -9978,7 +10263,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L704",
+      "source_location": "L707",
       "weight": 1.0
     },
     {
@@ -9990,7 +10275,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L705",
+      "source_location": "L708",
       "weight": 1.0
     },
     {
@@ -10002,7 +10287,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L538",
+      "source_location": "L541",
       "weight": 1.0
     },
     {
@@ -10902,7 +11187,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/tutorials.js",
-      "source_location": "L1030",
+      "source_location": "L1041",
       "weight": 1.0
     },
     {
@@ -10914,7 +11199,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/tutorials.js",
-      "source_location": "L1034",
+      "source_location": "L1045",
       "weight": 1.0
     },
     {
@@ -10926,7 +11211,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/tutorials.js",
-      "source_location": "L1062",
+      "source_location": "L1073",
       "weight": 1.0
     },
     {
@@ -10938,7 +11223,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/tutorials.js",
-      "source_location": "L1066",
+      "source_location": "L1077",
       "weight": 1.0
     },
     {
@@ -11011,6 +11296,66 @@
       "context": "call",
       "source_file": "scripts/check.mjs",
       "source_location": "L32",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_scrape_flags_fetchbytes",
+      "target": "scripts_scrape_flags_curl",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L76",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_scrape_flags_main",
+      "target": "scripts_scrape_flags_fetchbytes",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L87",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_scrape_flags_main",
+      "target": "scripts_scrape_flags_parseflagtable",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L88",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_scrape_flags_main",
+      "target": "scripts_scrape_flags_validaterows",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L89",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_scrape_flags_main",
+      "target": "scripts_scrape_flags_ispng",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L96",
       "weight": 1.0
     },
     {
@@ -11562,7 +11907,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L1000",
+      "source_location": "L1012",
       "weight": 1.0
     },
     {
@@ -11574,7 +11919,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L1001",
+      "source_location": "L1013",
       "weight": 1.0
     },
     {
@@ -11586,7 +11931,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L964",
+      "source_location": "L976",
       "weight": 1.0
     },
     {
@@ -11598,7 +11943,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L965",
+      "source_location": "L977",
       "weight": 1.0
     },
     {
@@ -11610,7 +11955,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L973",
+      "source_location": "L985",
       "weight": 1.0
     },
     {
@@ -11622,7 +11967,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L975",
+      "source_location": "L987",
       "weight": 1.0
     },
     {
@@ -11634,7 +11979,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L1049",
+      "source_location": "L1061",
       "weight": 1.0
     },
     {
@@ -11646,7 +11991,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L297",
+      "source_location": "L300",
       "weight": 1.0
     },
     {
@@ -11658,7 +12003,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L312",
+      "source_location": "L315",
       "weight": 1.0
     },
     {
@@ -11670,7 +12015,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L318",
+      "source_location": "L321",
       "weight": 1.0
     },
     {
@@ -11682,7 +12027,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L348",
+      "source_location": "L351",
       "weight": 1.0
     },
     {
@@ -11694,7 +12039,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L358",
+      "source_location": "L361",
+      "weight": 1.0
+    },
+    {
+      "source": "server_games_buildgamedata",
+      "target": "shared_flags_flagrounds",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "server/games.js",
+      "source_location": "L384",
       "weight": 1.0
     },
     {
@@ -11706,7 +12063,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L381",
+      "source_location": "L388",
       "weight": 1.0
     },
     {
@@ -11718,7 +12075,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L410",
+      "source_location": "L417",
       "weight": 1.0
     },
     {
@@ -11730,7 +12087,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L423",
+      "source_location": "L430",
       "weight": 1.0
     },
     {
@@ -11742,7 +12099,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L435",
+      "source_location": "L442",
       "weight": 1.0
     },
     {
@@ -11754,7 +12111,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L445",
+      "source_location": "L452",
       "weight": 1.0
     },
     {
@@ -11766,7 +12123,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L476",
+      "source_location": "L483",
       "weight": 1.0
     },
     {
@@ -11778,7 +12135,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L628",
+      "source_location": "L635",
       "weight": 1.0
     },
     {
@@ -11790,24 +12147,12 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L503",
+      "source_location": "L510",
       "weight": 1.0
     },
     {
       "source": "server_games_buildstages",
       "target": "shared_textclean_isusableentry",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "server/games.js",
-      "source_location": "L504",
-      "weight": 1.0
-    },
-    {
-      "source": "server_games_buildstages",
-      "target": "shared_rng_shuffle",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -11819,6 +12164,18 @@
     },
     {
       "source": "server_games_buildstages",
+      "target": "shared_rng_shuffle",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "server/games.js",
+      "source_location": "L518",
+      "weight": 1.0
+    },
+    {
+      "source": "server_games_buildstages",
       "target": "server_games_votesforpool",
       "relation": "calls",
       "_origin": "ast",
@@ -11826,7 +12183,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L557",
+      "source_location": "L564",
       "weight": 1.0
     },
     {
@@ -11838,7 +12195,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L667",
+      "source_location": "L674",
       "weight": 1.0
     },
     {
@@ -11850,7 +12207,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L671",
+      "source_location": "L678",
       "weight": 1.0
     },
     {
@@ -11862,7 +12219,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L672",
+      "source_location": "L679",
       "weight": 1.0
     },
     {
@@ -11874,7 +12231,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L672",
+      "source_location": "L679",
       "weight": 1.0
     },
     {
@@ -11886,7 +12243,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L821",
+      "source_location": "L828",
+      "weight": 1.0
+    },
+    {
+      "source": "server_games_computemetric",
+      "target": "shared_flags_validflagchoices",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "server/games.js",
+      "source_location": "L838",
       "weight": 1.0
     },
     {
@@ -11898,7 +12267,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L888",
+      "source_location": "L900",
       "weight": 1.0
     },
     {
@@ -11910,7 +12279,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L889",
+      "source_location": "L901",
       "weight": 1.0
     },
     {
@@ -11922,7 +12291,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L589",
+      "source_location": "L596",
       "weight": 1.0
     },
     {
@@ -11934,7 +12303,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/games.js",
-      "source_location": "L589",
+      "source_location": "L596",
       "weight": 1.0
     },
     {
@@ -12114,7 +12483,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1062",
+      "source_location": "L1070",
       "weight": 1.0
     },
     {
@@ -12126,7 +12495,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1069",
+      "source_location": "L1077",
       "weight": 1.0
     },
     {
@@ -12138,7 +12507,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1072",
+      "source_location": "L1080",
       "weight": 1.0
     },
     {
@@ -12150,7 +12519,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1076",
+      "source_location": "L1084",
       "weight": 1.0
     },
     {
@@ -12162,7 +12531,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1079",
+      "source_location": "L1087",
       "weight": 1.0
     },
     {
@@ -12186,7 +12555,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1367",
+      "source_location": "L1375",
       "weight": 1.0
     },
     {
@@ -12198,7 +12567,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1373",
+      "source_location": "L1381",
       "weight": 1.0
     },
     {
@@ -12342,7 +12711,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1088",
+      "source_location": "L1096",
       "weight": 1.0
     },
     {
@@ -12354,7 +12723,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1091",
+      "source_location": "L1099",
       "weight": 1.0
     },
     {
@@ -12366,7 +12735,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1094",
+      "source_location": "L1102",
       "weight": 1.0
     },
     {
@@ -12378,7 +12747,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1104",
+      "source_location": "L1112",
       "weight": 1.0
     },
     {
@@ -12390,7 +12759,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1107",
+      "source_location": "L1115",
       "weight": 1.0
     },
     {
@@ -12402,7 +12771,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1116",
+      "source_location": "L1124",
       "weight": 1.0
     },
     {
@@ -12414,7 +12783,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1279",
+      "source_location": "L1287",
       "weight": 1.0
     },
     {
@@ -12426,7 +12795,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1289",
+      "source_location": "L1297",
       "weight": 1.0
     },
     {
@@ -12438,7 +12807,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L669",
+      "source_location": "L670",
       "weight": 1.0
     },
     {
@@ -12486,7 +12855,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1252",
+      "source_location": "L1260",
       "weight": 1.0
     },
     {
@@ -12498,7 +12867,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1269",
+      "source_location": "L1277",
       "weight": 1.0
     },
     {
@@ -12510,7 +12879,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1270",
+      "source_location": "L1278",
       "weight": 1.0
     },
     {
@@ -12534,7 +12903,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1006",
+      "source_location": "L1014",
       "weight": 1.0
     },
     {
@@ -12546,7 +12915,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1012",
+      "source_location": "L1020",
       "weight": 1.0
     },
     {
@@ -12558,7 +12927,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1013",
+      "source_location": "L1021",
       "weight": 1.0
     },
     {
@@ -12570,7 +12939,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1014",
+      "source_location": "L1022",
       "weight": 1.0
     },
     {
@@ -12594,7 +12963,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1403",
+      "source_location": "L1411",
       "weight": 1.0
     },
     {
@@ -12606,7 +12975,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1406",
+      "source_location": "L1414",
       "weight": 1.0
     },
     {
@@ -12618,7 +12987,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1409",
+      "source_location": "L1417",
       "weight": 1.0
     },
     {
@@ -12630,7 +12999,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1413",
+      "source_location": "L1421",
       "weight": 1.0
     },
     {
@@ -12642,7 +13011,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1420",
+      "source_location": "L1428",
       "weight": 1.0
     },
     {
@@ -12654,7 +13023,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1423",
+      "source_location": "L1431",
       "weight": 1.0
     },
     {
@@ -12666,7 +13035,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1425",
+      "source_location": "L1433",
       "weight": 1.0
     },
     {
@@ -12678,7 +13047,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1428",
+      "source_location": "L1436",
       "weight": 1.0
     },
     {
@@ -12690,7 +13059,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1432",
+      "source_location": "L1440",
       "weight": 1.0
     },
     {
@@ -12702,7 +13071,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1433",
+      "source_location": "L1441",
       "weight": 1.0
     },
     {
@@ -12714,7 +13083,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1436",
+      "source_location": "L1444",
       "weight": 1.0
     },
     {
@@ -12954,7 +13323,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1378",
+      "source_location": "L1386",
       "weight": 1.0
     },
     {
@@ -12966,7 +13335,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1395",
+      "source_location": "L1403",
       "weight": 1.0
     },
     {
@@ -12978,7 +13347,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1396",
+      "source_location": "L1404",
       "weight": 1.0
     },
     {
@@ -13014,7 +13383,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1325",
+      "source_location": "L1333",
       "weight": 1.0
     },
     {
@@ -13026,7 +13395,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1347",
+      "source_location": "L1355",
       "weight": 1.0
     },
     {
@@ -13038,7 +13407,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1354",
+      "source_location": "L1362",
       "weight": 1.0
     },
     {
@@ -13050,7 +13419,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1126",
+      "source_location": "L1134",
       "weight": 1.0
     },
     {
@@ -13062,7 +13431,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1126",
+      "source_location": "L1134",
       "weight": 1.0
     },
     {
@@ -13074,7 +13443,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1138",
+      "source_location": "L1146",
       "weight": 1.0
     },
     {
@@ -13086,7 +13455,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1146",
+      "source_location": "L1154",
       "weight": 1.0
     },
     {
@@ -13098,7 +13467,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1155",
+      "source_location": "L1163",
       "weight": 1.0
     },
     {
@@ -13110,7 +13479,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1160",
+      "source_location": "L1168",
       "weight": 1.0
     },
     {
@@ -13314,7 +13683,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1187",
+      "source_location": "L1195",
       "weight": 1.0
     },
     {
@@ -13326,7 +13695,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1189",
+      "source_location": "L1197",
       "weight": 1.0
     },
     {
@@ -13338,7 +13707,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1191",
+      "source_location": "L1199",
       "weight": 1.0
     },
     {
@@ -13350,7 +13719,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1199",
+      "source_location": "L1207",
       "weight": 1.0
     },
     {
@@ -13422,7 +13791,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1219",
+      "source_location": "L1227",
       "weight": 1.0
     },
     {
@@ -13434,7 +13803,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1229",
+      "source_location": "L1237",
       "weight": 1.0
     },
     {
@@ -13446,7 +13815,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1233",
+      "source_location": "L1241",
       "weight": 1.0
     },
     {
@@ -13458,7 +13827,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1241",
+      "source_location": "L1249",
       "weight": 1.0
     },
     {
@@ -14194,6 +14563,30 @@
       "weight": 1.0
     },
     {
+      "source": "shared_flags_flagrounds",
+      "target": "shared_rng_randint",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "shared/flags.js",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "shared_flags_flagrounds",
+      "target": "shared_rng_shuffle",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "shared/flags.js",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
       "source": "shared_fractions_fractionspairs",
       "target": "shared_rng_randint",
       "relation": "calls",
@@ -14814,7 +15207,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "test/harness.test.js",
-      "source_location": "L206",
+      "source_location": "L211",
       "weight": 1.0
     },
     {
@@ -14826,7 +15219,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "test/harness.test.js",
-      "source_location": "L232",
+      "source_location": "L237",
       "weight": 1.0
     },
     {
@@ -14838,7 +15231,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "test/harness.test.js",
-      "source_location": "L238",
+      "source_location": "L243",
       "weight": 1.0
     },
     {
@@ -14874,7 +15267,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "test/harness.test.js",
-      "source_location": "L137",
+      "source_location": "L142",
       "weight": 1.0
     },
     {
@@ -14886,7 +15279,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "test/harness.test.js",
-      "source_location": "L144",
+      "source_location": "L149",
       "weight": 1.0
     },
     {
@@ -14898,7 +15291,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "test/harness.test.js",
-      "source_location": "L178",
+      "source_location": "L183",
       "weight": 1.0
     },
     {
@@ -15246,7 +15639,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "test/roster.test.js",
-      "source_location": "L72",
+      "source_location": "L73",
       "weight": 1.0
     },
     {
@@ -15258,7 +15651,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "test/roster.test.js",
-      "source_location": "L72",
+      "source_location": "L73",
       "weight": 1.0
     },
     {
@@ -15450,7 +15843,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L1125",
+      "source_location": "L1126",
       "weight": 1.0
     },
     {
@@ -15462,7 +15855,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L1167",
+      "source_location": "L1168",
       "weight": 1.0
     },
     {
@@ -15474,7 +15867,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L1209",
+      "source_location": "L1210",
       "weight": 1.0
     },
     {
@@ -15486,7 +15879,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L1829",
+      "source_location": "L1830",
       "weight": 1.0
     },
     {
@@ -15498,7 +15891,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L349",
+      "source_location": "L350",
       "weight": 1.0
     },
     {
@@ -15510,7 +15903,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L389",
+      "source_location": "L390",
       "weight": 1.0
     },
     {
@@ -15522,7 +15915,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L571",
+      "source_location": "L572",
       "weight": 1.0
     },
     {
@@ -15534,7 +15927,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L715",
+      "source_location": "L716",
       "weight": 1.0
     },
     {
@@ -15546,7 +15939,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L756",
+      "source_location": "L757",
       "weight": 1.0
     },
     {
@@ -15558,7 +15951,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L1979",
+      "source_location": "L1980",
       "weight": 1.0
     },
     {
@@ -15570,7 +15963,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/games.js",
-      "source_location": "L2003",
+      "source_location": "L2004",
       "weight": 1.0
     },
     {
@@ -15618,7 +16011,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L21",
+      "source_location": "L23",
       "weight": 1.0
     },
     {
@@ -15630,7 +16023,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L22",
+      "source_location": "L24",
       "weight": 1.0
     },
     {
@@ -15642,7 +16035,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L23",
+      "source_location": "L25",
       "weight": 1.0
     },
     {
@@ -15654,7 +16047,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L24",
+      "source_location": "L26",
       "weight": 1.0
     },
     {
@@ -15666,7 +16059,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L27",
+      "source_location": "L29",
       "weight": 1.0
     },
     {
@@ -15678,7 +16071,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L28",
+      "source_location": "L30",
       "weight": 1.0
     },
     {
@@ -15943,6 +16336,30 @@
       "context": "import",
       "source_file": "server/games.js",
       "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "server_games",
+      "target": "shared_flags_flagrounds",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "server/games.js",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "server_games",
+      "target": "shared_flags_validflagchoices",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "server/games.js",
+      "source_location": "L22",
       "weight": 1.0
     },
     {
@@ -16411,6 +16828,30 @@
       "context": "import",
       "source_file": "shared/feedback.js",
       "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "shared_flags",
+      "target": "shared_rng_randint",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "shared/flags.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "shared_flags",
+      "target": "shared_rng_shuffle",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "shared/flags.js",
+      "source_location": "L1",
       "weight": 1.0
     },
     {
@@ -17574,6 +18015,150 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "test/feedback.test.js",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "test_flags_test",
+      "target": "shared_rng_seededrng",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "test/flags.test.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "test_flags_test",
+      "target": "shared_flags_flagrounds",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "test/flags.test.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "test_flags_test",
+      "target": "server_games_buildgamedata",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "test/flags.test.js",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "test_flags_test",
+      "target": "server_games_completion_mode",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "test/flags.test.js",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "test_flags_test",
+      "target": "server_games_computemetric",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "test/flags.test.js",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "test_flags_test",
+      "target": "server_games_formatraw",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "test/flags.test.js",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "test_flags_test",
+      "target": "server_games_roster_by_key",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "test/flags.test.js",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "test_flags_test",
+      "target": "server_room_room",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "test/flags.test.js",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "test_flags_test",
+      "target": "scripts_scrape_flags_expected_flags",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "test/flags.test.js",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "test_flags_test",
+      "target": "scripts_scrape_flags_flags_source",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "test/flags.test.js",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "test_flags_test",
+      "target": "scripts_scrape_flags_ispng",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "test/flags.test.js",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "test_flags_test",
+      "target": "scripts_scrape_flags_parseflagtable",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "test/flags.test.js",
       "source_location": "L9",
       "weight": 1.0
     },
@@ -18947,6 +19532,18 @@
     },
     {
       "source": "server_games",
+      "target": "shared_flags",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "server/games.js",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "server_games",
       "target": "shared_rng",
       "relation": "imports_from",
       "_origin": "ast",
@@ -19135,6 +19732,18 @@
       "context": "import",
       "source_file": "shared/feedback.js",
       "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "shared_flags",
+      "target": "shared_rng",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "shared/flags.js",
+      "source_location": "L1",
       "weight": 1.0
     },
     {
@@ -19506,6 +20115,66 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "test/feedback.test.js",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "test_flags_test",
+      "target": "shared_rng",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "test/flags.test.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "test_flags_test",
+      "target": "shared_flags",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "test/flags.test.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "test_flags_test",
+      "target": "server_games",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "test/flags.test.js",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "test_flags_test",
+      "target": "server_room",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "test/flags.test.js",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "test_flags_test",
+      "target": "scripts_scrape_flags",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "test/flags.test.js",
       "source_location": "L9",
       "weight": 1.0
     },
@@ -20959,7 +21628,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L20",
+      "source_location": "L22",
       "weight": 1.0
     },
     {
@@ -20970,7 +21639,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L26",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -20992,7 +21661,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L30",
+      "source_location": "L32",
       "weight": 1.0
     },
     {
@@ -21047,7 +21716,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L21",
+      "source_location": "L23",
       "weight": 1.0
     },
     {
@@ -21058,7 +21727,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L22",
+      "source_location": "L24",
       "weight": 1.0
     },
     {
@@ -21069,7 +21738,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L23",
+      "source_location": "L25",
       "weight": 1.0
     },
     {
@@ -21080,7 +21749,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L24",
+      "source_location": "L26",
       "weight": 1.0
     },
     {
@@ -21091,7 +21760,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L27",
+      "source_location": "L29",
       "weight": 1.0
     },
     {
@@ -21102,7 +21771,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L28",
+      "source_location": "L30",
       "weight": 1.0
     },
     {
@@ -21162,7 +21831,7 @@
     },
     {
       "source": "package_scripts",
-      "target": "package_scripts_security_assess",
+      "target": "package_scripts_flags_verify",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -21173,7 +21842,7 @@
     },
     {
       "source": "package_scripts",
-      "target": "package_scripts_graph",
+      "target": "package_scripts_flags_update",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -21184,7 +21853,7 @@
     },
     {
       "source": "package_scripts",
-      "target": "package_scripts_graph_rebuild",
+      "target": "package_scripts_security_assess",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -21195,7 +21864,7 @@
     },
     {
       "source": "package_scripts",
-      "target": "package_scripts_graph_report",
+      "target": "package_scripts_graph",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -21206,13 +21875,35 @@
     },
     {
       "source": "package_scripts",
-      "target": "package_scripts_graph_setup",
+      "target": "package_scripts_graph_rebuild",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
       "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "package_scripts",
+      "target": "package_scripts_graph_report",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "package.json",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "package_scripts",
+      "target": "package_scripts_graph_setup",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "package.json",
+      "source_location": "L20",
       "weight": 1.0
     },
     {
@@ -21322,7 +22013,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L109",
+      "source_location": "L110",
       "weight": 1.0
     },
     {
@@ -21333,7 +22024,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L1247",
+      "source_location": "L1248",
       "weight": 1.0
     },
     {
@@ -21344,7 +22035,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L1291",
+      "source_location": "L1292",
       "weight": 1.0
     },
     {
@@ -21355,7 +22046,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L1356",
+      "source_location": "L1357",
       "weight": 1.0
     },
     {
@@ -21366,7 +22057,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L1367",
+      "source_location": "L1368",
       "weight": 1.0
     },
     {
@@ -21377,7 +22068,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L138",
+      "source_location": "L139",
       "weight": 1.0
     },
     {
@@ -21388,7 +22079,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L2180",
+      "source_location": "L2236",
       "weight": 1.0
     },
     {
@@ -21399,7 +22090,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L418",
+      "source_location": "L419",
       "weight": 1.0
     },
     {
@@ -21410,7 +22101,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L429",
+      "source_location": "L430",
       "weight": 1.0
     },
     {
@@ -21421,7 +22112,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L449",
+      "source_location": "L450",
       "weight": 1.0
     },
     {
@@ -21432,7 +22123,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L466",
+      "source_location": "L467",
       "weight": 1.0
     },
     {
@@ -21443,7 +22134,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L48",
+      "source_location": "L49",
       "weight": 1.0
     },
     {
@@ -21454,7 +22145,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L65",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -21465,7 +22156,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L70",
+      "source_location": "L71",
       "weight": 1.0
     },
     {
@@ -21476,7 +22167,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L89",
+      "source_location": "L90",
       "weight": 1.0
     },
     {
@@ -21487,7 +22178,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L94",
+      "source_location": "L95",
       "weight": 1.0
     },
     {
@@ -21498,7 +22189,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L1013",
+      "source_location": "L1014",
       "weight": 1.0
     },
     {
@@ -21509,7 +22200,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L1024",
+      "source_location": "L1025",
       "weight": 1.0
     },
     {
@@ -21520,7 +22211,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L1119",
+      "source_location": "L1120",
       "weight": 1.0
     },
     {
@@ -21531,7 +22222,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L1159",
+      "source_location": "L1160",
       "weight": 1.0
     },
     {
@@ -21542,7 +22233,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L1774",
+      "source_location": "L1775",
       "weight": 1.0
     },
     {
@@ -21553,7 +22244,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L189",
+      "source_location": "L190",
       "weight": 1.0
     },
     {
@@ -21564,7 +22255,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L2089",
+      "source_location": "L2090",
       "weight": 1.0
     },
     {
@@ -21575,7 +22266,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L2138",
+      "source_location": "L2139",
       "weight": 1.0
     },
     {
@@ -21586,7 +22277,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L293",
+      "source_location": "L294",
       "weight": 1.0
     },
     {
@@ -21597,7 +22288,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L723",
+      "source_location": "L724",
       "weight": 1.0
     },
     {
@@ -21608,7 +22299,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L741",
+      "source_location": "L742",
       "weight": 1.0
     },
     {
@@ -21619,7 +22310,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L846",
+      "source_location": "L847",
       "weight": 1.0
     },
     {
@@ -21630,7 +22321,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L989",
+      "source_location": "L990",
       "weight": 1.0
     },
     {
@@ -21641,7 +22332,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/games.js",
-      "source_location": "L1990",
+      "source_location": "L1991",
       "weight": 1.0
     },
     {
@@ -21839,7 +22530,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L445",
+      "source_location": "L448",
       "weight": 1.0
     },
     {
@@ -21850,7 +22541,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L490",
+      "source_location": "L493",
       "weight": 1.0
     },
     {
@@ -21861,7 +22552,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L537",
+      "source_location": "L540",
       "weight": 1.0
     },
     {
@@ -21872,7 +22563,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L559",
+      "source_location": "L562",
       "weight": 1.0
     },
     {
@@ -21883,7 +22574,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L573",
+      "source_location": "L576",
       "weight": 1.0
     },
     {
@@ -21894,7 +22585,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L590",
+      "source_location": "L593",
       "weight": 1.0
     },
     {
@@ -21905,7 +22596,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L602",
+      "source_location": "L605",
       "weight": 1.0
     },
     {
@@ -21916,7 +22607,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L613",
+      "source_location": "L616",
       "weight": 1.0
     },
     {
@@ -21927,7 +22618,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L639",
+      "source_location": "L642",
       "weight": 1.0
     },
     {
@@ -21938,7 +22629,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L683",
+      "source_location": "L686",
       "weight": 1.0
     },
     {
@@ -21949,7 +22640,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L708",
+      "source_location": "L711",
       "weight": 1.0
     },
     {
@@ -22372,6 +23063,17 @@
     },
     {
       "source": "public_js_tutorials",
+      "target": "public_js_tutorials_starttutorialanim",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "public/js/tutorials.js",
+      "source_location": "L1000",
+      "weight": 1.0
+    },
+    {
+      "source": "public_js_tutorials",
       "target": "public_js_tutorials_ball",
       "relation": "contains",
       "_origin": "ast",
@@ -22555,17 +23257,6 @@
       "confidence_score": 1.0,
       "source_file": "public/js/tutorials.js",
       "source_location": "L87",
-      "weight": 1.0
-    },
-    {
-      "source": "public_js_tutorials",
-      "target": "public_js_tutorials_starttutorialanim",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "public/js/tutorials.js",
-      "source_location": "L989",
       "weight": 1.0
     },
     {
@@ -22808,6 +23499,138 @@
       "confidence_score": 1.0,
       "source_file": "scripts/graph-lock.mjs",
       "source_location": "L51",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_scrape_flags",
+      "target": "scripts_scrape_flags_flags_source",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_scrape_flags",
+      "target": "scripts_scrape_flags_expected_flags",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_scrape_flags",
+      "target": "scripts_scrape_flags_root",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_scrape_flags",
+      "target": "scripts_scrape_flags_manifest",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_scrape_flags",
+      "target": "scripts_scrape_flags_source_snapshot",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_scrape_flags",
+      "target": "scripts_scrape_flags_assets",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_scrape_flags",
+      "target": "scripts_scrape_flags_parseflagtable",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_scrape_flags",
+      "target": "scripts_scrape_flags_validaterows",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L31",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_scrape_flags",
+      "target": "scripts_scrape_flags_ispng",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L38",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_scrape_flags",
+      "target": "scripts_scrape_flags_curl",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L69",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_scrape_flags",
+      "target": "scripts_scrape_flags_fetchbytes",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L72",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_scrape_flags",
+      "target": "scripts_scrape_flags_main",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/scrape-flags.mjs",
+      "source_location": "L83",
       "weight": 1.0
     },
     {
@@ -23307,13 +24130,24 @@
     },
     {
       "source": "server_games",
+      "target": "server_games_aggregatecaption",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "server/games.js",
+      "source_location": "L1004",
+      "weight": 1.0
+    },
+    {
+      "source": "server_games",
       "target": "server_games_aggregateicebreaker",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/games.js",
-      "source_location": "L1048",
+      "source_location": "L1060",
       "weight": 1.0
     },
     {
@@ -23324,7 +24158,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/games.js",
-      "source_location": "L1074",
+      "source_location": "L1086",
       "weight": 1.0
     },
     {
@@ -23335,7 +24169,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/games.js",
-      "source_location": "L142",
+      "source_location": "L144",
       "weight": 1.0
     },
     {
@@ -23346,7 +24180,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/games.js",
-      "source_location": "L180",
+      "source_location": "L182",
       "weight": 1.0
     },
     {
@@ -23357,7 +24191,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/games.js",
-      "source_location": "L205",
+      "source_location": "L207",
       "weight": 1.0
     },
     {
@@ -23368,18 +24202,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/games.js",
-      "source_location": "L216",
-      "weight": 1.0
-    },
-    {
-      "source": "server_games",
-      "target": "server_games_sentences",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "server/games.js",
-      "source_location": "L23",
+      "source_location": "L218",
       "weight": 1.0
     },
     {
@@ -23390,7 +24213,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/games.js",
-      "source_location": "L241",
+      "source_location": "L244",
       "weight": 1.0
     },
     {
@@ -23401,7 +24224,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/games.js",
-      "source_location": "L242",
+      "source_location": "L245",
+      "weight": 1.0
+    },
+    {
+      "source": "server_games",
+      "target": "server_games_sentences",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "server/games.js",
+      "source_location": "L25",
       "weight": 1.0
     },
     {
@@ -23412,7 +24246,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/games.js",
-      "source_location": "L248",
+      "source_location": "L251",
       "weight": 1.0
     },
     {
@@ -23423,7 +24257,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/games.js",
-      "source_location": "L255",
+      "source_location": "L258",
       "weight": 1.0
     },
     {
@@ -23434,7 +24268,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/games.js",
-      "source_location": "L268",
+      "source_location": "L271",
       "weight": 1.0
     },
     {
@@ -23445,7 +24279,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/games.js",
-      "source_location": "L271",
+      "source_location": "L274",
       "weight": 1.0
     },
     {
@@ -23456,7 +24290,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/games.js",
-      "source_location": "L272",
+      "source_location": "L275",
       "weight": 1.0
     },
     {
@@ -23467,7 +24301,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/games.js",
-      "source_location": "L275",
+      "source_location": "L278",
       "weight": 1.0
     },
     {
@@ -23478,7 +24312,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/games.js",
-      "source_location": "L287",
+      "source_location": "L290",
       "weight": 1.0
     },
     {
@@ -23489,7 +24323,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/games.js",
-      "source_location": "L497",
+      "source_location": "L504",
       "weight": 1.0
     },
     {
@@ -23500,7 +24334,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/games.js",
-      "source_location": "L56",
+      "source_location": "L58",
       "weight": 1.0
     },
     {
@@ -23511,7 +24345,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/games.js",
-      "source_location": "L581",
+      "source_location": "L588",
       "weight": 1.0
     },
     {
@@ -23522,7 +24356,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/games.js",
-      "source_location": "L624",
+      "source_location": "L631",
       "weight": 1.0
     },
     {
@@ -23533,7 +24367,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/games.js",
-      "source_location": "L663",
+      "source_location": "L670",
       "weight": 1.0
     },
     {
@@ -23544,18 +24378,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/games.js",
-      "source_location": "L963",
-      "weight": 1.0
-    },
-    {
-      "source": "server_games",
-      "target": "server_games_aggregatecaption",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "server/games.js",
-      "source_location": "L992",
+      "source_location": "L975",
       "weight": 1.0
     },
     {
@@ -24483,6 +25306,50 @@
       "weight": 1.0
     },
     {
+      "source": "shared_flags",
+      "target": "shared_flags_validflagchoices",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "shared/flags.js",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "shared_flags",
+      "target": "shared_flags_flags_rounds",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "shared/flags.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "shared_flags",
+      "target": "shared_flags_flags_options",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "shared/flags.js",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "shared_flags",
+      "target": "shared_flags_flagrounds",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "shared/flags.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
       "source": "shared_fractions",
       "target": "shared_fractions_parsevalue",
       "relation": "contains",
@@ -25374,6 +26241,28 @@
       "weight": 1.0
     },
     {
+      "source": "test_flags_test",
+      "target": "test_flags_test_stubio",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/flags.test.js",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "test_flags_test",
+      "target": "test_flags_test_addplayer",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/flags.test.js",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
       "source": "test_fractions_test",
       "target": "test_fractions_test_config",
       "relation": "contains",
@@ -25414,7 +26303,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "test/harness.test.js",
-      "source_location": "L190",
+      "source_location": "L195",
       "weight": 1.0
     },
     {
@@ -26041,7 +26930,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "test/roster.test.js",
-      "source_location": "L69",
+      "source_location": "L70",
       "weight": 1.0
     },
     {
@@ -26052,7 +26941,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "test/roster.test.js",
-      "source_location": "L71",
+      "source_location": "L72",
       "weight": 1.0
     },
     {
@@ -26342,6 +27231,17 @@
       "weight": 1.0
     },
     {
+      "source": "tests_e2e_flags_solo_spec",
+      "target": "tests_e2e_flags_solo_spec_asserttwobyfour",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/e2e/flags-solo.spec.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
       "source": "public_js_games",
       "target": "three_module_js",
       "relation": "dynamic_import",
@@ -26367,7 +27267,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1022",
+      "source_location": "L1030",
       "weight": 1.0
     },
     {
@@ -26378,7 +27278,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1052",
+      "source_location": "L1060",
       "weight": 1.0
     },
     {
@@ -26389,7 +27289,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1058",
+      "source_location": "L1066",
       "weight": 1.0
     },
     {
@@ -26400,7 +27300,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1085",
+      "source_location": "L1093",
       "weight": 1.0
     },
     {
@@ -26411,7 +27311,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1121",
+      "source_location": "L1129",
       "weight": 1.0
     },
     {
@@ -26422,7 +27322,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1171",
+      "source_location": "L1179",
       "weight": 1.0
     },
     {
@@ -26433,7 +27333,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1196",
+      "source_location": "L1204",
       "weight": 1.0
     },
     {
@@ -26444,7 +27344,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1202",
+      "source_location": "L1210",
       "weight": 1.0
     },
     {
@@ -26455,7 +27355,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1246",
+      "source_location": "L1254",
       "weight": 1.0
     },
     {
@@ -26466,7 +27366,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1273",
+      "source_location": "L1281",
       "weight": 1.0
     },
     {
@@ -26477,7 +27377,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1323",
+      "source_location": "L1331",
       "weight": 1.0
     },
     {
@@ -26488,7 +27388,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1360",
+      "source_location": "L1368",
       "weight": 1.0
     },
     {
@@ -26499,7 +27399,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1377",
+      "source_location": "L1385",
       "weight": 1.0
     },
     {
@@ -26510,7 +27410,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1401",
+      "source_location": "L1409",
       "weight": 1.0
     },
     {
@@ -27049,7 +27949,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "test/harness.test.js",
-      "source_location": "L191",
+      "source_location": "L196",
       "weight": 1.0
     },
     {
@@ -27060,7 +27960,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "test/harness.test.js",
-      "source_location": "L203",
+      "source_location": "L208",
       "weight": 1.0
     },
     {
@@ -27071,7 +27971,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "test/harness.test.js",
-      "source_location": "L224",
+      "source_location": "L229",
       "weight": 1.0
     },
     {
@@ -27082,7 +27982,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "test/harness.test.js",
-      "source_location": "L266",
+      "source_location": "L271",
       "weight": 1.0
     },
     {
@@ -27466,7 +28366,7 @@
       "confidence_score": 0.85,
       "context": "argument",
       "source_file": "public/js/games.js",
-      "source_location": "L1174",
+      "source_location": "L1175",
       "weight": 1.0
     },
     {
@@ -27478,7 +28378,7 @@
       "confidence_score": 0.85,
       "context": "argument",
       "source_file": "public/js/games.js",
-      "source_location": "L2167",
+      "source_location": "L2168",
       "weight": 1.0
     },
     {
@@ -27490,7 +28390,7 @@
       "confidence_score": 0.85,
       "context": "argument",
       "source_file": "public/js/games.js",
-      "source_location": "L288",
+      "source_location": "L289",
       "weight": 1.0
     },
     {
@@ -27502,7 +28402,7 @@
       "confidence_score": 0.85,
       "context": "argument",
       "source_file": "public/js/games.js",
-      "source_location": "L802",
+      "source_location": "L803",
       "weight": 1.0
     },
     {
@@ -27514,7 +28414,7 @@
       "confidence_score": 0.85,
       "context": "argument",
       "source_file": "public/js/games.js",
-      "source_location": "L1116",
+      "source_location": "L1117",
       "weight": 1.0
     },
     {
@@ -27526,7 +28426,7 @@
       "confidence_score": 0.85,
       "context": "argument",
       "source_file": "public/js/games.js",
-      "source_location": "L1133",
+      "source_location": "L1134",
       "weight": 1.0
     },
     {
@@ -27538,7 +28438,7 @@
       "confidence_score": 0.85,
       "context": "argument",
       "source_file": "public/js/games.js",
-      "source_location": "L1171",
+      "source_location": "L1172",
       "weight": 1.0
     },
     {
@@ -27550,7 +28450,7 @@
       "confidence_score": 0.85,
       "context": "argument",
       "source_file": "public/js/games.js",
-      "source_location": "L788",
+      "source_location": "L789",
       "weight": 1.0
     },
     {
@@ -27598,7 +28498,7 @@
       "confidence_score": 0.85,
       "context": "argument",
       "source_file": "public/js/tutorials.js",
-      "source_location": "L1069",
+      "source_location": "L1080",
       "weight": 1.0
     },
     {
@@ -27622,7 +28522,7 @@
       "confidence_score": 0.85,
       "context": "argument",
       "source_file": "server/games.js",
-      "source_location": "L313",
+      "source_location": "L316",
       "weight": 1.0
     },
     {
@@ -27634,7 +28534,7 @@
       "confidence_score": 0.85,
       "context": "collection",
       "source_file": "public/js/games.js",
-      "source_location": "L1663",
+      "source_location": "L1664",
       "weight": 1.0
     },
     {
@@ -27795,5 +28695,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "7c4056960b8762e8550cbfcbd47ad469e39f9b7f"
+  "built_at_commit": "67c76e1b6eec4028431faca9e20283b90742575f"
 }

@@ -5,7 +5,7 @@
       "semantic": null
     },
     ".github/workflows/ci.yml": {
-      "ast": "24eb1f02714e242bcbdf6178d0cef93e",
+      "ast": "cf111b9aa6ccffa87c0845fa0bcea65a",
       "semantic": null
     },
     ".github/workflows/security-assessment.yml": {
@@ -21,7 +21,15 @@
       "semantic": null
     },
     "README.md": {
-      "ast": "1885852532e2d94acf4137e953c54702",
+      "ast": "eb0da4e86e34f2126c926a69768dd1b7",
+      "semantic": null
+    },
+    "data/flags-manifest.json": {
+      "ast": "fe7a3b49e0e79949cfa376f65470e7f0",
+      "semantic": null
+    },
+    "data/flags-source-snapshot.html": {
+      "ast": "c16d4ea8bacb2f8a1a9ceb31aee2bee6",
       "semantic": null
     },
     "docs/color-cue-audit-issue-53.md": {
@@ -57,11 +65,799 @@
       "semantic": null
     },
     "package.json": {
-      "ast": "d845959e10736b31899610cc8e8950dd",
+      "ast": "2d1c8f61a60bb8eb25e2c2da2dc36ca1",
       "semantic": null
     },
     "playwright.config.js": {
       "ast": "1acbdb5f431d05244237b59ca7951dc5",
+      "semantic": null
+    },
+    "public/assets/flags/026a773c26d18f215d23.png": {
+      "ast": "fb0822bde317b2393908ae9e3c4b48d2",
+      "semantic": null
+    },
+    "public/assets/flags/0288a72f81b5b5687e3f.png": {
+      "ast": "b7da4b6a1f4e3cbdac2b6e1088f5377f",
+      "semantic": null
+    },
+    "public/assets/flags/0483118dbc71c083bc6c.png": {
+      "ast": "1c3e6b7ffc4421d6530969c90fbdd73e",
+      "semantic": null
+    },
+    "public/assets/flags/04a5c1cb0544e256d1d9.png": {
+      "ast": "e168e65023f06487dc56664babfa2f67",
+      "semantic": null
+    },
+    "public/assets/flags/070382a83e1f10ebeb7b.png": {
+      "ast": "88a7c8808e524d16157cf089cdcf548a",
+      "semantic": null
+    },
+    "public/assets/flags/094556ae8a9d7b9ec950.png": {
+      "ast": "dc8ea8f3c69be955e00dc0995a554f8e",
+      "semantic": null
+    },
+    "public/assets/flags/0cfb4832d79c297c84ce.png": {
+      "ast": "79bf480dfbec3dd206bb96b2d24665b5",
+      "semantic": null
+    },
+    "public/assets/flags/0f0f55c8dbcb479ac77d.png": {
+      "ast": "c5529a702b0e6918d7f1f24e99a4cd60",
+      "semantic": null
+    },
+    "public/assets/flags/112a24cd23251cf6b278.png": {
+      "ast": "91fea13177205118008c41b1a2af1beb",
+      "semantic": null
+    },
+    "public/assets/flags/131b6d4f8430dbd44010.png": {
+      "ast": "7785cbb9bfe08e6c7595445697136b56",
+      "semantic": null
+    },
+    "public/assets/flags/14eca02ee802f5824eb7.png": {
+      "ast": "84c539630d77676ea2513898e738c479",
+      "semantic": null
+    },
+    "public/assets/flags/15c271f5ef41be77d545.png": {
+      "ast": "ef88a0881fce268a18869e8a0e793239",
+      "semantic": null
+    },
+    "public/assets/flags/1756355e48c04f71ad65.png": {
+      "ast": "cb19246288320c4a0bc4850052b2e016",
+      "semantic": null
+    },
+    "public/assets/flags/17b44373380d64589283.png": {
+      "ast": "cdbb926af6d998def558efac9c25c077",
+      "semantic": null
+    },
+    "public/assets/flags/17d1281bef3800bbdb31.png": {
+      "ast": "e2d3591f47d9f10dd34ca9f041046b45",
+      "semantic": null
+    },
+    "public/assets/flags/194b61f35ae9a1252ee3.png": {
+      "ast": "c4184eebe33127b35c9836185d517d1b",
+      "semantic": null
+    },
+    "public/assets/flags/1a3abc96346b4fa0a42e.png": {
+      "ast": "a1428d9cbcb89e2bb4764e1ad9321004",
+      "semantic": null
+    },
+    "public/assets/flags/1b66b537ba5319ccd287.png": {
+      "ast": "2f84020b39a751ae19b108ba48983131",
+      "semantic": null
+    },
+    "public/assets/flags/1b9ba75a0796af6d2354.png": {
+      "ast": "75a96ab75d12d171bb93676be10e27f1",
+      "semantic": null
+    },
+    "public/assets/flags/1c289531d156e3d4833b.png": {
+      "ast": "1bfff08cb475fe5430dcf673c134de9a",
+      "semantic": null
+    },
+    "public/assets/flags/1c2f533cc8376440c514.png": {
+      "ast": "975a0cab650b453aeac0b317d5d0cf8c",
+      "semantic": null
+    },
+    "public/assets/flags/1c63fc0b8b05a92712f1.png": {
+      "ast": "94ba20cce556063a49522cf3d629c856",
+      "semantic": null
+    },
+    "public/assets/flags/1db86fe2a0d868f1e58a.png": {
+      "ast": "a13311ffa780e22f5b965b531b43e4ad",
+      "semantic": null
+    },
+    "public/assets/flags/1e3d7ec9bf184a38d68c.png": {
+      "ast": "7d0e47d090a2a5dcaa66cadf686de79a",
+      "semantic": null
+    },
+    "public/assets/flags/22f7dad161aa7781007d.png": {
+      "ast": "b0452b79f4bf5487d6bd6eb463e1de21",
+      "semantic": null
+    },
+    "public/assets/flags/23b84d7e71949e36260f.png": {
+      "ast": "068b3205a90b6ffd23deacf3b2a8b536",
+      "semantic": null
+    },
+    "public/assets/flags/24069402e4665efb6769.png": {
+      "ast": "c4c97f5d3ce6698642fc6d7ed42cfa50",
+      "semantic": null
+    },
+    "public/assets/flags/2439250ecd958159fbd4.png": {
+      "ast": "690d7ededb092e902ae5c0b34f9da25b",
+      "semantic": null
+    },
+    "public/assets/flags/24e246e73900f9fbc581.png": {
+      "ast": "e87a825ef8d9cf71810ef3ed035e306c",
+      "semantic": null
+    },
+    "public/assets/flags/25746b544f0d52b5278b.png": {
+      "ast": "e3d3fc3a608ea0a0e2fffe9eb2d618c8",
+      "semantic": null
+    },
+    "public/assets/flags/26044383cbc54b8df177.png": {
+      "ast": "daffd8bdc5343303b95cf2da2cfc2928",
+      "semantic": null
+    },
+    "public/assets/flags/263b29f42714a779d2a1.png": {
+      "ast": "4fd928c6f7993c69d9855bc00961a7cb",
+      "semantic": null
+    },
+    "public/assets/flags/269fd1d6ffba378e4051.png": {
+      "ast": "fc591d46e212862eb9f01e67a2147bf1",
+      "semantic": null
+    },
+    "public/assets/flags/27336f98c2f091714723.png": {
+      "ast": "50f7486d609c6a509eb60929e94fc922",
+      "semantic": null
+    },
+    "public/assets/flags/2a2dc604ecabc01d8bc9.png": {
+      "ast": "d351fbd36a4c37029fc16f07b4ceb08f",
+      "semantic": null
+    },
+    "public/assets/flags/2afe3b3be6d02ebd04cb.png": {
+      "ast": "0c53359ae59951e7aca3a49d521db4cc",
+      "semantic": null
+    },
+    "public/assets/flags/2b662f3c755cce391364.png": {
+      "ast": "5df440334ae8966bb3cd55bd6cac4b3f",
+      "semantic": null
+    },
+    "public/assets/flags/2dc499698d3a8d57cf35.png": {
+      "ast": "1cb7b2bd7c5ce885f1ea30b93486ba60",
+      "semantic": null
+    },
+    "public/assets/flags/2e250d42d8140bfc08ef.png": {
+      "ast": "92484d1db6f3aa5f5fc8c4c1a38ab99e",
+      "semantic": null
+    },
+    "public/assets/flags/2fda2ec24644e83ff2fe.png": {
+      "ast": "96ddc92c38d2363238d0b1dbed295186",
+      "semantic": null
+    },
+    "public/assets/flags/3048edf7794e6c7915ab.png": {
+      "ast": "4d981cbfcacfdde52afe31773288cf84",
+      "semantic": null
+    },
+    "public/assets/flags/33fc87740ac943b3e598.png": {
+      "ast": "2a86b4eeae990788305d4b5f7269981f",
+      "semantic": null
+    },
+    "public/assets/flags/34b81bc9bde1a6cb888b.png": {
+      "ast": "9fff659d1097a7f87049409aa53ae22e",
+      "semantic": null
+    },
+    "public/assets/flags/35750ffc9d45e48db7a1.png": {
+      "ast": "98a6d777423f2592723645cc47e97257",
+      "semantic": null
+    },
+    "public/assets/flags/35c1429da03f731a1402.png": {
+      "ast": "c8e3337e15f15c6d50a158b4618ea76f",
+      "semantic": null
+    },
+    "public/assets/flags/36c9ced5f512ec3a77f1.png": {
+      "ast": "c6f567b98a33cf6163479c5a446cc559",
+      "semantic": null
+    },
+    "public/assets/flags/38960cc9a02a251b8da9.png": {
+      "ast": "e05c89a2dda9debdae29d983f64b28af",
+      "semantic": null
+    },
+    "public/assets/flags/3919a39cceff1ebc1d0f.png": {
+      "ast": "376c173e95bdbdeddb7ecf3eb807a483",
+      "semantic": null
+    },
+    "public/assets/flags/398ac0e4301a80013734.png": {
+      "ast": "cbc7bef0a86eef25a7c76aaa2cb14e8a",
+      "semantic": null
+    },
+    "public/assets/flags/39a9cc217206cc701106.png": {
+      "ast": "aab024edec04b91c466814b4f7e40995",
+      "semantic": null
+    },
+    "public/assets/flags/3ba03a593ae948c3e1d4.png": {
+      "ast": "de9d56d0439398570950c2b7620485cb",
+      "semantic": null
+    },
+    "public/assets/flags/3bfac7f2a31e7eaec5f8.png": {
+      "ast": "dd404ab9dd2cd7ea1125554c3e2852e7",
+      "semantic": null
+    },
+    "public/assets/flags/3c6f42af9ec50d99783e.png": {
+      "ast": "c49d3c7284232e1f611342500f065cfa",
+      "semantic": null
+    },
+    "public/assets/flags/3c778bd7f6549300d38b.png": {
+      "ast": "4a476aa03a47e305f801ada97ce9c77b",
+      "semantic": null
+    },
+    "public/assets/flags/3e60e5422f0aff941087.png": {
+      "ast": "0088c3d9bcaba8eb27916c659cceb3a1",
+      "semantic": null
+    },
+    "public/assets/flags/3e8e13620106f1a3ea16.png": {
+      "ast": "37c58f4dd2616790e3584313a8bc32fd",
+      "semantic": null
+    },
+    "public/assets/flags/411e17769bd618eee82f.png": {
+      "ast": "94774c7944b36f34b23065139bfc1c77",
+      "semantic": null
+    },
+    "public/assets/flags/414f047e89e6ede48e0a.png": {
+      "ast": "f052a7ea0c72df916f0a02297ffd7571",
+      "semantic": null
+    },
+    "public/assets/flags/42ce53043da24c650236.png": {
+      "ast": "c07ee3f795be4525dbca3f41d8749146",
+      "semantic": null
+    },
+    "public/assets/flags/43293f0235872e951aca.png": {
+      "ast": "42e77d8dbc221dd2f00e4651117ef1b0",
+      "semantic": null
+    },
+    "public/assets/flags/44d6efb820dfdf7cef1b.png": {
+      "ast": "0be588e71bc8ca77e7e4ce2ba422f5c4",
+      "semantic": null
+    },
+    "public/assets/flags/4585ea013d1a6f316db9.png": {
+      "ast": "469484c55b386680031ec8e8cfddf958",
+      "semantic": null
+    },
+    "public/assets/flags/465ef95fc6909dd9b4b2.png": {
+      "ast": "a9d60f7df15fa1ecfedbf6909ea4b963",
+      "semantic": null
+    },
+    "public/assets/flags/48e0dfdd73ddca9286b3.png": {
+      "ast": "daecddc6ed474b81b3ed5dbc595a4470",
+      "semantic": null
+    },
+    "public/assets/flags/4ac27907358af54e4cef.png": {
+      "ast": "324331727e6514e74ff4d2cce8440275",
+      "semantic": null
+    },
+    "public/assets/flags/5163a9c110ff8319ea36.png": {
+      "ast": "0625a2512f100580c85857d9cde7472e",
+      "semantic": null
+    },
+    "public/assets/flags/53e83669bf685ead3f0f.png": {
+      "ast": "dca5381c26501a8b4c621c7327efb9fc",
+      "semantic": null
+    },
+    "public/assets/flags/54291d819bf43fdb59ca.png": {
+      "ast": "ff03873498af30d1ab726d5c8f81744d",
+      "semantic": null
+    },
+    "public/assets/flags/56086c0e8fa9901123e7.png": {
+      "ast": "c83d275459aad7b3ea3d2c94233e1c57",
+      "semantic": null
+    },
+    "public/assets/flags/5786ba12470bff7adc59.png": {
+      "ast": "bfeb52f6cff648fb42289e21d05fbceb",
+      "semantic": null
+    },
+    "public/assets/flags/58ff0c85f2f41fd0ce03.png": {
+      "ast": "ff01a4c3929c6c3276aa4edab9c009d8",
+      "semantic": null
+    },
+    "public/assets/flags/5919822805504aeb6b0b.png": {
+      "ast": "303adc94dab5b6d5a8583cd3778b3a63",
+      "semantic": null
+    },
+    "public/assets/flags/5af1e64fd15e81ea4d50.png": {
+      "ast": "e60b19fa9487ee3e3bbf589637bf70f0",
+      "semantic": null
+    },
+    "public/assets/flags/5b5468657c79c895238a.png": {
+      "ast": "f0ef3419c5f07570fc962b9569e46ce6",
+      "semantic": null
+    },
+    "public/assets/flags/5c01d4309bed3aa7fd04.png": {
+      "ast": "b4e8324d0c4acd1cc2c490d9262e31e6",
+      "semantic": null
+    },
+    "public/assets/flags/5d16692327ac097d9a5a.png": {
+      "ast": "3600c123aea5d50583d4998ecd2086cc",
+      "semantic": null
+    },
+    "public/assets/flags/5deafa2a2e5f8c83e1a3.png": {
+      "ast": "26767d908dd4940cdf4ce84c8d7e23e4",
+      "semantic": null
+    },
+    "public/assets/flags/5e8b9e923f04da42936e.png": {
+      "ast": "17199740611acc0f982889f63b5cebe2",
+      "semantic": null
+    },
+    "public/assets/flags/5fa3891892f4723592e9.png": {
+      "ast": "67f5d016df675a6a4151965b35e855ef",
+      "semantic": null
+    },
+    "public/assets/flags/615317ecd76507279dc6.png": {
+      "ast": "1d162440682dfb3298a411a1a37d077a",
+      "semantic": null
+    },
+    "public/assets/flags/62aab82bf78ddf22979d.png": {
+      "ast": "b9d74099b93a80489811febc89800704",
+      "semantic": null
+    },
+    "public/assets/flags/64cb93fbd087a7f6c650.png": {
+      "ast": "3548370ab9147702c6286eb3febc74d2",
+      "semantic": null
+    },
+    "public/assets/flags/654965a390980e7d00c6.png": {
+      "ast": "b00112a6815febd28acbe96b1fe2cb7c",
+      "semantic": null
+    },
+    "public/assets/flags/65d6cd0f25449edec97a.png": {
+      "ast": "dc790cec8d856e7b9a93628969acee92",
+      "semantic": null
+    },
+    "public/assets/flags/6cef8d1ceff2196935ac.png": {
+      "ast": "6f8cb1e1311871289b83f1890fbcb089",
+      "semantic": null
+    },
+    "public/assets/flags/6f2de2a1562641830d47.png": {
+      "ast": "5e0dd969084578be2922fb68abb07173",
+      "semantic": null
+    },
+    "public/assets/flags/7484d8281b6b2803ab58.png": {
+      "ast": "e468a28da35225ac061565bc7988e917",
+      "semantic": null
+    },
+    "public/assets/flags/751dcf2a2df3aa260969.png": {
+      "ast": "ed20fb6210835df14d0a0b1146505c20",
+      "semantic": null
+    },
+    "public/assets/flags/79dd8373d9648c2dc1d0.png": {
+      "ast": "145113295196421d431ec0635c5a0393",
+      "semantic": null
+    },
+    "public/assets/flags/7a9ea9847ecbebd98329.png": {
+      "ast": "f88f357aed1d466b8d3e169b184542bb",
+      "semantic": null
+    },
+    "public/assets/flags/7ca5390a692791a19390.png": {
+      "ast": "3925ecae4382a637a0ab7132e25962ac",
+      "semantic": null
+    },
+    "public/assets/flags/7cf2aba7ee8d0c4f7bde.png": {
+      "ast": "4c8ac980c97e43fe2603706cb25bf558",
+      "semantic": null
+    },
+    "public/assets/flags/7d8869a86d2e3315dcc5.png": {
+      "ast": "90e3537ad7fce129f4e8a6f511ce8156",
+      "semantic": null
+    },
+    "public/assets/flags/7df2bdfcb466cb9a38af.png": {
+      "ast": "3fd38bec78774e783f1c4678c5342fc5",
+      "semantic": null
+    },
+    "public/assets/flags/7ef0be4422fb3e6557a3.png": {
+      "ast": "c3eb5003e57360962a9b811d15b9e248",
+      "semantic": null
+    },
+    "public/assets/flags/81f6e99e7f983ad84284.png": {
+      "ast": "5212a155ba5e54cfe7e3206445078341",
+      "semantic": null
+    },
+    "public/assets/flags/83b6d4bf30e76407b4ed.png": {
+      "ast": "552144db8ac1b97c4af0beddd449dc1e",
+      "semantic": null
+    },
+    "public/assets/flags/852acb9ed22cd9101b83.png": {
+      "ast": "89d3a61afe0e7aefd4630800bf127576",
+      "semantic": null
+    },
+    "public/assets/flags/856da86ee4545977d32e.png": {
+      "ast": "37530cd26191533791f09c202f4c023b",
+      "semantic": null
+    },
+    "public/assets/flags/86a86475e6859054025c.png": {
+      "ast": "f713b369558888e819aea63f7dfd194c",
+      "semantic": null
+    },
+    "public/assets/flags/870aa3313ae35e37b159.png": {
+      "ast": "c3a4f90fd383c6614f8dde46658aec86",
+      "semantic": null
+    },
+    "public/assets/flags/8812aa21da8dcf551f79.png": {
+      "ast": "6bd49600ff29a8f628850b0ed2226fcd",
+      "semantic": null
+    },
+    "public/assets/flags/8853ebe296e1487b3a93.png": {
+      "ast": "7a5d090543b8001ba9ac2f19410e5eda",
+      "semantic": null
+    },
+    "public/assets/flags/88a10d351342fdf794e6.png": {
+      "ast": "040e38c023a181bd14204772562fc5b3",
+      "semantic": null
+    },
+    "public/assets/flags/88fd3753ebf03b459acf.png": {
+      "ast": "74460e85318e416ae3321e743b34ac3d",
+      "semantic": null
+    },
+    "public/assets/flags/8a371b180578938146cb.png": {
+      "ast": "0aa78a5ffa6de77b3c8d9aec55aed04c",
+      "semantic": null
+    },
+    "public/assets/flags/8d850c5e60998f4d46ef.png": {
+      "ast": "fe9d0d3bb53698e1e8b2d56359092945",
+      "semantic": null
+    },
+    "public/assets/flags/8e606d9a2412836f1998.png": {
+      "ast": "a6ad2bb3a3efa1d0832c351980d98163",
+      "semantic": null
+    },
+    "public/assets/flags/8e6d39d5c7363bfb62b1.png": {
+      "ast": "844ec3c67a719249858a4a2c5203e4c3",
+      "semantic": null
+    },
+    "public/assets/flags/8f8c0c7f8934cbc2536d.png": {
+      "ast": "8e19afdc23f6d03275c0a0b0b16d7cff",
+      "semantic": null
+    },
+    "public/assets/flags/90c2e990605a8ad0bec8.png": {
+      "ast": "2317f34397a0d48a6c4550a8a36e145a",
+      "semantic": null
+    },
+    "public/assets/flags/935e1e129bf2ccd08de8.png": {
+      "ast": "a5c02837156814aa426c15c9cbcffa93",
+      "semantic": null
+    },
+    "public/assets/flags/93c69a536c9541600075.png": {
+      "ast": "3cf8d06689bf3404289a3ff956a8bef5",
+      "semantic": null
+    },
+    "public/assets/flags/953ee2a713b364a765d4.png": {
+      "ast": "38c3fadc591e6de516c7a4464b168025",
+      "semantic": null
+    },
+    "public/assets/flags/95f72c9308a74a99b528.png": {
+      "ast": "e225cda8da425f3f0fd8653a07540877",
+      "semantic": null
+    },
+    "public/assets/flags/9cabb9b35f41002b0ebe.png": {
+      "ast": "35e17d99aa07866096fc1489ad454746",
+      "semantic": null
+    },
+    "public/assets/flags/9d73263691e9715c249d.png": {
+      "ast": "65ef81b59a64778ba73b6cac483a9f7b",
+      "semantic": null
+    },
+    "public/assets/flags/9e65657335c8a38c635b.png": {
+      "ast": "d2e3fb78bc969e76304f89d4c79339dc",
+      "semantic": null
+    },
+    "public/assets/flags/a07558c660be68291b8d.png": {
+      "ast": "c1a212cd3911fdc024734da6ed4fa6b1",
+      "semantic": null
+    },
+    "public/assets/flags/a19961c0e91a5e6dbb67.png": {
+      "ast": "0a24f13fc5b31347ee19b9e176b974d9",
+      "semantic": null
+    },
+    "public/assets/flags/a20049178e6884428467.png": {
+      "ast": "3adbdb733462d61478479e157934c20d",
+      "semantic": null
+    },
+    "public/assets/flags/a3486761744c1abd5682.png": {
+      "ast": "81a682fc029c3b4c5d14d787c1506ccd",
+      "semantic": null
+    },
+    "public/assets/flags/a4ea63218a6db0c51d10.png": {
+      "ast": "1e72ee718df1222dde88818e3e7f8b7f",
+      "semantic": null
+    },
+    "public/assets/flags/a6916701ad844910116b.png": {
+      "ast": "67e800025510585207606b7cb20deae1",
+      "semantic": null
+    },
+    "public/assets/flags/a80fff8b8b8feef01f54.png": {
+      "ast": "fe5c5f3700f31d1fb2aea48522f0b990",
+      "semantic": null
+    },
+    "public/assets/flags/a814f745a8d3a306acc8.png": {
+      "ast": "e629254e7efadda5392e5b0a5b0baa2b",
+      "semantic": null
+    },
+    "public/assets/flags/a84711820c598b69f452.png": {
+      "ast": "ada1db6dafa99787626db053e3921578",
+      "semantic": null
+    },
+    "public/assets/flags/a893c864f8676ade6d94.png": {
+      "ast": "863d9d7988daa433744239d6e99b1c54",
+      "semantic": null
+    },
+    "public/assets/flags/aa2843b894ea0a576972.png": {
+      "ast": "913b5367e8a5223434374d1078834e48",
+      "semantic": null
+    },
+    "public/assets/flags/aac2a2c4c80bc1f51588.png": {
+      "ast": "60f07896ed3aa3452a851f1fdd62317b",
+      "semantic": null
+    },
+    "public/assets/flags/ab4aaf6b787cd97bc55f.png": {
+      "ast": "376caabc682ce9cd95a53ab75eacb84f",
+      "semantic": null
+    },
+    "public/assets/flags/ac62cf1209a3b44bc3c6.png": {
+      "ast": "ffd119740657fad762e8d08979e2a73b",
+      "semantic": null
+    },
+    "public/assets/flags/ad5388659e41d8bd8939.png": {
+      "ast": "9f0eb8309755596ea58cd5e2dbbe8cfe",
+      "semantic": null
+    },
+    "public/assets/flags/afb517e4a234a15ce97b.png": {
+      "ast": "ac2dba4e725d5809028cbfb3bb7b7efe",
+      "semantic": null
+    },
+    "public/assets/flags/b07ceb10a86f20c05e77.png": {
+      "ast": "01fa741794e113f21b715738f594ff9a",
+      "semantic": null
+    },
+    "public/assets/flags/b0fad60a5c622dec50d1.png": {
+      "ast": "a9b13a7007c80e7d283e300bf66a8b00",
+      "semantic": null
+    },
+    "public/assets/flags/b2d3e2109e38b952ace7.png": {
+      "ast": "7d666e33e5cae1a8d91f4c1f6a2282af",
+      "semantic": null
+    },
+    "public/assets/flags/b327ee92c6803d03c1d5.png": {
+      "ast": "2c3b5c87067e170aaf6c3ca7bdf0303a",
+      "semantic": null
+    },
+    "public/assets/flags/b4985f33a93e2635ca74.png": {
+      "ast": "7b1ba50bb823c038904d3b81c43d14a9",
+      "semantic": null
+    },
+    "public/assets/flags/b506eb4f1391d106bb47.png": {
+      "ast": "54f6ce8d5f911d0cc04b1bed48cbc9ef",
+      "semantic": null
+    },
+    "public/assets/flags/b51bb155ad7888a60f98.png": {
+      "ast": "78b7459646dbf97fe1d634696ec42f16",
+      "semantic": null
+    },
+    "public/assets/flags/b54fab3a74201a2504ff.png": {
+      "ast": "37d711f73f40c1f6d7b1422198ec670a",
+      "semantic": null
+    },
+    "public/assets/flags/b5ac4d32efe813b7fed2.png": {
+      "ast": "1fab495d7fc0ac00e02e4d996102c889",
+      "semantic": null
+    },
+    "public/assets/flags/b7410a57c9edef1fa9da.png": {
+      "ast": "1d961ecd4e2cfeea8a4d3223a2c64089",
+      "semantic": null
+    },
+    "public/assets/flags/baf689ac0d62bd6b45e1.png": {
+      "ast": "41101245f5cdfad22fc1d878b577f4c7",
+      "semantic": null
+    },
+    "public/assets/flags/bb9f39fc1732cd9462b8.png": {
+      "ast": "18332a6c703fab01cab3381693e48ed1",
+      "semantic": null
+    },
+    "public/assets/flags/bc6f4ff6a091cc83ac63.png": {
+      "ast": "8cb83c63b8bc857c97839837eeff3751",
+      "semantic": null
+    },
+    "public/assets/flags/bc808702ae506b1c6ec3.png": {
+      "ast": "4fdeb8c30dc97b992fe90fcaa9c1decf",
+      "semantic": null
+    },
+    "public/assets/flags/bd633b5b8fb8c033add3.png": {
+      "ast": "ae2ff8b5d74d4acf1a1e55aba1e02f24",
+      "semantic": null
+    },
+    "public/assets/flags/c00068d49434abe17480.png": {
+      "ast": "770e076259d806d9cae22bc2666166b9",
+      "semantic": null
+    },
+    "public/assets/flags/c110f2382cee9ffda0a3.png": {
+      "ast": "133e7cd8bb13f5ca9c1735aabc964e31",
+      "semantic": null
+    },
+    "public/assets/flags/c15c659ba2999a41f25f.png": {
+      "ast": "e33ea7bee86f53cf57998224b821f424",
+      "semantic": null
+    },
+    "public/assets/flags/c2d42a9f618e90235b2c.png": {
+      "ast": "3df2658c55b6de68b57a93b831e35cad",
+      "semantic": null
+    },
+    "public/assets/flags/c37cd37d3616c7390e53.png": {
+      "ast": "3ab03d2abfbd1f5c0b09327cb6b9a296",
+      "semantic": null
+    },
+    "public/assets/flags/c65d31dea4c8b4459a07.png": {
+      "ast": "09c5d88fbfb171fa5a57e871f3f3ddd5",
+      "semantic": null
+    },
+    "public/assets/flags/c7c2c746441db5588318.png": {
+      "ast": "c0b94e5bffbf4f26210959870344bcc7",
+      "semantic": null
+    },
+    "public/assets/flags/c9bbb021f6c2f90b67df.png": {
+      "ast": "d87e101ed2352b67c7d89eb36b7347b1",
+      "semantic": null
+    },
+    "public/assets/flags/c9fa107593689399b560.png": {
+      "ast": "c47ee211189834a6c8ae08db98385bc4",
+      "semantic": null
+    },
+    "public/assets/flags/cbdb3ea2ea4c9b141589.png": {
+      "ast": "8bbed1b3c0d03c0b81b8e7b3c496d283",
+      "semantic": null
+    },
+    "public/assets/flags/cbf15eb781f53b80e005.png": {
+      "ast": "ca12b9cee05c868d2f63252177a9ea9b",
+      "semantic": null
+    },
+    "public/assets/flags/cdfbad73ac28f208946b.png": {
+      "ast": "3d6c899c7608ebfff4d9a87ffd41516c",
+      "semantic": null
+    },
+    "public/assets/flags/ceb42511191e1b692108.png": {
+      "ast": "3e16af0ae395215191efa7115600864b",
+      "semantic": null
+    },
+    "public/assets/flags/cf7109a188c0745b75e2.png": {
+      "ast": "28dc964b5853968f0f13208fbde62b8a",
+      "semantic": null
+    },
+    "public/assets/flags/d0861c49f35ac03fd497.png": {
+      "ast": "653c75e338564925131000f4431ff719",
+      "semantic": null
+    },
+    "public/assets/flags/d2db99bfbf14040853d5.png": {
+      "ast": "92b0b9d89a2d3e03b76fbcb42341f662",
+      "semantic": null
+    },
+    "public/assets/flags/d2fb081830e4073445b5.png": {
+      "ast": "62f7de516c515c5137d71b03e34f47bb",
+      "semantic": null
+    },
+    "public/assets/flags/d7df14cc40aa248e20aa.png": {
+      "ast": "4f7ebedd815ce81098c05050d3118f94",
+      "semantic": null
+    },
+    "public/assets/flags/d8cec28c9dab94be0a2f.png": {
+      "ast": "5feb63b69ffb9cf5155a990759d65509",
+      "semantic": null
+    },
+    "public/assets/flags/d942765e0e6bf90b4479.png": {
+      "ast": "cb7b4dd8e9624a512ffde8102fe63005",
+      "semantic": null
+    },
+    "public/assets/flags/da27ab5f84e76a2583d3.png": {
+      "ast": "3f83d7e6a762f4430bc0781573a4f940",
+      "semantic": null
+    },
+    "public/assets/flags/dadf57a0fbe80adb7e2a.png": {
+      "ast": "568eab0a293f64f9395c83c2064dab06",
+      "semantic": null
+    },
+    "public/assets/flags/db3f7c67491a34fcfcc1.png": {
+      "ast": "f777b3c076ecb2ba89376834c58b30e2",
+      "semantic": null
+    },
+    "public/assets/flags/dd0af4e26c2cd1bef2b7.png": {
+      "ast": "3225b0c56bb57719b124696008231d76",
+      "semantic": null
+    },
+    "public/assets/flags/e01e65a5de9db2992b9e.png": {
+      "ast": "32d39603ec14ea9e9629b4064cf1f29a",
+      "semantic": null
+    },
+    "public/assets/flags/e0a640307bae8a8569a1.png": {
+      "ast": "1845a9c6b3352e9ac365fb38d095b0e7",
+      "semantic": null
+    },
+    "public/assets/flags/e1c129302854a7bbb00b.png": {
+      "ast": "ff990b30f68ad45a925c62ff30e8eb10",
+      "semantic": null
+    },
+    "public/assets/flags/e231961dcecd05501c8a.png": {
+      "ast": "d03fd4b2bcbdf555dedb5f8ccbd1ba6b",
+      "semantic": null
+    },
+    "public/assets/flags/e2f3f637986b920262c2.png": {
+      "ast": "b0d9f26c086a42f9146f9fe77ef34fdb",
+      "semantic": null
+    },
+    "public/assets/flags/e3b2b1bb9751cfe5e329.png": {
+      "ast": "104e87092cbc9130ec7182e32c65d3e7",
+      "semantic": null
+    },
+    "public/assets/flags/e57357f14082a087c5eb.png": {
+      "ast": "f81fb51837fda807d0b289369b6967bb",
+      "semantic": null
+    },
+    "public/assets/flags/e5a6adf2369ab2eed0eb.png": {
+      "ast": "f86d0483cc2ed278d39c420041475eab",
+      "semantic": null
+    },
+    "public/assets/flags/e5ab5b19890e4cf8813b.png": {
+      "ast": "b745329c76a84c50888ffffb81e21f80",
+      "semantic": null
+    },
+    "public/assets/flags/e6434c39eb2db1ed0585.png": {
+      "ast": "8f3a950e1c50f45d01d8cdf8543af57a",
+      "semantic": null
+    },
+    "public/assets/flags/e725f9b30140fd2f88f6.png": {
+      "ast": "0ebdb73480902b91adb4b092ed650173",
+      "semantic": null
+    },
+    "public/assets/flags/e9b7189cabb046f537d8.png": {
+      "ast": "85c127255662a626c125056c31011b1d",
+      "semantic": null
+    },
+    "public/assets/flags/eb1bd9ac1568d20a8440.png": {
+      "ast": "568b798901e06564162dff435fb6982b",
+      "semantic": null
+    },
+    "public/assets/flags/ed17dd32cf71f4f7933e.png": {
+      "ast": "3abb46108f278c3c14e6b0078a7bb736",
+      "semantic": null
+    },
+    "public/assets/flags/f38eedf56de4a7452dc9.png": {
+      "ast": "222dc85dae070c549e153123dc1b65d2",
+      "semantic": null
+    },
+    "public/assets/flags/f3c40dbe2f4a7a73652a.png": {
+      "ast": "04417011711600762dadac6becbce64b",
+      "semantic": null
+    },
+    "public/assets/flags/f4472bab5f9b26ed0499.png": {
+      "ast": "6f13737deccdc8aa2901bfcbb2b55636",
+      "semantic": null
+    },
+    "public/assets/flags/f5192ce9f96d5cb6f5f7.png": {
+      "ast": "c4b56912039bc22bf4bcc06c6ec84946",
+      "semantic": null
+    },
+    "public/assets/flags/f8967cdbe6cdf807c674.png": {
+      "ast": "c2f5bbfe35f92649d6d04008597dd5e3",
+      "semantic": null
+    },
+    "public/assets/flags/f99233f206a31f0a2a89.png": {
+      "ast": "f209c92f880e6a2433e4381cd3fda1e3",
+      "semantic": null
+    },
+    "public/assets/flags/f9ed5bd2f81a5334d777.png": {
+      "ast": "5eb70b77bf7fa0266792107671853aa6",
+      "semantic": null
+    },
+    "public/assets/flags/fb7dfc38a9e7f3967b15.png": {
+      "ast": "781a9c304ad13f345be8de31c712fab1",
+      "semantic": null
+    },
+    "public/assets/flags/fdd6d9198fed8fa5dc98.png": {
+      "ast": "83385fa1af9f26b9b399fc035c8a34f4",
+      "semantic": null
+    },
+    "public/assets/flags/fe536e6c7aef54cf7a04.png": {
+      "ast": "8d810983815b0deb80314a777aae7a77",
       "semantic": null
     },
     "public/host.html": {
@@ -77,11 +873,11 @@
       "semantic": null
     },
     "public/js/games.js": {
-      "ast": "ac2e1c855f1b9de3d6bce6cb9db4f918",
+      "ast": "581cda23f41943095ef4d7b34a304bf2",
       "semantic": null
     },
     "public/js/host.js": {
-      "ast": "c039ba9ee30f7ecf9c187906eb19d7d9",
+      "ast": "9a6369ad6a2f9399ed03169fadb5b46c",
       "semantic": null
     },
     "public/js/motion.js": {
@@ -89,7 +885,7 @@
       "semantic": null
     },
     "public/js/player.js": {
-      "ast": "ec3acdc6a271274f0309915601f7c39f",
+      "ast": "8c476d344f06477a819b3bdb31a9f548",
       "semantic": null
     },
     "public/js/sync.js": {
@@ -97,7 +893,7 @@
       "semantic": "3d9aa8d2aabb42cdc226c0dc852c93f2"
     },
     "public/js/tutorials.js": {
-      "ast": "5306e3f25f38cb25565ab94e4fecc22d",
+      "ast": "6c7c9ced571c31692ce1d340d82287a1",
       "semantic": null
     },
     "scripts/check.mjs": {
@@ -106,6 +902,10 @@
     },
     "scripts/graph-lock.mjs": {
       "ast": "43afb726a4cc1ae7db786249cc2e9b35",
+      "semantic": null
+    },
+    "scripts/scrape-flags.mjs": {
+      "ast": "3f84c9ef80a5c5d7dc2e43c7515611d3",
       "semantic": null
     },
     "scripts/security-assessment.mjs": {
@@ -117,7 +917,7 @@
       "semantic": null
     },
     "server/games.js": {
-      "ast": "276faed937e8ed59b08fd956df31f865",
+      "ast": "c56483b5be72c29cba745a4a84330137",
       "semantic": null
     },
     "server/index.js": {
@@ -125,7 +925,7 @@
       "semantic": "f9bcb5a92468425b887f7d6ed3da4eb4"
     },
     "server/room.js": {
-      "ast": "575bad64bffed73285d6349296a78025",
+      "ast": "3d3b1efd53393561dd4d488db44408be",
       "semantic": null
     },
     "server/sockets.js": {
@@ -158,6 +958,10 @@
     },
     "shared/feedback.js": {
       "ast": "8745e99e22bfa522869fdb002819b47d",
+      "semantic": null
+    },
+    "shared/flags.js": {
+      "ast": "0ebb50fa6e23ba16e5547ad5a6497607",
       "semantic": null
     },
     "shared/fractions.js": {
@@ -240,12 +1044,16 @@
       "ast": "45c19c26ff9c1f22a69fac6a3d7d718b",
       "semantic": null
     },
+    "test/flags.test.js": {
+      "ast": "e8c0998b49935667f20de0d466703778",
+      "semantic": null
+    },
     "test/fractions.test.js": {
       "ast": "7fc7bce4ee8d25ff71c3056be69f3555",
       "semantic": null
     },
     "test/harness.test.js": {
-      "ast": "d17afe93a93ce56957860b6deffe3f51",
+      "ast": "0cea552b39ec289b7527bbea710573dd",
       "semantic": null
     },
     "test/icebreaker.test.js": {
@@ -285,7 +1093,7 @@
       "semantic": null
     },
     "test/roster.test.js": {
-      "ast": "c701ab7634f98f2678abaddd28d33982",
+      "ast": "bdb3223ae53a6ab5a6e65918d63046dd",
       "semantic": null
     },
     "test/security.test.js": {
@@ -318,6 +1126,10 @@
     },
     "tests/e2e/feedback.spec.js": {
       "ast": "40629c39090de378457fc76e9735b3e4",
+      "semantic": null
+    },
+    "tests/e2e/flags-solo.spec.js": {
+      "ast": "0c15e0c8abaec13dfb200d5d7f5abd4b",
       "semantic": null
     }
   }

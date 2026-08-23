@@ -977,6 +977,17 @@ const TUTORIALS = {
         if (p > 0.65) text(g, 'keep mashing and you never see green', w / 2, h - 14, { size: 14, color: C.bad });
       } },
   ],
+  flags: [
+    { ok: true, dur: 3500, label: 'Tap the country that matches the flag', draw(g, w, h, p) {
+      box(g, 28, 24, w - 56, 82, '#1b6ca8');
+      text(g, 'FLAG', w / 2, 73, { size: 28, bold: true, color: '#fff' });
+      text(g, '8 country choices · 10 rounds', w / 2, 140, { size: 16, color: C.ink });
+    } },
+    { ok: false, dur: 3000, label: 'Do not stop after a wrong answer', draw(g, w, h, p) {
+      text(g, 'Wrong answers still advance', w / 2, 70, { size: 19, color: C.bad, bold: true });
+      text(g, 'finish all 10 rounds', w / 2, 115, { size: 18, color: C.warn });
+    } },
+  ],
 };
 
 // The practice round reuses the stopclock tutorial; typing sprint intro etc.

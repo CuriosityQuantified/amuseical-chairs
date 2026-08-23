@@ -61,6 +61,7 @@ const PAYLOADS = {
   fractions: (cd) => ({
     picks: cd.pairs.map((p) => (parseValue(p.left) > parseValue(p.right) ? 'left' : 'right')),
   }),
+  flags: (cd) => ({ choices: cd.rounds.map((round) => round.options.indexOf(round.options[0])) }),
   readroom: null,
   caption: null,
   icebreaker: null,

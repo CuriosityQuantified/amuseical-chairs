@@ -23,11 +23,11 @@ Open the player page and choose **Practice solo** to try any game without creati
 
 ## Games
 
-The current roster has 22 games across perception, timing, memory, attention, social play, language, motor control, and numerical reasoning.
+The current roster has 23 games across perception, timing, memory, attention, social play, language, motor control, and numerical reasoning.
 
 | Category | Games |
 |---|---|
-| Perceptual | RGB Color Match, Odd One Out, Bisect the Line, Proportion Sense, Trace the Shape |
+| Perceptual | RGB Color Match, Odd One Out, Bisect the Line, Proportion Sense, Trace the Shape, Flag Finder |
 | Numerical | Dots in the Jar, Fraction Face-Off |
 | Timing | Stop the Clock, Metronome Blackout |
 | Memory | Grid Flash, Vanishing Tray |
@@ -36,7 +36,7 @@ The current roster has 22 games across perception, timing, memory, attention, so
 | Language | Anagram Rush, Word Hunt |
 | Motor | Typing Sprint, Space Mash, Slingshot, Balance the Beam |
 
-Anagram Rush and Word Hunt are off by default. The other 20 games start enabled and can be switched off in the host lobby.
+Anagram Rush and Word Hunt are off by default. The other 21 games start enabled and can be switched off in the host lobby.
 
 Caption Battle and Icebreaker are multi-stage games built from the room's own submissions. Player-authored text is normalized server-side, displayed anonymously where appropriate, and can be removed from every screen by the host.
 
@@ -94,10 +94,14 @@ npm run test:e2e     # Playwright flows in Chromium
 npm run check        # source, roster, config, accessibility, and graph checks
 npm run graph        # refresh the committed AST knowledge graph
 npm run graph:report # show the graph's highest-connectivity nodes
+npm run flags:verify # verify the committed 197-row flag source snapshot and PNG assets offline
+npm run flags:update # scrape and replace the flag snapshot, manifest, and local assets
 npm run security:assess -- --target https://amuseical.com
 ```
 
 CI runs syntax/server smoke tests, graph freshness checks, the full suite on Node 20/22/24, Playwright, and a production dependency audit.
+
+Flag Finder data comes from [Flags of the World](https://www.countries-ofthe-world.com/flags-of-the-world.html). `npm run flags:update` uses `curl` to save the source table, exact country names, and 197 local PNG files. Gameplay and `npm run flags:verify` use only committed files and do not use the network.
 
 ## Security
 

@@ -1,0 +1,991 @@
+{
+  "source": "https://www.countries-ofthe-world.com/flags-of-the-world.html",
+  "count": 197,
+  "flags": [
+    {
+      "name": "Afghanistan",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Afghanistan.png",
+      "asset": "/assets/flags/8d850c5e60998f4d46ef.png"
+    },
+    {
+      "name": "Albania",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Albania.png",
+      "asset": "/assets/flags/90c2e990605a8ad0bec8.png"
+    },
+    {
+      "name": "Algeria",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Algeria.png",
+      "asset": "/assets/flags/3c778bd7f6549300d38b.png"
+    },
+    {
+      "name": "Andorra",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Andorra.png",
+      "asset": "/assets/flags/ceb42511191e1b692108.png"
+    },
+    {
+      "name": "Angola",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Angola.png",
+      "asset": "/assets/flags/c9fa107593689399b560.png"
+    },
+    {
+      "name": "Antigua and Barbuda",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Antigua.png",
+      "asset": "/assets/flags/f8967cdbe6cdf807c674.png"
+    },
+    {
+      "name": "Argentina",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Argentina.png",
+      "asset": "/assets/flags/f4472bab5f9b26ed0499.png"
+    },
+    {
+      "name": "Armenia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Armenia.png",
+      "asset": "/assets/flags/e01e65a5de9db2992b9e.png"
+    },
+    {
+      "name": "Australia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Australia.png",
+      "asset": "/assets/flags/8f8c0c7f8934cbc2536d.png"
+    },
+    {
+      "name": "Austria",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Austria.png",
+      "asset": "/assets/flags/e5a6adf2369ab2eed0eb.png"
+    },
+    {
+      "name": "Azerbaijan",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Azerbaijan.png",
+      "asset": "/assets/flags/a07558c660be68291b8d.png"
+    },
+    {
+      "name": "Bahamas",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Bahamas.png",
+      "asset": "/assets/flags/ed17dd32cf71f4f7933e.png"
+    },
+    {
+      "name": "Bahrain",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Bahrain.png",
+      "asset": "/assets/flags/411e17769bd618eee82f.png"
+    },
+    {
+      "name": "Bangladesh",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Bangladesh.png",
+      "asset": "/assets/flags/62aab82bf78ddf22979d.png"
+    },
+    {
+      "name": "Barbados",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Barbados.png",
+      "asset": "/assets/flags/f99233f206a31f0a2a89.png"
+    },
+    {
+      "name": "Belarus",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Belarus.png",
+      "asset": "/assets/flags/39a9cc217206cc701106.png"
+    },
+    {
+      "name": "Belgium",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Belgium.png",
+      "asset": "/assets/flags/bc808702ae506b1c6ec3.png"
+    },
+    {
+      "name": "Belize",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Belize.png",
+      "asset": "/assets/flags/86a86475e6859054025c.png"
+    },
+    {
+      "name": "Benin",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Benin.png",
+      "asset": "/assets/flags/3e60e5422f0aff941087.png"
+    },
+    {
+      "name": "Bhutan",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Bhutan.png",
+      "asset": "/assets/flags/26044383cbc54b8df177.png"
+    },
+    {
+      "name": "Bolivia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Bolivia.png",
+      "asset": "/assets/flags/7cf2aba7ee8d0c4f7bde.png"
+    },
+    {
+      "name": "Bosnia and Herzegovina",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Bosnia-Herzegovina.png",
+      "asset": "/assets/flags/9e65657335c8a38c635b.png"
+    },
+    {
+      "name": "Botswana",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Botswana.png",
+      "asset": "/assets/flags/6cef8d1ceff2196935ac.png"
+    },
+    {
+      "name": "Brazil",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Brazil.png",
+      "asset": "/assets/flags/22f7dad161aa7781007d.png"
+    },
+    {
+      "name": "Brunei",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Brunei.png",
+      "asset": "/assets/flags/d7df14cc40aa248e20aa.png"
+    },
+    {
+      "name": "Bulgaria",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Bulgaria.png",
+      "asset": "/assets/flags/65d6cd0f25449edec97a.png"
+    },
+    {
+      "name": "Burkina Faso",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Burkina-Faso.png",
+      "asset": "/assets/flags/1b66b537ba5319ccd287.png"
+    },
+    {
+      "name": "Burundi",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Burundi.png",
+      "asset": "/assets/flags/1e3d7ec9bf184a38d68c.png"
+    },
+    {
+      "name": "Cabo Verde",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Cabo-Verde.png",
+      "asset": "/assets/flags/b327ee92c6803d03c1d5.png"
+    },
+    {
+      "name": "Cambodia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Cambodia.png",
+      "asset": "/assets/flags/1c63fc0b8b05a92712f1.png"
+    },
+    {
+      "name": "Cameroon",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Cameroon.png",
+      "asset": "/assets/flags/0cfb4832d79c297c84ce.png"
+    },
+    {
+      "name": "Canada",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Canada.png",
+      "asset": "/assets/flags/5af1e64fd15e81ea4d50.png"
+    },
+    {
+      "name": "Central African Republic",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Central-African-Republic.png",
+      "asset": "/assets/flags/2b662f3c755cce391364.png"
+    },
+    {
+      "name": "Chad",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Chad.png",
+      "asset": "/assets/flags/026a773c26d18f215d23.png"
+    },
+    {
+      "name": "Chile",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Chile.png",
+      "asset": "/assets/flags/81f6e99e7f983ad84284.png"
+    },
+    {
+      "name": "China",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-China.png",
+      "asset": "/assets/flags/bd633b5b8fb8c033add3.png"
+    },
+    {
+      "name": "Colombia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Colombia.png",
+      "asset": "/assets/flags/e9b7189cabb046f537d8.png"
+    },
+    {
+      "name": "Comoros",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Comoros.png",
+      "asset": "/assets/flags/263b29f42714a779d2a1.png"
+    },
+    {
+      "name": "Congo, Democratic Republic of the",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Congo-Democratic-Republic-of.png",
+      "asset": "/assets/flags/a19961c0e91a5e6dbb67.png"
+    },
+    {
+      "name": "Congo, Republic of the",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Congo.png",
+      "asset": "/assets/flags/afb517e4a234a15ce97b.png"
+    },
+    {
+      "name": "Costa Rica",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Costa-Rica.png",
+      "asset": "/assets/flags/b2d3e2109e38b952ace7.png"
+    },
+    {
+      "name": "Cote d'Ivoire",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Cote-d-Ivoire.png",
+      "asset": "/assets/flags/58ff0c85f2f41fd0ce03.png"
+    },
+    {
+      "name": "Croatia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Croatia.png",
+      "asset": "/assets/flags/88a10d351342fdf794e6.png"
+    },
+    {
+      "name": "Cuba",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Cuba.png",
+      "asset": "/assets/flags/a3486761744c1abd5682.png"
+    },
+    {
+      "name": "Cyprus",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Cyprus.png",
+      "asset": "/assets/flags/3c6f42af9ec50d99783e.png"
+    },
+    {
+      "name": "Czechia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Czech-Republic.png",
+      "asset": "/assets/flags/8e6d39d5c7363bfb62b1.png"
+    },
+    {
+      "name": "Denmark",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Denmark.png",
+      "asset": "/assets/flags/a20049178e6884428467.png"
+    },
+    {
+      "name": "Djibouti",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Djibouti.png",
+      "asset": "/assets/flags/cbf15eb781f53b80e005.png"
+    },
+    {
+      "name": "Dominica",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Dominica.png",
+      "asset": "/assets/flags/c2d42a9f618e90235b2c.png"
+    },
+    {
+      "name": "Dominican Republic",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Dominican-Republic.png",
+      "asset": "/assets/flags/f3c40dbe2f4a7a73652a.png"
+    },
+    {
+      "name": "Ecuador",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Ecuador.png",
+      "asset": "/assets/flags/8812aa21da8dcf551f79.png"
+    },
+    {
+      "name": "Egypt",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Egypt.png",
+      "asset": "/assets/flags/a893c864f8676ade6d94.png"
+    },
+    {
+      "name": "El Salvador",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-El-Salvador.png",
+      "asset": "/assets/flags/2afe3b3be6d02ebd04cb.png"
+    },
+    {
+      "name": "Equatorial Guinea",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Equatorial-Guinea.png",
+      "asset": "/assets/flags/d0861c49f35ac03fd497.png"
+    },
+    {
+      "name": "Eritrea",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Eritrea.png",
+      "asset": "/assets/flags/6f2de2a1562641830d47.png"
+    },
+    {
+      "name": "Estonia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Estonia.png",
+      "asset": "/assets/flags/44d6efb820dfdf7cef1b.png"
+    },
+    {
+      "name": "Eswatini",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Eswatini.png",
+      "asset": "/assets/flags/54291d819bf43fdb59ca.png"
+    },
+    {
+      "name": "Ethiopia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Ethiopia.png",
+      "asset": "/assets/flags/7df2bdfcb466cb9a38af.png"
+    },
+    {
+      "name": "Fiji",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Fiji.png",
+      "asset": "/assets/flags/070382a83e1f10ebeb7b.png"
+    },
+    {
+      "name": "Finland",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Finland.png",
+      "asset": "/assets/flags/83b6d4bf30e76407b4ed.png"
+    },
+    {
+      "name": "France",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-France.png",
+      "asset": "/assets/flags/b51bb155ad7888a60f98.png"
+    },
+    {
+      "name": "Gabon",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Gabon.png",
+      "asset": "/assets/flags/48e0dfdd73ddca9286b3.png"
+    },
+    {
+      "name": "Gambia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Gambia.png",
+      "asset": "/assets/flags/c00068d49434abe17480.png"
+    },
+    {
+      "name": "Georgia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Georgia.png",
+      "asset": "/assets/flags/c65d31dea4c8b4459a07.png"
+    },
+    {
+      "name": "Germany",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Germany.png",
+      "asset": "/assets/flags/5c01d4309bed3aa7fd04.png"
+    },
+    {
+      "name": "Ghana",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Ghana.png",
+      "asset": "/assets/flags/79dd8373d9648c2dc1d0.png"
+    },
+    {
+      "name": "Greece",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Greece.png",
+      "asset": "/assets/flags/24069402e4665efb6769.png"
+    },
+    {
+      "name": "Grenada",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Grenada.png",
+      "asset": "/assets/flags/38960cc9a02a251b8da9.png"
+    },
+    {
+      "name": "Guatemala",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Guatemala.png",
+      "asset": "/assets/flags/56086c0e8fa9901123e7.png"
+    },
+    {
+      "name": "Guinea",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Guinea.png",
+      "asset": "/assets/flags/5786ba12470bff7adc59.png"
+    },
+    {
+      "name": "Guinea-Bissau",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Guinea-Bissau.png",
+      "asset": "/assets/flags/3ba03a593ae948c3e1d4.png"
+    },
+    {
+      "name": "Guyana",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Guyana.png",
+      "asset": "/assets/flags/1b9ba75a0796af6d2354.png"
+    },
+    {
+      "name": "Haiti",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Haiti.png",
+      "asset": "/assets/flags/e2f3f637986b920262c2.png"
+    },
+    {
+      "name": "Honduras",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Honduras.png",
+      "asset": "/assets/flags/7484d8281b6b2803ab58.png"
+    },
+    {
+      "name": "Hungary",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Hungary.png",
+      "asset": "/assets/flags/615317ecd76507279dc6.png"
+    },
+    {
+      "name": "Iceland",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Iceland.png",
+      "asset": "/assets/flags/34b81bc9bde1a6cb888b.png"
+    },
+    {
+      "name": "India",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-India.png",
+      "asset": "/assets/flags/24e246e73900f9fbc581.png"
+    },
+    {
+      "name": "Indonesia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Indonesia.png",
+      "asset": "/assets/flags/7ca5390a692791a19390.png"
+    },
+    {
+      "name": "Iran",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Iran.png",
+      "asset": "/assets/flags/856da86ee4545977d32e.png"
+    },
+    {
+      "name": "Iraq",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Iraq.png",
+      "asset": "/assets/flags/e0a640307bae8a8569a1.png"
+    },
+    {
+      "name": "Ireland",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Ireland.png",
+      "asset": "/assets/flags/f38eedf56de4a7452dc9.png"
+    },
+    {
+      "name": "Israel",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Israel.png",
+      "asset": "/assets/flags/43293f0235872e951aca.png"
+    },
+    {
+      "name": "Italy",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Italy.png",
+      "asset": "/assets/flags/2a2dc604ecabc01d8bc9.png"
+    },
+    {
+      "name": "Jamaica",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Jamaica.png",
+      "asset": "/assets/flags/c9bbb021f6c2f90b67df.png"
+    },
+    {
+      "name": "Japan",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Japan.png",
+      "asset": "/assets/flags/953ee2a713b364a765d4.png"
+    },
+    {
+      "name": "Jordan",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Jordan.png",
+      "asset": "/assets/flags/465ef95fc6909dd9b4b2.png"
+    },
+    {
+      "name": "Kazakhstan",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Kazakhstan.png",
+      "asset": "/assets/flags/935e1e129bf2ccd08de8.png"
+    },
+    {
+      "name": "Kenya",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Kenya.png",
+      "asset": "/assets/flags/baf689ac0d62bd6b45e1.png"
+    },
+    {
+      "name": "Kiribati",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Kiribati.png",
+      "asset": "/assets/flags/b07ceb10a86f20c05e77.png"
+    },
+    {
+      "name": "Kosovo",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Kosovo.png",
+      "asset": "/assets/flags/a80fff8b8b8feef01f54.png"
+    },
+    {
+      "name": "Kuwait",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Kuwait.png",
+      "asset": "/assets/flags/5b5468657c79c895238a.png"
+    },
+    {
+      "name": "Kyrgyzstan",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Kyrgyzstan.png",
+      "asset": "/assets/flags/d8cec28c9dab94be0a2f.png"
+    },
+    {
+      "name": "Laos",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Laos.png",
+      "asset": "/assets/flags/da27ab5f84e76a2583d3.png"
+    },
+    {
+      "name": "Latvia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Latvia.png",
+      "asset": "/assets/flags/7d8869a86d2e3315dcc5.png"
+    },
+    {
+      "name": "Lebanon",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Lebanon.png",
+      "asset": "/assets/flags/17d1281bef3800bbdb31.png"
+    },
+    {
+      "name": "Lesotho",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Lesotho.png",
+      "asset": "/assets/flags/0f0f55c8dbcb479ac77d.png"
+    },
+    {
+      "name": "Liberia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Liberia.png",
+      "asset": "/assets/flags/094556ae8a9d7b9ec950.png"
+    },
+    {
+      "name": "Libya",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Libya.png",
+      "asset": "/assets/flags/398ac0e4301a80013734.png"
+    },
+    {
+      "name": "Liechtenstein",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Liechtenstein.png",
+      "asset": "/assets/flags/14eca02ee802f5824eb7.png"
+    },
+    {
+      "name": "Lithuania",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Lithuania.png",
+      "asset": "/assets/flags/8a371b180578938146cb.png"
+    },
+    {
+      "name": "Luxembourg",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Luxembourg.png",
+      "asset": "/assets/flags/eb1bd9ac1568d20a8440.png"
+    },
+    {
+      "name": "Madagascar",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Madagascar.png",
+      "asset": "/assets/flags/b4985f33a93e2635ca74.png"
+    },
+    {
+      "name": "Malawi",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Malawi.png",
+      "asset": "/assets/flags/4585ea013d1a6f316db9.png"
+    },
+    {
+      "name": "Malaysia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Malaysia.png",
+      "asset": "/assets/flags/7ef0be4422fb3e6557a3.png"
+    },
+    {
+      "name": "Maldives",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Maldives.png",
+      "asset": "/assets/flags/e1c129302854a7bbb00b.png"
+    },
+    {
+      "name": "Mali",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Mali.png",
+      "asset": "/assets/flags/25746b544f0d52b5278b.png"
+    },
+    {
+      "name": "Malta",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Malta.png",
+      "asset": "/assets/flags/1c2f533cc8376440c514.png"
+    },
+    {
+      "name": "Marshall Islands",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Marshall-Islands.png",
+      "asset": "/assets/flags/269fd1d6ffba378e4051.png"
+    },
+    {
+      "name": "Mauritania",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Mauritania.png",
+      "asset": "/assets/flags/3919a39cceff1ebc1d0f.png"
+    },
+    {
+      "name": "Mauritius",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Mauritius.png",
+      "asset": "/assets/flags/b0fad60a5c622dec50d1.png"
+    },
+    {
+      "name": "Mexico",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Mexico.png",
+      "asset": "/assets/flags/b506eb4f1391d106bb47.png"
+    },
+    {
+      "name": "Micronesia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Micronesia.png",
+      "asset": "/assets/flags/131b6d4f8430dbd44010.png"
+    },
+    {
+      "name": "Moldova",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Moldova.png",
+      "asset": "/assets/flags/2e250d42d8140bfc08ef.png"
+    },
+    {
+      "name": "Monaco",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Monaco.png",
+      "asset": "/assets/flags/fdd6d9198fed8fa5dc98.png"
+    },
+    {
+      "name": "Mongolia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Mongolia.png",
+      "asset": "/assets/flags/c7c2c746441db5588318.png"
+    },
+    {
+      "name": "Montenegro",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Montenegro.png",
+      "asset": "/assets/flags/8e606d9a2412836f1998.png"
+    },
+    {
+      "name": "Morocco",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Morocco.png",
+      "asset": "/assets/flags/dd0af4e26c2cd1bef2b7.png"
+    },
+    {
+      "name": "Mozambique",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Mozambique.png",
+      "asset": "/assets/flags/b5ac4d32efe813b7fed2.png"
+    },
+    {
+      "name": "Myanmar",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Myanmar.png",
+      "asset": "/assets/flags/852acb9ed22cd9101b83.png"
+    },
+    {
+      "name": "Namibia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Namibia.png",
+      "asset": "/assets/flags/112a24cd23251cf6b278.png"
+    },
+    {
+      "name": "Nauru",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Nauru.png",
+      "asset": "/assets/flags/8853ebe296e1487b3a93.png"
+    },
+    {
+      "name": "Nepal",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Nepal.png",
+      "asset": "/assets/flags/d2fb081830e4073445b5.png"
+    },
+    {
+      "name": "Netherlands",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Netherlands.png",
+      "asset": "/assets/flags/5deafa2a2e5f8c83e1a3.png"
+    },
+    {
+      "name": "New Zealand",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-New-Zealand.png",
+      "asset": "/assets/flags/d2db99bfbf14040853d5.png"
+    },
+    {
+      "name": "Nicaragua",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Nicaragua.png",
+      "asset": "/assets/flags/f9ed5bd2f81a5334d777.png"
+    },
+    {
+      "name": "Niger",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Niger.png",
+      "asset": "/assets/flags/5d16692327ac097d9a5a.png"
+    },
+    {
+      "name": "Nigeria",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Nigeria.png",
+      "asset": "/assets/flags/04a5c1cb0544e256d1d9.png"
+    },
+    {
+      "name": "North Korea",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Korea-North.png",
+      "asset": "/assets/flags/870aa3313ae35e37b159.png"
+    },
+    {
+      "name": "North Macedonia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-North-Macedonia.png",
+      "asset": "/assets/flags/23b84d7e71949e36260f.png"
+    },
+    {
+      "name": "Norway",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Norway.png",
+      "asset": "/assets/flags/15c271f5ef41be77d545.png"
+    },
+    {
+      "name": "Oman",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Oman.png",
+      "asset": "/assets/flags/1c289531d156e3d4833b.png"
+    },
+    {
+      "name": "Pakistan",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Pakistan.png",
+      "asset": "/assets/flags/33fc87740ac943b3e598.png"
+    },
+    {
+      "name": "Palau",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Palau.png",
+      "asset": "/assets/flags/e6434c39eb2db1ed0585.png"
+    },
+    {
+      "name": "Palestine",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Palestine.png",
+      "asset": "/assets/flags/4ac27907358af54e4cef.png"
+    },
+    {
+      "name": "Panama",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Panama.png",
+      "asset": "/assets/flags/aa2843b894ea0a576972.png"
+    },
+    {
+      "name": "Papua New Guinea",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Papua-New-Guinea.png",
+      "asset": "/assets/flags/a6916701ad844910116b.png"
+    },
+    {
+      "name": "Paraguay",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Paraguay.png",
+      "asset": "/assets/flags/b7410a57c9edef1fa9da.png"
+    },
+    {
+      "name": "Peru",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Peru.png",
+      "asset": "/assets/flags/64cb93fbd087a7f6c650.png"
+    },
+    {
+      "name": "Philippines",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Philippines.png",
+      "asset": "/assets/flags/88fd3753ebf03b459acf.png"
+    },
+    {
+      "name": "Poland",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Poland.png",
+      "asset": "/assets/flags/93c69a536c9541600075.png"
+    },
+    {
+      "name": "Portugal",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Portugal.png",
+      "asset": "/assets/flags/ac62cf1209a3b44bc3c6.png"
+    },
+    {
+      "name": "Qatar",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Qatar.png",
+      "asset": "/assets/flags/ab4aaf6b787cd97bc55f.png"
+    },
+    {
+      "name": "Romania",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Romania.png",
+      "asset": "/assets/flags/35750ffc9d45e48db7a1.png"
+    },
+    {
+      "name": "Russia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Russia.png",
+      "asset": "/assets/flags/e725f9b30140fd2f88f6.png"
+    },
+    {
+      "name": "Rwanda",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Rwanda.png",
+      "asset": "/assets/flags/2439250ecd958159fbd4.png"
+    },
+    {
+      "name": "Saint Kitts and Nevis",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-St-Kitts-Nevis.png",
+      "asset": "/assets/flags/654965a390980e7d00c6.png"
+    },
+    {
+      "name": "Saint Lucia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-St-Lucia.png",
+      "asset": "/assets/flags/c15c659ba2999a41f25f.png"
+    },
+    {
+      "name": "Saint Vincent and the Grenadines",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-St-Vincent-the-Grenadines.png",
+      "asset": "/assets/flags/751dcf2a2df3aa260969.png"
+    },
+    {
+      "name": "Samoa",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Samoa.png",
+      "asset": "/assets/flags/cdfbad73ac28f208946b.png"
+    },
+    {
+      "name": "San Marino",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-San-Marino.png",
+      "asset": "/assets/flags/2dc499698d3a8d57cf35.png"
+    },
+    {
+      "name": "Sao Tome and Principe",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Sao-Tome-and-Principe.png",
+      "asset": "/assets/flags/b54fab3a74201a2504ff.png"
+    },
+    {
+      "name": "Saudi Arabia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Saudi-Arabia.png",
+      "asset": "/assets/flags/414f047e89e6ede48e0a.png"
+    },
+    {
+      "name": "Senegal",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Senegal.png",
+      "asset": "/assets/flags/42ce53043da24c650236.png"
+    },
+    {
+      "name": "Serbia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Serbia.png",
+      "asset": "/assets/flags/53e83669bf685ead3f0f.png"
+    },
+    {
+      "name": "Seychelles",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Seychelles.png",
+      "asset": "/assets/flags/36c9ced5f512ec3a77f1.png"
+    },
+    {
+      "name": "Sierra Leone",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Sierra-Leone.png",
+      "asset": "/assets/flags/dadf57a0fbe80adb7e2a.png"
+    },
+    {
+      "name": "Singapore",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Singapore.png",
+      "asset": "/assets/flags/fb7dfc38a9e7f3967b15.png"
+    },
+    {
+      "name": "Slovakia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Slovakia.png",
+      "asset": "/assets/flags/bc6f4ff6a091cc83ac63.png"
+    },
+    {
+      "name": "Slovenia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Slovenia.png",
+      "asset": "/assets/flags/95f72c9308a74a99b528.png"
+    },
+    {
+      "name": "Solomon Islands",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Solomon-Islands.png",
+      "asset": "/assets/flags/5919822805504aeb6b0b.png"
+    },
+    {
+      "name": "Somalia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Somalia.png",
+      "asset": "/assets/flags/194b61f35ae9a1252ee3.png"
+    },
+    {
+      "name": "South Africa",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-South-Africa.png",
+      "asset": "/assets/flags/1756355e48c04f71ad65.png"
+    },
+    {
+      "name": "South Korea",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Korea-South.png",
+      "asset": "/assets/flags/ad5388659e41d8bd8939.png"
+    },
+    {
+      "name": "South Sudan",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-South-Sudan.png",
+      "asset": "/assets/flags/e57357f14082a087c5eb.png"
+    },
+    {
+      "name": "Spain",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Spain.png",
+      "asset": "/assets/flags/f5192ce9f96d5cb6f5f7.png"
+    },
+    {
+      "name": "Sri Lanka",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Sri-Lanka.png",
+      "asset": "/assets/flags/3048edf7794e6c7915ab.png"
+    },
+    {
+      "name": "Sudan",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Sudan.png",
+      "asset": "/assets/flags/27336f98c2f091714723.png"
+    },
+    {
+      "name": "Suriname",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Suriname.png",
+      "asset": "/assets/flags/0288a72f81b5b5687e3f.png"
+    },
+    {
+      "name": "Sweden",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Sweden.png",
+      "asset": "/assets/flags/a84711820c598b69f452.png"
+    },
+    {
+      "name": "Switzerland",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Switzerland.png",
+      "asset": "/assets/flags/7a9ea9847ecbebd98329.png"
+    },
+    {
+      "name": "Syria",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Syria.png",
+      "asset": "/assets/flags/bb9f39fc1732cd9462b8.png"
+    },
+    {
+      "name": "Taiwan",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Taiwan.png",
+      "asset": "/assets/flags/5163a9c110ff8319ea36.png"
+    },
+    {
+      "name": "Tajikistan",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Tajikistan.png",
+      "asset": "/assets/flags/c37cd37d3616c7390e53.png"
+    },
+    {
+      "name": "Tanzania",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Tanzania.png",
+      "asset": "/assets/flags/17b44373380d64589283.png"
+    },
+    {
+      "name": "Thailand",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Thailand.png",
+      "asset": "/assets/flags/aac2a2c4c80bc1f51588.png"
+    },
+    {
+      "name": "Timor-Leste",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Timor-Leste.png",
+      "asset": "/assets/flags/cf7109a188c0745b75e2.png"
+    },
+    {
+      "name": "Togo",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Togo.png",
+      "asset": "/assets/flags/35c1429da03f731a1402.png"
+    },
+    {
+      "name": "Tonga",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Tonga.png",
+      "asset": "/assets/flags/3e8e13620106f1a3ea16.png"
+    },
+    {
+      "name": "Trinidad and Tobago",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Trinidad-and-Tobago.png",
+      "asset": "/assets/flags/9d73263691e9715c249d.png"
+    },
+    {
+      "name": "Tunisia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Tunisia.png",
+      "asset": "/assets/flags/a4ea63218a6db0c51d10.png"
+    },
+    {
+      "name": "Turkey",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Turkey.png",
+      "asset": "/assets/flags/3bfac7f2a31e7eaec5f8.png"
+    },
+    {
+      "name": "Turkmenistan",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Turkmenistan.png",
+      "asset": "/assets/flags/5fa3891892f4723592e9.png"
+    },
+    {
+      "name": "Tuvalu",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Tuvalu.png",
+      "asset": "/assets/flags/1a3abc96346b4fa0a42e.png"
+    },
+    {
+      "name": "Uganda",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Uganda.png",
+      "asset": "/assets/flags/db3f7c67491a34fcfcc1.png"
+    },
+    {
+      "name": "Ukraine",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Ukraine.png",
+      "asset": "/assets/flags/1db86fe2a0d868f1e58a.png"
+    },
+    {
+      "name": "United Arab Emirates",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-United-Arab-Emirates.png",
+      "asset": "/assets/flags/2fda2ec24644e83ff2fe.png"
+    },
+    {
+      "name": "United Kingdom",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-United-Kingdom.png",
+      "asset": "/assets/flags/d942765e0e6bf90b4479.png"
+    },
+    {
+      "name": "United States of America",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-United-States-of-America.png",
+      "asset": "/assets/flags/a814f745a8d3a306acc8.png"
+    },
+    {
+      "name": "Uruguay",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Uruguay.png",
+      "asset": "/assets/flags/cbdb3ea2ea4c9b141589.png"
+    },
+    {
+      "name": "Uzbekistan",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Uzbekistan.png",
+      "asset": "/assets/flags/9cabb9b35f41002b0ebe.png"
+    },
+    {
+      "name": "Vanuatu",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Vanuatu.png",
+      "asset": "/assets/flags/e5ab5b19890e4cf8813b.png"
+    },
+    {
+      "name": "Vatican City (Holy See)",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Vatican-City.png",
+      "asset": "/assets/flags/fe536e6c7aef54cf7a04.png"
+    },
+    {
+      "name": "Venezuela",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Venezuela.png",
+      "asset": "/assets/flags/e231961dcecd05501c8a.png"
+    },
+    {
+      "name": "Vietnam",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Vietnam.png",
+      "asset": "/assets/flags/0483118dbc71c083bc6c.png"
+    },
+    {
+      "name": "Yemen",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Yemen.png",
+      "asset": "/assets/flags/5e8b9e923f04da42936e.png"
+    },
+    {
+      "name": "Zambia",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Zambia.png",
+      "asset": "/assets/flags/e3b2b1bb9751cfe5e329.png"
+    },
+    {
+      "name": "Zimbabwe",
+      "sourceUrl": "https://www.countries-ofthe-world.com/flags-normal/flag-of-Zimbabwe.png",
+      "asset": "/assets/flags/c110f2382cee9ffda0a3.png"
+    }
+  ]
+}

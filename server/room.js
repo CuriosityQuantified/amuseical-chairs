@@ -31,7 +31,7 @@ import {
 // broadcast clientData), so the client must ask the server for its own turn
 // answer to show per-turn feedback (issue #48). The secret is stored on the
 // game stage as `secret.answers` (one entry per turn/round).
-const PER_TURN_SECRET = new Set(['anagram']);
+const PER_TURN_SECRET = new Set(['anagram', 'flags']);
 
 // Temporary competitive-integrity mitigation (Strix pentest 2026-08-22/23):
 // these games submit client-computed summary metrics that the server only
@@ -666,6 +666,7 @@ export class Room {
   }
 
   gamePayload(g, duration) {
+    const completion = COMPLETION_MODE.has(g.key);
     const dur = duration ?? this.stageDuration(g);
     return {
       gameNumber: this.queueIndex + 1,
@@ -674,13 +675,12 @@ export class Room {
       gameType: g.type,
       category: g.category,
       clientData: g.clientData,
-      duration: dur,
-      deadline: g.deadline ?? Date.now() + dur,
-      // Completion-mode games (cups) run to completion, not to a deadline: the
-      // client ignores the countdown/auto-submit and submits when the player
-      // finishes all levels. `duration`/`deadline` stay in the payload for
-      // shape compatibility but are not counted down.
-      completion: COMPLETION_MODE.has(g.key),
+      duration: completion ? null : dur,
+      deadline: completion ? null : (g.deadline ?? Date.now() + dur),
+      // Completion-mode games run until all players submit. The player hides
+      // the countdown, the server keeps a safety backstop, and the host can
+      // still advance a stalled room.
+      completion,
       // Multi-stage games label themselves the way the chairs rounds do.
       stage: g.stage || 1,
       totalStages: g.totalStages || 1,
@@ -1001,7 +1001,15 @@ export class Room {
       let scoringPayload = payload;
       if (PER_TURN_SECRET.has(g.key)) {
         const locked = this.lockedSolved(g, playerId);
-        if (locked) scoringPayload = { ...(payload && typeof payload === 'object' ? payload : {}), solved: locked };
+        if (locked) {
+          if (g.key === 'flags') {
+            const choices = Array.from({ length: g.secret.rounds.length }, () => -1);
+            for (const { index, word } of locked) choices[index] = g.secret.rounds[index].options.indexOf(word);
+            scoringPayload = { choices };
+          } else {
+            scoringPayload = { ...(payload && typeof payload === 'object' ? payload : {}), solved: locked };
+          }
+        }
       }
       const metric = computeMetric(g.key, scoringPayload, g.secret, g.clientData, this.config);
       if (metric != null) g.metrics.set(playerId, metric);

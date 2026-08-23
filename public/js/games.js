@@ -33,6 +33,7 @@ import {
   BALANCE_DT,
 } from '/shared/balance.js';
 import { FRACTIONS_PENALTY, parseValue } from '/shared/fractions.js';
+import { FLAGS_ROUNDS } from '/shared/flags.js';
 import {
   bisectFeedback,
   areaFeedback,
@@ -2227,5 +2228,45 @@ GameClients.fractions = {
       // ride along for the host's display line (formatRaw).
       collect: () => ({ picks, correct, wrong }),
     };
+  },
+};
+
+GameClients.flags = {
+  intro: 'Identify each country flag. Tap one of exactly eight names. Wrong answers still advance to the next flag.',
+  start(root, ctx) {
+    const rounds = Array.isArray(ctx.data.rounds) ? ctx.data.rounds.slice(0, FLAGS_ROUNDS) : [];
+    const choices = [];
+    let round = 0;
+    let locked = false;
+    const progress = h('div', { class: 'flags-progress' }, `Round 1 of ${FLAGS_ROUNDS}`);
+    const feedback = h('p', { class: 'trial-note center flags-feedback' }, 'Choose the country.');
+    const image = h('img', { class: 'flag-image', alt: 'Country flag' });
+    const grid = h('div', { class: 'flags-options' });
+    const render = () => {
+      if (round >= rounds.length) return;
+      const item = rounds[round];
+      progress.textContent = `Round ${round + 1} of ${FLAGS_ROUNDS}`;
+      image.src = item.image;
+      image.alt = `Flag for round ${round + 1}`;
+      feedback.textContent = 'Choose the country.';
+      grid.replaceChildren(...item.options.map((name, index) => h('button', { class: 'flag-option big', type: 'button', onclick: () => choose(index) }, name)));
+    };
+    const choose = async (index) => {
+      if (locked || round >= rounds.length) return;
+      locked = true;
+      choices.push(index);
+      [...grid.children].forEach((button, i) => { button.disabled = true; if (i === index) button.classList.add('selected'); });
+      let result = null;
+      try { result = await ctx.reveal(round, rounds[round].options[index]); } catch { /* feedback can degrade without stopping the game */ }
+      const selected = rounds[round].options[index];
+      const answer = result?.answer || 'answer unavailable';
+      let verdict = '';
+      if (answer !== 'answer unavailable') verdict = selected === answer ? ' · ✓ Correct' : ' · ✗ Incorrect';
+      feedback.textContent = `Selected: ${selected} · Correct: ${answer}${verdict}`;
+      setTimeout(() => { round++; locked = false; if (round === FLAGS_ROUNDS) ctx.submit({ choices: [...choices] }); else render(); }, 650);
+    };
+    root.append(progress, image, grid, feedback);
+    render();
+    return { collect: () => ({ choices: [...choices] }) };
   },
 };
