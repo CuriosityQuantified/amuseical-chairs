@@ -7,6 +7,10 @@ import { Room, makeRoomCode, pickHostEditableConfig } from './room.js';
 
 const MAX_EVENT_BYTES = 32 * 1024;
 const JOIN_FAILURE = 'Room or reconnect credential not found.';
+const ROOM_CREATE_EXHAUSTED = 'Too many rooms — try again shortly.';
+const ROOM_CREATE_WINDOW_MS = 60_000;
+const DEFAULT_ROOM_CREATE_LIMIT = 30; // per source address per window
+const DEFAULT_MAX_ROOMS = 1000;        // process-wide hard cap, fail closed
 
 
 function withinPayloadLimit(value) {
@@ -69,6 +73,35 @@ function failedJoinResponse(failedJoins, socket) {
     : { error: 'Too many failed joins — try again later.' };
 }
 
+// Room creation is budgeted per SOURCE ADDRESS (the immediate TCP peer), not
+// per socket: an attacker who opens fresh Socket.IO transports must not reset
+// the budget and mint unlimited in-memory rooms (Strix 2026-08-23, CWE-770,
+// HIGH). One bucket is shared across host:create and solo:create so parallel
+// transports cannot double the allowance. The tracker is bounded the same way
+// the failed-join tracker is: expired entries are pruned under pressure and a
+// hard cap stops address churn from growing the map without limit.
+function roomCreateAllowed(roomCreates, socket, limit, windowMs) {
+  const now = Date.now();
+  const key = crypto.createHash('sha256').update(clientAddress(socket)).digest('hex');
+  const recent = (roomCreates.get(key) || []).filter((at) => now - at < windowMs);
+  if (recent.length >= limit) {
+    roomCreates.set(key, recent);
+    return false;
+  }
+  recent.push(now);
+  roomCreates.set(key, recent);
+  if (roomCreates.size > 10_000) {
+    for (const [address, attempts] of roomCreates) {
+      if (!attempts.some((at) => now - at < windowMs)) roomCreates.delete(address);
+      if (roomCreates.size <= 8_000) break;
+    }
+  }
+  if (roomCreates.size > 12_000) {
+    roomCreates.clear();
+  }
+  return true;
+}
+
 function publicOrigin(socket) {
   const configured = String(process.env.APP_PUBLIC_ORIGIN || '').replace(/\/$/, '');
   if (configured) return configured;
@@ -90,11 +123,19 @@ function guarded(socket, event, { limit, windowMs = 60_000, ack = false }, handl
   };
 }
 
-export function attachSockets(io, { allowClientScoredCompetitive = false, allowInternalCreateConfig = false } = {}) {
+export function attachSockets(io, {
+  allowClientScoredCompetitive = false,
+  allowInternalCreateConfig = false,
+  maxRooms = DEFAULT_MAX_ROOMS,
+  roomCreateLimit = DEFAULT_ROOM_CREATE_LIMIT,
+} = {}) {
   const rooms = new Map();
   // Shared across sockets for this server instance so reconnecting does not
   // reset a source's failed-code budget; isolated across test/server instances.
   const failedJoins = new Map();
+  // Same sharing principle for room creation: one per-source bucket across
+  // host:create and solo:create, isolated per server instance.
+  const roomCreates = new Map();
 
   const destroyRoom = (room) => {
     room.destroy();
@@ -122,6 +163,12 @@ export function attachSockets(io, { allowClientScoredCompetitive = false, allowI
 
     socket.on('host:create', guarded(socket, 'host:create', { limit: 3, ack: true }, async (payload, cb) => {
       if (typeof cb !== 'function') return;
+      // Per-source budget and process-wide cap run BEFORE any Room allocation:
+      // fresh transports must not reset the budget, and the process fails
+      // closed before memory pressure (Strix 2026-08-23, CWE-770, HIGH).
+      if (rooms.size >= maxRooms || !roomCreateAllowed(roomCreates, socket, roomCreateLimit, ROOM_CREATE_WINDOW_MS)) {
+        return cb({ error: ROOM_CREATE_EXHAUSTED });
+      }
       try {
         let code;
         do { code = makeRoomCode(); } while (rooms.has(code));
@@ -214,6 +261,12 @@ export function attachSockets(io, { allowClientScoredCompetitive = false, allowI
     // private room and drives it (any game or the reaction round, unscored).
     socket.on('solo:create', guarded(socket, 'solo:create', { limit: 3, ack: true }, ({ name } = {}, cb) => {
       if (typeof cb !== 'function') return;
+      // Same per-source budget and process-wide cap as host:create — one
+      // shared bucket, so opening fresh transports or alternating events
+      // cannot bypass the room-creation throttle.
+      if (rooms.size >= maxRooms || !roomCreateAllowed(roomCreates, socket, roomCreateLimit, ROOM_CREATE_WINDOW_MS)) {
+        return cb({ error: ROOM_CREATE_EXHAUSTED });
+      }
       let code;
       do { code = makeRoomCode(); } while (rooms.has(code));
       const r = new Room(io, code, {}, destroyRoom, { allowClientScoredCompetitive });
