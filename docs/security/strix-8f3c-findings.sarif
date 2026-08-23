@@ -1,0 +1,420 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Strix",
+          "informationUri": "https://strix.ai",
+          "rules": [
+            {
+              "id": "CWE-602",
+              "name": "Competitive score forgery in hosted `cups` minigame",
+              "shortDescription": {
+                "text": "Competitive score forgery in hosted `cups` minigame"
+              },
+              "fullDescription": {
+                "text": "Hosted competitive rooms still queue **`cups`** even though the game exposes enough public state for a client to derive every correct answer and the server accepts a single final client-computed submission. A normal participant can submit a synthesized perfect payload immediately after the round starts and receive the maximum score without legitimately playing the minigame."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "text": "Hosted competitive rooms still queue **`cups`** even though the game exposes enough public state for a client to derive every correct answer and the server accepts a single final client-computed submission. A normal participant can submit a synthesized perfect payload immediately after the round starts and receive the maximum score without legitimately playing the minigame.\n\nA low-privilege player can deterministically win any hosted competitive **`cups`** round by forging a perfect final submission before the natural shuffle sequence finishes. This causes unauthorized leaderboard manipulation and score inflation in live rooms; in the validated two-player proof of concept, the cheater received **`5500 pts`** / **`1000`** normalized points while the honest player received **`0 pts`**.\n\n1. Add **`cups`** to `COMPETITIVE_CLIENT_SCORING_DISABLED` so hosted competitive sessions cannot queue it.\n2. Keep `startTest('cups')` and solo practice unchanged so the minigame remains available for local testing and unscored practice.\n3. Before re-enabling **`cups`** competitively, redesign scoring so the server derives results from authoritative interaction data instead of trusting a one-shot client summary payload.",
+                "markdown": "Hosted competitive rooms still queue **`cups`** even though the game exposes enough public state for a client to derive every correct answer and the server accepts a single final client-computed submission. A normal participant can submit a synthesized perfect payload immediately after the round starts and receive the maximum score without legitimately playing the minigame.\n\nA low-privilege player can deterministically win any hosted competitive **`cups`** round by forging a perfect final submission before the natural shuffle sequence finishes. This causes unauthorized leaderboard manipulation and score inflation in live rooms; in the validated two-player proof of concept, the cheater received **`5500 pts`** / **`1000`** normalized points while the honest player received **`0 pts`**.\n\n1. Add **`cups`** to `COMPETITIVE_CLIENT_SCORING_DISABLED` so hosted competitive sessions cannot queue it.\n2. Keep `startTest('cups')` and solo practice unchanged so the minigame remains available for local testing and unscored practice.\n3. Before re-enabling **`cups`** competitively, redesign scoring so the server derives results from authoritative interaction data instead of trusting a one-shot client summary payload."
+              },
+              "properties": {
+                "security-severity": "4.3",
+                "tags": [
+                  "security",
+                  "CWE-602",
+                  "stride:T",
+                  "stride:I"
+                ]
+              },
+              "helpUri": "https://cwe.mitre.org/data/definitions/602.html"
+            },
+            {
+              "id": "CWE-841",
+              "name": "Late-joining player can enter the musical-chairs finale and win the session",
+              "shortDescription": {
+                "text": "Late-joining player can enter the musical-chairs finale and win the session"
+              },
+              "fullDescription": {
+                "text": "The realtime room flow accepts a fresh **`player:join`** during the last queued competitive minigame. Because the musical-chairs finale then seeds participants from **all current room players**, the late entrant can skip the regular game, compete for the **3000-point** finale bonus, and still win the overall session."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "help": {
+                "text": "The realtime room flow accepts a fresh **`player:join`** during the last queued competitive minigame. Because the musical-chairs finale then seeds participants from **all current room players**, the late entrant can skip the regular game, compete for the **3000-point** finale bonus, and still win the overall session.\n\nAn unauthenticated participant who knows a valid room code can alter the integrity of a live session's final standings and winner selection. In the confirmed proof of concept, a player who joined only during the final queued minigame won the entire session with **3000** points, beating players who had participated from the start.\n\n1. Treat **fresh** joins and **reconnects** as different workflow states, and continue allowing reconnects for existing player identities at any phase.\n2. Reject any new player admission once the room has entered the **last queued competitive minigame**, because the next transition is the bonus musical-chairs finale.\n3. Keep the existing mid-session late-join behavior for earlier minigames only, where the newcomer can still legitimately play later regular games.\n4. Add regression coverage that proves a fresh join during the final queued minigame is rejected while a reconnect for an existing player still succeeds.\n5. Optionally enforce the same rule defensively when building the finale participant list so later workflow changes cannot reintroduce the condition.",
+                "markdown": "The realtime room flow accepts a fresh **`player:join`** during the last queued competitive minigame. Because the musical-chairs finale then seeds participants from **all current room players**, the late entrant can skip the regular game, compete for the **3000-point** finale bonus, and still win the overall session.\n\nAn unauthenticated participant who knows a valid room code can alter the integrity of a live session's final standings and winner selection. In the confirmed proof of concept, a player who joined only during the final queued minigame won the entire session with **3000** points, beating players who had participated from the start.\n\n1. Treat **fresh** joins and **reconnects** as different workflow states, and continue allowing reconnects for existing player identities at any phase.\n2. Reject any new player admission once the room has entered the **last queued competitive minigame**, because the next transition is the bonus musical-chairs finale.\n3. Keep the existing mid-session late-join behavior for earlier minigames only, where the newcomer can still legitimately play later regular games.\n4. Add regression coverage that proves a fresh join during the final queued minigame is rejected while a reconnect for an existing player still succeeds.\n5. Optionally enforce the same rule defensively when building the finale participant list so later workflow changes cannot reintroduce the condition."
+              },
+              "properties": {
+                "security-severity": "7.5",
+                "tags": [
+                  "security",
+                  "CWE-841",
+                  "stride:T",
+                  "stride:I"
+                ]
+              },
+              "helpUri": "https://cwe.mitre.org/data/definitions/841.html"
+            },
+            {
+              "id": "CWE-367",
+              "name": "Late forged redemption report can win musical-chairs rounds",
+              "shortDescription": {
+                "text": "Late forged redemption report can win musical-chairs rounds"
+              },
+              "fullDescription": {
+                "text": "A participant can submit a forged `redemption:report` **seconds after** the server’s `tGreen` and still claim a very low `rawMs`. The server marks the report `flagged`, but still preserves the forged `finalMs`, so the delayed attacker can outrank honest players and manipulate elimination order in the chairs finale."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "text": "A participant can submit a forged `redemption:report` **seconds after** the server’s `tGreen` and still claim a very low `rawMs`. The server marks the report `flagged`, but still preserves the forged `finalMs`, so the delayed attacker can outrank honest players and manipulate elimination order in the chairs finale.\n\nA low-privilege participant can **unauthorizedly alter tournament integrity** by eliminating honest players and surviving or winning the musical-chairs redemption round with a fabricated reaction time. This changes bonus placement points and can change the overall winner of the hosted session.\n\n1. Treat **late-arriving redemption claims** the same way as impossible early claims: once `receivedAt` is outside a server-defined arrival window derived from `tGreen`, the claimed `rawMs`, and conservative network slack, convert the result to a disqualified score instead of only setting `flagged`.\n2. Move the late-arrival decision into the central redemption scoring path so every consumer receives a canonical disqualified result rather than a separately flagged-but-still-ranked score.\n3. Preserve `flagged` for operator visibility, but set the stored score to a losing value such as `finalMs: 999999` and a disqualifying status.\n4. Add regression coverage for both the pure scorer and the room-level flow: one test for a delayed forged claim at the scoring layer, and one integration test that proves an honest report beats a late forged submission in `chairs_result`.",
+                "markdown": "A participant can submit a forged `redemption:report` **seconds after** the server’s `tGreen` and still claim a very low `rawMs`. The server marks the report `flagged`, but still preserves the forged `finalMs`, so the delayed attacker can outrank honest players and manipulate elimination order in the chairs finale.\n\nA low-privilege participant can **unauthorizedly alter tournament integrity** by eliminating honest players and surviving or winning the musical-chairs redemption round with a fabricated reaction time. This changes bonus placement points and can change the overall winner of the hosted session.\n\n1. Treat **late-arriving redemption claims** the same way as impossible early claims: once `receivedAt` is outside a server-defined arrival window derived from `tGreen`, the claimed `rawMs`, and conservative network slack, convert the result to a disqualified score instead of only setting `flagged`.\n2. Move the late-arrival decision into the central redemption scoring path so every consumer receives a canonical disqualified result rather than a separately flagged-but-still-ranked score.\n3. Preserve `flagged` for operator visibility, but set the stored score to a losing value such as `finalMs: 999999` and a disqualifying status.\n4. Add regression coverage for both the pure scorer and the room-level flow: one test for a delayed forged claim at the scoring layer, and one integration test that proves an honest report beats a late forged submission in `chairs_result`."
+              },
+              "properties": {
+                "security-severity": "6.5",
+                "tags": [
+                  "security",
+                  "CWE-367",
+                  "stride:T",
+                  "stride:I"
+                ]
+              },
+              "helpUri": "https://cwe.mitre.org/data/definitions/367.html"
+            }
+          ],
+          "version": "1.5.3"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CWE-602",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Competitive score forgery in hosted `cups` minigame\n\nHosted competitive rooms still queue **`cups`** even though the game exposes enough public state for a client to derive every correct answer and the server accepts a single final client-computed submission. A normal participant can submit a synthesized perfect payload immediately after the round starts and receive the maximum score without legitimately playing the minigame."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/room.js"
+                },
+                "region": {
+                  "startLine": 41,
+                  "endLine": 44,
+                  "snippet": {
+                    "text": "const COMPETITIVE_CLIENT_SCORING_DISABLED = new Set([\\n  'trace', 'stopclock', 'slingshot', 'balance',\\n  'oddoneout', 'typing', 'spacemash',\\n]);"
+                  }
+                }
+              },
+              "message": {
+                "text": "Block `cups` from hosted competitive sessions until scoring is server-authoritative"
+              }
+            },
+            {
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "/socket.io/",
+                  "kind": "endpoint"
+                }
+              ]
+            }
+          ],
+          "fixes": [
+            {
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "server/room.js"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "startLine": 41,
+                        "endLine": 44
+                      },
+                      "insertedContent": {
+                        "text": "const COMPETITIVE_CLIENT_SCORING_DISABLED = new Set([\\n  'trace', 'stopclock', 'slingshot', 'balance',\\n  'oddoneout', 'typing', 'spacemash', 'cups',\\n]);"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "description": {
+                "text": "1. Add **`cups`** to `COMPETITIVE_CLIENT_SCORING_DISABLED` so hosted competitive sessions cannot queue it.\n2. Keep `startTest('cups')` and solo practice unchanged so the minigame remains available for local testing and unscored practice.\n3. Before re-enabling **`cups`** competitively, redesign scoring so the server derives results from authoritative interaction data instead of trusting a one-shot client summary payload.",
+                "markdown": "1. Add **`cups`** to `COMPETITIVE_CLIENT_SCORING_DISABLED` so hosted competitive sessions cannot queue it.\n2. Keep `startTest('cups')` and solo practice unchanged so the minigame remains available for local testing and unscored practice.\n3. Before re-enabling **`cups`** competitively, redesign scoring so the server derives results from authoritative interaction data instead of trusting a one-shot client summary payload."
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "primaryLocationLineHash": "8dd05a11b6d962ed44f8bbccdaefeef8b94d96cde966e9d70b24ce8df59fb7cf"
+          },
+          "properties": {
+            "security-severity": "4.3",
+            "strix_vuln_class_hash": "dceef82e012d648b6ffca67b0c1234436b19d1ef6559276d2b7f1f5041ee5d7a",
+            "strix": {
+              "id": "vuln-0001",
+              "severity": "medium",
+              "cvss": 4.3,
+              "timestamp": "2026-08-23 03:20:39 UTC",
+              "target": "http://host.docker.internal:3123",
+              "endpoint": "/socket.io/",
+              "method": "WebSocket",
+              "cwe": "CWE-602",
+              "impact": "A low-privilege player can deterministically win any hosted competitive **`cups`** round by forging a perfect final submission before the natural shuffle sequence finishes. This causes unauthorized leaderboard manipulation and score inflation in live rooms; in the validated two-player proof of concept, the cheater received **`5500 pts`** / **`1000`** normalized points while the honest player received **`0 pts`**.",
+              "technical_analysis": "The competitive-room guard in `server/room.js` does not disable **`cups`**, so hosted sessions can still queue a minigame whose scoring is fully client-derivable.\n\n```javascript title=server/room.js startLineNumber=41 endLineNumber=50\nconst COMPETITIVE_CLIENT_SCORING_DISABLED = new Set([\n  'trace', 'stopclock', 'slingshot', 'balance',\n  'oddoneout', 'typing', 'spacemash',\n]);\n\nfunction clientScoredGameAllowed(room, key) {\n  return room.solo || room.allowClientScoredCompetitive || !COMPETITIVE_CLIENT_SCORING_DISABLED.has(key);\n}\n```\n\nWhen **`cups`** is built, the server sends a public `seed`, `maxLevels`, and `baseCups` to every player. No server-only secret is retained for answer validation.\n\n```javascript title=server/games.js startLineNumber=361 endLineNumber=378\ncase 'cups': {\n  return {\n    clientData: {\n      seed: `cups-${Math.floor(rng() * 1e9)}`,\n      maxLevels: CUPS_MAX_LEVELS,\n      baseCups: CUPS_BASE_CUPS,\n    },\n    secret: {},\n  };\n}\n```\n\nThe shared implementation in `shared/cups.js` deterministically derives the correct `ball` location for every level from that public seed.\n\n```javascript title=shared/cups.js startLineNumber=58 endLineNumber=85\nexport function cupsLevel(seed, level, { baseCups = CUPS_BASE_CUPS, maxCups = CUPS_MAX_CUPS } = {}) {\n  const n = Math.max(1, Math.floor(level));\n  const rng = seededRng(`${seed}:lvl${n}`);\n  const cups = cupsCount(n, baseCups, maxCups);\n  const swapCount = 2 + n;\n  const swapMs = cupsSwapMs(n);\n  const allPairs = pairsFor(cups);\n\n  const start = randInt(rng, 0, cups - 1);\n  const swaps = [];\n  let ball = start;\n  let prev = null;\n  for (let i = 0; i < swapCount; i++) {\n    const choices = prev ? allPairs.filter((p) => !(p.a === prev.a && p.b === prev.b)) : allPairs;\n    const swap = choices[randInt(rng, 0, choices.length - 1)];\n    swaps.push(swap);\n    if (ball === swap.a) ball = swap.b;\n    else if (ball === swap.b) ball = swap.a;\n    prev = swap;\n  }\n\n  return { level: n, cups, start, swaps, swapMs, ball, shuffleMs: swaps.length * swapMs };\n}\n```\n\nAt submission time, `Room.handleSubmit()` stores the client payload and immediately scores it with `computeMetric('cups')` without requiring authoritative per-level interaction data. The cups scorer accepts a one-shot `payload.picks` array and awards **`100 * level`** for each correct forged entry.\n\n```javascript title=server/room.js startLineNumber=954 endLineNumber=978\nhandleSubmit(playerId, payload) {\n  if (this.phase !== 'minigame') return;\n  const p = this.players.get(playerId);\n  if (!p) return;\n  const g = this.round.games[this.round.gameIndex];\n  if (!g || g.submissions.has(playerId)) return;\n  g.submissions.set(playerId, payload ?? {});\n  if (!NEEDS_AGGREGATION.has(g.key)) {\n    let scoringPayload = payload;\n    if (PER_TURN_SECRET.has(g.key)) {\n      const locked = this.lockedSolved(g, playerId);\n      if (locked) scoringPayload = { ...(payload && typeof payload === 'object' ? payload : {}), solved: locked };\n    }\n    const metric = computeMetric(g.key, scoringPayload, g.secret, g.clientData, this.config);\n    if (metric != null) g.metrics.set(playerId, metric);\n  }\n  const total = this.players.size;\n  const submitted = g.submissions.size;\n  this.emitAll('host:progress', { submitted, total });\n  this.emitPlayer(playerId, 'submit:ack', { gameIndex: this.round.gameIndex });\n  if (submitted >= total) this.closeGame(g.token);\n}\n```\n\n```javascript title=server/games.js startLineNumber=799 endLineNumber=828\ncase 'cups': {\n  if (!Array.isArray(payload.picks)) return null;\n  const { seed, maxLevels, baseCups } = clientData;\n  let score = 0;\n  const n = Math.min(payload.picks.length, maxLevels);\n  for (let i = 0; i < n; i++) {\n    const level = i + 1;\n    const entry = payload.picks[i];\n    if (!entry || typeof entry !== 'object') continue;\n    if (entry.level !== level) continue;\n    const plan = cupsLevel(seed, level, { baseCups });\n    const idx = entry.cupIndex;\n    if (!Number.isInteger(idx) || idx < 0 || idx >= plan.cups) continue;\n    if (idx === plan.ball) score += 100 * level;\n  }\n  return score;\n}\n```\n\nBecause the server already tells the client everything required to compute `plan.ball`, a malicious player can emit a perfect final payload immediately after the `phase` event and beat the intended **`18336ms`** human-visible shuffle sequence by several orders of magnitude.",
+              "remediation_steps": "1. Add **`cups`** to `COMPETITIVE_CLIENT_SCORING_DISABLED` so hosted competitive sessions cannot queue it.\n2. Keep `startTest('cups')` and solo practice unchanged so the minigame remains available for local testing and unscored practice.\n3. Before re-enabling **`cups`** competitively, redesign scoring so the server derives results from authoritative interaction data instead of trusting a one-shot client summary payload.",
+              "poc": {
+                "description": "1. Connect three Socket.IO clients to the application: one host, one attacker, and one honest player.\n2. Create a hosted room, configure the room so only **`cups`** is enabled, and join both players.\n3. Start the room and wait for the attacker to receive the `phase` event for the **`cups`** minigame.\n4. Read `clientData.seed`, `clientData.maxLevels`, and `clientData.baseCups` from that event.\n5. For each level from `1` to `maxLevels`, derive the correct final cup with the same `cupsLevel(seed, level, clientData)` logic used by the application and build `payload.picks` as `[{ level, cupIndex: plan.ball }, ...]`.\n6. Immediately emit `player:submit` with the synthesized payload, without waiting for the level shuffles to complete.\n7. Submit intentionally wrong picks for the honest player to show contrast.\n8. Observe that the server acknowledges the forged submission within a few milliseconds and awards the attacker the maximum **`5500 pts`** / **`1000`** normalized points.",
+                "script_available": true
+              }
+            }
+          }
+        },
+        {
+          "ruleId": "CWE-841",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "Late-joining player can enter the musical-chairs finale and win the session\n\nThe realtime room flow accepts a fresh **`player:join`** during the last queued competitive minigame. Because the musical-chairs finale then seeds participants from **all current room players**, the late entrant can skip the regular game, compete for the **3000-point** finale bonus, and still win the overall session."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/room.js"
+                },
+                "region": {
+                  "startLine": 389,
+                  "endLine": 396,
+                  "snippet": {
+                    "text": "if (this.phase !== 'lobby' && this.phase !== 'minigame') {\n      // Fresh players may join during the lobby or an active minigame (the\n      // issue #54 late-join feature: they score 0 for missed games and play\n      // the rest). Joining once the queue is exhausted — scores, the chairs\n      // finale, redemption, or the winner reveal — would let a stranger sit\n      // into the finale and change the outcome (Strix re-scan 2026-08-23).\n      return { error: 'Room is no longer accepting new players.' };\n    }"
+                  }
+                }
+              },
+              "message": {
+                "text": "Reject fresh joins once the current minigame is the last queued competitive game"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/room.js"
+                },
+                "region": {
+                  "startLine": 1135,
+                  "endLine": 1143,
+                  "snippet": {
+                    "text": "startChairsFinale() {\n    this.round = null;\n    const ids = [...this.players.keys()];\n    this.chairs = {\n      active: ids,              // still holding a chair\n      eliminated: [],           // elimination order: first out first\n      totalRounds: Math.max(1, ids.length - 1),\n      round: 0,\n    };"
+                  }
+                }
+              },
+              "message": {
+                "text": "Bonus finale currently seeds participants from all current room players"
+              }
+            },
+            {
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "/socket.io/",
+                  "kind": "endpoint"
+                }
+              ]
+            }
+          ],
+          "fixes": [
+            {
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "server/room.js"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "startLine": 389,
+                        "endLine": 396
+                      },
+                      "insertedContent": {
+                        "text": "const joiningDuringFinalQueuedMinigame = this.phase === 'minigame'\n      && !this.round?.test\n      && this.queue.length > 0\n      && this.queueIndex >= this.queue.length - 1;\n    if ((this.phase !== 'lobby' && this.phase !== 'minigame') || joiningDuringFinalQueuedMinigame) {\n      // Fresh players may join during the lobby or an active minigame, except\n      // once the room is already in its final queued competitive game. A new\n      // identity admitted that late can skip the regular session, enter the\n      // 3000-point chairs finale, and change the overall winner.\n      return { error: 'Room is no longer accepting new players.' };\n    }"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "description": {
+                "text": "1. Treat **fresh** joins and **reconnects** as different workflow states, and continue allowing reconnects for existing player identities at any phase.\n2. Reject any new player admission once the room has entered the **last queued competitive minigame**, because the next transition is the bonus musical-chairs finale.\n3. Keep the existing mid-session late-join behavior for earlier minigames only, where the newcomer can still legitimately play later regular games.\n4. Add regression coverage that proves a fresh join during the final queued minigame is rejected while a reconnect for an existing player still succeeds.\n5. Optionally enforce the same rule defensively when building the finale participant list so later workflow changes cannot reintroduce the condition.",
+                "markdown": "1. Treat **fresh** joins and **reconnects** as different workflow states, and continue allowing reconnects for existing player identities at any phase.\n2. Reject any new player admission once the room has entered the **last queued competitive minigame**, because the next transition is the bonus musical-chairs finale.\n3. Keep the existing mid-session late-join behavior for earlier minigames only, where the newcomer can still legitimately play later regular games.\n4. Add regression coverage that proves a fresh join during the final queued minigame is rejected while a reconnect for an existing player still succeeds.\n5. Optionally enforce the same rule defensively when building the finale participant list so later workflow changes cannot reintroduce the condition."
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "primaryLocationLineHash": "d1960a79033e2f11e0f2d0972274912415e0a696734bf148479ee5cb52cd0dd7"
+          },
+          "properties": {
+            "security-severity": "7.5",
+            "strix_vuln_class_hash": "cba7b29845f598a7d6899d81b19ded071f171c5060cdb405b7be195bcd957ced",
+            "strix": {
+              "id": "vuln-0002",
+              "severity": "high",
+              "cvss": 7.5,
+              "timestamp": "2026-08-23 03:22:30 UTC",
+              "target": "http://host.docker.internal:3123",
+              "endpoint": "/socket.io/",
+              "cwe": "CWE-841",
+              "impact": "An unauthenticated participant who knows a valid room code can alter the integrity of a live session's final standings and winner selection. In the confirmed proof of concept, a player who joined only during the final queued minigame won the entire session with **3000** points, beating players who had participated from the start.",
+              "technical_analysis": "`Room.join(...)` distinguishes reconnects from fresh joins, but once a join is treated as **new** it permits admission during any `minigame` phase:\n\n```javascript title=server/room.js startLineNumber=389 endLineNumber=396\nif (this.phase !== 'lobby' && this.phase !== 'minigame') {\n  // Fresh players may join during the lobby or an active minigame (the\n  // issue #54 late-join feature: they score 0 for missed games and play\n  // the rest). Joining once the queue is exhausted — scores, the chairs\n  // finale, redemption, or the winner reveal — would let a stranger sit\n  // into the finale and change the outcome (Strix re-scan 2026-08-23).\n  return { error: 'Room is no longer accepting new players.' };\n}\n```\n\nA fresh mid-game join is immediately promoted to a full player and back-filled into `totals` with `0`:\n\n```javascript title=server/room.js startLineNumber=413 endLineNumber=418\nthis.players.set(p.id, p);\n// Late join (issue #54): a player admitted after the lobby is a full\n// player, not a spectator. Seed a 0 total so scoreGame/leaderboard show\n// an explicit zero row for the games they missed (each missed game\n// already scores 0 for non-submitters, so cumulative back-fill is 0).\nif (this.phase !== 'lobby') this.totals.set(p.id, 0);\n```\n\nWhen the host advances past the last regular game, `startChairsFinale()` seeds the bonus finale from **all current room players**, not only those who were eligible before that last minigame began:\n\n```javascript title=server/room.js startLineNumber=1135 endLineNumber=1143\nstartChairsFinale() {\n  this.round = null;\n  const ids = [...this.players.keys()];\n  this.chairs = {\n    active: ids,\n    eliminated: [],\n    totalRounds: Math.max(1, ids.length - 1),\n    round: 0,\n  };\n}\n```\n\nThis creates a workflow boundary failure in the last queued game of a session:\n\n- the late entrant misses the regular competitive game,\n- is still added to the authoritative player set,\n- is carried directly into the musical-chairs finale, and\n- can overtake the room via the finale's **3000-point** bonus structure.\n\nThe flaw is therefore not a rendering issue or client-side inconsistency; it is a server-side realtime state-transition bug that lets a newcomer enter a protected end-of-session scoring stage and change the final winner.",
+              "remediation_steps": "1. Treat **fresh** joins and **reconnects** as different workflow states, and continue allowing reconnects for existing player identities at any phase.\n2. Reject any new player admission once the room has entered the **last queued competitive minigame**, because the next transition is the bonus musical-chairs finale.\n3. Keep the existing mid-session late-join behavior for earlier minigames only, where the newcomer can still legitimately play later regular games.\n4. Add regression coverage that proves a fresh join during the final queued minigame is rejected while a reconnect for an existing player still succeeds.\n5. Optionally enforce the same rule defensively when building the finale participant list so later workflow changes cannot reintroduce the condition.",
+              "poc": {
+                "description": "1. Create a room with exactly **one** enabled competitive game so the first minigame is also the last regular queued game before musical chairs.\n2. Join two normal players and start the session as the host.\n3. Advance the room until the competitive game is in the **`minigame`** phase.\n4. From a fresh third socket, call **`player:join`** with the room code during that minigame.\n5. Let the host close the minigame and advance into the musical-chairs finale.\n6. Observe that the late entrant is included in the first **`redemption`** phase for chairs.\n7. Submit faster `redemption:report` times for the late entrant than for the original players.\n8. Advance the host through both chairs rounds and observe that the late entrant is declared the overall session winner.",
+                "script_available": true
+              }
+            }
+          }
+        },
+        {
+          "ruleId": "CWE-367",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Late forged redemption report can win musical-chairs rounds\n\nA participant can submit a forged `redemption:report` **seconds after** the server’s `tGreen` and still claim a very low `rawMs`. The server marks the report `flagged`, but still preserves the forged `finalMs`, so the delayed attacker can outrank honest players and manipulate elimination order in the chairs finale."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "shared/redemption-core.js"
+                },
+                "region": {
+                  "startLine": 98,
+                  "endLine": 132,
+                  "snippet": {
+                    "text": "export function scoreRedemptionReport(\n  report,\n  {\n    earlyPressPenalty = 0.1,\n    tGreen = null,\n    receivedAt = null,\n    earliestArrivalSlackMs = 0,\n  } = {},\n) {\n  if (!report || report.status === 'hardTimeout' || report.status == null) {\n    return { finalMs: 999999, rawMs: null, earlyPresses: report?.earlyPresses ?? 0, status: 'hardTimeout', flagged: false };\n  }\n  const early = Math.max(0, Math.floor(report.earlyPresses || 0));\n  if (report.status === 'postGreenTimeout') {\n    return { finalMs: 10000, rawMs: null, earlyPresses: early, status: 'postGreenTimeout', flagged: false };\n  }\n  const raw = Number(report.rawMs);\n  if (!Number.isFinite(raw) || raw < 0) {\n    return { finalMs: 999999, rawMs: null, earlyPresses: early, status: 'invalid', flagged: true };\n  }\n  if (raw < 100) {\n    // Below the human floor — macro or clock bug. Flag, don't crash.\n    return { finalMs: 999999, rawMs: raw, earlyPresses: early, status: 'tooFast', flagged: true };\n  }\n  if (Number.isFinite(tGreen) && Number.isFinite(receivedAt)) {\n    // Impossible timing: the report arrived before the green signal, or\n    // before the claimed reaction time could have physically elapsed (with a\n    // jitter-based slack so honest clients on imperfect sync are not burned).\n    // This is a disqualification, not a warning — the pre-green forgery from\n    // the Strix pentest (2026-08-22) must not be able to outrank honest play.\n    const slack = Math.max(0, Number(earliestArrivalSlackMs) || 0);\n    if (receivedAt < tGreen || receivedAt + slack < tGreen + raw) {\n      return { finalMs: 999999, rawMs: raw, earlyPresses: early, status: 'tooFast', flagged: true };\n    }\n  }"
+                  }
+                }
+              },
+              "message": {
+                "text": "Disqualify redemption reports that arrive outside the full server-side timing window"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/room.js"
+                },
+                "region": {
+                  "startLine": 1209,
+                  "endLine": 1224,
+                  "snippet": {
+                    "text": "const scored = scoreRedemptionReport(report, {\n  earlyPressPenalty: this.config.earlyPressPenalty,\n  tGreen: red.tGreen,\n  receivedAt,\n  // A player's clock-sync confidence bounds how much earlier than the\n  // claimed reaction the report may legitimately arrive (Strix 2026-08-22:\n  // pre-green reports must be disqualified, not just flagged).\n  earliestArrivalSlackMs: Math.max(25, Math.min(150, (p?.sync?.jitter ?? 0) + 25)),\n});\n// Server-side sanity: a clean (no-early-press) report should arrive\n// roughly rtt after T_green + reportedTime. Flag, don't crash.\nif (scored.status === 'ok' && scored.earlyPresses === 0) {\n  const rtt = p?.sync?.minRtt ?? 200;\n  const expected = red.tGreen + scored.rawMs + rtt + 1500;\n  if (receivedAt > expected + 1000) scored.flagged = true;\n}"
+                  }
+                }
+              },
+              "message": {
+                "text": "Pass a bounded late-arrival allowance and stop storing flagged-forged scores as valid results"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/room.js"
+                },
+                "region": {
+                  "startLine": 1237,
+                  "endLine": 1242,
+                  "snippet": {
+                    "text": "const results = red.participants.map((id, i) => {\n  const scored = red.reports.get(id) ||\n    { finalMs: 999999, rawMs: null, earlyPresses: 0, status: 'noReport', flagged: false };\n  return { id, name: this.players.get(id)?.name || '?', order: i, ...scored };\n});\nresults.sort((a, b) => a.finalMs - b.finalMs || a.order - b.order);"
+                  }
+                }
+              },
+              "message": {
+                "text": "Ranking sink sorts by `finalMs` even when the row is only marked `flagged`"
+              }
+            },
+            {
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "/socket.io/",
+                  "kind": "endpoint"
+                }
+              ]
+            }
+          ],
+          "fixes": [
+            {
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "shared/redemption-core.js"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "startLine": 98,
+                        "endLine": 132
+                      },
+                      "insertedContent": {
+                        "text": "export function scoreRedemptionReport(\n  report,\n  {\n    earlyPressPenalty = 0.1,\n    tGreen = null,\n    receivedAt = null,\n    earliestArrivalSlackMs = 0,\n    latestArrivalSlackMs = Number.POSITIVE_INFINITY,\n  } = {},\n) {\n  if (!report || report.status === 'hardTimeout' || report.status == null) {\n    return { finalMs: 999999, rawMs: null, earlyPresses: report?.earlyPresses ?? 0, status: 'hardTimeout', flagged: false };\n  }\n  const early = Math.max(0, Math.floor(report.earlyPresses || 0));\n  if (report.status === 'postGreenTimeout') {\n    return { finalMs: 10000, rawMs: null, earlyPresses: early, status: 'postGreenTimeout', flagged: false };\n  }\n  const raw = Number(report.rawMs);\n  if (!Number.isFinite(raw) || raw < 0) {\n    return { finalMs: 999999, rawMs: null, earlyPresses: early, status: 'invalid', flagged: true };\n  }\n  if (raw < 100) {\n    // Below the human floor — macro or clock bug. Flag, don't crash.\n    return { finalMs: 999999, rawMs: raw, earlyPresses: early, status: 'tooFast', flagged: true };\n  }\n  if (Number.isFinite(tGreen) && Number.isFinite(receivedAt)) {\n    // Impossible timing: the report arrived before the green signal, or\n    // before the claimed reaction time could have physically elapsed (with a\n    // jitter-based slack so honest clients on imperfect sync are not burned).\n    // This is a disqualification, not a warning — the pre-green forgery from\n    // the Strix pentest (2026-08-22) must not be able to outrank honest play.\n    const earliestSlack = Math.max(0, Number(earliestArrivalSlackMs) || 0);\n    if (receivedAt < tGreen || receivedAt + earliestSlack < tGreen + raw) {\n      return { finalMs: 999999, rawMs: raw, earlyPresses: early, status: 'tooFast', flagged: true };\n    }\n    const latestSlack = Number.isFinite(latestArrivalSlackMs)\n      ? Math.max(0, Number(latestArrivalSlackMs) || 0)\n      : Number.POSITIVE_INFINITY;\n    if (receivedAt > tGreen + raw + latestSlack) {\n      return { finalMs: 999999, rawMs: raw, earlyPresses: early, status: 'tooFast', flagged: true };\n    }\n  }"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "artifactLocation": {
+                    "uri": "server/room.js"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "startLine": 1209,
+                        "endLine": 1224
+                      },
+                      "insertedContent": {
+                        "text": "const scored = scoreRedemptionReport(report, {\n  earlyPressPenalty: this.config.earlyPressPenalty,\n  tGreen: red.tGreen,\n  receivedAt,\n  // A player's clock-sync confidence bounds how much earlier than the\n  // claimed reaction the report may legitimately arrive (Strix 2026-08-22:\n  // pre-green reports must be disqualified, not just flagged).\n  earliestArrivalSlackMs: Math.max(25, Math.min(150, (p?.sync?.jitter ?? 0) + 25)),\n  // Reports that arrive seconds after the claimed reaction window are\n  // not just suspicious; they are physically inconsistent with the\n  // reported raw time and must be disqualified before ranking.\n  latestArrivalSlackMs: Math.max(1500, Math.min(4000, (p?.sync?.minRtt ?? 200) + 2500)),\n});"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "description": {
+                "text": "1. Treat **late-arriving redemption claims** the same way as impossible early claims: once `receivedAt` is outside a server-defined arrival window derived from `tGreen`, the claimed `rawMs`, and conservative network slack, convert the result to a disqualified score instead of only setting `flagged`.\n2. Move the late-arrival decision into the central redemption scoring path so every consumer receives a canonical disqualified result rather than a separately flagged-but-still-ranked score.\n3. Preserve `flagged` for operator visibility, but set the stored score to a losing value such as `finalMs: 999999` and a disqualifying status.\n4. Add regression coverage for both the pure scorer and the room-level flow: one test for a delayed forged claim at the scoring layer, and one integration test that proves an honest report beats a late forged submission in `chairs_result`.",
+                "markdown": "1. Treat **late-arriving redemption claims** the same way as impossible early claims: once `receivedAt` is outside a server-defined arrival window derived from `tGreen`, the claimed `rawMs`, and conservative network slack, convert the result to a disqualified score instead of only setting `flagged`.\n2. Move the late-arrival decision into the central redemption scoring path so every consumer receives a canonical disqualified result rather than a separately flagged-but-still-ranked score.\n3. Preserve `flagged` for operator visibility, but set the stored score to a losing value such as `finalMs: 999999` and a disqualifying status.\n4. Add regression coverage for both the pure scorer and the room-level flow: one test for a delayed forged claim at the scoring layer, and one integration test that proves an honest report beats a late forged submission in `chairs_result`."
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "primaryLocationLineHash": "89fc6c5f70f467b0055fd32f34afbbf0669fe92d23a09eab49e4a13f5ecad6f3"
+          },
+          "properties": {
+            "security-severity": "6.5",
+            "strix_vuln_class_hash": "84ac9bada2949f16adc7c9f1358e95c7e447d9afa6de853fdecc43910dac152f",
+            "strix": {
+              "id": "vuln-0003",
+              "severity": "medium",
+              "cvss": 6.5,
+              "timestamp": "2026-08-23 03:34:10 UTC",
+              "target": "http://host.docker.internal:3123",
+              "endpoint": "/socket.io/",
+              "cwe": "CWE-367",
+              "impact": "A low-privilege participant can **unauthorizedly alter tournament integrity** by eliminating honest players and surviving or winning the musical-chairs redemption round with a fabricated reaction time. This changes bonus placement points and can change the overall winner of the hosted session.",
+              "technical_analysis": "The redemption scorer only disqualifies reports that are **too early** relative to `tGreen`, but it does not reject reports that arrive **far too late** for the claimed reaction time.\n\n```javascript title=shared/redemption-core.js startLineNumber=98 endLineNumber=132\nexport function scoreRedemptionReport(\n  report,\n  {\n    earlyPressPenalty = 0.1,\n    tGreen = null,\n    receivedAt = null,\n    earliestArrivalSlackMs = 0,\n  } = {},\n) {\n  ...\n  if (Number.isFinite(tGreen) && Number.isFinite(receivedAt)) {\n    const slack = Math.max(0, Number(earliestArrivalSlackMs) || 0);\n    if (receivedAt < tGreen || receivedAt + slack < tGreen + raw) {\n      return { finalMs: 999999, rawMs: raw, earlyPresses: early, status: 'tooFast', flagged: true };\n    }\n  }\n  return {\n    finalMs: raw * (1 + earlyPressPenalty * early),\n    rawMs: raw,\n    earlyPresses: early,\n    status: 'ok',\n    flagged: false,\n  };\n}\n```\n\n`handleRedemptionReport()` notices implausibly late arrivals, but only flips `flagged = true`; it does **not** disqualify them or replace the forged score:\n\n```javascript title=server/room.js startLineNumber=1209 endLineNumber=1224\nconst scored = scoreRedemptionReport(report, {\n  earlyPressPenalty: this.config.earlyPressPenalty,\n  tGreen: red.tGreen,\n  receivedAt,\n  earliestArrivalSlackMs: Math.max(25, Math.min(150, (p?.sync?.jitter ?? 0) + 25)),\n});\nif (scored.status === 'ok' && scored.earlyPresses === 0) {\n  const rtt = p?.sync?.minRtt ?? 200;\n  const expected = red.tGreen + scored.rawMs + rtt + 1500;\n  if (receivedAt > expected + 1000) scored.flagged = true;\n}\nred.reports.set(playerId, scored);\n```\n\nThe round resolver then sorts by `finalMs` alone, so a `flagged` forged score still wins:\n\n```javascript title=server/room.js startLineNumber=1237 endLineNumber=1242\nconst results = red.participants.map((id, i) => {\n  const scored = red.reports.get(id) ||\n    { finalMs: 999999, rawMs: null, earlyPresses: 0, status: 'noReport', flagged: false };\n  return { id, name: this.players.get(id)?.name || '?', order: i, ...scored };\n});\nresults.sort((a, b) => a.finalMs - b.finalMs || a.order - b.order);\n```\n\nThis creates a timing/TOCTOU-style integrity flaw: the server identifies that the claim is inconsistent with observed timing, but still uses the attacker-controlled score during ranking.",
+              "remediation_steps": "1. Treat **late-arriving redemption claims** the same way as impossible early claims: once `receivedAt` is outside a server-defined arrival window derived from `tGreen`, the claimed `rawMs`, and conservative network slack, convert the result to a disqualified score instead of only setting `flagged`.\n2. Move the late-arrival decision into the central redemption scoring path so every consumer receives a canonical disqualified result rather than a separately flagged-but-still-ranked score.\n3. Preserve `flagged` for operator visibility, but set the stored score to a losing value such as `finalMs: 999999` and a disqualifying status.\n4. Add regression coverage for both the pure scorer and the room-level flow: one test for a delayed forged claim at the scoring layer, and one integration test that proves an honest report beats a late forged submission in `chairs_result`.",
+              "poc": {
+                "description": "1. Create a hosted session with two participants and advance to the musical-chairs `redemption` phase.\n2. Wait for the server to emit `redemption:go` and record the server `tGreen` value.\n3. Have an honest player submit `redemption:report` shortly after green with a realistic `rawMs` such as `650`.\n4. Wait several seconds after `tGreen` and then have the attacker submit `redemption:report` with `status: \"ok\"`, `rawMs: 150`, and `earlyPresses: 0`.\n5. Observe that the attacker is marked `flagged: true` but still receives `finalMs: 150` and is ranked ahead of the honest player in `chairs_result`.\n6. Confirm that the honest player is eliminated even though the attacker’s claimed reaction time is incompatible with the actual arrival time.",
+                "script_available": true
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -43,6 +43,33 @@ const FAST = {
   postGreenTimeout: 800, hardTimeout: 1500, closeGraceMs: 200,
 };
 
+test('empty-room eviction is short before start and preserves the started-room reconnect grace', () => {
+  const retentionFor = ({ phase = 'lobby', solo = false, player = false } = {}) => {
+    const room = new Room(stubIo(), `E${phase[0]}${solo ? 'S' : 'H'}1`, FAST);
+    room.phase = phase;
+    room.solo = solo;
+    let scheduledMs = null;
+    room.setTimer = (name, _fn, ms) => {
+      if (name === 'empty') scheduledMs = ms;
+    };
+    if (player) {
+      addPlayer(room, 'p1', 'Player');
+      room.handleDisconnect({ id: 'sock-p1' });
+    } else {
+      room.hostSocketId = 'host-socket';
+      room.handleDisconnect({ id: 'host-socket' });
+    }
+    return scheduledMs;
+  };
+
+  assert.equal(retentionFor(), 2 * 60 * 1000,
+    'abandoned lobby host room is reclaimed after 2 minutes');
+  assert.equal(retentionFor({ solo: true, player: true }), 2 * 60 * 1000,
+    'abandoned never-started solo room is reclaimed after 2 minutes');
+  assert.equal(retentionFor({ phase: 'scores' }), 15 * 60 * 1000,
+    'started room keeps the 15-minute reconnect grace');
+});
+
 test('score attack: every game once, totals accumulate, chairs finale, highest total wins', async () => {
   const room = new Room(stubIo(), 'TEST', {
     ...FAST,

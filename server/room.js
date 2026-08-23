@@ -152,6 +152,13 @@ function reconnectTokenMatches(expected, supplied) {
   return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
 
+// Empty-room retention. Started rooms keep a long reconnect grace so a
+// mid-game player with flaky wifi can rejoin; never-started lobby/solo rooms
+// are reclaimed quickly so anonymous room-creation bursts cannot park memory
+// for a quarter of an hour (Strix 2026-08-23, CWE-770, HIGH).
+export const EMPTY_ROOM_RETENTION_MS = 15 * 60 * 1000;
+export const EMPTY_UNSTARTED_RETENTION_MS = 2 * 60 * 1000;
+
 export class Room {
   constructor(io, code, config, onEmpty = () => {}, options = {}) {
     this.io = io;
@@ -443,7 +450,12 @@ export class Room {
     const anyConnected =
       this.hostSocketId || [...this.players.values()].some((p) => p.connected);
     if (!anyConnected) {
-      this.setTimer('empty', () => this.onEmpty(this), 15 * 60 * 1000);
+      // A room that never left the lobby (or a solo room the owner abandoned)
+      // has nothing to reconnect to — reclaim it fast. A started room keeps the
+      // long grace so players mid-session can come back.
+      const started = this.phase !== 'lobby' || !!this.sessionStartedAt;
+      const retention = started ? EMPTY_ROOM_RETENTION_MS : EMPTY_UNSTARTED_RETENTION_MS;
+      this.setTimer('empty', () => this.onEmpty(this), retention);
     }
   }
 

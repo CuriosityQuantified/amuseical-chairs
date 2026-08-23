@@ -48,8 +48,8 @@ function openSocket(options = {}) {
   return connectSocket(baseUrl, options);
 }
 
-async function withServer(run) {
-  const { httpServer: localServer, io: localIo, rooms } = createServer();
+async function withServer(run, serverOptions = {}) {
+  const { httpServer: localServer, io: localIo, rooms } = createServer(serverOptions);
   await new Promise((resolve) => localServer.listen(0, '127.0.0.1', resolve));
   const localBaseUrl = `http://127.0.0.1:${localServer.address().port}`;
   const openLocalSocket = (options = {}) => connectSocket(localBaseUrl, options);
@@ -264,6 +264,56 @@ test('per-event quotas reject a burst but preserve the socket connection', async
   } finally {
     socket.disconnect();
   }
+});
+
+test('fresh transports share one source budget across host and solo room creation', async () => {
+  await withServer(async ({ openSocket: openLocalSocket, rooms }) => {
+    const sockets = [];
+    try {
+      const first = await openLocalSocket();
+      sockets.push(first);
+      const hostCreated = await emitAck(first, 'host:create', { config: {} }, 8_000);
+      assert.equal(hostCreated.value?.ok, true);
+      first.disconnect();
+
+      const second = await openLocalSocket();
+      sockets.push(second);
+      const soloCreated = await emitAck(second, 'solo:create', { name: 'Solo' });
+      assert.equal(soloCreated.value?.ok, true);
+      second.disconnect();
+
+      // A third fresh transport has no fresh budget: the source-address bucket
+      // is shared across sockets AND across host:create / solo:create.
+      const third = await openLocalSocket();
+      sockets.push(third);
+      const blocked = await emitAck(third, 'host:create', { config: {} }, 8_000);
+      assert.match(blocked.value?.error || '', /too many rooms/i);
+      assert.equal(rooms.size, 2, 'rejected creation allocates no Room');
+    } finally {
+      for (const socket of sockets) socket.disconnect();
+    }
+  }, { roomCreateLimit: 2, maxRooms: 100 });
+});
+
+test('the process-wide room cap fails closed before allocating another room', async () => {
+  await withServer(async ({ openSocket: openLocalSocket, rooms }) => {
+    const sockets = [];
+    try {
+      for (let i = 0; i < 2; i++) {
+        const socket = await openLocalSocket();
+        sockets.push(socket);
+        const created = await emitAck(socket, 'host:create', { config: {} }, 8_000);
+        assert.equal(created.value?.ok, true);
+      }
+      const blockedSocket = await openLocalSocket();
+      sockets.push(blockedSocket);
+      const blocked = await emitAck(blockedSocket, 'solo:create', { name: 'Overflow' });
+      assert.match(blocked.value?.error || '', /too many rooms/i);
+      assert.equal(rooms.size, 2, 'hard cap is not exceeded');
+    } finally {
+      for (const socket of sockets) socket.disconnect();
+    }
+  }, { roomCreateLimit: 10, maxRooms: 2 });
 });
 
 test('Socket.IO enforces host-only actions and host rejoin credentials', async () => {
