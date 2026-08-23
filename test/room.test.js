@@ -223,6 +223,40 @@ test('disconnect clears every player record still attached to the socket', () =>
   }
 });
 
+test('reconnect credentials rotate on every successful rejoin and expire the previous secret', () => {
+  const room = new Room(stubIo(), 'ROT8', {});
+  try {
+    addPlayer(room, 'p1', 'Rotating');
+    const original = room.players.get('p1').reconnectToken;
+
+    const first = { id: 'sock-r1', join() {}, data: {} };
+    const rejoined = room.join(first, { playerId: 'p1', reconnectToken: original });
+    assert.equal(rejoined.ok, true);
+    assert.notEqual(rejoined.reconnectToken, original, 'token rotates on successful rejoin');
+    const rotated = rejoined.reconnectToken;
+
+    // A lost-ACK retry with the previous token still works inside the grace
+    // window — the bounded transition, not indefinite replay.
+    const retry = { id: 'sock-r2', join() {}, data: {} };
+    assert.equal(room.join(retry, { playerId: 'p1', reconnectToken: original }).ok, true,
+      'previous token is accepted within the rotation grace (lost-ACK retry)');
+    const current = room.players.get('p1').reconnectToken;
+
+    // Once the grace window closes, every old secret is dead…
+    room.players.get('p1').prevReconnectExpiresAt = Date.now() - 1;
+    const replay = { id: 'sock-r3', join() {}, data: {} };
+    assert.equal(room.join(replay, { playerId: 'p1', reconnectToken: original }).error,
+      'Reconnect credential is invalid or expired.');
+    assert.equal(room.join(replay, { playerId: 'p1', reconnectToken: rotated }).error,
+      'Reconnect credential is invalid or expired.');
+    // …and only the freshly returned token still works.
+    assert.equal(room.join(replay, { playerId: 'p1', reconnectToken: current }).ok, true,
+      'the current rotated token works after the window');
+  } finally {
+    room.destroy();
+  }
+});
+
 // gamesPerSession is an internal default, not a host option: every hosted
 // session plays all of its enabled games (0), and the K-of-N draw stays here
 // as the pacing lever a room can be constructed with.
@@ -422,7 +456,7 @@ test('a pre-green redemption report is disqualified; an honest post-green report
   }
 });
 
-const ALL_BLOCKED = ['trace', 'stopclock', 'slingshot', 'balance', 'oddoneout', 'typing', 'spacemash', 'cups'];
+const ALL_BLOCKED = ['trace', 'stopclock', 'slingshot', 'balance', 'oddoneout', 'typing', 'spacemash', 'cups', 'metronome'];
 test('client-scored games are blocked from hosted competitive sessions', () => {
   const room = new Room(stubIo(), 'BLK1', {
     ...FAST,

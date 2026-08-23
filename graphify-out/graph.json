@@ -14,7 +14,7 @@
       "file_type": "code",
       "norm_label": "room",
       "source_file": "server/room.js",
-      "source_location": "L162"
+      "source_location": "L169"
     },
     {
       "id": "test_harness_test_bot",
@@ -22,8 +22,8 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 27,
-      "community_name": "harness.test.js",
+      "community": 45,
+      "community_name": "Bot",
       "file_type": "code",
       "norm_label": "bot",
       "source_file": "test/harness.test.js",
@@ -75,7 +75,7 @@
       "file_type": "code",
       "norm_label": ".advancereveal()",
       "source_file": "server/room.js",
-      "source_location": "L866"
+      "source_location": "L880"
     },
     {
       "id": "server_room_room_alive",
@@ -87,7 +87,7 @@
       "file_type": "code",
       "norm_label": ".alive()",
       "source_file": "server/room.js",
-      "source_location": "L261"
+      "source_location": "L268"
     },
     {
       "id": "server_room_room_backtolobby",
@@ -99,7 +99,7 @@
       "file_type": "code",
       "norm_label": ".backtolobby()",
       "source_file": "server/room.js",
-      "source_location": "L639"
+      "source_location": "L653"
     },
     {
       "id": "server_room_room_betweenstages",
@@ -111,7 +111,7 @@
       "file_type": "code",
       "norm_label": ".betweenstages()",
       "source_file": "server/room.js",
-      "source_location": "L830"
+      "source_location": "L844"
     },
     {
       "id": "server_room_room_broadcastplayers",
@@ -123,7 +123,7 @@
       "file_type": "code",
       "norm_label": ".broadcastplayers()",
       "source_file": "server/room.js",
-      "source_location": "L283"
+      "source_location": "L290"
     },
     {
       "id": "server_room_room_cleartimer",
@@ -135,7 +135,7 @@
       "file_type": "code",
       "norm_label": ".cleartimer()",
       "source_file": "server/room.js",
-      "source_location": "L214"
+      "source_location": "L221"
     },
     {
       "id": "server_room_room_closegame",
@@ -147,7 +147,7 @@
       "file_type": "code",
       "norm_label": ".closegame()",
       "source_file": "server/room.js",
-      "source_location": "L1044"
+      "source_location": "L1058"
     },
     {
       "id": "server_room_room_constructor",
@@ -159,7 +159,7 @@
       "file_type": "code",
       "norm_label": ".constructor()",
       "source_file": "server/room.js",
-      "source_location": "L163"
+      "source_location": "L170"
     },
     {
       "id": "server_room_room_declarewinner",
@@ -171,7 +171,7 @@
       "file_type": "code",
       "norm_label": ".declarewinner()",
       "source_file": "server/room.js",
-      "source_location": "L1346"
+      "source_location": "L1360"
     },
     {
       "id": "server_room_room_destroy",
@@ -183,7 +183,7 @@
       "file_type": "code",
       "norm_label": ".destroy()",
       "source_file": "server/room.js",
-      "source_location": "L219"
+      "source_location": "L226"
     },
     {
       "id": "server_room_room_disconnectplayer",
@@ -195,7 +195,7 @@
       "file_type": "code",
       "norm_label": ".disconnectplayer()",
       "source_file": "server/room.js",
-      "source_location": "L303"
+      "source_location": "L310"
     },
     {
       "id": "server_room_room_disconnectsocketplayers",
@@ -207,7 +207,7 @@
       "file_type": "code",
       "norm_label": ".disconnectsocketplayers()",
       "source_file": "server/room.js",
-      "source_location": "L315"
+      "source_location": "L322"
     },
     {
       "id": "server_room_room_emitall",
@@ -219,7 +219,7 @@
       "file_type": "code",
       "norm_label": ".emitall()",
       "source_file": "server/room.js",
-      "source_location": "L225"
+      "source_location": "L232"
     },
     {
       "id": "server_room_room_emithost",
@@ -231,7 +231,7 @@
       "file_type": "code",
       "norm_label": ".emithost()",
       "source_file": "server/room.js",
-      "source_location": "L226"
+      "source_location": "L233"
     },
     {
       "id": "server_room_room_emitplayer",
@@ -243,7 +243,7 @@
       "file_type": "code",
       "norm_label": ".emitplayer()",
       "source_file": "server/room.js",
-      "source_location": "L227"
+      "source_location": "L234"
     },
     {
       "id": "server_room_room_emitreveal",
@@ -255,7 +255,7 @@
       "file_type": "code",
       "norm_label": ".emitreveal()",
       "source_file": "server/room.js",
-      "source_location": "L246"
+      "source_location": "L253"
     },
     {
       "id": "server_room_room_endtutorial",
@@ -267,7 +267,7 @@
       "file_type": "code",
       "norm_label": ".endtutorial()",
       "source_file": "server/room.js",
-      "source_location": "L731"
+      "source_location": "L745"
     },
     {
       "id": "server_room_room_extendtimer",
@@ -279,7 +279,7 @@
       "file_type": "code",
       "norm_label": ".extendtimer()",
       "source_file": "server/room.js",
-      "source_location": "L929"
+      "source_location": "L943"
     },
     {
       "id": "server_room_room_finishgame",
@@ -291,7 +291,7 @@
       "file_type": "code",
       "norm_label": ".finishgame()",
       "source_file": "server/room.js",
-      "source_location": "L1071"
+      "source_location": "L1085"
     },
     {
       "id": "server_room_room_finishredemption",
@@ -303,7 +303,7 @@
       "file_type": "code",
       "norm_label": ".finishredemption()",
       "source_file": "server/room.js",
-      "source_location": "L1259"
+      "source_location": "L1273"
     },
     {
       "id": "server_room_room_gamepayload",
@@ -315,7 +315,7 @@
       "file_type": "code",
       "norm_label": ".gamepayload()",
       "source_file": "server/room.js",
-      "source_location": "L654"
+      "source_location": "L668"
     },
     {
       "id": "server_room_room_handledisconnect",
@@ -327,7 +327,7 @@
       "file_type": "code",
       "norm_label": ".handledisconnect()",
       "source_file": "server/room.js",
-      "source_location": "L446"
+      "source_location": "L460"
     },
     {
       "id": "server_room_room_handleredemptionreport",
@@ -339,7 +339,19 @@
       "file_type": "code",
       "norm_label": ".handleredemptionreport()",
       "source_file": "server/room.js",
-      "source_location": "L1232"
+      "source_location": "L1246"
+    },
+    {
+      "id": "server_room_room_handlesubmit",
+      "label": ".handleSubmit()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Room",
+      "file_type": "code",
+      "norm_label": ".handlesubmit()",
+      "source_file": "server/room.js",
+      "source_location": "L990"
     },
     {
       "id": "server_room_room_hideentry",
@@ -351,7 +363,7 @@
       "file_type": "code",
       "norm_label": ".hideentry()",
       "source_file": "server/room.js",
-      "source_location": "L949"
+      "source_location": "L963"
     },
     {
       "id": "server_room_room_hostnext",
@@ -363,7 +375,7 @@
       "file_type": "code",
       "norm_label": ".hostnext()",
       "source_file": "server/room.js",
-      "source_location": "L1387"
+      "source_location": "L1401"
     },
     {
       "id": "server_room_room_join",
@@ -375,7 +387,19 @@
       "file_type": "code",
       "norm_label": ".join()",
       "source_file": "server/room.js",
-      "source_location": "L327"
+      "source_location": "L334"
+    },
+    {
+      "id": "server_room_room_lockedsolved",
+      "label": ".lockedSolved()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Room",
+      "file_type": "code",
+      "norm_label": ".lockedsolved()",
+      "source_file": "server/room.js",
+      "source_location": "L1052"
     },
     {
       "id": "server_room_room_makestage",
@@ -387,7 +411,7 @@
       "file_type": "code",
       "norm_label": ".makestage()",
       "source_file": "server/room.js",
-      "source_location": "L570"
+      "source_location": "L584"
     },
     {
       "id": "server_room_room_nextgame",
@@ -399,7 +423,7 @@
       "file_type": "code",
       "norm_label": ".nextgame()",
       "source_file": "server/room.js",
-      "source_location": "L697"
+      "source_location": "L711"
     },
     {
       "id": "server_room_room_playeroptions",
@@ -411,7 +435,7 @@
       "file_type": "code",
       "norm_label": ".playeroptions()",
       "source_file": "server/room.js",
-      "source_location": "L598"
+      "source_location": "L612"
     },
     {
       "id": "server_room_room_playersforsocket",
@@ -423,7 +447,7 @@
       "file_type": "code",
       "norm_label": ".playersforsocket()",
       "source_file": "server/room.js",
-      "source_location": "L287"
+      "source_location": "L294"
     },
     {
       "id": "server_room_room_playersummaries",
@@ -435,7 +459,7 @@
       "file_type": "code",
       "norm_label": ".playersummaries()",
       "source_file": "server/room.js",
-      "source_location": "L273"
+      "source_location": "L280"
     },
     {
       "id": "server_room_room_playmusicthen",
@@ -447,7 +471,7 @@
       "file_type": "code",
       "norm_label": ".playmusicthen()",
       "source_file": "server/room.js",
-      "source_location": "L689"
+      "source_location": "L703"
     },
     {
       "id": "server_room_room_progressinfo",
@@ -459,7 +483,7 @@
       "file_type": "code",
       "norm_label": ".progressinfo()",
       "source_file": "server/room.js",
-      "source_location": "L264"
+      "source_location": "L271"
     },
     {
       "id": "server_room_room_publicconfig",
@@ -471,7 +495,7 @@
       "file_type": "code",
       "norm_label": ".publicconfig()",
       "source_file": "server/room.js",
-      "source_location": "L514"
+      "source_location": "L528"
     },
     {
       "id": "server_room_room_recordsync",
@@ -483,7 +507,7 @@
       "file_type": "code",
       "norm_label": ".recordsync()",
       "source_file": "server/room.js",
-      "source_location": "L462"
+      "source_location": "L476"
     },
     {
       "id": "server_room_room_reset",
@@ -495,7 +519,7 @@
       "file_type": "code",
       "norm_label": ".reset()",
       "source_file": "server/room.js",
-      "source_location": "L1363"
+      "source_location": "L1377"
     },
     {
       "id": "server_room_room_revealpayload",
@@ -507,7 +531,7 @@
       "file_type": "code",
       "norm_label": ".revealpayload()",
       "source_file": "server/room.js",
-      "source_location": "L855"
+      "source_location": "L869"
     },
     {
       "id": "server_room_room_revealturn",
@@ -519,7 +543,7 @@
       "file_type": "code",
       "norm_label": ".revealturn()",
       "source_file": "server/room.js",
-      "source_location": "L1008"
+      "source_location": "L1022"
     },
     {
       "id": "server_room_room_schedulelobbykick",
@@ -531,7 +555,7 @@
       "file_type": "code",
       "norm_label": ".schedulelobbykick()",
       "source_file": "server/room.js",
-      "source_location": "L292"
+      "source_location": "L299"
     },
     {
       "id": "server_room_room_scorechairstournament",
@@ -543,7 +567,7 @@
       "file_type": "code",
       "norm_label": ".scorechairstournament()",
       "source_file": "server/room.js",
-      "source_location": "L1309"
+      "source_location": "L1323"
     },
     {
       "id": "server_room_room_scoregame",
@@ -555,7 +579,7 @@
       "file_type": "code",
       "norm_label": ".scoregame()",
       "source_file": "server/room.js",
-      "source_location": "L1107"
+      "source_location": "L1121"
     },
     {
       "id": "server_room_room_setphase",
@@ -567,7 +591,7 @@
       "file_type": "code",
       "norm_label": ".setphase()",
       "source_file": "server/room.js",
-      "source_location": "L232"
+      "source_location": "L239"
     },
     {
       "id": "server_room_room_settimer",
@@ -579,7 +603,7 @@
       "file_type": "code",
       "norm_label": ".settimer()",
       "source_file": "server/room.js",
-      "source_location": "L201"
+      "source_location": "L208"
     },
     {
       "id": "server_room_room_skipgame",
@@ -591,7 +615,7 @@
       "file_type": "code",
       "norm_label": ".skipgame()",
       "source_file": "server/room.js",
-      "source_location": "L916"
+      "source_location": "L930"
     },
     {
       "id": "server_room_room_skiptutorial",
@@ -603,7 +627,7 @@
       "file_type": "code",
       "norm_label": ".skiptutorial()",
       "source_file": "server/room.js",
-      "source_location": "L739"
+      "source_location": "L753"
     },
     {
       "id": "server_room_room_snapshot",
@@ -615,7 +639,7 @@
       "file_type": "code",
       "norm_label": ".snapshot()",
       "source_file": "server/room.js",
-      "source_location": "L478"
+      "source_location": "L492"
     },
     {
       "id": "server_room_room_soloadvance",
@@ -627,7 +651,7 @@
       "file_type": "code",
       "norm_label": ".soloadvance()",
       "source_file": "server/room.js",
-      "source_location": "L748"
+      "source_location": "L762"
     },
     {
       "id": "server_room_room_stageduration",
@@ -639,7 +663,7 @@
       "file_type": "code",
       "norm_label": ".stageduration()",
       "source_file": "server/room.js",
-      "source_location": "L683"
+      "source_location": "L697"
     },
     {
       "id": "server_room_room_stagehistory",
@@ -651,7 +675,7 @@
       "file_type": "code",
       "norm_label": ".stagehistory()",
       "source_file": "server/room.js",
-      "source_location": "L815"
+      "source_location": "L829"
     },
     {
       "id": "server_room_room_start",
@@ -663,7 +687,7 @@
       "file_type": "code",
       "norm_label": ".start()",
       "source_file": "server/room.js",
-      "source_location": "L544"
+      "source_location": "L558"
     },
     {
       "id": "server_room_room_startchairsfinale",
@@ -675,7 +699,7 @@
       "file_type": "code",
       "norm_label": ".startchairsfinale()",
       "source_file": "server/room.js",
-      "source_location": "L1157"
+      "source_location": "L1171"
     },
     {
       "id": "server_room_room_startchairsround",
@@ -687,7 +711,7 @@
       "file_type": "code",
       "norm_label": ".startchairsround()",
       "source_file": "server/room.js",
-      "source_location": "L1182"
+      "source_location": "L1196"
     },
     {
       "id": "server_room_room_startgame",
@@ -699,7 +723,7 @@
       "file_type": "code",
       "norm_label": ".startgame()",
       "source_file": "server/room.js",
-      "source_location": "L754"
+      "source_location": "L768"
     },
     {
       "id": "server_room_room_startredemption",
@@ -711,7 +735,7 @@
       "file_type": "code",
       "norm_label": ".startredemption()",
       "source_file": "server/room.js",
-      "source_location": "L1188"
+      "source_location": "L1202"
     },
     {
       "id": "server_room_room_startredemptiontest",
@@ -723,7 +747,7 @@
       "file_type": "code",
       "norm_label": ".startredemptiontest()",
       "source_file": "server/room.js",
-      "source_location": "L628"
+      "source_location": "L642"
     },
     {
       "id": "server_room_room_startstages",
@@ -735,7 +759,7 @@
       "file_type": "code",
       "norm_label": ".startstages()",
       "source_file": "server/room.js",
-      "source_location": "L780"
+      "source_location": "L794"
     },
     {
       "id": "server_room_room_starttest",
@@ -747,7 +771,7 @@
       "file_type": "code",
       "norm_label": ".starttest()",
       "source_file": "server/room.js",
-      "source_location": "L605"
+      "source_location": "L619"
     },
     {
       "id": "server_room_room_starttutorial",
@@ -759,7 +783,7 @@
       "file_type": "code",
       "norm_label": ".starttutorial()",
       "source_file": "server/room.js",
-      "source_location": "L724"
+      "source_location": "L738"
     },
     {
       "id": "server_room_room_updateconfig",
@@ -771,7 +795,7 @@
       "file_type": "code",
       "norm_label": ".updateconfig()",
       "source_file": "server/room.js",
-      "source_location": "L525"
+      "source_location": "L539"
     },
     {
       "id": "server_room_room_withnames",
@@ -783,7 +807,7 @@
       "file_type": "code",
       "norm_label": ".withnames()",
       "source_file": "server/room.js",
-      "source_location": "L883"
+      "source_location": "L897"
     },
     {
       "id": "server_room_sanitizeconfig",
@@ -911,7 +935,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "aggregatecaption()",
       "source_file": "server/games.js",
@@ -923,7 +947,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "aggregategame()",
       "source_file": "server/games.js",
@@ -935,7 +959,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "aggregateicebreaker()",
       "source_file": "server/games.js",
@@ -947,7 +971,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "buildreveal()",
       "source_file": "server/games.js",
@@ -959,7 +983,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "buildstages()",
       "source_file": "server/games.js",
@@ -971,11 +995,23 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "clamp()",
       "source_file": "server/games.js",
       "source_location": "L272"
+    },
+    {
+      "id": "server_games_formatraw",
+      "label": "formatRaw()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "server/games.js",
+      "file_type": "code",
+      "norm_label": "formatraw()",
+      "source_file": "server/games.js",
+      "source_location": "L1074"
     },
     {
       "id": "server_games_icebreakertally",
@@ -983,7 +1019,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "icebreakertally()",
       "source_file": "server/games.js",
@@ -995,7 +1031,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "num()",
       "source_file": "server/games.js",
@@ -1007,7 +1043,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "votesforpool()",
       "source_file": "server/games.js",
@@ -1019,7 +1055,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "cleanentrytext()",
       "source_file": "shared/textclean.js",
@@ -1031,7 +1067,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "isusableentry()",
       "source_file": "shared/textclean.js",
@@ -1043,7 +1079,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "ballot()",
       "source_file": "test/caption.test.js",
@@ -1055,7 +1091,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "build()",
       "source_file": "test/caption.test.js",
@@ -1067,7 +1103,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "rng()",
       "source_file": "test/caption.test.js",
@@ -1079,7 +1115,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "score()",
       "source_file": "test/caption.test.js",
@@ -1091,7 +1127,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "stagetwo()",
       "source_file": "test/caption.test.js",
@@ -1103,7 +1139,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "facts()",
       "source_file": "test/icebreaker.test.js",
@@ -1115,7 +1151,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "play()",
       "source_file": "test/icebreaker.test.js",
@@ -1127,7 +1163,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "rng()",
       "source_file": "test/icebreaker.test.js",
@@ -1139,7 +1175,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "stageof()",
       "source_file": "test/icebreaker.test.js",
@@ -1503,7 +1539,7 @@
       "file_type": "code",
       "norm_label": "recordingio()",
       "source_file": "test/room.test.js",
-      "source_location": "L687"
+      "source_location": "L721"
     },
     {
       "id": "test_room_test_sleep",
@@ -1902,48 +1938,12 @@
       "source_location": "L58"
     },
     {
-      "id": "shared_anagram_letters",
-      "label": "letters()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "harness.test.js",
-      "file_type": "code",
-      "norm_label": "letters()",
-      "source_file": "shared/anagram.js",
-      "source_location": "L15"
-    },
-    {
-      "id": "shared_anagram_solvescramble",
-      "label": "solveScramble()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "harness.test.js",
-      "file_type": "code",
-      "norm_label": "solvescramble()",
-      "source_file": "shared/anagram.js",
-      "source_location": "L76"
-    },
-    {
-      "id": "shared_area_arearatio",
-      "label": "areaRatio()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "harness.test.js",
-      "file_type": "code",
-      "norm_label": "arearatio()",
-      "source_file": "shared/area.js",
-      "source_location": "L27"
-    },
-    {
       "id": "shared_feedback_anagramfeedback",
       "label": "anagramFeedback()",
       "_callable": true,
       "_origin": "ast",
       "community": 27,
-      "community_name": "harness.test.js",
+      "community_name": "feedback.js",
       "file_type": "code",
       "norm_label": "anagramfeedback()",
       "source_file": "shared/feedback.js",
@@ -1955,7 +1955,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 27,
-      "community_name": "harness.test.js",
+      "community_name": "feedback.js",
       "file_type": "code",
       "norm_label": "areafeedback()",
       "source_file": "shared/feedback.js",
@@ -1967,7 +1967,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 27,
-      "community_name": "harness.test.js",
+      "community_name": "feedback.js",
       "file_type": "code",
       "norm_label": "bisectfeedback()",
       "source_file": "shared/feedback.js",
@@ -1979,7 +1979,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 27,
-      "community_name": "harness.test.js",
+      "community_name": "feedback.js",
       "file_type": "code",
       "norm_label": "blank()",
       "source_file": "shared/feedback.js",
@@ -1991,7 +1991,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 27,
-      "community_name": "harness.test.js",
+      "community_name": "feedback.js",
       "file_type": "code",
       "norm_label": "clamp()",
       "source_file": "shared/feedback.js",
@@ -2003,7 +2003,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 27,
-      "community_name": "harness.test.js",
+      "community_name": "feedback.js",
       "file_type": "code",
       "norm_label": "dotsfeedback()",
       "source_file": "shared/feedback.js",
@@ -2015,7 +2015,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 27,
-      "community_name": "harness.test.js",
+      "community_name": "feedback.js",
       "file_type": "code",
       "norm_label": "fractionsfeedback()",
       "source_file": "shared/feedback.js",
@@ -2027,7 +2027,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 27,
-      "community_name": "harness.test.js",
+      "community_name": "feedback.js",
       "file_type": "code",
       "norm_label": "gridflashfeedback()",
       "source_file": "shared/feedback.js",
@@ -2039,7 +2039,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 27,
-      "community_name": "harness.test.js",
+      "community_name": "feedback.js",
       "file_type": "code",
       "norm_label": "isnum()",
       "source_file": "shared/feedback.js",
@@ -2051,7 +2051,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 27,
-      "community_name": "harness.test.js",
+      "community_name": "feedback.js",
       "file_type": "code",
       "norm_label": "secs()",
       "source_file": "shared/feedback.js",
@@ -2063,107 +2063,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 27,
-      "community_name": "harness.test.js",
+      "community_name": "feedback.js",
       "file_type": "code",
       "norm_label": "stopclockfeedback()",
       "source_file": "shared/feedback.js",
       "source_location": "L71"
-    },
-    {
-      "id": "shared_fractions_parsevalue",
-      "label": "parseValue()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "harness.test.js",
-      "file_type": "code",
-      "norm_label": "parsevalue()",
-      "source_file": "shared/fractions.js",
-      "source_location": "L116"
-    },
-    {
-      "id": "test_harness_test_bot_close",
-      "label": ".close()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "harness.test.js",
-      "file_type": "code",
-      "norm_label": ".close()",
-      "source_file": "test/harness.test.js",
-      "source_location": "L266"
-    },
-    {
-      "id": "test_harness_test_bot_constructor",
-      "label": ".constructor()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "harness.test.js",
-      "file_type": "code",
-      "norm_label": ".constructor()",
-      "source_file": "test/harness.test.js",
-      "source_location": "L191"
-    },
-    {
-      "id": "test_harness_test_bot_join",
-      "label": ".join()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "harness.test.js",
-      "file_type": "code",
-      "norm_label": ".join()",
-      "source_file": "test/harness.test.js",
-      "source_location": "L203"
-    },
-    {
-      "id": "test_harness_test_bot_wire",
-      "label": ".wire()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "harness.test.js",
-      "file_type": "code",
-      "norm_label": ".wire()",
-      "source_file": "test/harness.test.js",
-      "source_location": "L224"
-    },
-    {
-      "id": "test_harness_test_botpayload",
-      "label": "botPayload()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "harness.test.js",
-      "file_type": "code",
-      "norm_label": "botpayload()",
-      "source_file": "test/harness.test.js",
-      "source_location": "L61"
-    },
-    {
-      "id": "test_harness_test_sleep",
-      "label": "sleep()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "harness.test.js",
-      "file_type": "code",
-      "norm_label": "sleep()",
-      "source_file": "test/harness.test.js",
-      "source_location": "L20"
-    },
-    {
-      "id": "test_harness_test_withdeadline",
-      "label": "withDeadline()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "harness.test.js",
-      "file_type": "code",
-      "norm_label": "withdeadline()",
-      "source_file": "test/harness.test.js",
-      "source_location": "L25"
     },
     {
       "id": "shared_cups_cupscount",
@@ -2274,6 +2178,18 @@
       "source_location": "L46"
     },
     {
+      "id": "test_cups_ten_level_test_score",
+      "label": "score()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "cups.test.js",
+      "file_type": "code",
+      "norm_label": "score()",
+      "source_file": "test/cups-ten-level.test.js",
+      "source_location": "L40"
+    },
+    {
       "id": "test_cups_ten_level_test_sleep",
       "label": "sleep()",
       "_callable": true,
@@ -2380,6 +2296,18 @@
       "norm_label": "perfect()",
       "source_file": "test/cups.test.js",
       "source_location": "L62"
+    },
+    {
+      "id": "test_cups_test_score",
+      "label": "score()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "cups.test.js",
+      "file_type": "code",
+      "norm_label": "score()",
+      "source_file": "test/cups.test.js",
+      "source_location": "L49"
     },
     {
       "id": "test_cups_test_sleep",
@@ -2511,7 +2439,7 @@
       "file_type": "code",
       "norm_label": "buildconfigpanel()",
       "source_file": "public/js/host.js",
-      "source_location": "L100"
+      "source_location": "L108"
     },
     {
       "id": "public_js_host_confetti",
@@ -2523,7 +2451,7 @@
       "file_type": "code",
       "norm_label": "confetti()",
       "source_file": "public/js/host.js",
-      "source_location": "L700"
+      "source_location": "L708"
     },
     {
       "id": "public_js_host_content",
@@ -2535,7 +2463,7 @@
       "file_type": "code",
       "norm_label": "content()",
       "source_file": "public/js/host.js",
-      "source_location": "L197"
+      "source_location": "L205"
     },
     {
       "id": "public_js_host_createroom",
@@ -2547,7 +2475,7 @@
       "file_type": "code",
       "norm_label": "createroom()",
       "source_file": "public/js/host.js",
-      "source_location": "L59"
+      "source_location": "L67"
     },
     {
       "id": "public_js_host_el",
@@ -2571,7 +2499,7 @@
       "file_type": "code",
       "norm_label": "enabledcount()",
       "source_file": "public/js/host.js",
-      "source_location": "L82"
+      "source_location": "L90"
     },
     {
       "id": "public_js_host_enterlobbyui",
@@ -2583,7 +2511,7 @@
       "file_type": "code",
       "norm_label": "enterlobbyui()",
       "source_file": "public/js/host.js",
-      "source_location": "L70"
+      "source_location": "L78"
     },
     {
       "id": "public_js_host_extrasblock",
@@ -2595,7 +2523,7 @@
       "file_type": "code",
       "norm_label": "extrasblock()",
       "source_file": "public/js/host.js",
-      "source_location": "L482"
+      "source_location": "L490"
     },
     {
       "id": "public_js_host_fmtredrow",
@@ -2607,7 +2535,7 @@
       "file_type": "code",
       "norm_label": "fmtredrow()",
       "source_file": "public/js/host.js",
-      "source_location": "L582"
+      "source_location": "L590"
     },
     {
       "id": "public_js_host_playmusic",
@@ -2619,7 +2547,7 @@
       "file_type": "code",
       "norm_label": "playmusic()",
       "source_file": "public/js/host.js",
-      "source_location": "L244"
+      "source_location": "L252"
     },
     {
       "id": "public_js_host_poolshape",
@@ -2631,7 +2559,7 @@
       "file_type": "code",
       "norm_label": "poolshape()",
       "source_file": "public/js/host.js",
-      "source_location": "L315"
+      "source_location": "L323"
     },
     {
       "id": "public_js_host_pushconfig",
@@ -2643,7 +2571,7 @@
       "file_type": "code",
       "norm_label": "pushconfig()",
       "source_file": "public/js/host.js",
-      "source_location": "L138"
+      "source_location": "L146"
     },
     {
       "id": "public_js_host_renderchairsresult",
@@ -2655,7 +2583,7 @@
       "file_type": "code",
       "norm_label": "renderchairsresult()",
       "source_file": "public/js/host.js",
-      "source_location": "L631"
+      "source_location": "L639"
     },
     {
       "id": "public_js_host_renderhostliveboard",
@@ -2667,7 +2595,7 @@
       "file_type": "code",
       "norm_label": "renderhostliveboard()",
       "source_file": "public/js/host.js",
-      "source_location": "L165"
+      "source_location": "L173"
     },
     {
       "id": "public_js_host_renderlobbysummary",
@@ -2679,7 +2607,7 @@
       "file_type": "code",
       "norm_label": "renderlobbysummary()",
       "source_file": "public/js/host.js",
-      "source_location": "L86"
+      "source_location": "L94"
     },
     {
       "id": "public_js_host_renderminigame",
@@ -2691,7 +2619,7 @@
       "file_type": "code",
       "norm_label": "renderminigame()",
       "source_file": "public/js/host.js",
-      "source_location": "L359"
+      "source_location": "L367"
     },
     {
       "id": "public_js_host_rendermusic",
@@ -2703,7 +2631,7 @@
       "file_type": "code",
       "norm_label": "rendermusic()",
       "source_file": "public/js/host.js",
-      "source_location": "L265"
+      "source_location": "L273"
     },
     {
       "id": "public_js_host_renderpool",
@@ -2715,7 +2643,7 @@
       "file_type": "code",
       "norm_label": "renderpool()",
       "source_file": "public/js/host.js",
-      "source_location": "L326"
+      "source_location": "L334"
     },
     {
       "id": "public_js_host_renderprogressinto",
@@ -2727,7 +2655,7 @@
       "file_type": "code",
       "norm_label": "renderprogressinto()",
       "source_file": "public/js/host.js",
-      "source_location": "L176"
+      "source_location": "L184"
     },
     {
       "id": "public_js_host_renderredemption",
@@ -2739,7 +2667,7 @@
       "file_type": "code",
       "norm_label": "renderredemption()",
       "source_file": "public/js/host.js",
-      "source_location": "L605"
+      "source_location": "L613"
     },
     {
       "id": "public_js_host_renderredemptiontestdone",
@@ -2751,7 +2679,7 @@
       "file_type": "code",
       "norm_label": "renderredemptiontestdone()",
       "source_file": "public/js/host.js",
-      "source_location": "L594"
+      "source_location": "L602"
     },
     {
       "id": "public_js_host_renderreveal",
@@ -2763,7 +2691,7 @@
       "file_type": "code",
       "norm_label": "renderreveal()",
       "source_file": "public/js/host.js",
-      "source_location": "L437"
+      "source_location": "L445"
     },
     {
       "id": "public_js_host_renderscores",
@@ -2775,7 +2703,7 @@
       "file_type": "code",
       "norm_label": "renderscores()",
       "source_file": "public/js/host.js",
-      "source_location": "L551"
+      "source_location": "L559"
     },
     {
       "id": "public_js_host_rendertestdone",
@@ -2787,7 +2715,7 @@
       "file_type": "code",
       "norm_label": "rendertestdone()",
       "source_file": "public/js/host.js",
-      "source_location": "L565"
+      "source_location": "L573"
     },
     {
       "id": "public_js_host_rendertutorial",
@@ -2799,7 +2727,7 @@
       "file_type": "code",
       "norm_label": "rendertutorial()",
       "source_file": "public/js/host.js",
-      "source_location": "L294"
+      "source_location": "L302"
     },
     {
       "id": "public_js_host_renderwinner",
@@ -2811,7 +2739,7 @@
       "file_type": "code",
       "norm_label": "renderwinner()",
       "source_file": "public/js/host.js",
-      "source_location": "L675"
+      "source_location": "L683"
     },
     {
       "id": "public_js_host_scoretable",
@@ -2823,7 +2751,7 @@
       "file_type": "code",
       "norm_label": "scoretable()",
       "source_file": "public/js/host.js",
-      "source_location": "L529"
+      "source_location": "L537"
     },
     {
       "id": "public_js_host_stagelabel",
@@ -2835,7 +2763,7 @@
       "file_type": "code",
       "norm_label": "stagelabel()",
       "source_file": "public/js/host.js",
-      "source_location": "L350"
+      "source_location": "L358"
     },
     {
       "id": "public_js_host_unlockaudio",
@@ -2847,7 +2775,7 @@
       "file_type": "code",
       "norm_label": "unlockaudio()",
       "source_file": "public/js/host.js",
-      "source_location": "L236"
+      "source_location": "L244"
     },
     {
       "id": "server_app_allowedsocketorigin",
@@ -2919,7 +2847,7 @@
       "file_type": "code",
       "norm_label": "to()",
       "source_file": "test/security.test.js",
-      "source_location": "L554"
+      "source_location": "L564"
     },
     {
       "id": "test_security_test_wait",
@@ -2970,6 +2898,54 @@
       "source_location": "L287"
     },
     {
+      "id": "server_games_pickcontent",
+      "label": "pickContent()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 31,
+      "community_name": "seededRng",
+      "file_type": "code",
+      "norm_label": "pickcontent()",
+      "source_file": "server/games.js",
+      "source_location": "L275"
+    },
+    {
+      "id": "shared_anagram_anagramrounds",
+      "label": "anagramRounds()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 31,
+      "community_name": "seededRng",
+      "file_type": "code",
+      "norm_label": "anagramrounds()",
+      "source_file": "shared/anagram.js",
+      "source_location": "L54"
+    },
+    {
+      "id": "shared_anagram_istrivialrotation",
+      "label": "isTrivialRotation()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 31,
+      "community_name": "seededRng",
+      "file_type": "code",
+      "norm_label": "istrivialrotation()",
+      "source_file": "shared/anagram.js",
+      "source_location": "L19"
+    },
+    {
+      "id": "shared_anagram_scrambleword",
+      "label": "scrambleWord()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 31,
+      "community_name": "seededRng",
+      "file_type": "code",
+      "norm_label": "scrambleword()",
+      "source_file": "shared/anagram.js",
+      "source_location": "L25"
+    },
+    {
       "id": "shared_area_areatrials",
       "label": "areaTrials()",
       "_callable": true,
@@ -2994,6 +2970,18 @@
       "source_location": "L15"
     },
     {
+      "id": "shared_rng_pick",
+      "label": "pick()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 31,
+      "community_name": "seededRng",
+      "file_type": "code",
+      "norm_label": "pick()",
+      "source_file": "shared/rng.js",
+      "source_location": "L36"
+    },
+    {
       "id": "shared_rng_seededrng",
       "label": "seededRng()",
       "_callable": true,
@@ -3016,6 +3004,18 @@
       "norm_label": "round()",
       "source_file": "test/anagram.test.js",
       "source_location": "L12"
+    },
+    {
+      "id": "test_anagram_test_stubio",
+      "label": "stubIo()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 31,
+      "community_name": "seededRng",
+      "file_type": "code",
+      "norm_label": "stubio()",
+      "source_file": "test/anagram.test.js",
+      "source_location": "L15"
     },
     {
       "id": "test_area_test_round",
@@ -3066,54 +3066,6 @@
       "source_location": "L46"
     },
     {
-      "id": "test_fractions_test_round",
-      "label": "round()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 31,
-      "community_name": "seededRng",
-      "file_type": "code",
-      "norm_label": "round()",
-      "source_file": "test/fractions.test.js",
-      "source_location": "L25"
-    },
-    {
-      "id": "test_metronome_test_build",
-      "label": "build()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 31,
-      "community_name": "seededRng",
-      "file_type": "code",
-      "norm_label": "build()",
-      "source_file": "test/metronome.test.js",
-      "source_location": "L30"
-    },
-    {
-      "id": "test_roster_test_rounddata",
-      "label": "roundData()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 31,
-      "community_name": "seededRng",
-      "file_type": "code",
-      "norm_label": "rounddata()",
-      "source_file": "test/roster.test.js",
-      "source_location": "L71"
-    },
-    {
-      "id": "test_stroop_test_round",
-      "label": "round()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 31,
-      "community_name": "seededRng",
-      "file_type": "code",
-      "norm_label": "round()",
-      "source_file": "test/stroop.test.js",
-      "source_location": "L14"
-    },
-    {
       "id": "test_tray_test_round",
       "label": "round()",
       "_callable": true,
@@ -3124,18 +3076,6 @@
       "norm_label": "round()",
       "source_file": "test/tray.test.js",
       "source_location": "L30"
-    },
-    {
-      "id": "test_wordhunt_test_round",
-      "label": "round()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 31,
-      "community_name": "seededRng",
-      "file_type": "code",
-      "norm_label": "round()",
-      "source_file": "test/wordhunt.test.js",
-      "source_location": "L16"
     },
     {
       "id": "public_js_motion_prefersreducedmotion",
@@ -3208,6 +3148,18 @@
       "norm_label": "stroopsequence()",
       "source_file": "shared/stroop.js",
       "source_location": "L47"
+    },
+    {
+      "id": "test_stroop_test_round",
+      "label": "round()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 33,
+      "community_name": "stroop.test.js",
+      "file_type": "code",
+      "norm_label": "round()",
+      "source_file": "test/stroop.test.js",
+      "source_location": "L14"
     },
     {
       "id": "test_stroop_test_stubio",
@@ -3294,64 +3246,88 @@
       "source_location": "L14"
     },
     {
-      "id": "test_reveal_test_addplayer",
-      "label": "addPlayer()",
+      "id": "shared_anagram_letters",
+      "label": "letters()",
       "_callable": true,
       "_origin": "ast",
       "community": 35,
-      "community_name": "reveal.test.js",
+      "community_name": "roster.test.js",
       "file_type": "code",
-      "norm_label": "addplayer()",
-      "source_file": "test/reveal.test.js",
+      "norm_label": "letters()",
+      "source_file": "shared/anagram.js",
+      "source_location": "L15"
+    },
+    {
+      "id": "shared_anagram_solvescramble",
+      "label": "solveScramble()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 35,
+      "community_name": "roster.test.js",
+      "file_type": "code",
+      "norm_label": "solvescramble()",
+      "source_file": "shared/anagram.js",
+      "source_location": "L76"
+    },
+    {
+      "id": "shared_area_arearatio",
+      "label": "areaRatio()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 35,
+      "community_name": "roster.test.js",
+      "file_type": "code",
+      "norm_label": "arearatio()",
+      "source_file": "shared/area.js",
+      "source_location": "L27"
+    },
+    {
+      "id": "shared_fractions_parsevalue",
+      "label": "parseValue()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 35,
+      "community_name": "roster.test.js",
+      "file_type": "code",
+      "norm_label": "parsevalue()",
+      "source_file": "shared/fractions.js",
+      "source_location": "L116"
+    },
+    {
+      "id": "test_harness_test_botpayload",
+      "label": "botPayload()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 35,
+      "community_name": "roster.test.js",
+      "file_type": "code",
+      "norm_label": "botpayload()",
+      "source_file": "test/harness.test.js",
+      "source_location": "L61"
+    },
+    {
+      "id": "test_harness_test_withdeadline",
+      "label": "withDeadline()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 35,
+      "community_name": "roster.test.js",
+      "file_type": "code",
+      "norm_label": "withdeadline()",
+      "source_file": "test/harness.test.js",
       "source_location": "L25"
     },
     {
-      "id": "test_reveal_test_anagramroom",
-      "label": "anagramRoom()",
+      "id": "test_roster_test_rounddata",
+      "label": "roundData()",
       "_callable": true,
       "_origin": "ast",
       "community": 35,
-      "community_name": "reveal.test.js",
+      "community_name": "roster.test.js",
       "file_type": "code",
-      "norm_label": "anagramroom()",
-      "source_file": "test/reveal.test.js",
-      "source_location": "L34"
-    },
-    {
-      "id": "test_reveal_test_fakeio",
-      "label": "fakeIo()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 35,
-      "community_name": "reveal.test.js",
-      "file_type": "code",
-      "norm_label": "fakeio()",
-      "source_file": "test/reveal.test.js",
-      "source_location": "L155"
-    },
-    {
-      "id": "test_reveal_test_fakesocket",
-      "label": "fakeSocket()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 35,
-      "community_name": "reveal.test.js",
-      "file_type": "code",
-      "norm_label": "fakesocket()",
-      "source_file": "test/reveal.test.js",
-      "source_location": "L145"
-    },
-    {
-      "id": "test_reveal_test_stubio",
-      "label": "stubIo()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 35,
-      "community_name": "reveal.test.js",
-      "file_type": "code",
-      "norm_label": "stubio()",
-      "source_file": "test/reveal.test.js",
-      "source_location": "L23"
+      "norm_label": "rounddata()",
+      "source_file": "test/roster.test.js",
+      "source_location": "L71"
     },
     {
       "id": "server_room_newreconnecttoken",
@@ -3378,40 +3354,64 @@
       "source_location": "L148"
     },
     {
-      "id": "shared_normalize_normalizeerror",
-      "label": "normalizeError()",
+      "id": "test_reveal_test_addplayer",
+      "label": "addPlayer()",
       "_callable": true,
       "_origin": "ast",
       "community": 36,
       "community_name": "room.js",
       "file_type": "code",
-      "norm_label": "normalizeerror()",
-      "source_file": "shared/normalize.js",
-      "source_location": "L18"
+      "norm_label": "addplayer()",
+      "source_file": "test/reveal.test.js",
+      "source_location": "L25"
     },
     {
-      "id": "shared_normalize_normalizescore",
-      "label": "normalizeScore()",
+      "id": "test_reveal_test_anagramroom",
+      "label": "anagramRoom()",
       "_callable": true,
       "_origin": "ast",
       "community": 36,
       "community_name": "room.js",
       "file_type": "code",
-      "norm_label": "normalizescore()",
-      "source_file": "shared/normalize.js",
-      "source_location": "L30"
+      "norm_label": "anagramroom()",
+      "source_file": "test/reveal.test.js",
+      "source_location": "L34"
     },
     {
-      "id": "shared_normalize_percentile",
-      "label": "percentile()",
+      "id": "test_reveal_test_fakeio",
+      "label": "fakeIo()",
       "_callable": true,
       "_origin": "ast",
       "community": 36,
       "community_name": "room.js",
       "file_type": "code",
-      "norm_label": "percentile()",
-      "source_file": "shared/normalize.js",
-      "source_location": "L6"
+      "norm_label": "fakeio()",
+      "source_file": "test/reveal.test.js",
+      "source_location": "L155"
+    },
+    {
+      "id": "test_reveal_test_fakesocket",
+      "label": "fakeSocket()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 36,
+      "community_name": "room.js",
+      "file_type": "code",
+      "norm_label": "fakesocket()",
+      "source_file": "test/reveal.test.js",
+      "source_location": "L145"
+    },
+    {
+      "id": "test_reveal_test_stubio",
+      "label": "stubIo()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 36,
+      "community_name": "room.js",
+      "file_type": "code",
+      "norm_label": "stubio()",
+      "source_file": "test/reveal.test.js",
+      "source_location": "L23"
     },
     {
       "id": "scripts_check_fail",
@@ -3474,24 +3474,12 @@
       "source_location": "L28"
     },
     {
-      "id": "server_games_computemetric",
-      "label": "computeMetric()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 39,
-      "community_name": "computeMetric",
-      "file_type": "code",
-      "norm_label": "computemetric()",
-      "source_file": "server/games.js",
-      "source_location": "L663"
-    },
-    {
       "id": "shared_fractions_findpair",
       "label": "findPair()",
       "_callable": true,
       "_origin": "ast",
       "community": 39,
-      "community_name": "computeMetric",
+      "community_name": "fractions.js",
       "file_type": "code",
       "norm_label": "findpair()",
       "source_file": "shared/fractions.js",
@@ -3503,47 +3491,23 @@
       "_callable": true,
       "_origin": "ast",
       "community": 39,
-      "community_name": "computeMetric",
+      "community_name": "fractions.js",
       "file_type": "code",
       "norm_label": "fractionspairs()",
       "source_file": "shared/fractions.js",
       "source_location": "L91"
     },
     {
-      "id": "test_balance_test_score",
-      "label": "score()",
+      "id": "test_fractions_test_round",
+      "label": "round()",
       "_callable": true,
       "_origin": "ast",
       "community": 39,
-      "community_name": "computeMetric",
+      "community_name": "fractions.js",
       "file_type": "code",
-      "norm_label": "score()",
-      "source_file": "test/balance.test.js",
-      "source_location": "L44"
-    },
-    {
-      "id": "test_cups_ten_level_test_score",
-      "label": "score()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 39,
-      "community_name": "computeMetric",
-      "file_type": "code",
-      "norm_label": "score()",
-      "source_file": "test/cups-ten-level.test.js",
-      "source_location": "L40"
-    },
-    {
-      "id": "test_cups_test_score",
-      "label": "score()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 39,
-      "community_name": "computeMetric",
-      "file_type": "code",
-      "norm_label": "score()",
-      "source_file": "test/cups.test.js",
-      "source_location": "L49"
+      "norm_label": "round()",
+      "source_file": "test/fractions.test.js",
+      "source_location": "L25"
     },
     {
       "id": "test_fractions_test_score",
@@ -3551,35 +3515,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 39,
-      "community_name": "computeMetric",
+      "community_name": "fractions.js",
       "file_type": "code",
       "norm_label": "score()",
       "source_file": "test/fractions.test.js",
       "source_location": "L28"
-    },
-    {
-      "id": "test_metronome_test_score",
-      "label": "score()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 39,
-      "community_name": "computeMetric",
-      "file_type": "code",
-      "norm_label": "score()",
-      "source_file": "test/metronome.test.js",
-      "source_location": "L33"
-    },
-    {
-      "id": "test_tray_test_score",
-      "label": "score()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 39,
-      "community_name": "computeMetric",
-      "file_type": "code",
-      "norm_label": "score()",
-      "source_file": "test/tray.test.js",
-      "source_location": "L33"
     },
     {
       "id": "public_js_player_applysnapshot",
@@ -3990,6 +3930,18 @@
       "source_location": "L53"
     },
     {
+      "id": "test_balance_test_score",
+      "label": "score()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 41,
+      "community_name": "balance.test.js",
+      "file_type": "code",
+      "norm_label": "score()",
+      "source_file": "test/balance.test.js",
+      "source_location": "L44"
+    },
+    {
       "id": "test_balance_test_steertowardfall",
       "label": "steerTowardFall()",
       "_callable": true,
@@ -4002,28 +3954,16 @@
       "source_location": "L50"
     },
     {
-      "id": "server_games_pickcontent",
-      "label": "pickContent()",
+      "id": "server_games_computemetric",
+      "label": "computeMetric()",
       "_callable": true,
       "_origin": "ast",
       "community": 43,
-      "community_name": "server/games.js",
+      "community_name": "computeMetric",
       "file_type": "code",
-      "norm_label": "pickcontent()",
+      "norm_label": "computemetric()",
       "source_file": "server/games.js",
-      "source_location": "L275"
-    },
-    {
-      "id": "shared_rng_pick",
-      "label": "pick()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 43,
-      "community_name": "server/games.js",
-      "file_type": "code",
-      "norm_label": "pick()",
-      "source_file": "shared/rng.js",
-      "source_location": "L36"
+      "source_location": "L663"
     },
     {
       "id": "shared_wordhunt_buildgrid",
@@ -4031,7 +3971,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 43,
-      "community_name": "server/games.js",
+      "community_name": "computeMetric",
       "file_type": "code",
       "norm_label": "buildgrid()",
       "source_file": "shared/wordhunt.js",
@@ -4043,7 +3983,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 43,
-      "community_name": "server/games.js",
+      "community_name": "computeMetric",
       "file_type": "code",
       "norm_label": "gridhaspath()",
       "source_file": "shared/wordhunt.js",
@@ -4055,7 +3995,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 43,
-      "community_name": "server/games.js",
+      "community_name": "computeMetric",
       "file_type": "code",
       "norm_label": "scoreword()",
       "source_file": "shared/wordhunt.js",
@@ -4067,11 +4007,47 @@
       "_callable": true,
       "_origin": "ast",
       "community": 43,
-      "community_name": "server/games.js",
+      "community_name": "computeMetric",
       "file_type": "code",
       "norm_label": "solvegrid()",
       "source_file": "shared/wordhunt.js",
       "source_location": "L372"
+    },
+    {
+      "id": "test_metronome_test_score",
+      "label": "score()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 43,
+      "community_name": "computeMetric",
+      "file_type": "code",
+      "norm_label": "score()",
+      "source_file": "test/metronome.test.js",
+      "source_location": "L33"
+    },
+    {
+      "id": "test_tray_test_score",
+      "label": "score()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 43,
+      "community_name": "computeMetric",
+      "file_type": "code",
+      "norm_label": "score()",
+      "source_file": "test/tray.test.js",
+      "source_location": "L33"
+    },
+    {
+      "id": "test_wordhunt_test_round",
+      "label": "round()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 43,
+      "community_name": "computeMetric",
+      "file_type": "code",
+      "norm_label": "round()",
+      "source_file": "test/wordhunt.test.js",
+      "source_location": "L16"
     },
     {
       "id": "test_wordhunt_test_stubio",
@@ -4079,7 +4055,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 43,
-      "community_name": "server/games.js",
+      "community_name": "computeMetric",
       "file_type": "code",
       "norm_label": "stubio()",
       "source_file": "test/wordhunt.test.js",
@@ -4134,64 +4110,64 @@
       "source_location": "L45"
     },
     {
-      "id": "shared_anagram_anagramrounds",
-      "label": "anagramRounds()",
+      "id": "test_harness_test_bot_close",
+      "label": ".close()",
       "_callable": true,
       "_origin": "ast",
       "community": 45,
-      "community_name": "anagram.test.js",
+      "community_name": "Bot",
       "file_type": "code",
-      "norm_label": "anagramrounds()",
-      "source_file": "shared/anagram.js",
-      "source_location": "L54"
+      "norm_label": ".close()",
+      "source_file": "test/harness.test.js",
+      "source_location": "L266"
     },
     {
-      "id": "shared_anagram_istrivialrotation",
-      "label": "isTrivialRotation()",
+      "id": "test_harness_test_bot_constructor",
+      "label": ".constructor()",
       "_callable": true,
       "_origin": "ast",
       "community": 45,
-      "community_name": "anagram.test.js",
+      "community_name": "Bot",
       "file_type": "code",
-      "norm_label": "istrivialrotation()",
-      "source_file": "shared/anagram.js",
-      "source_location": "L19"
+      "norm_label": ".constructor()",
+      "source_file": "test/harness.test.js",
+      "source_location": "L191"
     },
     {
-      "id": "shared_anagram_scrambleword",
-      "label": "scrambleWord()",
+      "id": "test_harness_test_bot_join",
+      "label": ".join()",
       "_callable": true,
       "_origin": "ast",
       "community": 45,
-      "community_name": "anagram.test.js",
+      "community_name": "Bot",
       "file_type": "code",
-      "norm_label": "scrambleword()",
-      "source_file": "shared/anagram.js",
-      "source_location": "L25"
+      "norm_label": ".join()",
+      "source_file": "test/harness.test.js",
+      "source_location": "L203"
     },
     {
-      "id": "test_anagram_test_stubio",
-      "label": "stubIo()",
+      "id": "test_harness_test_bot_wire",
+      "label": ".wire()",
       "_callable": true,
       "_origin": "ast",
       "community": 45,
-      "community_name": "anagram.test.js",
+      "community_name": "Bot",
       "file_type": "code",
-      "norm_label": "stubio()",
-      "source_file": "test/anagram.test.js",
-      "source_location": "L15"
+      "norm_label": ".wire()",
+      "source_file": "test/harness.test.js",
+      "source_location": "L224"
     },
     {
-      "id": "server_games_formatraw",
-      "label": "formatRaw()",
+      "id": "test_harness_test_sleep",
+      "label": "sleep()",
       "_callable": true,
       "_origin": "ast",
-      "community": 46,
-      "community_name": "roster.test.js",
+      "community": 45,
+      "community_name": "Bot",
       "file_type": "code",
-      "norm_label": "formatraw()",
-      "source_file": "server/games.js",
-      "source_location": "L1074"
+      "norm_label": "sleep()",
+      "source_file": "test/harness.test.js",
+      "source_location": "L20"
     },
     {
       "id": "test_metronome_test_addplayer",
@@ -4199,11 +4175,23 @@
       "_callable": true,
       "_origin": "ast",
       "community": 46,
-      "community_name": "roster.test.js",
+      "community_name": "metronome.test.js",
       "file_type": "code",
       "norm_label": "addplayer()",
       "source_file": "test/metronome.test.js",
       "source_location": "L208"
+    },
+    {
+      "id": "test_metronome_test_build",
+      "label": "build()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 46,
+      "community_name": "metronome.test.js",
+      "file_type": "code",
+      "norm_label": "build()",
+      "source_file": "test/metronome.test.js",
+      "source_location": "L30"
     },
     {
       "id": "test_metronome_test_onlymetronome",
@@ -4211,7 +4199,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 46,
-      "community_name": "roster.test.js",
+      "community_name": "metronome.test.js",
       "file_type": "code",
       "norm_label": "onlymetronome()",
       "source_file": "test/metronome.test.js",
@@ -4223,7 +4211,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 46,
-      "community_name": "roster.test.js",
+      "community_name": "metronome.test.js",
       "file_type": "code",
       "norm_label": "sleep()",
       "source_file": "test/metronome.test.js",
@@ -4235,7 +4223,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 46,
-      "community_name": "roster.test.js",
+      "community_name": "metronome.test.js",
       "file_type": "code",
       "norm_label": "stubio()",
       "source_file": "test/metronome.test.js",
@@ -4247,7 +4235,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 46,
-      "community_name": "roster.test.js",
+      "community_name": "metronome.test.js",
       "file_type": "code",
       "norm_label": "taps()",
       "source_file": "test/metronome.test.js",
@@ -4259,35 +4247,47 @@
       "_callable": true,
       "_origin": "ast",
       "community": 46,
-      "community_name": "roster.test.js",
+      "community_name": "metronome.test.js",
       "file_type": "code",
       "norm_label": "waitfor()",
       "source_file": "test/metronome.test.js",
       "source_location": "L199"
     },
     {
-      "id": "server_room_room_handlesubmit",
-      "label": ".handleSubmit()",
+      "id": "shared_normalize_normalizeerror",
+      "label": "normalizeError()",
       "_callable": true,
       "_origin": "ast",
-      "community": 7,
-      "community_name": "multistage.test.js",
+      "community": 47,
+      "community_name": "normalize.js",
       "file_type": "code",
-      "norm_label": ".handlesubmit()",
-      "source_file": "server/room.js",
-      "source_location": "L976"
+      "norm_label": "normalizeerror()",
+      "source_file": "shared/normalize.js",
+      "source_location": "L18"
     },
     {
-      "id": "server_room_room_lockedsolved",
-      "label": ".lockedSolved()",
+      "id": "shared_normalize_normalizescore",
+      "label": "normalizeScore()",
       "_callable": true,
       "_origin": "ast",
-      "community": 7,
-      "community_name": "multistage.test.js",
+      "community": 47,
+      "community_name": "normalize.js",
       "file_type": "code",
-      "norm_label": ".lockedsolved()",
-      "source_file": "server/room.js",
-      "source_location": "L1038"
+      "norm_label": "normalizescore()",
+      "source_file": "shared/normalize.js",
+      "source_location": "L30"
+    },
+    {
+      "id": "shared_normalize_percentile",
+      "label": "percentile()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 47,
+      "community_name": "normalize.js",
+      "file_type": "code",
+      "norm_label": "percentile()",
+      "source_file": "shared/normalize.js",
+      "source_location": "L6"
     },
     {
       "id": "test_multistage_test_addplayer",
@@ -5178,6 +5178,17 @@
       "source_location": "L55"
     },
     {
+      "id": "server_room_reconnect_rotation_grace_ms",
+      "label": "RECONNECT_ROTATION_GRACE_MS",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Room",
+      "file_type": "code",
+      "norm_label": "reconnect_rotation_grace_ms",
+      "source_file": "server/room.js",
+      "source_location": "L167"
+    },
+    {
       "id": "server_sockets",
       "label": "sockets.js",
       "_origin": "ast",
@@ -5189,11 +5200,77 @@
       "source_location": "L1"
     },
     {
+      "id": "server_games",
+      "label": "server/games.js",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "server/games.js",
+      "file_type": "code",
+      "norm_label": "server/games.js",
+      "source_file": "server/games.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "server_games_caption_prompts",
+      "label": "CAPTION_PROMPTS",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "server/games.js",
+      "file_type": "code",
+      "norm_label": "caption_prompts",
+      "source_file": "server/games.js",
+      "source_location": "L142"
+    },
+    {
+      "id": "server_games_icebreaker_prompts",
+      "label": "ICEBREAKER_PROMPTS",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "server/games.js",
+      "file_type": "code",
+      "norm_label": "icebreaker_prompts",
+      "source_file": "server/games.js",
+      "source_location": "L180"
+    },
+    {
+      "id": "server_games_metronome_intervals",
+      "label": "METRONOME_INTERVALS",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "server/games.js",
+      "file_type": "code",
+      "norm_label": "metronome_intervals",
+      "source_file": "server/games.js",
+      "source_location": "L205"
+    },
+    {
+      "id": "server_games_room_questions",
+      "label": "ROOM_QUESTIONS",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "server/games.js",
+      "file_type": "code",
+      "norm_label": "room_questions",
+      "source_file": "server/games.js",
+      "source_location": "L56"
+    },
+    {
+      "id": "server_games_sentences",
+      "label": "SENTENCES",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "server/games.js",
+      "file_type": "code",
+      "norm_label": "sentences",
+      "source_file": "server/games.js",
+      "source_location": "L23"
+    },
+    {
       "id": "shared_textclean",
       "label": "textclean.js",
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "textclean.js",
       "source_file": "shared/textclean.js",
@@ -5204,7 +5281,7 @@
       "label": "ENTRY_MAX_CHARS",
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "entry_max_chars",
       "source_file": "shared/textclean.js",
@@ -5215,7 +5292,7 @@
       "label": "caption.test.js",
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "caption.test.js",
       "source_file": "test/caption.test.js",
@@ -5226,7 +5303,7 @@
       "label": "stageOne",
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "stageone",
       "source_file": "test/caption.test.js",
@@ -5237,7 +5314,7 @@
       "label": "icebreaker.test.js",
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "icebreaker.test.js",
       "source_file": "test/icebreaker.test.js",
@@ -5248,7 +5325,7 @@
       "label": "PLAYERS",
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "players",
       "source_file": "test/icebreaker.test.js",
@@ -5259,7 +5336,7 @@
       "label": "stageOne",
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "stageone",
       "source_file": "test/icebreaker.test.js",
@@ -5270,7 +5347,7 @@
       "label": "textclean.test.js",
       "_origin": "ast",
       "community": 1,
-      "community_name": "caption.test.js",
+      "community_name": "server/games.js",
       "file_type": "code",
       "norm_label": "textclean.test.js",
       "source_file": "test/textclean.test.js",
@@ -5525,7 +5602,7 @@
       "file_type": "code",
       "norm_label": "all_blocked",
       "source_file": "test/room.test.js",
-      "source_location": "L425"
+      "source_location": "L459"
     },
     {
       "id": "test_room_test_fast",
@@ -6109,22 +6186,11 @@
       "source_location": "L1"
     },
     {
-      "id": "server_games_roster",
-      "label": "ROSTER",
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "harness.test.js",
-      "file_type": "code",
-      "norm_label": "roster",
-      "source_file": "server/games.js",
-      "source_location": "L216"
-    },
-    {
       "id": "shared_feedback",
       "label": "feedback.js",
       "_origin": "ast",
       "community": 27,
-      "community_name": "harness.test.js",
+      "community_name": "feedback.js",
       "file_type": "code",
       "norm_label": "feedback.js",
       "source_file": "shared/feedback.js",
@@ -6135,7 +6201,7 @@
       "label": "AREA_TOL",
       "_origin": "ast",
       "community": 27,
-      "community_name": "harness.test.js",
+      "community_name": "feedback.js",
       "file_type": "code",
       "norm_label": "area_tol",
       "source_file": "shared/feedback.js",
@@ -6146,7 +6212,7 @@
       "label": "BISECT_TOL",
       "_origin": "ast",
       "community": 27,
-      "community_name": "harness.test.js",
+      "community_name": "feedback.js",
       "file_type": "code",
       "norm_label": "bisect_tol",
       "source_file": "shared/feedback.js",
@@ -6157,7 +6223,7 @@
       "label": "DOTS_TOL",
       "_origin": "ast",
       "community": 27,
-      "community_name": "harness.test.js",
+      "community_name": "feedback.js",
       "file_type": "code",
       "norm_label": "dots_tol",
       "source_file": "shared/feedback.js",
@@ -6168,7 +6234,7 @@
       "label": "STOPCLOCK_TOL",
       "_origin": "ast",
       "community": 27,
-      "community_name": "harness.test.js",
+      "community_name": "feedback.js",
       "file_type": "code",
       "norm_label": "stopclock_tol",
       "source_file": "shared/feedback.js",
@@ -6179,33 +6245,11 @@
       "label": "feedback.test.js",
       "_origin": "ast",
       "community": 27,
-      "community_name": "harness.test.js",
+      "community_name": "feedback.js",
       "file_type": "code",
       "norm_label": "feedback.test.js",
       "source_file": "test/feedback.test.js",
       "source_location": "L1"
-    },
-    {
-      "id": "test_harness_test",
-      "label": "harness.test.js",
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "harness.test.js",
-      "file_type": "code",
-      "norm_label": "harness.test.js",
-      "source_file": "test/harness.test.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "test_harness_test_test_config",
-      "label": "TEST_CONFIG",
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "harness.test.js",
-      "file_type": "code",
-      "norm_label": "test_config",
-      "source_file": "test/harness.test.js",
-      "source_location": "L39"
     },
     {
       "id": "server_games_completion_mode",
@@ -6516,6 +6560,28 @@
       "source_location": "L18"
     },
     {
+      "id": "shared_anagram",
+      "label": "anagram.js",
+      "_origin": "ast",
+      "community": 31,
+      "community_name": "seededRng",
+      "file_type": "code",
+      "norm_label": "anagram.js",
+      "source_file": "shared/anagram.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "shared_anagram_words_by_length",
+      "label": "WORDS_BY_LENGTH",
+      "_origin": "ast",
+      "community": 31,
+      "community_name": "seededRng",
+      "file_type": "code",
+      "norm_label": "words_by_length",
+      "source_file": "shared/anagram.js",
+      "source_location": "L7"
+    },
+    {
       "id": "shared_area",
       "label": "area.js",
       "_origin": "ast",
@@ -6558,6 +6624,28 @@
       "norm_label": "shapes",
       "source_file": "shared/area.js",
       "source_location": "L13"
+    },
+    {
+      "id": "test_anagram_test",
+      "label": "anagram.test.js",
+      "_origin": "ast",
+      "community": 31,
+      "community_name": "seededRng",
+      "file_type": "code",
+      "norm_label": "anagram.test.js",
+      "source_file": "test/anagram.test.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "test_anagram_test_config",
+      "label": "CONFIG",
+      "_origin": "ast",
+      "community": 31,
+      "community_name": "seededRng",
+      "file_type": "code",
+      "norm_label": "config",
+      "source_file": "test/anagram.test.js",
+      "source_location": "L11"
     },
     {
       "id": "test_area_test",
@@ -6747,15 +6835,81 @@
       "source_location": "L1"
     },
     {
-      "id": "test_reveal_test",
-      "label": "reveal.test.js",
+      "id": "server_games_multi_stage",
+      "label": "MULTI_STAGE",
       "_origin": "ast",
       "community": 35,
-      "community_name": "reveal.test.js",
+      "community_name": "roster.test.js",
       "file_type": "code",
-      "norm_label": "reveal.test.js",
-      "source_file": "test/reveal.test.js",
+      "norm_label": "multi_stage",
+      "source_file": "server/games.js",
+      "source_location": "L248"
+    },
+    {
+      "id": "test_harness_test",
+      "label": "harness.test.js",
+      "_origin": "ast",
+      "community": 35,
+      "community_name": "roster.test.js",
+      "file_type": "code",
+      "norm_label": "harness.test.js",
+      "source_file": "test/harness.test.js",
       "source_location": "L1"
+    },
+    {
+      "id": "test_harness_test_test_config",
+      "label": "TEST_CONFIG",
+      "_origin": "ast",
+      "community": 35,
+      "community_name": "roster.test.js",
+      "file_type": "code",
+      "norm_label": "test_config",
+      "source_file": "test/harness.test.js",
+      "source_location": "L39"
+    },
+    {
+      "id": "test_roster_test",
+      "label": "roster.test.js",
+      "_origin": "ast",
+      "community": 35,
+      "community_name": "roster.test.js",
+      "file_type": "code",
+      "norm_label": "roster.test.js",
+      "source_file": "test/roster.test.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "test_roster_test_config",
+      "label": "CONFIG",
+      "_origin": "ast",
+      "community": 35,
+      "community_name": "roster.test.js",
+      "file_type": "code",
+      "norm_label": "config",
+      "source_file": "test/roster.test.js",
+      "source_location": "L69"
+    },
+    {
+      "id": "test_roster_test_payloads",
+      "label": "PAYLOADS",
+      "_origin": "ast",
+      "community": 35,
+      "community_name": "roster.test.js",
+      "file_type": "code",
+      "norm_label": "payloads",
+      "source_file": "test/roster.test.js",
+      "source_location": "L38"
+    },
+    {
+      "id": "server_games_roster",
+      "label": "ROSTER",
+      "_origin": "ast",
+      "community": 36,
+      "community_name": "room.js",
+      "file_type": "code",
+      "norm_label": "roster",
+      "source_file": "server/games.js",
+      "source_location": "L216"
     },
     {
       "id": "server_room",
@@ -6824,25 +6978,14 @@
       "source_location": "L34"
     },
     {
-      "id": "shared_normalize",
-      "label": "normalize.js",
+      "id": "test_reveal_test",
+      "label": "reveal.test.js",
       "_origin": "ast",
       "community": 36,
       "community_name": "room.js",
       "file_type": "code",
-      "norm_label": "normalize.js",
-      "source_file": "shared/normalize.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "test_normalize_test",
-      "label": "normalize.test.js",
-      "_origin": "ast",
-      "community": 36,
-      "community_name": "room.js",
-      "file_type": "code",
-      "norm_label": "normalize.test.js",
-      "source_file": "test/normalize.test.js",
+      "norm_label": "reveal.test.js",
+      "source_file": "test/reveal.test.js",
       "source_location": "L1"
     },
     {
@@ -7098,7 +7241,7 @@
       "label": "fractions.js",
       "_origin": "ast",
       "community": 39,
-      "community_name": "computeMetric",
+      "community_name": "fractions.js",
       "file_type": "code",
       "norm_label": "fractions.js",
       "source_file": "shared/fractions.js",
@@ -7109,7 +7252,7 @@
       "label": "FRACTIONS_COUNT",
       "_origin": "ast",
       "community": 39,
-      "community_name": "computeMetric",
+      "community_name": "fractions.js",
       "file_type": "code",
       "norm_label": "fractions_count",
       "source_file": "shared/fractions.js",
@@ -7120,7 +7263,7 @@
       "label": "FRACTIONS_PENALTY",
       "_origin": "ast",
       "community": 39,
-      "community_name": "computeMetric",
+      "community_name": "fractions.js",
       "file_type": "code",
       "norm_label": "fractions_penalty",
       "source_file": "shared/fractions.js",
@@ -7131,7 +7274,7 @@
       "label": "MAGNITUDE_POOL",
       "_origin": "ast",
       "community": 39,
-      "community_name": "computeMetric",
+      "community_name": "fractions.js",
       "file_type": "code",
       "norm_label": "magnitude_pool",
       "source_file": "shared/fractions.js",
@@ -7142,7 +7285,7 @@
       "label": "POWER_POOL",
       "_origin": "ast",
       "community": 39,
-      "community_name": "computeMetric",
+      "community_name": "fractions.js",
       "file_type": "code",
       "norm_label": "power_pool",
       "source_file": "shared/fractions.js",
@@ -7153,7 +7296,7 @@
       "label": "fractions.test.js",
       "_origin": "ast",
       "community": 39,
-      "community_name": "computeMetric",
+      "community_name": "fractions.js",
       "file_type": "code",
       "norm_label": "fractions.test.js",
       "source_file": "test/fractions.test.js",
@@ -7164,7 +7307,7 @@
       "label": "CONFIG",
       "_origin": "ast",
       "community": 39,
-      "community_name": "computeMetric",
+      "community_name": "fractions.js",
       "file_type": "code",
       "norm_label": "config",
       "source_file": "test/fractions.test.js",
@@ -7395,77 +7538,131 @@
       "source_location": "L39"
     },
     {
-      "id": "server_games",
-      "label": "server/games.js",
+      "id": "docs_security_strix_bac3_report",
+      "label": "strix-bac3-report.md",
       "_origin": "ast",
-      "community": 43,
-      "community_name": "server/games.js",
-      "file_type": "code",
-      "norm_label": "server/games.js",
-      "source_file": "server/games.js",
+      "community": 42,
+      "community_name": "strix-bac3-report.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "strix-bac3-report.md",
+      "source_file": "docs/security/strix-bac3-report.md",
       "source_location": "L1"
     },
     {
-      "id": "server_games_caption_prompts",
-      "label": "CAPTION_PROMPTS",
+      "id": "docs_security_strix_bac3_report_executive_summary",
+      "label": "Executive Summary",
       "_origin": "ast",
-      "community": 43,
-      "community_name": "server/games.js",
-      "file_type": "code",
-      "norm_label": "caption_prompts",
-      "source_file": "server/games.js",
-      "source_location": "L142"
+      "community": 42,
+      "community_name": "strix-bac3-report.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "executive summary",
+      "source_file": "docs/security/strix-bac3-report.md",
+      "source_location": "L5"
     },
     {
-      "id": "server_games_icebreaker_prompts",
-      "label": "ICEBREAKER_PROMPTS",
+      "id": "docs_security_strix_bac3_report_executive_summary_7",
+      "label": "Executive Summary",
       "_origin": "ast",
-      "community": 43,
-      "community_name": "server/games.js",
-      "file_type": "code",
-      "norm_label": "icebreaker_prompts",
-      "source_file": "server/games.js",
-      "source_location": "L180"
+      "community": 42,
+      "community_name": "strix-bac3-report.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "executive summary",
+      "source_file": "docs/security/strix-bac3-report.md",
+      "source_location": "L7"
     },
     {
-      "id": "server_games_metronome_intervals",
-      "label": "METRONOME_INTERVALS",
+      "id": "docs_security_strix_bac3_report_methodology",
+      "label": "Methodology",
       "_origin": "ast",
-      "community": 43,
-      "community_name": "server/games.js",
-      "file_type": "code",
-      "norm_label": "metronome_intervals",
-      "source_file": "server/games.js",
-      "source_location": "L205"
+      "community": 42,
+      "community_name": "strix-bac3-report.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "methodology",
+      "source_file": "docs/security/strix-bac3-report.md",
+      "source_location": "L25"
     },
     {
-      "id": "server_games_room_questions",
-      "label": "ROOM_QUESTIONS",
+      "id": "docs_security_strix_bac3_report_methodology_27",
+      "label": "Methodology",
       "_origin": "ast",
-      "community": 43,
-      "community_name": "server/games.js",
-      "file_type": "code",
-      "norm_label": "room_questions",
-      "source_file": "server/games.js",
-      "source_location": "L56"
+      "community": 42,
+      "community_name": "strix-bac3-report.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "methodology",
+      "source_file": "docs/security/strix-bac3-report.md",
+      "source_location": "L27"
     },
     {
-      "id": "server_games_sentences",
-      "label": "SENTENCES",
+      "id": "docs_security_strix_bac3_report_recommendations",
+      "label": "Recommendations",
       "_origin": "ast",
-      "community": 43,
-      "community_name": "server/games.js",
-      "file_type": "code",
-      "norm_label": "sentences",
-      "source_file": "server/games.js",
-      "source_location": "L23"
+      "community": 42,
+      "community_name": "strix-bac3-report.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "recommendations",
+      "source_file": "docs/security/strix-bac3-report.md",
+      "source_location": "L74"
+    },
+    {
+      "id": "docs_security_strix_bac3_report_recommendations_76",
+      "label": "Recommendations",
+      "_origin": "ast",
+      "community": 42,
+      "community_name": "strix-bac3-report.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "recommendations",
+      "source_file": "docs/security/strix-bac3-report.md",
+      "source_location": "L76"
+    },
+    {
+      "id": "docs_security_strix_bac3_report_security_penetration_test_report",
+      "label": "Security Penetration Test Report",
+      "_origin": "ast",
+      "community": 42,
+      "community_name": "strix-bac3-report.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "security penetration test report",
+      "source_file": "docs/security/strix-bac3-report.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "docs_security_strix_bac3_report_technical_analysis",
+      "label": "Technical Analysis",
+      "_origin": "ast",
+      "community": 42,
+      "community_name": "strix-bac3-report.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "technical analysis",
+      "source_file": "docs/security/strix-bac3-report.md",
+      "source_location": "L49"
+    },
+    {
+      "id": "docs_security_strix_bac3_report_technical_analysis_51",
+      "label": "Technical Analysis",
+      "_origin": "ast",
+      "community": 42,
+      "community_name": "strix-bac3-report.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "technical analysis",
+      "source_file": "docs/security/strix-bac3-report.md",
+      "source_location": "L51"
     },
     {
       "id": "shared_wordhunt",
       "label": "wordhunt.js",
       "_origin": "ast",
       "community": 43,
-      "community_name": "server/games.js",
+      "community_name": "computeMetric",
       "file_type": "code",
       "norm_label": "wordhunt.js",
       "source_file": "shared/wordhunt.js",
@@ -7476,7 +7673,7 @@
       "label": "DICE",
       "_origin": "ast",
       "community": 43,
-      "community_name": "server/games.js",
+      "community_name": "computeMetric",
       "file_type": "code",
       "norm_label": "dice",
       "source_file": "shared/wordhunt.js",
@@ -7487,7 +7684,7 @@
       "label": "WORDLIST",
       "_origin": "ast",
       "community": 43,
-      "community_name": "server/games.js",
+      "community_name": "computeMetric",
       "file_type": "code",
       "norm_label": "wordlist",
       "source_file": "shared/wordhunt.js",
@@ -7498,7 +7695,7 @@
       "label": "wordhunt.test.js",
       "_origin": "ast",
       "community": 43,
-      "community_name": "server/games.js",
+      "community_name": "computeMetric",
       "file_type": "code",
       "norm_label": "wordhunt.test.js",
       "source_file": "test/wordhunt.test.js",
@@ -7509,7 +7706,7 @@
       "label": "CONFIG",
       "_origin": "ast",
       "community": 43,
-      "community_name": "server/games.js",
+      "community_name": "computeMetric",
       "file_type": "code",
       "norm_label": "config",
       "source_file": "test/wordhunt.test.js",
@@ -7571,66 +7768,11 @@
       "source_location": "L1"
     },
     {
-      "id": "shared_anagram",
-      "label": "anagram.js",
-      "_origin": "ast",
-      "community": 45,
-      "community_name": "anagram.test.js",
-      "file_type": "code",
-      "norm_label": "anagram.js",
-      "source_file": "shared/anagram.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "shared_anagram_words_by_length",
-      "label": "WORDS_BY_LENGTH",
-      "_origin": "ast",
-      "community": 45,
-      "community_name": "anagram.test.js",
-      "file_type": "code",
-      "norm_label": "words_by_length",
-      "source_file": "shared/anagram.js",
-      "source_location": "L7"
-    },
-    {
-      "id": "test_anagram_test",
-      "label": "anagram.test.js",
-      "_origin": "ast",
-      "community": 45,
-      "community_name": "anagram.test.js",
-      "file_type": "code",
-      "norm_label": "anagram.test.js",
-      "source_file": "test/anagram.test.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "test_anagram_test_config",
-      "label": "CONFIG",
-      "_origin": "ast",
-      "community": 45,
-      "community_name": "anagram.test.js",
-      "file_type": "code",
-      "norm_label": "config",
-      "source_file": "test/anagram.test.js",
-      "source_location": "L11"
-    },
-    {
-      "id": "server_games_multi_stage",
-      "label": "MULTI_STAGE",
-      "_origin": "ast",
-      "community": 46,
-      "community_name": "roster.test.js",
-      "file_type": "code",
-      "norm_label": "multi_stage",
-      "source_file": "server/games.js",
-      "source_location": "L248"
-    },
-    {
       "id": "server_games_needs_aggregation",
       "label": "NEEDS_AGGREGATION",
       "_origin": "ast",
       "community": 46,
-      "community_name": "roster.test.js",
+      "community_name": "metronome.test.js",
       "file_type": "code",
       "norm_label": "needs_aggregation",
       "source_file": "server/games.js",
@@ -7641,7 +7783,7 @@
       "label": "metronome.test.js",
       "_origin": "ast",
       "community": 46,
-      "community_name": "roster.test.js",
+      "community_name": "metronome.test.js",
       "file_type": "code",
       "norm_label": "metronome.test.js",
       "source_file": "test/metronome.test.js",
@@ -7652,44 +7794,33 @@
       "label": "FAST",
       "_origin": "ast",
       "community": 46,
-      "community_name": "roster.test.js",
+      "community_name": "metronome.test.js",
       "file_type": "code",
       "norm_label": "fast",
       "source_file": "test/metronome.test.js",
       "source_location": "L221"
     },
     {
-      "id": "test_roster_test",
-      "label": "roster.test.js",
+      "id": "shared_normalize",
+      "label": "normalize.js",
       "_origin": "ast",
-      "community": 46,
-      "community_name": "roster.test.js",
+      "community": 47,
+      "community_name": "normalize.js",
       "file_type": "code",
-      "norm_label": "roster.test.js",
-      "source_file": "test/roster.test.js",
+      "norm_label": "normalize.js",
+      "source_file": "shared/normalize.js",
       "source_location": "L1"
     },
     {
-      "id": "test_roster_test_config",
-      "label": "CONFIG",
+      "id": "test_normalize_test",
+      "label": "normalize.test.js",
       "_origin": "ast",
-      "community": 46,
-      "community_name": "roster.test.js",
+      "community": 47,
+      "community_name": "normalize.js",
       "file_type": "code",
-      "norm_label": "config",
-      "source_file": "test/roster.test.js",
-      "source_location": "L69"
-    },
-    {
-      "id": "test_roster_test_payloads",
-      "label": "PAYLOADS",
-      "_origin": "ast",
-      "community": 46,
-      "community_name": "roster.test.js",
-      "file_type": "code",
-      "norm_label": "payloads",
-      "source_file": "test/roster.test.js",
-      "source_location": "L38"
+      "norm_label": "normalize.test.js",
+      "source_file": "test/normalize.test.js",
+      "source_location": "L1"
     },
     {
       "id": "package",
@@ -9247,7 +9378,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L110",
+      "source_location": "L118",
       "weight": 1.0
     },
     {
@@ -9259,7 +9390,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L112",
+      "source_location": "L120",
       "weight": 1.0
     },
     {
@@ -9271,7 +9402,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L701",
+      "source_location": "L709",
       "weight": 1.0
     },
     {
@@ -9283,7 +9414,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L66",
+      "source_location": "L74",
       "weight": 1.0
     },
     {
@@ -9295,7 +9426,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L78",
+      "source_location": "L86",
       "weight": 1.0
     },
     {
@@ -9307,7 +9438,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L79",
+      "source_location": "L87",
       "weight": 1.0
     },
     {
@@ -9319,7 +9450,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L483",
+      "source_location": "L491",
       "weight": 1.0
     },
     {
@@ -9331,7 +9462,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L633",
+      "source_location": "L641",
       "weight": 1.0
     },
     {
@@ -9343,7 +9474,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L635",
+      "source_location": "L643",
       "weight": 1.0
     },
     {
@@ -9355,7 +9486,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L637",
+      "source_location": "L645",
       "weight": 1.0
     },
     {
@@ -9367,7 +9498,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L169",
+      "source_location": "L177",
       "weight": 1.0
     },
     {
@@ -9379,7 +9510,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L88",
+      "source_location": "L96",
       "weight": 1.0
     },
     {
@@ -9391,7 +9522,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L89",
+      "source_location": "L97",
       "weight": 1.0
     },
     {
@@ -9403,7 +9534,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L365",
+      "source_location": "L373",
       "weight": 1.0
     },
     {
@@ -9415,7 +9546,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L367",
+      "source_location": "L375",
       "weight": 1.0
     },
     {
@@ -9427,7 +9558,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L373",
+      "source_location": "L381",
       "weight": 1.0
     },
     {
@@ -9439,7 +9570,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L394",
+      "source_location": "L402",
       "weight": 1.0
     },
     {
@@ -9451,7 +9582,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L395",
+      "source_location": "L403",
       "weight": 1.0
     },
     {
@@ -9463,7 +9594,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L266",
+      "source_location": "L274",
       "weight": 1.0
     },
     {
@@ -9475,7 +9606,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L271",
+      "source_location": "L279",
       "weight": 1.0
     },
     {
@@ -9487,7 +9618,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L283",
+      "source_location": "L291",
       "weight": 1.0
     },
     {
@@ -9499,7 +9630,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L333",
+      "source_location": "L341",
       "weight": 1.0
     },
     {
@@ -9511,7 +9642,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L179",
+      "source_location": "L187",
       "weight": 1.0
     },
     {
@@ -9523,7 +9654,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L606",
+      "source_location": "L614",
       "weight": 1.0
     },
     {
@@ -9535,7 +9666,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L609",
+      "source_location": "L617",
       "weight": 1.0
     },
     {
@@ -9547,7 +9678,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L595",
+      "source_location": "L603",
       "weight": 1.0
     },
     {
@@ -9559,7 +9690,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L596",
+      "source_location": "L604",
       "weight": 1.0
     },
     {
@@ -9571,7 +9702,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L598",
+      "source_location": "L606",
       "weight": 1.0
     },
     {
@@ -9583,7 +9714,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L440",
+      "source_location": "L448",
       "weight": 1.0
     },
     {
@@ -9595,7 +9726,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L441",
+      "source_location": "L449",
       "weight": 1.0
     },
     {
@@ -9607,7 +9738,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L552",
+      "source_location": "L560",
       "weight": 1.0
     },
     {
@@ -9619,7 +9750,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L553",
+      "source_location": "L561",
       "weight": 1.0
     },
     {
@@ -9631,7 +9762,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L554",
+      "source_location": "L562",
       "weight": 1.0
     },
     {
@@ -9643,7 +9774,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L555",
+      "source_location": "L563",
       "weight": 1.0
     },
     {
@@ -9655,7 +9786,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L566",
+      "source_location": "L574",
       "weight": 1.0
     },
     {
@@ -9667,7 +9798,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L571",
+      "source_location": "L579",
       "weight": 1.0
     },
     {
@@ -9679,7 +9810,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L577",
+      "source_location": "L585",
       "weight": 1.0
     },
     {
@@ -9691,7 +9822,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L295",
+      "source_location": "L303",
       "weight": 1.0
     },
     {
@@ -9703,7 +9834,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L296",
+      "source_location": "L304",
       "weight": 1.0
     },
     {
@@ -9715,7 +9846,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L677",
+      "source_location": "L685",
       "weight": 1.0
     },
     {
@@ -9727,7 +9858,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L696",
+      "source_location": "L704",
       "weight": 1.0
     },
     {
@@ -9739,7 +9870,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L697",
+      "source_location": "L705",
       "weight": 1.0
     },
     {
@@ -9751,7 +9882,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "public/js/host.js",
-      "source_location": "L530",
+      "source_location": "L538",
       "weight": 1.0
     },
     {
@@ -11695,7 +11826,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L871",
+      "source_location": "L885",
       "weight": 1.0
     },
     {
@@ -11707,7 +11838,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L871",
+      "source_location": "L885",
       "weight": 1.0
     },
     {
@@ -11719,7 +11850,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L875",
+      "source_location": "L889",
       "weight": 1.0
     },
     {
@@ -11731,7 +11862,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L876",
+      "source_location": "L890",
       "weight": 1.0
     },
     {
@@ -11743,7 +11874,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L640",
+      "source_location": "L654",
       "weight": 1.0
     },
     {
@@ -11755,7 +11886,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L649",
+      "source_location": "L663",
       "weight": 1.0
     },
     {
@@ -11767,7 +11898,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L650",
+      "source_location": "L664",
       "weight": 1.0
     },
     {
@@ -11779,7 +11910,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L834",
+      "source_location": "L848",
       "weight": 1.0
     },
     {
@@ -11791,7 +11922,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L834",
+      "source_location": "L848",
       "weight": 1.0
     },
     {
@@ -11803,7 +11934,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L846",
+      "source_location": "L860",
       "weight": 1.0
     },
     {
@@ -11815,7 +11946,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L851",
+      "source_location": "L865",
       "weight": 1.0
     },
     {
@@ -11827,7 +11958,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L851",
+      "source_location": "L865",
       "weight": 1.0
     },
     {
@@ -11839,7 +11970,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L284",
+      "source_location": "L291",
       "weight": 1.0
     },
     {
@@ -11851,48 +11982,12 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L284",
+      "source_location": "L291",
       "weight": 1.0
     },
     {
       "source": "server_room_room_closegame",
       "target": "server_room_room_cleartimer",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "server/room.js",
-      "source_location": "L1048",
-      "weight": 1.0
-    },
-    {
-      "source": "server_room_room_closegame",
-      "target": "server_room_room_startstages",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "server/room.js",
-      "source_location": "L1055",
-      "weight": 1.0
-    },
-    {
-      "source": "server_room_room_closegame",
-      "target": "server_room_room_betweenstages",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "server/room.js",
-      "source_location": "L1058",
-      "weight": 1.0
-    },
-    {
-      "source": "server_room_room_closegame",
-      "target": "server_room_room_startgame",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -11904,6 +11999,42 @@
     },
     {
       "source": "server_room_room_closegame",
+      "target": "server_room_room_startstages",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "server/room.js",
+      "source_location": "L1069",
+      "weight": 1.0
+    },
+    {
+      "source": "server_room_room_closegame",
+      "target": "server_room_room_betweenstages",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "server/room.js",
+      "source_location": "L1072",
+      "weight": 1.0
+    },
+    {
+      "source": "server_room_room_closegame",
+      "target": "server_room_room_startgame",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "server/room.js",
+      "source_location": "L1076",
+      "weight": 1.0
+    },
+    {
+      "source": "server_room_room_closegame",
       "target": "server_room_room_finishgame",
       "relation": "calls",
       "_origin": "ast",
@@ -11911,7 +12042,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1065",
+      "source_location": "L1079",
       "weight": 1.0
     },
     {
@@ -11923,7 +12054,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L166",
+      "source_location": "L173",
       "weight": 1.0
     },
     {
@@ -11935,7 +12066,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1353",
+      "source_location": "L1367",
       "weight": 1.0
     },
     {
@@ -11947,7 +12078,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1359",
+      "source_location": "L1373",
       "weight": 1.0
     },
     {
@@ -11959,7 +12090,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L306",
+      "source_location": "L313",
       "weight": 1.0
     },
     {
@@ -11971,7 +12102,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L311",
+      "source_location": "L318",
       "weight": 1.0
     },
     {
@@ -11983,7 +12114,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L318",
+      "source_location": "L325",
       "weight": 1.0
     },
     {
@@ -11995,7 +12126,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L320",
+      "source_location": "L327",
       "weight": 1.0
     },
     {
@@ -12007,7 +12138,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L247",
+      "source_location": "L254",
       "weight": 1.0
     },
     {
@@ -12019,7 +12150,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L249",
+      "source_location": "L256",
       "weight": 1.0
     },
     {
@@ -12031,7 +12162,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L258",
+      "source_location": "L265",
       "weight": 1.0
     },
     {
@@ -12043,7 +12174,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L732",
+      "source_location": "L746",
       "weight": 1.0
     },
     {
@@ -12055,7 +12186,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L939",
+      "source_location": "L953",
       "weight": 1.0
     },
     {
@@ -12067,7 +12198,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L939",
+      "source_location": "L953",
       "weight": 1.0
     },
     {
@@ -12079,7 +12210,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L941",
+      "source_location": "L955",
       "weight": 1.0
     },
     {
@@ -12091,7 +12222,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1074",
+      "source_location": "L1088",
       "weight": 1.0
     },
     {
@@ -12103,7 +12234,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1077",
+      "source_location": "L1091",
       "weight": 1.0
     },
     {
@@ -12115,7 +12246,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1080",
+      "source_location": "L1094",
       "weight": 1.0
     },
     {
@@ -12127,7 +12258,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1090",
+      "source_location": "L1104",
       "weight": 1.0
     },
     {
@@ -12139,7 +12270,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1093",
+      "source_location": "L1107",
       "weight": 1.0
     },
     {
@@ -12151,7 +12282,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1102",
+      "source_location": "L1116",
       "weight": 1.0
     },
     {
@@ -12163,7 +12294,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1265",
+      "source_location": "L1279",
       "weight": 1.0
     },
     {
@@ -12175,7 +12306,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1275",
+      "source_location": "L1289",
       "weight": 1.0
     },
     {
@@ -12187,7 +12318,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L655",
+      "source_location": "L669",
       "weight": 1.0
     },
     {
@@ -12199,7 +12330,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L448",
+      "source_location": "L462",
       "weight": 1.0
     },
     {
@@ -12211,7 +12342,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L449",
+      "source_location": "L463",
       "weight": 1.0
     },
     {
@@ -12223,7 +12354,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L458",
+      "source_location": "L472",
       "weight": 1.0
     },
     {
@@ -12235,7 +12366,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1238",
+      "source_location": "L1252",
       "weight": 1.0
     },
     {
@@ -12247,7 +12378,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1255",
+      "source_location": "L1269",
       "weight": 1.0
     },
     {
@@ -12259,19 +12390,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1256",
-      "weight": 1.0
-    },
-    {
-      "source": "server_room_room_handlesubmit",
-      "target": "server_room_room_closegame",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "server/room.js",
-      "source_location": "L1000",
+      "source_location": "L1270",
       "weight": 1.0
     },
     {
@@ -12283,7 +12402,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L989",
+      "source_location": "L1003",
       "weight": 1.0
     },
     {
@@ -12295,7 +12414,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L992",
+      "source_location": "L1006",
       "weight": 1.0
     },
     {
@@ -12307,7 +12426,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L998",
+      "source_location": "L1012",
       "weight": 1.0
     },
     {
@@ -12319,7 +12438,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L999",
+      "source_location": "L1013",
+      "weight": 1.0
+    },
+    {
+      "source": "server_room_room_handlesubmit",
+      "target": "server_room_room_closegame",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "server/room.js",
+      "source_location": "L1014",
       "weight": 1.0
     },
     {
@@ -12331,7 +12462,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L961",
+      "source_location": "L975",
       "weight": 1.0
     },
     {
@@ -12343,7 +12474,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1389",
+      "source_location": "L1403",
       "weight": 1.0
     },
     {
@@ -12355,48 +12486,12 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1392",
-      "weight": 1.0
-    },
-    {
-      "source": "server_room_room_hostnext",
-      "target": "server_room_room_closegame",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "server/room.js",
-      "source_location": "L1395",
-      "weight": 1.0
-    },
-    {
-      "source": "server_room_room_hostnext",
-      "target": "server_room_room_cleartimer",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "server/room.js",
-      "source_location": "L1399",
-      "weight": 1.0
-    },
-    {
-      "source": "server_room_room_hostnext",
-      "target": "server_room_room_endtutorial",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "server/room.js",
       "source_location": "L1406",
       "weight": 1.0
     },
     {
       "source": "server_room_room_hostnext",
-      "target": "server_room_room_advancereveal",
+      "target": "server_room_room_closegame",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -12408,6 +12503,42 @@
     },
     {
       "source": "server_room_room_hostnext",
+      "target": "server_room_room_cleartimer",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "server/room.js",
+      "source_location": "L1413",
+      "weight": 1.0
+    },
+    {
+      "source": "server_room_room_hostnext",
+      "target": "server_room_room_endtutorial",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "server/room.js",
+      "source_location": "L1420",
+      "weight": 1.0
+    },
+    {
+      "source": "server_room_room_hostnext",
+      "target": "server_room_room_advancereveal",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "server/room.js",
+      "source_location": "L1423",
+      "weight": 1.0
+    },
+    {
+      "source": "server_room_room_hostnext",
       "target": "server_room_room_nextgame",
       "relation": "calls",
       "_origin": "ast",
@@ -12415,7 +12546,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1411",
+      "source_location": "L1425",
       "weight": 1.0
     },
     {
@@ -12427,7 +12558,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1414",
+      "source_location": "L1428",
       "weight": 1.0
     },
     {
@@ -12439,7 +12570,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1418",
+      "source_location": "L1432",
       "weight": 1.0
     },
     {
@@ -12451,7 +12582,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1419",
+      "source_location": "L1433",
       "weight": 1.0
     },
     {
@@ -12463,7 +12594,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1422",
+      "source_location": "L1436",
       "weight": 1.0
     },
     {
@@ -12475,7 +12606,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L328",
+      "source_location": "L335",
       "weight": 1.0
     },
     {
@@ -12487,55 +12618,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L334",
-      "weight": 1.0
-    },
-    {
-      "source": "server_room_room_join",
-      "target": "server_room_room_disconnectsocketplayers",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "server/room.js",
       "source_location": "L342",
-      "weight": 1.0
-    },
-    {
-      "source": "server_room_room_join",
-      "target": "server_room_room_cleartimer",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "server/room.js",
-      "source_location": "L359",
-      "weight": 1.0
-    },
-    {
-      "source": "server_room_room_join",
-      "target": "server_room_room_broadcastplayers",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "server/room.js",
-      "source_location": "L363",
-      "weight": 1.0
-    },
-    {
-      "source": "server_room_room_join",
-      "target": "server_room_room_snapshot",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "server/room.js",
-      "source_location": "L369",
       "weight": 1.0
     },
     {
@@ -12547,7 +12630,55 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L419",
+      "source_location": "L353",
+      "weight": 1.0
+    },
+    {
+      "source": "server_room_room_join",
+      "target": "server_room_room_disconnectsocketplayers",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "server/room.js",
+      "source_location": "L356",
+      "weight": 1.0
+    },
+    {
+      "source": "server_room_room_join",
+      "target": "server_room_room_cleartimer",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "server/room.js",
+      "source_location": "L373",
+      "weight": 1.0
+    },
+    {
+      "source": "server_room_room_join",
+      "target": "server_room_room_broadcastplayers",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "server/room.js",
+      "source_location": "L377",
+      "weight": 1.0
+    },
+    {
+      "source": "server_room_room_join",
+      "target": "server_room_room_snapshot",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "server/room.js",
+      "source_location": "L383",
       "weight": 1.0
     },
     {
@@ -12559,7 +12690,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L698",
+      "source_location": "L712",
       "weight": 1.0
     },
     {
@@ -12571,7 +12702,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L701",
+      "source_location": "L715",
       "weight": 1.0
     },
     {
@@ -12583,7 +12714,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L702",
+      "source_location": "L716",
       "weight": 1.0
     },
     {
@@ -12595,7 +12726,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L708",
+      "source_location": "L722",
       "weight": 1.0
     },
     {
@@ -12607,7 +12738,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L712",
+      "source_location": "L726",
       "weight": 1.0
     },
     {
@@ -12619,7 +12750,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L714",
+      "source_location": "L728",
       "weight": 1.0
     },
     {
@@ -12631,7 +12762,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L716",
+      "source_location": "L730",
       "weight": 1.0
     },
     {
@@ -12643,7 +12774,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L690",
+      "source_location": "L704",
       "weight": 1.0
     },
     {
@@ -12655,7 +12786,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L693",
+      "source_location": "L707",
       "weight": 1.0
     },
     {
@@ -12667,7 +12798,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L694",
+      "source_location": "L708",
       "weight": 1.0
     },
     {
@@ -12679,7 +12810,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L517",
+      "source_location": "L531",
       "weight": 1.0
     },
     {
@@ -12691,7 +12822,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L475",
+      "source_location": "L489",
       "weight": 1.0
     },
     {
@@ -12703,7 +12834,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1364",
+      "source_location": "L1378",
       "weight": 1.0
     },
     {
@@ -12715,7 +12846,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1381",
+      "source_location": "L1395",
       "weight": 1.0
     },
     {
@@ -12727,7 +12858,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1382",
+      "source_location": "L1396",
       "weight": 1.0
     },
     {
@@ -12739,7 +12870,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L294",
+      "source_location": "L301",
       "weight": 1.0
     },
     {
@@ -12751,7 +12882,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L298",
+      "source_location": "L305",
       "weight": 1.0
     },
     {
@@ -12763,7 +12894,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1311",
+      "source_location": "L1325",
       "weight": 1.0
     },
     {
@@ -12775,7 +12906,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1333",
+      "source_location": "L1347",
       "weight": 1.0
     },
     {
@@ -12787,7 +12918,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1340",
+      "source_location": "L1354",
       "weight": 1.0
     },
     {
@@ -12799,7 +12930,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1112",
+      "source_location": "L1126",
       "weight": 1.0
     },
     {
@@ -12811,7 +12942,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1112",
+      "source_location": "L1126",
       "weight": 1.0
     },
     {
@@ -12823,7 +12954,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1124",
+      "source_location": "L1138",
       "weight": 1.0
     },
     {
@@ -12835,7 +12966,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1132",
+      "source_location": "L1146",
       "weight": 1.0
     },
     {
@@ -12847,7 +12978,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1141",
+      "source_location": "L1155",
       "weight": 1.0
     },
     {
@@ -12859,7 +12990,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1146",
+      "source_location": "L1160",
       "weight": 1.0
     },
     {
@@ -12871,7 +13002,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L237",
+      "source_location": "L244",
       "weight": 1.0
     },
     {
@@ -12883,7 +13014,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L237",
+      "source_location": "L244",
       "weight": 1.0
     },
     {
@@ -12895,7 +13026,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L203",
+      "source_location": "L210",
       "weight": 1.0
     },
     {
@@ -12907,7 +13038,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L920",
+      "source_location": "L934",
       "weight": 1.0
     },
     {
@@ -12919,7 +13050,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L741",
+      "source_location": "L755",
       "weight": 1.0
     },
     {
@@ -12931,7 +13062,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L484",
+      "source_location": "L498",
       "weight": 1.0
     },
     {
@@ -12943,7 +13074,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L485",
+      "source_location": "L499",
       "weight": 1.0
     },
     {
@@ -12955,7 +13086,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L486",
+      "source_location": "L500",
       "weight": 1.0
     },
     {
@@ -12967,7 +13098,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L494",
+      "source_location": "L508",
       "weight": 1.0
     },
     {
@@ -12979,7 +13110,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L503",
+      "source_location": "L517",
       "weight": 1.0
     },
     {
@@ -12991,7 +13122,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L749",
+      "source_location": "L763",
       "weight": 1.0
     },
     {
@@ -13003,7 +13134,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L750",
+      "source_location": "L764",
       "weight": 1.0
     },
     {
@@ -13015,7 +13146,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L548",
+      "source_location": "L562",
       "weight": 1.0
     },
     {
@@ -13027,7 +13158,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L553",
+      "source_location": "L567",
       "weight": 1.0
     },
     {
@@ -13039,7 +13170,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L553",
+      "source_location": "L567",
       "weight": 1.0
     },
     {
@@ -13051,7 +13182,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L563",
+      "source_location": "L577",
       "weight": 1.0
     },
     {
@@ -13063,7 +13194,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1173",
+      "source_location": "L1187",
       "weight": 1.0
     },
     {
@@ -13075,7 +13206,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1175",
+      "source_location": "L1189",
       "weight": 1.0
     },
     {
@@ -13087,7 +13218,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1177",
+      "source_location": "L1191",
       "weight": 1.0
     },
     {
@@ -13099,7 +13230,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1185",
+      "source_location": "L1199",
       "weight": 1.0
     },
     {
@@ -13111,7 +13242,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L758",
+      "source_location": "L772",
       "weight": 1.0
     },
     {
@@ -13123,7 +13254,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L762",
+      "source_location": "L776",
       "weight": 1.0
     },
     {
@@ -13135,7 +13266,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L762",
+      "source_location": "L776",
       "weight": 1.0
     },
     {
@@ -13147,7 +13278,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L763",
+      "source_location": "L777",
       "weight": 1.0
     },
     {
@@ -13159,36 +13290,12 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L768",
+      "source_location": "L782",
       "weight": 1.0
     },
     {
       "source": "server_room_room_startredemption",
       "target": "server_room_room_setphase",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "server/room.js",
-      "source_location": "L1205",
-      "weight": 1.0
-    },
-    {
-      "source": "server_room_room_startredemption",
-      "target": "server_room_room_settimer",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "server/room.js",
-      "source_location": "L1215",
-      "weight": 1.0
-    },
-    {
-      "source": "server_room_room_startredemption",
-      "target": "server_room_room_emitall",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -13200,6 +13307,30 @@
     },
     {
       "source": "server_room_room_startredemption",
+      "target": "server_room_room_settimer",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "server/room.js",
+      "source_location": "L1229",
+      "weight": 1.0
+    },
+    {
+      "source": "server_room_room_startredemption",
+      "target": "server_room_room_emitall",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "server/room.js",
+      "source_location": "L1233",
+      "weight": 1.0
+    },
+    {
+      "source": "server_room_room_startredemption",
       "target": "server_room_room_finishredemption",
       "relation": "calls",
       "_origin": "ast",
@@ -13207,7 +13338,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L1227",
+      "source_location": "L1241",
       "weight": 1.0
     },
     {
@@ -13219,7 +13350,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L632",
+      "source_location": "L646",
       "weight": 1.0
     },
     {
@@ -13231,7 +13362,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L634",
+      "source_location": "L648",
       "weight": 1.0
     },
     {
@@ -13243,7 +13374,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L783",
+      "source_location": "L797",
       "weight": 1.0
     },
     {
@@ -13255,7 +13386,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L784",
+      "source_location": "L798",
       "weight": 1.0
     },
     {
@@ -13267,7 +13398,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L786",
+      "source_location": "L800",
       "weight": 1.0
     },
     {
@@ -13279,7 +13410,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L800",
+      "source_location": "L814",
       "weight": 1.0
     },
     {
@@ -13291,7 +13422,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L807",
+      "source_location": "L821",
       "weight": 1.0
     },
     {
@@ -13303,7 +13434,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L611",
+      "source_location": "L625",
       "weight": 1.0
     },
     {
@@ -13315,7 +13446,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L612",
+      "source_location": "L626",
       "weight": 1.0
     },
     {
@@ -13327,7 +13458,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L618",
+      "source_location": "L632",
       "weight": 1.0
     },
     {
@@ -13339,7 +13470,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L622",
+      "source_location": "L636",
       "weight": 1.0
     },
     {
@@ -13351,7 +13482,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L622",
+      "source_location": "L636",
       "weight": 1.0
     },
     {
@@ -13363,7 +13494,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L728",
+      "source_location": "L742",
       "weight": 1.0
     },
     {
@@ -13375,7 +13506,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L531",
+      "source_location": "L545",
       "weight": 1.0
     },
     {
@@ -13387,7 +13518,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L532",
+      "source_location": "L546",
       "weight": 1.0
     },
     {
@@ -13399,7 +13530,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L535",
+      "source_location": "L549",
       "weight": 1.0
     },
     {
@@ -13411,7 +13542,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L538",
+      "source_location": "L552",
       "weight": 1.0
     },
     {
@@ -13423,7 +13554,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/room.js",
-      "source_location": "L538",
+      "source_location": "L552",
       "weight": 1.0
     },
     {
@@ -16045,6 +16176,18 @@
     {
       "source": "server_sockets",
       "target": "server_room_pickhosteditableconfig",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "server/sockets.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "server_sockets",
+      "target": "server_room_reconnect_rotation_grace_ms",
       "relation": "imports",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -20403,6 +20546,105 @@
       "weight": 1.0
     },
     {
+      "source": "docs_security_strix_bac3_report",
+      "target": "docs_security_strix_bac3_report_security_penetration_test_report",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/security/strix-bac3-report.md",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_security_strix_bac3_report",
+      "target": "docs_security_strix_bac3_report_methodology",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/security/strix-bac3-report.md",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_security_strix_bac3_report",
+      "target": "docs_security_strix_bac3_report_methodology_27",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/security/strix-bac3-report.md",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_security_strix_bac3_report",
+      "target": "docs_security_strix_bac3_report_technical_analysis",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/security/strix-bac3-report.md",
+      "source_location": "L49",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_security_strix_bac3_report",
+      "target": "docs_security_strix_bac3_report_executive_summary",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/security/strix-bac3-report.md",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_security_strix_bac3_report",
+      "target": "docs_security_strix_bac3_report_technical_analysis_51",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/security/strix-bac3-report.md",
+      "source_location": "L51",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_security_strix_bac3_report",
+      "target": "docs_security_strix_bac3_report_executive_summary_7",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/security/strix-bac3-report.md",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_security_strix_bac3_report",
+      "target": "docs_security_strix_bac3_report_recommendations",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/security/strix-bac3-report.md",
+      "source_location": "L74",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_security_strix_bac3_report",
+      "target": "docs_security_strix_bac3_report_recommendations_76",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/security/strix-bac3-report.md",
+      "source_location": "L76",
+      "weight": 1.0
+    },
+    {
       "source": "handoff",
       "target": "handoff_handoff_issue_65_security_session_integrity",
       "relation": "contains",
@@ -21191,7 +21433,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L100",
+      "source_location": "L108",
       "weight": 1.0
     },
     {
@@ -21213,7 +21455,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L138",
+      "source_location": "L146",
       "weight": 1.0
     },
     {
@@ -21235,7 +21477,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L165",
+      "source_location": "L173",
       "weight": 1.0
     },
     {
@@ -21246,7 +21488,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L176",
+      "source_location": "L184",
       "weight": 1.0
     },
     {
@@ -21257,23 +21499,12 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L197",
+      "source_location": "L205",
       "weight": 1.0
     },
     {
       "source": "public_js_host",
       "target": "public_js_host_unlockaudio",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "public/js/host.js",
-      "source_location": "L236",
-      "weight": 1.0
-    },
-    {
-      "source": "public_js_host",
-      "target": "public_js_host_playmusic",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -21295,13 +21526,24 @@
     },
     {
       "source": "public_js_host",
+      "target": "public_js_host_playmusic",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "public/js/host.js",
+      "source_location": "L252",
+      "weight": 1.0
+    },
+    {
+      "source": "public_js_host",
       "target": "public_js_host_rendermusic",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L265",
+      "source_location": "L273",
       "weight": 1.0
     },
     {
@@ -21312,7 +21554,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L294",
+      "source_location": "L302",
       "weight": 1.0
     },
     {
@@ -21323,7 +21565,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L315",
+      "source_location": "L323",
       "weight": 1.0
     },
     {
@@ -21334,7 +21576,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L326",
+      "source_location": "L334",
       "weight": 1.0
     },
     {
@@ -21345,7 +21587,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L350",
+      "source_location": "L358",
       "weight": 1.0
     },
     {
@@ -21356,7 +21598,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L359",
+      "source_location": "L367",
       "weight": 1.0
     },
     {
@@ -21378,7 +21620,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L437",
+      "source_location": "L445",
       "weight": 1.0
     },
     {
@@ -21389,7 +21631,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L482",
+      "source_location": "L490",
       "weight": 1.0
     },
     {
@@ -21400,7 +21642,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L529",
+      "source_location": "L537",
       "weight": 1.0
     },
     {
@@ -21411,7 +21653,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L551",
+      "source_location": "L559",
       "weight": 1.0
     },
     {
@@ -21422,7 +21664,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L565",
+      "source_location": "L573",
       "weight": 1.0
     },
     {
@@ -21433,7 +21675,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L582",
+      "source_location": "L590",
       "weight": 1.0
     },
     {
@@ -21444,7 +21686,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L594",
+      "source_location": "L602",
       "weight": 1.0
     },
     {
@@ -21455,7 +21697,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L605",
+      "source_location": "L613",
       "weight": 1.0
     },
     {
@@ -21466,7 +21708,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L631",
+      "source_location": "L639",
       "weight": 1.0
     },
     {
@@ -21477,18 +21719,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L675",
-      "weight": 1.0
-    },
-    {
-      "source": "public_js_host",
-      "target": "public_js_host_enterlobbyui",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "public/js/host.js",
-      "source_location": "L70",
+      "source_location": "L683",
       "weight": 1.0
     },
     {
@@ -21499,7 +21730,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L700",
+      "source_location": "L708",
+      "weight": 1.0
+    },
+    {
+      "source": "public_js_host",
+      "target": "public_js_host_enterlobbyui",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "public/js/host.js",
+      "source_location": "L78",
       "weight": 1.0
     },
     {
@@ -21510,7 +21752,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L82",
+      "source_location": "L90",
       "weight": 1.0
     },
     {
@@ -21521,7 +21763,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "public/js/host.js",
-      "source_location": "L86",
+      "source_location": "L94",
       "weight": 1.0
     },
     {
@@ -23187,13 +23429,24 @@
     },
     {
       "source": "server_room",
+      "target": "server_room_reconnect_rotation_grace_ms",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "server/room.js",
+      "source_location": "L167",
+      "weight": 1.0
+    },
+    {
+      "source": "server_room",
       "target": "server_room_room",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L162",
+      "source_location": "L169",
       "weight": 1.0
     },
     {
@@ -25525,7 +25778,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "test/room.test.js",
-      "source_location": "L425",
+      "source_location": "L459",
       "weight": 1.0
     },
     {
@@ -25536,7 +25789,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "test/room.test.js",
-      "source_location": "L644",
+      "source_location": "L678",
       "weight": 1.0
     },
     {
@@ -25547,7 +25800,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "test/room.test.js",
-      "source_location": "L687",
+      "source_location": "L721",
       "weight": 1.0
     },
     {
@@ -25646,7 +25899,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "test/security.test.js",
-      "source_location": "L554",
+      "source_location": "L564",
       "weight": 1.0
     },
     {
@@ -25895,7 +26148,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1008",
+      "source_location": "L1022",
       "weight": 1.0
     },
     {
@@ -25906,7 +26159,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1038",
+      "source_location": "L1052",
       "weight": 1.0
     },
     {
@@ -25917,7 +26170,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1044",
+      "source_location": "L1058",
       "weight": 1.0
     },
     {
@@ -25928,7 +26181,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1071",
+      "source_location": "L1085",
       "weight": 1.0
     },
     {
@@ -25939,7 +26192,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1107",
+      "source_location": "L1121",
       "weight": 1.0
     },
     {
@@ -25950,7 +26203,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1157",
+      "source_location": "L1171",
       "weight": 1.0
     },
     {
@@ -25961,7 +26214,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1182",
+      "source_location": "L1196",
       "weight": 1.0
     },
     {
@@ -25972,7 +26225,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1188",
+      "source_location": "L1202",
       "weight": 1.0
     },
     {
@@ -25983,7 +26236,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1232",
+      "source_location": "L1246",
       "weight": 1.0
     },
     {
@@ -25994,7 +26247,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1259",
+      "source_location": "L1273",
       "weight": 1.0
     },
     {
@@ -26005,7 +26258,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1309",
+      "source_location": "L1323",
       "weight": 1.0
     },
     {
@@ -26016,7 +26269,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1346",
+      "source_location": "L1360",
       "weight": 1.0
     },
     {
@@ -26027,7 +26280,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1363",
+      "source_location": "L1377",
       "weight": 1.0
     },
     {
@@ -26038,7 +26291,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L1387",
+      "source_location": "L1401",
       "weight": 1.0
     },
     {
@@ -26049,7 +26302,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L163",
+      "source_location": "L170",
       "weight": 1.0
     },
     {
@@ -26060,7 +26313,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L201",
+      "source_location": "L208",
       "weight": 1.0
     },
     {
@@ -26071,7 +26324,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L214",
+      "source_location": "L221",
       "weight": 1.0
     },
     {
@@ -26082,7 +26335,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L219",
+      "source_location": "L226",
       "weight": 1.0
     },
     {
@@ -26093,7 +26346,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L225",
+      "source_location": "L232",
       "weight": 1.0
     },
     {
@@ -26104,7 +26357,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L226",
+      "source_location": "L233",
       "weight": 1.0
     },
     {
@@ -26115,7 +26368,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L227",
+      "source_location": "L234",
       "weight": 1.0
     },
     {
@@ -26126,7 +26379,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L232",
+      "source_location": "L239",
       "weight": 1.0
     },
     {
@@ -26137,7 +26390,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L246",
+      "source_location": "L253",
       "weight": 1.0
     },
     {
@@ -26148,7 +26401,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L261",
+      "source_location": "L268",
       "weight": 1.0
     },
     {
@@ -26159,7 +26412,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L264",
+      "source_location": "L271",
       "weight": 1.0
     },
     {
@@ -26170,7 +26423,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L273",
+      "source_location": "L280",
       "weight": 1.0
     },
     {
@@ -26181,7 +26434,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L283",
+      "source_location": "L290",
       "weight": 1.0
     },
     {
@@ -26192,7 +26445,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L287",
+      "source_location": "L294",
       "weight": 1.0
     },
     {
@@ -26203,7 +26456,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L292",
+      "source_location": "L299",
       "weight": 1.0
     },
     {
@@ -26214,7 +26467,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L303",
+      "source_location": "L310",
       "weight": 1.0
     },
     {
@@ -26225,7 +26478,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L315",
+      "source_location": "L322",
       "weight": 1.0
     },
     {
@@ -26236,7 +26489,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L327",
+      "source_location": "L334",
       "weight": 1.0
     },
     {
@@ -26247,7 +26500,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L446",
+      "source_location": "L460",
       "weight": 1.0
     },
     {
@@ -26258,7 +26511,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L462",
+      "source_location": "L476",
       "weight": 1.0
     },
     {
@@ -26269,7 +26522,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L478",
+      "source_location": "L492",
       "weight": 1.0
     },
     {
@@ -26280,7 +26533,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L514",
+      "source_location": "L528",
       "weight": 1.0
     },
     {
@@ -26291,7 +26544,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L525",
+      "source_location": "L539",
       "weight": 1.0
     },
     {
@@ -26302,7 +26555,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L544",
+      "source_location": "L558",
       "weight": 1.0
     },
     {
@@ -26313,7 +26566,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L570",
+      "source_location": "L584",
       "weight": 1.0
     },
     {
@@ -26324,7 +26577,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L598",
+      "source_location": "L612",
       "weight": 1.0
     },
     {
@@ -26335,7 +26588,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L605",
+      "source_location": "L619",
       "weight": 1.0
     },
     {
@@ -26346,7 +26599,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L628",
+      "source_location": "L642",
       "weight": 1.0
     },
     {
@@ -26357,7 +26610,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L639",
+      "source_location": "L653",
       "weight": 1.0
     },
     {
@@ -26368,7 +26621,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L654",
+      "source_location": "L668",
       "weight": 1.0
     },
     {
@@ -26379,7 +26632,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L683",
+      "source_location": "L697",
       "weight": 1.0
     },
     {
@@ -26390,7 +26643,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L689",
+      "source_location": "L703",
       "weight": 1.0
     },
     {
@@ -26401,7 +26654,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L697",
+      "source_location": "L711",
       "weight": 1.0
     },
     {
@@ -26412,7 +26665,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L724",
+      "source_location": "L738",
       "weight": 1.0
     },
     {
@@ -26423,7 +26676,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L731",
+      "source_location": "L745",
       "weight": 1.0
     },
     {
@@ -26434,7 +26687,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L739",
+      "source_location": "L753",
       "weight": 1.0
     },
     {
@@ -26445,7 +26698,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L748",
+      "source_location": "L762",
       "weight": 1.0
     },
     {
@@ -26456,7 +26709,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L754",
+      "source_location": "L768",
       "weight": 1.0
     },
     {
@@ -26467,7 +26720,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L780",
+      "source_location": "L794",
       "weight": 1.0
     },
     {
@@ -26478,7 +26731,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L815",
+      "source_location": "L829",
       "weight": 1.0
     },
     {
@@ -26489,7 +26742,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L830",
+      "source_location": "L844",
       "weight": 1.0
     },
     {
@@ -26500,7 +26753,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L855",
+      "source_location": "L869",
       "weight": 1.0
     },
     {
@@ -26511,7 +26764,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L866",
+      "source_location": "L880",
       "weight": 1.0
     },
     {
@@ -26522,7 +26775,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L883",
+      "source_location": "L897",
       "weight": 1.0
     },
     {
@@ -26533,7 +26786,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L916",
+      "source_location": "L930",
       "weight": 1.0
     },
     {
@@ -26544,7 +26797,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L929",
+      "source_location": "L943",
       "weight": 1.0
     },
     {
@@ -26555,7 +26808,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L949",
+      "source_location": "L963",
       "weight": 1.0
     },
     {
@@ -26566,7 +26819,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/room.js",
-      "source_location": "L976",
+      "source_location": "L990",
       "weight": 1.0
     },
     {
@@ -26634,7 +26887,7 @@
       "confidence_score": 0.8,
       "context": "call",
       "source_file": "server/sockets.js",
-      "source_location": "L208",
+      "source_location": "L219",
       "weight": 1.0
     },
     {
@@ -26646,7 +26899,7 @@
       "confidence_score": 0.8,
       "context": "call",
       "source_file": "server/sockets.js",
-      "source_location": "L208",
+      "source_location": "L219",
       "weight": 1.0
     },
     {
@@ -26658,7 +26911,7 @@
       "confidence_score": 0.8,
       "context": "call",
       "source_file": "server/sockets.js",
-      "source_location": "L218",
+      "source_location": "L229",
       "weight": 1.0
     },
     {
@@ -26670,7 +26923,7 @@
       "confidence_score": 0.8,
       "context": "call",
       "source_file": "server/sockets.js",
-      "source_location": "L224",
+      "source_location": "L235",
       "weight": 1.0
     },
     {
@@ -26682,7 +26935,7 @@
       "confidence_score": 0.8,
       "context": "call",
       "source_file": "server/sockets.js",
-      "source_location": "L238",
+      "source_location": "L249",
       "weight": 1.0
     },
     {
@@ -26694,7 +26947,7 @@
       "confidence_score": 0.8,
       "context": "call",
       "source_file": "server/sockets.js",
-      "source_location": "L292",
+      "source_location": "L303",
       "weight": 1.0
     },
     {
@@ -26706,7 +26959,7 @@
       "confidence_score": 0.8,
       "context": "call",
       "source_file": "server/sockets.js",
-      "source_location": "L293",
+      "source_location": "L304",
       "weight": 1.0
     },
     {
@@ -26718,7 +26971,7 @@
       "confidence_score": 0.8,
       "context": "call",
       "source_file": "server/sockets.js",
-      "source_location": "L294",
+      "source_location": "L305",
       "weight": 1.0
     },
     {
@@ -26730,7 +26983,7 @@
       "confidence_score": 0.8,
       "context": "call",
       "source_file": "server/sockets.js",
-      "source_location": "L297",
+      "source_location": "L308",
       "weight": 1.0
     },
     {
@@ -26742,7 +26995,7 @@
       "confidence_score": 0.8,
       "context": "call",
       "source_file": "server/sockets.js",
-      "source_location": "L301",
+      "source_location": "L312",
       "weight": 1.0
     },
     {
@@ -26754,7 +27007,7 @@
       "confidence_score": 0.8,
       "context": "call",
       "source_file": "server/sockets.js",
-      "source_location": "L306",
+      "source_location": "L317",
       "weight": 1.0
     },
     {
@@ -26766,7 +27019,7 @@
       "confidence_score": 0.8,
       "context": "call",
       "source_file": "server/sockets.js",
-      "source_location": "L316",
+      "source_location": "L327",
       "weight": 1.0
     },
     {
@@ -26778,7 +27031,7 @@
       "confidence_score": 0.8,
       "context": "call",
       "source_file": "server/sockets.js",
-      "source_location": "L328",
+      "source_location": "L339",
       "weight": 1.0
     },
     {
@@ -26790,7 +27043,7 @@
       "confidence_score": 0.8,
       "context": "call",
       "source_file": "server/sockets.js",
-      "source_location": "L342",
+      "source_location": "L353",
       "weight": 1.0
     },
     {
@@ -26802,7 +27055,7 @@
       "confidence_score": 0.8,
       "context": "call",
       "source_file": "server/sockets.js",
-      "source_location": "L344",
+      "source_location": "L355",
       "weight": 1.0
     },
     {
@@ -26814,7 +27067,7 @@
       "confidence_score": 0.8,
       "context": "call",
       "source_file": "server/sockets.js",
-      "source_location": "L346",
+      "source_location": "L357",
       "weight": 1.0
     },
     {
@@ -26826,7 +27079,7 @@
       "confidence_score": 0.8,
       "context": "call",
       "source_file": "server/sockets.js",
-      "source_location": "L347",
+      "source_location": "L358",
       "weight": 1.0
     },
     {
@@ -26838,7 +27091,7 @@
       "confidence_score": 0.8,
       "context": "call",
       "source_file": "server/sockets.js",
-      "source_location": "L349",
+      "source_location": "L360",
       "weight": 1.0
     },
     {
@@ -26850,7 +27103,7 @@
       "confidence_score": 0.8,
       "context": "call",
       "source_file": "server/sockets.js",
-      "source_location": "L350",
+      "source_location": "L361",
       "weight": 1.0
     },
     {
@@ -26862,7 +27115,7 @@
       "confidence_score": 0.8,
       "context": "call",
       "source_file": "server/sockets.js",
-      "source_location": "L354",
+      "source_location": "L365",
       "weight": 1.0
     },
     {
@@ -27323,5 +27576,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "33fb36933fbb3c7966264fa73af70c169a18ac3a"
+  "built_at_commit": "70c5f4a56930d552f30be1e929772f1948255c8e"
 }

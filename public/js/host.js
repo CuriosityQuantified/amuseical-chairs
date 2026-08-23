@@ -43,12 +43,20 @@ socket.on('connect', async () => {
   const s = await syncClock(socket, 6);
   state.offset = s.offset;
   if (state.code && state.hostKey) {
-    socket.emit('host:rejoin', { code: state.code, hostKey: state.hostKey }, () => {});
+    socket.emit('host:rejoin', { code: state.code, hostKey: state.hostKey }, (res) => {
+      if (res && res.ok) {
+        // Host credentials rotate on every successful rejoin: persist the
+        // freshly returned key or the next reconnect will be rejected.
+        state.hostKey = res.hostKey || state.hostKey;
+        sessionStorage.setItem('mc_host', JSON.stringify({ code: state.code, hostKey: state.hostKey }));
+      }
+    });
   } else if (saved && !state.code) {
     socket.emit('host:rejoin', saved, (res) => {
       if (res && res.ok) {
         state.code = res.code;
-        state.hostKey = saved.hostKey;
+        state.hostKey = res.hostKey || saved.hostKey;
+        sessionStorage.setItem('mc_host', JSON.stringify({ code: state.code, hostKey: state.hostKey }));
         state.config = res.config;
         enterLobbyUi(res);
       }

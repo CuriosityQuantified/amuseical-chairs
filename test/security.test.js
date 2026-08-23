@@ -370,20 +370,22 @@ test('Socket.IO enforces host-only actions and host rejoin credentials', async (
     });
     assert.equal(rejoined.value?.ok, true);
     assert.equal(rejoined.value?.playerId, joinedOne.value.playerId);
-    // The room-lifetime credential stays stable so a lost reconnect ACK can
-    // be retried; only the socket binding moves.
-    assert.equal(rejoined.value?.reconnectToken, joinedOne.value.reconnectToken,
-      'a successful reconnect keeps the room-lifetime bearer credential');
+    // Reconnect credentials rotate on every successful rejoin (Strix
+    // 2026-08-23, CWE-294): a copied token must not replay for the room's
+    // lifetime. The previous token survives only inside a short grace window.
+    assert.notEqual(rejoined.value?.reconnectToken, joinedOne.value.reconnectToken,
+      'a successful reconnect rotates the bearer credential');
 
-    // The same credential is idempotent: a retried reconnect after a lost ACK
-    // succeeds rather than locking the player out.
+    // A retried reconnect with the previous credential still succeeds inside
+    // the rotation grace window (lost-ACK safety), then only the rotated
+    // credential works.
     const retried = await emitAck(legitimateReconnect, 'player:join', {
       code,
       name: 'ignored',
       playerId: joinedOne.value.playerId,
       reconnectToken: joinedOne.value.reconnectToken,
     });
-    assert.equal(retried.value?.ok, true, 'retrying with the same credential succeeds');
+    assert.equal(retried.value?.ok, true, 'retrying with the previous credential succeeds within the rotation grace');
 
     // Old connections are evicted when a new socket takes over the identity.
     await wait(150);
@@ -393,6 +395,14 @@ test('Socket.IO enforces host-only actions and host rejoin credentials', async (
     const wrongRejoin = await emitAck(wrongHost, 'host:rejoin', { code, hostKey: '00000000-0000-0000-0000-000000000000' });
     assert.equal(wrongRejoin.value?.ok, undefined);
     assert.equal(wrongRejoin.value?.error, 'Room or reconnect credential not found.');
+
+    // Host credentials rotate on every successful rejoin; the previous key
+    // stays valid only inside the rotation grace window (lost-ACK safety).
+    const hostRejoined = await emitAck(host, 'host:rejoin', { code, hostKey });
+    assert.equal(hostRejoined.value?.ok, true);
+    assert.notEqual(hostRejoined.value?.hostKey, hostKey, 'host credential rotates on successful rejoin');
+    const hostRetry = await emitAck(host, 'host:rejoin', { code, hostKey });
+    assert.equal(hostRetry.value?.ok, true, 'previous host credential accepted within the rotation grace');
 
     const unauthorizedStart = await emitAck(playerOne, 'host:start', {}, 500);
     const unauthorizedConfig = await emitAck(playerOne, 'host:config', { gameDuration: 500 }, 500);
