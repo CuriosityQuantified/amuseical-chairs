@@ -17,6 +17,7 @@ import assert from 'node:assert/strict';
 import { seededRng } from '../shared/rng.js';
 import { cupsLevel } from '../shared/cups.js';
 import { trayLevel } from '../shared/tray.js';
+import { bookBashRound } from '../shared/bookbash.js';
 import { parseValue } from '../shared/fractions.js';
 import { solveScramble } from '../shared/anagram.js';
 import { solveGrid } from '../shared/wordhunt.js';
@@ -48,6 +49,7 @@ const PAYLOADS = {
   }),
   gridflash: (cd) => ({ picks: cd.patterns.map((p) => p.slice(0, 3)) }),
   tray: (cd) => ({ picks: trayLevel(cd.seed).changed }),
+  bookbash: (cd) => ({ positions: bookBashRound(cd.seed).map((page) => page.holes[0]) }),
   cups: (cd) => ({
     picks: [1, 2, 3].map((level) => ({ level, cupIndex: cupsLevel(cd.seed, level, cd).ball })),
   }),

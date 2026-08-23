@@ -483,6 +483,33 @@ const TUTORIALS = {
       } },
   ],
 
+  bookbash: [
+    { ok: true, dur: 5200, label: 'Choose a matching hole before the page slams down',
+      draw(g, w, h, p) {
+        const safe = [1, 4, 7];
+        const size = 42, gap = 8;
+        const gx = w / 2 - (3 * size + 2 * gap) / 2;
+        for (let i = 0; i < 9; i++) {
+          const x = gx + (i % 3) * (size + gap);
+          const y = 34 + Math.floor(i / 3) * (size + gap);
+          box(g, x, y, size, size, safe.includes(i) ? C.good : C.panel, C.line);
+          text(g, i === 4 ? '★' : '◇', x + size / 2, y + size / 2, { size: 22 });
+        }
+        text(g, p < 0.55 ? 'find a safe hole' : 'page slam — you slip through', w / 2, h - 18, { size: 15, color: C.good, bold: true });
+      } },
+    { ok: false, dur: 3600, label: 'Do not stay outside a hole',
+      draw(g, w, h, p) {
+        const size = 42, gap = 8;
+        const gx = w / 2 - (3 * size + 2 * gap) / 2;
+        for (let i = 0; i < 9; i++) {
+          const x = gx + (i % 3) * (size + gap);
+          const y = 34 + Math.floor(i / 3) * (size + gap);
+          box(g, x, y, size, size, C.panel, C.line);
+        }
+        text(g, p < 0.5 ? 'no safe position selected' : 'CRUSHED', w / 2, h - 18, { size: 16, color: C.bad, bold: true });
+      } },
+  ],
+
   cups: [
     { ok: true, dur: 5200, label: 'Lock onto the one cup and stay on it through every swap',
       draw(g, w, h, p) {

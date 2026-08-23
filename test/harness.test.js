@@ -12,6 +12,7 @@ import { createServer } from '../server/app.js';
 import { ROSTER } from '../server/games.js';
 import { cupsLevel } from '../shared/cups.js';
 import { trayLevel } from '../shared/tray.js';
+import { bookBashRound } from '../shared/bookbash.js';
 import { parseValue } from '../shared/fractions.js';
 import { solveScramble } from '../shared/anagram.js';
 import { solveGrid } from '../shared/wordhunt.js';
@@ -117,6 +118,10 @@ function botPayload(key, data, rnd, stage = 1, bot = null) {
     // neighbouring cup. Derived from the round seed through the same module the
     // real client animates, so the point total (100·level per correct level)
     // varies across bots and the room does not tie at the floor.
+    case 'bookbash': {
+      const pages = bookBashRound(data.seed);
+      return { positions: pages.map((page) => rnd() < 0.75 ? page.holes[0] : (page.holes[0] + 1) % 9) };
+    }
     case 'cups': {
       return {
         picks: [...Array(data.maxLevels)].map((_, i) => {
