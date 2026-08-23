@@ -147,4 +147,21 @@ test('server scoring: pre-green and physically-impossible reports are disqualifi
     { tGreen, receivedAt: tGreen + 280 + 50, earliestArrivalSlackMs: 25 });
   assert.equal(honest.status, 'ok');
   assert.equal(honest.finalMs, 280);
+
+  // Late forged report (Strix 2026-08-23): the client waited ~8s after green
+  // then claimed 150ms. The arrival time is a hard upper bound — the claim is
+  // physically impossible and must not outrank honest players.
+  const lateForged = scoreRedemptionReport(
+    { status: 'ok', rawMs: 150, earlyPresses: 0 },
+    { tGreen, receivedAt: tGreen + 8_000, earliestArrivalSlackMs: 25 });
+  assert.equal(lateForged.status, 'tooLate');
+  assert.equal(lateForged.flagged, true);
+  assert.equal(lateForged.finalMs, 999999);
+
+  // A slow honest reactor is NOT caught: the claimed time matches the arrival.
+  const slowHonest = scoreRedemptionReport(
+    { status: 'ok', rawMs: 5200, earlyPresses: 0 },
+    { tGreen, receivedAt: tGreen + 5300, earliestArrivalSlackMs: 25 });
+  assert.equal(slowHonest.status, 'ok');
+  assert.equal(slowHonest.finalMs, 5200);
 });

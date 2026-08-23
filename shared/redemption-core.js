@@ -129,6 +129,14 @@ export function scoreRedemptionReport(
     if (receivedAt < tGreen || receivedAt + slack < tGreen + raw) {
       return { finalMs: 999999, rawMs: raw, earlyPresses: early, status: 'tooFast', flagged: true };
     }
+    // Physically impossible the OTHER way (Strix 2026-08-23, MED): the report
+    // arrived so long after the green that the claimed reaction time could
+    // not still be true — a client that waited out the round and then
+    // submitted a tiny rawMs must not win the chairs round. The arrival time
+    // is a hard upper bound on how long the reaction could really have been.
+    if (receivedAt - tGreen > raw + 3000) {
+      return { finalMs: 999999, rawMs: raw, earlyPresses: early, status: 'tooLate', flagged: true };
+    }
   }
   return {
     finalMs: raw * (1 + earlyPressPenalty * early),

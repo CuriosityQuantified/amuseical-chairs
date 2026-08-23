@@ -113,7 +113,7 @@
       "semantic": "f9bcb5a92468425b887f7d6ed3da4eb4"
     },
     "server/room.js": {
-      "ast": "7a97c9334a1e770a6b6fb188d08b8b14",
+      "ast": "4cdfa4b4d8f79d23e70d92ff80320a84",
       "semantic": null
     },
     "server/sockets.js": {
@@ -161,7 +161,7 @@
       "semantic": "1c06ce2e24f36647698104a9cefe3494"
     },
     "shared/redemption-core.js": {
-      "ast": "3c73f00b71c98a6900d4a9b1b6d670e7",
+      "ast": "3252ffcea71a1a806bb848fbcbad4df0",
       "semantic": null
     },
     "shared/rng.js": {
@@ -213,11 +213,11 @@
       "semantic": null
     },
     "test/cups-ten-level.test.js": {
-      "ast": "a5339bff521d25181650a77e4244e23e",
+      "ast": "03e5f0dc6abd8c29b80e8950c413e905",
       "semantic": null
     },
     "test/cups.test.js": {
-      "ast": "cab6734bdc8e707171270eedce71638b",
+      "ast": "81bc16bb76acde3b7b513c670da7574c",
       "semantic": null
     },
     "test/fakeclock.js": {
@@ -257,7 +257,7 @@
       "semantic": "0fd107fe9780bb836e13c1f9b3c6e06d"
     },
     "test/redemption.test.js": {
-      "ast": "e5cb92b969c3bbd4a9cbfd27c80cacc7",
+      "ast": "148cba0a64ed27fe9c1b13fc257158f1",
       "semantic": null
     },
     "test/reduced-motion.test.js": {
@@ -269,7 +269,7 @@
       "semantic": null
     },
     "test/room.test.js": {
-      "ast": "7484d8fabedf582f52f998f003c5aa8b",
+      "ast": "91b1d3caa1dd42f3555db138936e044b",
       "semantic": null
     },
     "test/roster.test.js": {
