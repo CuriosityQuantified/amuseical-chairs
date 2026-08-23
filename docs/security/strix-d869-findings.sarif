@@ -1,0 +1,349 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Strix",
+          "informationUri": "https://strix.ai",
+          "rules": [
+            {
+              "id": "CWE-807",
+              "name": "Client-trusted `player:submit` data allows metronome score forgery",
+              "shortDescription": {
+                "text": "Client-trusted `player:submit` data allows metronome score forgery"
+              },
+              "fullDescription": {
+                "text": "The competitive **`metronome`** round trusts player-supplied timing offsets and scores them against public round data. A normal joined player can therefore submit a synthetically perfect payload and receive the maximum score without performing the timing challenge."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "text": "The competitive **`metronome`** round trusts player-supplied timing offsets and scores them against public round data. A normal joined player can therefore submit a synthetically perfect payload and receive the maximum score without performing the timing challenge.\n\nA non-host participant can manipulate the competitive leaderboard for **`Metronome Blackout`** and materially influence the session outcome. In the validated proof of concept, the attacker received **`0 ms avg off`**, **`1000`** points, and **rank 1 of 2** by submitting a forged payload immediately when the minigame started, before a legitimate first tap could exist.\n\n1. Remove **`metronome`** from hosted competitive sessions until scoring is recomputed from server-authoritative interaction data rather than client-supplied summary values.\n2. When re-enabling the game, score from authoritative tap evidence captured or validated server-side instead of trusting a client-computed `offsets` array.\n3. Treat timing-based submissions that arrive before the lead-in and first valid beat window as invalid or suspicious, but use that only as defense in depth rather than the primary fix.",
+                "markdown": "The competitive **`metronome`** round trusts player-supplied timing offsets and scores them against public round data. A normal joined player can therefore submit a synthetically perfect payload and receive the maximum score without performing the timing challenge.\n\nA non-host participant can manipulate the competitive leaderboard for **`Metronome Blackout`** and materially influence the session outcome. In the validated proof of concept, the attacker received **`0 ms avg off`**, **`1000`** points, and **rank 1 of 2** by submitting a forged payload immediately when the minigame started, before a legitimate first tap could exist.\n\n1. Remove **`metronome`** from hosted competitive sessions until scoring is recomputed from server-authoritative interaction data rather than client-supplied summary values.\n2. When re-enabling the game, score from authoritative tap evidence captured or validated server-side instead of trusting a client-computed `offsets` array.\n3. Treat timing-based submissions that arrive before the lead-in and first valid beat window as invalid or suspicious, but use that only as defense in depth rather than the primary fix."
+              },
+              "properties": {
+                "security-severity": "4.3",
+                "tags": [
+                  "security",
+                  "CWE-807",
+                  "stride:T",
+                  "stride:I"
+                ]
+              },
+              "helpUri": "https://cwe.mitre.org/data/definitions/807.html"
+            },
+            {
+              "id": "CWE-294",
+              "name": "Replayable room reconnect tokens allow repeated host and player takeover",
+              "shortDescription": {
+                "text": "Replayable room reconnect tokens allow repeated host and player takeover"
+              },
+              "fullDescription": {
+                "text": "The application treats room reconnect secrets as replayable bearer tokens for both hosts and players. A copied `hostKey` or player reconnect token can be reused from fresh browsers to seize the live room role, disconnect the legitimate participant, and then be replayed again because the secret is not rotated after successful takeover."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "text": "The application treats room reconnect secrets as replayable bearer tokens for both hosts and players. A copied `hostKey` or player reconnect token can be reused from fresh browsers to seize the live room role, disconnect the legitimate participant, and then be replayed again because the secret is not rotated after successful takeover.\n\nAny party that obtains a copied room-scoped reconnect secret can repeatedly take over an active session without knowing any password or completing the original join flow. In the validated proof of concept, replaying a copied player token seized that player's identity and evicted the legitimate socket, while replaying a copied `hostKey` seized host control, allowed unauthorized `host:config` changes, and displaced the original host; the same copied secrets remained valid from a third socket.\n\n1. Rotate the host bearer token immediately after every successful `host:rejoin`, return the replacement token in the acknowledgement, and overwrite the browser's stored `mc_host` value with the rotated secret.\n2. Rotate each player's reconnect token immediately after every successful authenticated reconnect, return the replacement token in the join acknowledgement, and persist only the rotated token client-side.\n3. Treat reconnect credentials as one-time or short-lived bearer secrets rather than room-lifetime tokens; if transport reliability requires retry tolerance, keep only a narrowly bounded transition window instead of allowing indefinite replay across successive takeovers.\n4. Add regression tests proving that a copied pre-rejoin host or player token fails after the first successful rejoin, while the freshly returned replacement token still permits the legitimate browser to resume the session.",
+                "markdown": "The application treats room reconnect secrets as replayable bearer tokens for both hosts and players. A copied `hostKey` or player reconnect token can be reused from fresh browsers to seize the live room role, disconnect the legitimate participant, and then be replayed again because the secret is not rotated after successful takeover.\n\nAny party that obtains a copied room-scoped reconnect secret can repeatedly take over an active session without knowing any password or completing the original join flow. In the validated proof of concept, replaying a copied player token seized that player's identity and evicted the legitimate socket, while replaying a copied `hostKey` seized host control, allowed unauthorized `host:config` changes, and displaced the original host; the same copied secrets remained valid from a third socket.\n\n1. Rotate the host bearer token immediately after every successful `host:rejoin`, return the replacement token in the acknowledgement, and overwrite the browser's stored `mc_host` value with the rotated secret.\n2. Rotate each player's reconnect token immediately after every successful authenticated reconnect, return the replacement token in the join acknowledgement, and persist only the rotated token client-side.\n3. Treat reconnect credentials as one-time or short-lived bearer secrets rather than room-lifetime tokens; if transport reliability requires retry tolerance, keep only a narrowly bounded transition window instead of allowing indefinite replay across successive takeovers.\n4. Add regression tests proving that a copied pre-rejoin host or player token fails after the first successful rejoin, while the freshly returned replacement token still permits the legitimate browser to resume the session."
+              },
+              "properties": {
+                "security-severity": "5.6",
+                "tags": [
+                  "security",
+                  "CWE-294",
+                  "stride:S"
+                ]
+              },
+              "helpUri": "https://cwe.mitre.org/data/definitions/294.html"
+            }
+          ],
+          "version": "1.5.3"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CWE-807",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Client-trusted `player:submit` data allows metronome score forgery\n\nThe competitive **`metronome`** round trusts player-supplied timing offsets and scores them against public round data. A normal joined player can therefore submit a synthetically perfect payload and receive the maximum score without performing the timing challenge."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/room.js"
+                },
+                "region": {
+                  "startLine": 41,
+                  "endLine": 45,
+                  "snippet": {
+                    "text": "const COMPETITIVE_CLIENT_SCORING_DISABLED = new Set([\n  'trace', 'stopclock', 'slingshot', 'balance',\n  'oddoneout', 'typing', 'spacemash',\n  'cups',\n]);"
+                  }
+                }
+              },
+              "message": {
+                "text": "Disable metronome in competitive hosted sessions until scoring is server-authoritative"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/games.js"
+                },
+                "region": {
+                  "startLine": 337,
+                  "endLine": 344,
+                  "snippet": {
+                    "text": "case 'metronome':\n      // Four beats play, then silence, and the player taps the next eight.\n      // There is no secret half: intervalMs implies the whole grid, and the\n      // player has just heard it — hiding it would hide nothing.\n      return {\n        clientData: { intervalMs: pick(rng, METRONOME_INTERVALS), leadInBeats: 4, silentBeats: 8 },\n        secret: {},\n      };"
+                  }
+                }
+              },
+              "message": {
+                "text": "The full beat grid is disclosed to every player as public round data"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/games.js"
+                },
+                "region": {
+                  "startLine": 738,
+                  "endLine": 765,
+                  "snippet": {
+                    "text": "case 'metronome': {\n      // payload.offsets: ms from the LAST lead-in beat to each tap, in the\n      // order they were made, so the nth scored beat is due at intervalMs * n.\n      //\n      // Taps are consumed IN ORDER rather than matched to whichever beat they\n      // happen to sit nearest. That is the whole defence against mashing: the\n      // eighth tap is judged against the eighth beat wherever it landed, so\n      // filling the window with taps buys a worse average, never a better one.\n      if (!Array.isArray(payload.offsets)) return null;\n      const { intervalMs, silentBeats } = clientData;\n      const taps = payload.offsets\n        .map((v) => num(v))\n        .filter((v) => v != null)\n        .slice(0, silentBeats);   // extra taps past the last beat are ignored\n      // Not one usable tap: this player did not play the game. Scoring them as\n      // maximally bad would drag the P90 clamp for everyone who did (§4 —\n      // normalize across the players who played it), so they are a\n      // non-submission, the same way bisect treats an all-blank sheet.\n      if (!taps.length) return null;\n      let sum = 0;\n      for (let i = 0; i < silentBeats; i++) {\n        // A beat never tapped costs one full interval — exactly what the most\n        // wrong possible tap costs, so skipping a beat is never the cheaper\n        // option, and one wild tap cannot swamp seven good ones.\n        const dev = i < taps.length ? Math.abs(taps[i] - intervalMs * (i + 1)) : intervalMs;\n        sum += Math.min(dev, intervalMs);\n      }\n      return sum / silentBeats;   // mean absolute deviation, ms; ≤ intervalMs"
+                  }
+                }
+              },
+              "message": {
+                "text": "Metronome scoring is derived directly from the client-supplied `offsets` array"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/room.js"
+                },
+                "region": {
+                  "startLine": 976,
+                  "endLine": 993,
+                  "snippet": {
+                    "text": "handleSubmit(playerId, payload) {\n    if (this.phase !== 'minigame') return;\n    const p = this.players.get(playerId);\n    if (!p) return;\n    const g = this.round.games[this.round.gameIndex];\n    if (!g || g.submissions.has(playerId)) return;\n    g.submissions.set(playerId, payload ?? {});\n    if (!NEEDS_AGGREGATION.has(g.key)) {\n      // For a server-secret game, score the answers the player LOCKED before\n      // each reveal, not a re-submittable final payload — so a client that used\n      // reveals to peek at answers cannot then claim turns it locked blank.\n      let scoringPayload = payload;\n      if (PER_TURN_SECRET.has(g.key)) {\n        const locked = this.lockedSolved(g, playerId);\n        if (locked) scoringPayload = { ...(payload && typeof payload === 'object' ? payload : {}), solved: locked };\n      }\n      const metric = computeMetric(g.key, scoringPayload, g.secret, g.clientData, this.config);\n      if (metric != null) g.metrics.set(playerId, metric);"
+                  }
+                }
+              },
+              "message": {
+                "text": "The first attacker-controlled submission during `minigame` is accepted and scored"
+              }
+            },
+            {
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "/socket.io/ (`player:submit`)",
+                  "kind": "endpoint"
+                }
+              ]
+            }
+          ],
+          "fixes": [
+            {
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "server/room.js"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "startLine": 41,
+                        "endLine": 45
+                      },
+                      "insertedContent": {
+                        "text": "const COMPETITIVE_CLIENT_SCORING_DISABLED = new Set([\n  'trace', 'stopclock', 'metronome', 'slingshot', 'balance',\n  'oddoneout', 'typing', 'spacemash',\n  'cups',\n]);"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "description": {
+                "text": "1. Remove **`metronome`** from hosted competitive sessions until scoring is recomputed from server-authoritative interaction data rather than client-supplied summary values.\n2. When re-enabling the game, score from authoritative tap evidence captured or validated server-side instead of trusting a client-computed `offsets` array.\n3. Treat timing-based submissions that arrive before the lead-in and first valid beat window as invalid or suspicious, but use that only as defense in depth rather than the primary fix.",
+                "markdown": "1. Remove **`metronome`** from hosted competitive sessions until scoring is recomputed from server-authoritative interaction data rather than client-supplied summary values.\n2. When re-enabling the game, score from authoritative tap evidence captured or validated server-side instead of trusting a client-computed `offsets` array.\n3. Treat timing-based submissions that arrive before the lead-in and first valid beat window as invalid or suspicious, but use that only as defense in depth rather than the primary fix."
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "primaryLocationLineHash": "18cf365c8de7b21842e1398077660e2ec331d16940fb1ef649cf5841acec0909"
+          },
+          "properties": {
+            "security-severity": "4.3",
+            "strix_vuln_class_hash": "15706e92e464e3980b51a47cbae823de11c1f2849f62c8c969c5229d342cef6d",
+            "strix": {
+              "id": "vuln-0001",
+              "severity": "medium",
+              "cvss": 4.3,
+              "timestamp": "2026-08-23 04:50:41 UTC",
+              "target": "http://host.docker.internal:3123",
+              "endpoint": "/socket.io/ (`player:submit`)",
+              "cwe": "CWE-807",
+              "impact": "A non-host participant can manipulate the competitive leaderboard for **`Metronome Blackout`** and materially influence the session outcome. In the validated proof of concept, the attacker received **`0 ms avg off`**, **`1000`** points, and **rank 1 of 2** by submitting a forged payload immediately when the minigame started, before a legitimate first tap could exist.",
+              "technical_analysis": "The server exposes all data needed to synthesize a perfect metronome result and then trusts the client to report that result honestly.\n\n`server/games.js` builds the metronome round with public `clientData` only:\n\n```javascript\ncase 'metronome':\n  return {\n    clientData: { intervalMs: pick(rng, METRONOME_INTERVALS), leadInBeats: 4, silentBeats: 8 },\n    secret: {},\n  };\n```\n\nThat means every player learns the exact beat grid for the round. During the minigame, `server/room.js` accepts the first `player:submit` payload for a player and immediately scores it:\n\n```javascript\nconst metric = computeMetric(g.key, scoringPayload, g.secret, g.clientData, this.config);\nif (metric != null) g.metrics.set(playerId, metric);\n```\n\nFor `metronome`, `computeMetric()` derives the raw score directly from `payload.offsets` and the public `clientData.intervalMs`/`silentBeats` values:\n\n```javascript\nconst dev = i < taps.length ? Math.abs(taps[i] - intervalMs * (i + 1)) : intervalMs;\n```\n\nBecause the expected tap times are deterministic and fully disclosed, an attacker can submit `offsets` equal to exact beat multiples such as `[intervalMs, 2*intervalMs, ...]` and force a perfect `0 ms avg off` result. Unlike other client-trusted games already blocked in competitive mode, `metronome` remains enabled for hosted competitive sessions.",
+              "remediation_steps": "1. Remove **`metronome`** from hosted competitive sessions until scoring is recomputed from server-authoritative interaction data rather than client-supplied summary values.\n2. When re-enabling the game, score from authoritative tap evidence captured or validated server-side instead of trusting a client-computed `offsets` array.\n3. Treat timing-based submissions that arrive before the lead-in and first valid beat window as invalid or suspicious, but use that only as defense in depth rather than the primary fix.",
+              "poc": {
+                "description": "1. Connect three Socket.IO clients to the application: one host, one attacker-controlled player, and one second player.\n2. Create a room as the host, disable every game except **`metronome`**, and set the minigame duration to the minimum allowed value.\n3. Join both non-host players to the room and start the competitive session.\n4. When the tutorial phase appears, advance it as the host so the room enters the **`metronome`** minigame.\n5. As soon as the attacker receives the minigame payload, read `clientData.intervalMs` and `clientData.silentBeats`.\n6. Immediately submit a forged `player:submit` payload containing offsets equal to exact beat multiples, without interacting with the game UI.\n7. Let the second player submit nothing and wait for the round to close.\n8. Observe that the attacker receives a perfect raw result and the maximum normalized score, despite submitting before a legitimate first tap could occur.",
+                "script_available": true
+              }
+            }
+          }
+        },
+        {
+          "ruleId": "CWE-294",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Replayable room reconnect tokens allow repeated host and player takeover\n\nThe application treats room reconnect secrets as replayable bearer tokens for both hosts and players. A copied `hostKey` or player reconnect token can be reused from fresh browsers to seize the live room role, disconnect the legitimate participant, and then be replayed again because the secret is not rotated after successful takeover."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/room.js"
+                },
+                "region": {
+                  "startLine": 327,
+                  "endLine": 371
+                }
+              },
+              "message": {
+                "text": "Rotate the player reconnect token after every authenticated rejoin"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "server/sockets.js"
+                },
+                "region": {
+                  "startLine": 198,
+                  "endLine": 225
+                }
+              },
+              "message": {
+                "text": "Rotate the host bearer token after every successful rejoin"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "public/js/host.js"
+                },
+                "region": {
+                  "startLine": 40,
+                  "endLine": 68
+                }
+              },
+              "message": {
+                "text": "Persist the rotated host token returned after rejoin"
+              }
+            },
+            {
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "/socket.io/",
+                  "kind": "endpoint"
+                }
+              ]
+            }
+          ],
+          "fixes": [
+            {
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "server/room.js"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "startLine": 327,
+                        "endLine": 371
+                      },
+                      "insertedContent": {
+                        "text": "join(socket, { name, playerId, reconnectToken }) {\n    const socketPlayers = this.playersForSocket(socket.id);\n    if (playerId && this.players.has(playerId)) {\n      if (socketPlayers.length && !socketPlayers.some((p) => p.id === playerId)) {\n        return { error: 'This connection is already bound to another player.' };\n      }\n      const p = this.players.get(playerId);\n      if (!reconnectTokenMatches(p.reconnectToken, reconnectToken)) {\n        return { error: 'Reconnect credential is invalid or expired.' };\n      }\n      // Rotate the reconnect credential on every successful rejoin so a\n      // copied room token stops working as soon as one socket resumes it.\n      const nextReconnectToken = newReconnectToken();\n      const previousSocketId = p.socketId;\n      if (previousSocketId && previousSocketId !== socket.id) {\n        this.disconnectSocketPlayers(previousSocketId, p.id);\n      }\n      this.disconnectSocketPlayers(socket.id, p.id);\n      p.socketId = socket.id;\n      p.connected = true;\n      p.disconnectedAt = null;\n      p.reconnectToken = nextReconnectToken;\n      // Evict the previous socket from this room's trust boundary. The old\n      // transport may still be alive (Socket.IO reconnects), so it must not\n      // retain room state after the identity moves.\n      if (previousSocketId && previousSocketId !== socket.id) {\n        const previous = this.io.sockets?.sockets?.get(previousSocketId);\n        if (previous) {\n          previous.data.roomCode = null;\n          previous.data.playerId = null;\n          previous.leave?.(`room:${this.code}`);\n        }\n      }\n      this.clearTimer(`kick:${p.id}`);\n      socket.join(`room:${this.code}`);\n      socket.data.roomCode = this.code;\n      socket.data.playerId = p.id;\n      this.broadcastPlayers();\n      return {\n        ok: true,\n        playerId: p.id,\n        reconnectToken: nextReconnectToken,\n        name: p.name,\n        snapshot: this.snapshot(p.id),\n      };\n    }"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "artifactLocation": {
+                    "uri": "server/sockets.js"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "startLine": 198,
+                        "endLine": 225
+                      },
+                      "insertedContent": {
+                        "text": "socket.on('host:rejoin', guarded(socket, 'host:rejoin', { limit: 10, ack: true }, ({ code, hostKey } = {}, cb) => {\n      const r = rooms.get(String(code || '').toUpperCase());\n      if (!r || r.hostKey !== hostKey) return cb?.(failedJoinResponse(failedJoins, socket));\n      const nextHostKey = crypto.randomUUID();\n      const previousCode = socket.data.roomCode;\n      if (previousCode && previousCode !== r.code) {\n        detachFromRoom(previousCode);\n      } else if (previousCode === r.code && socket.data.playerId) {\n        // Same-room player -> host: remove the stale player binding before\n        // granting host authority, or direct you:score events keep targeting\n        // this now-host socket.\n        if (r.disconnectSocketPlayers(socket.id)) r.broadcastPlayers();\n      }\n      const previousHost = r.hostSocketId && io.sockets.sockets.get(r.hostSocketId);\n      if (previousHost && previousHost.id !== socket.id) {\n        previousHost.data.isHost = false;\n        previousHost.data.roomCode = null;\n        previousHost.leave(`host:${r.code}`);\n        previousHost.leave(`room:${r.code}`);\n      }\n      r.hostKey = nextHostKey;\n      r.hostSocketId = socket.id;\n      r.clearTimer('empty');\n      socket.join(`room:${r.code}`);\n      socket.join(`host:${r.code}`);\n      socket.data.roomCode = r.code;\n      socket.data.isHost = true;\n      socket.data.playerId = null;\n      cb?.({ ok: true, code: r.code, hostKey: nextHostKey, snapshot: r.snapshot(null), config: r.publicConfig() });\n    }));"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "artifactLocation": {
+                    "uri": "public/js/host.js"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "startLine": 40,
+                        "endLine": 68
+                      },
+                      "insertedContent": {
+                        "text": "const saved = JSON.parse(sessionStorage.getItem('mc_host') || 'null');\n\nfunction persistHostSession(code, hostKey) {\n  state.code = code;\n  state.hostKey = hostKey;\n  sessionStorage.setItem('mc_host', JSON.stringify({ code, hostKey }));\n}\n\nsocket.on('connect', async () => {\n  const s = await syncClock(socket, 6);\n  state.offset = s.offset;\n  if (state.code && state.hostKey) {\n    socket.emit('host:rejoin', { code: state.code, hostKey: state.hostKey }, (res) => {\n      if (res && res.ok && res.hostKey) {\n        persistHostSession(res.code, res.hostKey);\n        state.config = res.config;\n      }\n    });\n  } else if (saved && !state.code) {\n    socket.emit('host:rejoin', saved, (res) => {\n      if (res && res.ok && res.hostKey) {\n        persistHostSession(res.code, res.hostKey);\n        state.config = res.config;\n        enterLobbyUi(res);\n      }\n    });\n  }\n});\n\nfunction createRoom() {\n  socket.emit('host:create', { origin: location.origin, config: {} }, (res) => {\n    if (res.error) { $('create-error').textContent = res.error; return; }\n    persistHostSession(res.code, res.hostKey);\n    state.config = res.config;\n    enterLobbyUi(res);\n  });\n}"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "description": {
+                "text": "1. Rotate the host bearer token immediately after every successful `host:rejoin`, return the replacement token in the acknowledgement, and overwrite the browser's stored `mc_host` value with the rotated secret.\n2. Rotate each player's reconnect token immediately after every successful authenticated reconnect, return the replacement token in the join acknowledgement, and persist only the rotated token client-side.\n3. Treat reconnect credentials as one-time or short-lived bearer secrets rather than room-lifetime tokens; if transport reliability requires retry tolerance, keep only a narrowly bounded transition window instead of allowing indefinite replay across successive takeovers.\n4. Add regression tests proving that a copied pre-rejoin host or player token fails after the first successful rejoin, while the freshly returned replacement token still permits the legitimate browser to resume the session.",
+                "markdown": "1. Rotate the host bearer token immediately after every successful `host:rejoin`, return the replacement token in the acknowledgement, and overwrite the browser's stored `mc_host` value with the rotated secret.\n2. Rotate each player's reconnect token immediately after every successful authenticated reconnect, return the replacement token in the join acknowledgement, and persist only the rotated token client-side.\n3. Treat reconnect credentials as one-time or short-lived bearer secrets rather than room-lifetime tokens; if transport reliability requires retry tolerance, keep only a narrowly bounded transition window instead of allowing indefinite replay across successive takeovers.\n4. Add regression tests proving that a copied pre-rejoin host or player token fails after the first successful rejoin, while the freshly returned replacement token still permits the legitimate browser to resume the session."
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "primaryLocationLineHash": "45449d8d5354b8c10e3320f37be5a02e83603d9c77bbc68ab734b2a6d07ae604"
+          },
+          "properties": {
+            "security-severity": "5.6",
+            "strix_vuln_class_hash": "a1f4287810efb61f88b935e8a5b130af8f0e764a0d8b39d5d3204ada21edcce8",
+            "strix": {
+              "id": "vuln-0002",
+              "severity": "medium",
+              "cvss": 5.6,
+              "timestamp": "2026-08-23 04:56:43 UTC",
+              "target": "http://host.docker.internal:3123",
+              "endpoint": "/socket.io/",
+              "method": "WebSocket",
+              "cwe": "CWE-294",
+              "impact": "Any party that obtains a copied room-scoped reconnect secret can repeatedly take over an active session without knowing any password or completing the original join flow. In the validated proof of concept, replaying a copied player token seized that player's identity and evicted the legitimate socket, while replaying a copied `hostKey` seized host control, allowed unauthorized `host:config` changes, and displaced the original host; the same copied secrets remained valid from a third socket.",
+              "technical_analysis": "The room host and player rejoin paths both rely on long-lived browser-stored bearer secrets and do not rotate them after a successful takeover.\n\nThe host client persists `{ code, hostKey }` in `sessionStorage` and reuses it automatically:\n\n```javascript title=public/js/host.js startLineNumber=40 endLineNumber=65\nconst saved = JSON.parse(sessionStorage.getItem('mc_host') || 'null');\n\nsocket.on('connect', async () => {\n  const s = await syncClock(socket, 6);\n  state.offset = s.offset;\n  if (state.code && state.hostKey) {\n    socket.emit('host:rejoin', { code: state.code, hostKey: state.hostKey }, () => {});\n  } else if (saved && !state.code) {\n    socket.emit('host:rejoin', saved, (res) => {\n      if (res && res.ok) {\n        state.code = res.code;\n        state.hostKey = saved.hostKey;\n        state.config = res.config;\n        enterLobbyUi(res);\n      }\n    });\n  }\n});\n```\n\nThe player client persists `mc_pid_<ROOM>` and `mc_reconnect_<ROOM>` in `localStorage` and reuses them on join/reconnect:\n\n```javascript title=public/js/player.js startLineNumber=43 endLineNumber=54\nconst storedPid = localStorage.getItem(`mc_pid_${code}`);\nconst storedToken = localStorage.getItem(`mc_reconnect_${code}`);\nconst canReconnect = Boolean(storedPid && storedToken);\nsocket.emit('player:join', {\n  code,\n  name,\n  playerId: canReconnect ? storedPid : null,\n  reconnectToken: canReconnect ? storedToken : null,\n}, (res) => enterRoom(res, code));\n```\n\nOn the server, `host:rejoin` authorizes control solely by room code plus the stored `hostKey`, then moves host authority to the new socket without rotating that secret:\n\n```javascript title=server/sockets.js startLineNumber=198 endLineNumber=224\nsocket.on('host:rejoin', guarded(socket, 'host:rejoin', { limit: 10, ack: true }, ({ code, hostKey } = {}, cb) => {\n  const r = rooms.get(String(code || '').toUpperCase());\n  if (!r || r.hostKey !== hostKey) return cb?.(failedJoinResponse(failedJoins, socket));\n  // ...snip...\n  r.hostSocketId = socket.id;\n  // ...snip...\n  cb?.({ ok: true, code: r.code, snapshot: r.snapshot(null), config: r.publicConfig() });\n}));\n```\n\nThe player reconnect path similarly accepts `playerId` plus `reconnectToken`, evicts the previous socket, and then returns the same reconnect token again:\n\n```javascript title=server/room.js startLineNumber=327 endLineNumber=370\nif (playerId && this.players.has(playerId)) {\n  const p = this.players.get(playerId);\n  if (!reconnectTokenMatches(p.reconnectToken, reconnectToken)) {\n    return { error: 'Reconnect credential is invalid or expired.' };\n  }\n  const previousSocketId = p.socketId;\n  if (previousSocketId && previousSocketId !== socket.id) {\n    this.disconnectSocketPlayers(previousSocketId, p.id);\n  }\n  // ...snip...\n  return {\n    ok: true,\n    playerId: p.id,\n    reconnectToken: p.reconnectToken,\n    name: p.name,\n    snapshot: this.snapshot(p.id),\n  };\n}\n```\n\nBecause the same bearer secret survives every successful takeover, possession of a copied value is enough to repeatedly bind fresh sockets to the same host or player identity. The previous socket is evicted, but the credential itself remains valid indefinitely for the life of the room, so the same copied secret can be replayed again from a third socket.",
+              "remediation_steps": "1. Rotate the host bearer token immediately after every successful `host:rejoin`, return the replacement token in the acknowledgement, and overwrite the browser's stored `mc_host` value with the rotated secret.\n2. Rotate each player's reconnect token immediately after every successful authenticated reconnect, return the replacement token in the join acknowledgement, and persist only the rotated token client-side.\n3. Treat reconnect credentials as one-time or short-lived bearer secrets rather than room-lifetime tokens; if transport reliability requires retry tolerance, keep only a narrowly bounded transition window instead of allowing indefinite replay across successive takeovers.\n4. Add regression tests proving that a copied pre-rejoin host or player token fails after the first successful rejoin, while the freshly returned replacement token still permits the legitimate browser to resume the session.",
+              "poc": {
+                "description": "1. Create a room as the host and join it as a normal player.\n2. Copy the host browser's `sessionStorage.mc_host` value and the player browser's `localStorage.mc_pid_<ROOM>` plus `localStorage.mc_reconnect_<ROOM>` values.\n3. Open a fresh socket and call `player:join` with the copied room code, `playerId`, and `reconnectToken`.\n4. Observe that the new socket is accepted as the existing player identity and the legitimate player socket immediately loses room access.\n5. Open a third socket and replay the same copied player values again.\n6. Observe that the third socket is again accepted as the same player, proving the reconnect token was not invalidated after the previous takeover.\n7. Open a fresh socket and call `host:rejoin` with the copied room code and `hostKey`.\n8. Observe that the new socket gains host control, can successfully invoke `host:config`, and the original host can no longer do so.\n9. Open a third host socket and replay the same copied `hostKey` again.\n10. Observe that host takeover succeeds again, proving the host secret was not rotated after the prior rejoin.",
+                "script_available": true
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
