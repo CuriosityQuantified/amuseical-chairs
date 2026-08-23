@@ -47,7 +47,7 @@ test('score attack: every game once, totals accumulate, chairs finale, highest t
   const room = new Room(stubIo(), 'TEST', {
     ...FAST,
     enabled: onlyGames('spacemash', 'stopclock'),
-  });
+  }, undefined, { allowClientScoredCompetitive: true });
   try {
     const ids = ['p1', 'p2', 'p3'];
     ids.forEach((id, i) => addPlayer(room, id, `Player${i + 1}`));
@@ -203,9 +203,9 @@ test('gamesPerSession draws K of N — a two-stage game must not outgrow the mee
   const enabled = {};
   for (const g of ROSTER) enabled[g.key] = true;
 
-  const all = new Room(stubIo(), 'FULL', { ...FAST, enabled });
-  const four = new Room(stubIo(), 'FULL', { ...FAST, enabled, gamesPerSession: 4 });
-  const over = new Room(stubIo(), 'FULL', { ...FAST, enabled, gamesPerSession: 99 });
+  const all = new Room(stubIo(), 'FULL', { ...FAST, enabled }, undefined, { allowClientScoredCompetitive: true });
+  const four = new Room(stubIo(), 'FULL', { ...FAST, enabled, gamesPerSession: 4 }, undefined, { allowClientScoredCompetitive: true });
+  const over = new Room(stubIo(), 'FULL', { ...FAST, enabled, gamesPerSession: 99 }, undefined, { allowClientScoredCompetitive: true });
   try {
     for (const room of [all, four, over]) {
       addPlayer(room, 'p1', 'Anna');
@@ -267,7 +267,7 @@ test('the host config surface is minigame duration and the game toggles, nothing
 test('no practice round: start() opens on a scored game, whatever the config says', async () => {
   const room = new Room(stubIo(), 'NOPR', {
     ...FAST, practice: true, enabled: onlyGames('stopclock'),
-  });
+  }, undefined, { allowClientScoredCompetitive: true });
   const phases = [];
   const setPhase = room.setPhase.bind(room);
   room.setPhase = (name, data) => { phases.push(name); return setPhase(name, data); };
@@ -298,7 +298,7 @@ test('2-player finale: one round, placement bonus (3000 / 0) can flip the lead',
   const room = new Room(stubIo(), 'TESB', {
     ...FAST,
     enabled: onlyGames('stopclock'),
-  });
+  }, undefined, { allowClientScoredCompetitive: true });
   try {
     addPlayer(room, 'a', 'Anna');
     addPlayer(room, 'b', 'Ben');
@@ -333,7 +333,7 @@ test('host cannot skip a chairs redemption round before player reports arrive', 
   const room = new Room(stubIo(), 'SKIP', {
     ...FAST,
     enabled: onlyGames('stopclock'),
-  });
+  }, undefined, { allowClientScoredCompetitive: true });
   try {
     addPlayer(room, 'a', 'Alpha');
     addPlayer(room, 'b', 'Bravo');
@@ -350,12 +350,128 @@ test('host cannot skip a chairs redemption round before player reports arrive', 
     assert.equal(room.redemption.reports.size, 0, 'no synthetic results are created');
 
     await waitFor(() => room.redemption && room.redemption.tGreen, 3000, 'go');
+    const tGreen = room.redemption.tGreen;
+    // Reports must arrive after the claimed reaction time could have elapsed
+    // (a report that claims 210 ms but arrives instantly would be disqualified
+    // as an impossible pre-green timing).
+    await sleep(Math.max(0, tGreen - Date.now()) + 220);
     room.handleRedemptionReport('a', { status: 'ok', rawMs: 210, earlyPresses: 0 });
+    await sleep(110);
     room.handleRedemptionReport('b', { status: 'ok', rawMs: 320, earlyPresses: 0 });
     await waitFor(() => room.phase === 'chairs_result', 3000, 'result');
     assert.equal(room.chairs.eliminated[0], 'b', 'actual slowest reporter is eliminated');
   } finally {
     room.destroy();
+  }
+});
+
+test('a pre-green redemption report is disqualified; an honest post-green report still wins', async () => {
+  const room = new Room(stubIo(), 'PREK', { ...FAST, enabled: onlyGames('spacemash') });
+  try {
+    addPlayer(room, 'cheat', 'Cheater');
+    addPlayer(room, 'fair', 'Fair');
+    room.start();
+    await waitFor(() => room.phase === 'minigame', 3000, 'minigame');
+    room.handleSubmit('cheat', { count: 40, flagged: false });
+    room.handleSubmit('fair', { count: 41, flagged: false });
+    await waitFor(() => room.phase === 'scores', 3000, 'scores');
+    room.hostNext();
+    await waitFor(() => room.phase === 'redemption', 3000, 'finale');
+    await waitFor(() => room.redemption && room.redemption.tGreen, 3000, 'go');
+    const tGreen = room.redemption.tGreen;
+    // Forged report: sent before the green signal, claiming a plausible 100 ms.
+    room.handleRedemptionReport('cheat', { status: 'ok', rawMs: 100, earlyPresses: 0 });
+    const forged = room.redemption.reports.get('cheat');
+    assert.equal(forged.status, 'tooFast', 'pre-green report is disqualified, not scored');
+    assert.equal(forged.flagged, true);
+    assert.equal(forged.finalMs, 999999, 'it cannot outrank any honest report');
+    // Honest report: press at green + 400 ms, report right after.
+    await sleep(Math.max(0, tGreen - Date.now()) + 400);
+    room.handleRedemptionReport('fair', { status: 'ok', rawMs: 400, earlyPresses: 0 });
+    await waitFor(() => room.phase === 'chairs_result', 3000, 'result');
+    assert.equal(room.chairs.eliminated[0], 'cheat', 'the disqualified cheater loses the round');
+  } finally {
+    room.destroy();
+  }
+});
+
+test('client-scored games are blocked from hosted competitive sessions', () => {
+  const room = new Room(stubIo(), 'BLK1', {
+    ...FAST,
+    enabled: { ...onlyGames('trace', 'stopclock', 'slingshot', 'balance'), rgb: true },
+  });
+  try {
+    addPlayer(room, 'p1', 'Anna');
+    addPlayer(room, 'p2', 'Ben');
+    // Not advertised, and reported as disabled to the lobby.
+    const cfg = room.publicConfig();
+    for (const key of ['trace', 'stopclock', 'slingshot', 'balance']) {
+      assert.equal(cfg.roster.some((g) => g.key === key), false, `${key} hidden from the hosted lobby`);
+      assert.equal(cfg.enabled[key], false, `${key} reported disabled`);
+    }
+    assert.ok(cfg.roster.some((g) => g.key === 'rgb'), 'unaffected games are still advertised');
+    assert.equal(cfg.enabled.rgb, true, 'unaffected games keep their configured state');
+    // Blocked games never enter the competitive queue even when configured on.
+    assert.equal(room.start().ok, true);
+    for (const key of ['trace', 'stopclock', 'slingshot', 'balance']) {
+      assert.ok(!room.queue.includes(key), `${key} never queued`);
+    }
+    assert.ok(room.queue.includes('rgb'));
+  } finally {
+    room.destroy();
+  }
+  // A session with ONLY blocked games enabled cannot start.
+  const only = new Room(stubIo(), 'BLK1B', { ...FAST, enabled: onlyGames('trace', 'stopclock', 'slingshot', 'balance') });
+  try {
+    addPlayer(only, 'p1', 'Anna');
+    addPlayer(only, 'p2', 'Ben');
+    assert.equal(only.start().error, 'Enable at least one game.');
+    assert.equal(only.phase, 'lobby');
+  } finally {
+    only.destroy();
+  }
+});
+
+test('a crafted host config cannot re-enable client-scored games in a hosted room', () => {
+  const room = new Room(stubIo(), 'BLK2', { ...FAST, enabled: onlyGames('spacemash') });
+  try {
+    assert.equal(room.updateConfig({ enabled: { trace: true, stopclock: true } }).ok, true);
+    assert.equal(room.config.enabled.trace, false, 'updateConfig forces the block back on');
+    assert.equal(room.config.enabled.stopclock, false);
+    assert.equal(room.publicConfig().enabled.trace, false, 'the lobby sees the enforced state');
+    addPlayer(room, 'p1', 'Anna');
+    addPlayer(room, 'p2', 'Ben');
+    assert.equal(room.start().ok, true);
+    assert.ok(!room.queue.includes('trace') && !room.queue.includes('stopclock'),
+      'blocked games never enter the competitive queue');
+    assert.ok(room.queue.includes('spacemash'));
+  } finally {
+    room.destroy();
+  }
+});
+
+test('test-only opt-in and solo rooms still play client-scored games', () => {
+  // The harness/constructor opt-in (never settable from a client payload).
+  const optIn = new Room(stubIo(), 'BLK3', { ...FAST, enabled: onlyGames('stopclock') }, undefined, { allowClientScoredCompetitive: true });
+  try {
+    assert.ok(optIn.publicConfig().roster.some((g) => g.key === 'stopclock'), 'opt-in advertises the game');
+    addPlayer(optIn, 'p1', 'Anna');
+    addPlayer(optIn, 'p2', 'Ben');
+    assert.equal(optIn.start().ok, true);
+    assert.ok(optIn.queue.includes('stopclock'), 'opt-in queues the game');
+  } finally {
+    optIn.destroy();
+  }
+  // Solo practice keeps the full roster (unscored, nothing at stake).
+  const solo = new Room(stubIo(), 'SOLO', {}, undefined, {});
+  try {
+    solo.solo = true;
+    const cfg = solo.publicConfig();
+    assert.ok(cfg.roster.some((g) => g.key === 'trace'));
+    assert.ok(cfg.roster.some((g) => g.key === 'balance'));
+    assert.equal(cfg.enabled.trace, true, 'solo defaults keep the game on');
+  } finally {
+    solo.destroy();
   }
 });
 
@@ -366,7 +482,7 @@ test('late join: mid-session joiner scores subsequent games and 0 for missed', a
   const room = new Room(stubIo(), 'LATE', {
     ...FAST,
     enabled: onlyGames('spacemash', 'stopclock'),
-  });
+  }, undefined, { allowClientScoredCompetitive: true });
   try {
     addPlayer(room, 'p1', 'Player1');
     addPlayer(room, 'p2', 'Player2');
@@ -457,7 +573,7 @@ test('host skip: ends current game immediately, scoring exactly like a natural d
   const room = new Room(stubIo(), 'TEST', {
     ...FAST,
     enabled: onlyGames('spacemash', 'stopclock'),
-  });
+  }, undefined, { allowClientScoredCompetitive: true });
   try {
     addPlayer(room, 'p1', 'Player1');
     addPlayer(room, 'p2', 'Player2');

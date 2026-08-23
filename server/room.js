@@ -33,6 +33,20 @@ import {
 // game stage as `secret.answers` (one entry per turn/round).
 const PER_TURN_SECRET = new Set(['anagram']);
 
+// Temporary competitive-integrity mitigation (Strix pentest 2026-08-22): these
+// games submit client-computed summary metrics that the server only
+// sanity-clamps, so hosted competitive sessions must not queue them until
+// scoring is recomputed server-side from authoritative interaction data.
+// Solo practice and the lobby's unscored solo test run stay available.
+const COMPETITIVE_CLIENT_SCORING_DISABLED = new Set(['trace', 'stopclock', 'slingshot', 'balance']);
+
+// Whether a game may be queued in a competitive session. Solo rooms and a
+// test-only server/constructor opt-in (never settable from a client payload)
+// are exempt; everything else must not expose client-trusted scoring.
+function clientScoredGameAllowed(room, key) {
+  return room.solo || room.allowClientScoredCompetitive || !COMPETITIVE_CLIENT_SCORING_DISABLED.has(key);
+}
+
 // Ambiguity-free room-code alphabet: no I or O (and digits are excluded).
 const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
 
@@ -127,7 +141,7 @@ function reconnectTokenMatches(expected, supplied) {
 }
 
 export class Room {
-  constructor(io, code, config, onEmpty = () => {}) {
+  constructor(io, code, config, onEmpty = () => {}, options = {}) {
     this.io = io;
     this.code = code;
     this.config = sanitizeConfig(config);
@@ -151,6 +165,10 @@ export class Room {
     this.finalStandings = null;
     this.timers = new Map();
     this.solo = false;        // solo practice room: the lone player drives it
+    // Test-harness opt-in that re-enables client-scored games in competitive
+    // sessions. Server/constructor-sourced only — no client payload can set
+    // it, so a remote participant cannot un-block the vulnerable games.
+    this.allowClientScoredCompetitive = !!options.allowClientScoredCompetitive;
     this.testCounter = 0;
     this.destroyed = false;
     this.createdAt = Date.now();
@@ -426,9 +444,13 @@ export class Room {
   // its value.
   publicConfig() {
     const { gameDuration, minDelay, maxDelay, enabled } = this.config;
-    const roster = ROSTER.map(({ key, name, category, stages, defaultEnabled }) =>
-      ({ key, name, category, stages: stages || 1, defaultEnabled: defaultEnabled !== false }));
-    return { gameDuration, minDelay, maxDelay, enabled, roster };
+    const roster = ROSTER
+      .filter(({ key }) => clientScoredGameAllowed(this, key))
+      .map(({ key, name, category, stages, defaultEnabled }) =>
+        ({ key, name, category, stages: stages || 1, defaultEnabled: defaultEnabled !== false }));
+    const publicEnabled = Object.fromEntries(
+      Object.entries(enabled).map(([key, on]) => [key, clientScoredGameAllowed(this, key) ? on : false]));
+    return { gameDuration, minDelay, maxDelay, enabled: publicEnabled, roster };
   }
 
   updateConfig(raw) {
@@ -442,6 +464,11 @@ export class Room {
       if (HOST_EDITABLE_CONFIG.has(key)) patch[key] = value;
     }
     this.config = sanitizeConfig({ ...this.config, ...patch, enabled: { ...this.config.enabled, ...(patch.enabled || {}) } });
+    // A crafted host payload cannot re-enable client-scored games in a
+    // competitive session — the block is enforced after every config patch.
+    if (!clientScoredGameAllowed(this, 'trace')) {
+      for (const key of COMPETITIVE_CLIENT_SCORING_DISABLED) this.config.enabled[key] = false;
+    }
     this.emitAll('room:config', this.publicConfig());
     return { ok: true };
   }
@@ -451,7 +478,9 @@ export class Room {
   start() {
     if (this.phase !== 'lobby') return { error: 'Already started.' };
     if (this.players.size < 2) return { error: 'Need at least 2 players.' };
-    const enabledKeys = ROSTER.filter((g) => this.config.enabled[g.key]).map((g) => g.key);
+    const enabledKeys = ROSTER
+      .filter((g) => this.config.enabled[g.key] && clientScoredGameAllowed(this, g.key))
+      .map((g) => g.key);
     if (!enabledKeys.length) return { error: 'Enable at least one game.' };
     // K-of-N draw: seeded shuffle first, then take the first K. Which games a
     // session plays is as random as their order, and 0 still means "all".
@@ -1124,14 +1153,23 @@ export class Room {
     const red = this.redemption;
     if (!red || !red.tGreen) return;
     if (!red.participants.includes(playerId) || red.reports.has(playerId)) return;
-    const scored = scoreRedemptionReport(report, { earlyPressPenalty: this.config.earlyPressPenalty });
+    const p = this.players.get(playerId);
+    const receivedAt = Date.now();
+    const scored = scoreRedemptionReport(report, {
+      earlyPressPenalty: this.config.earlyPressPenalty,
+      tGreen: red.tGreen,
+      receivedAt,
+      // A player's clock-sync confidence bounds how much earlier than the
+      // claimed reaction the report may legitimately arrive (Strix 2026-08-22:
+      // pre-green reports must be disqualified, not just flagged).
+      earliestArrivalSlackMs: Math.max(25, Math.min(150, (p?.sync?.jitter ?? 0) + 25)),
+    });
     // Server-side sanity: a clean (no-early-press) report should arrive
     // roughly rtt after T_green + reportedTime. Flag, don't crash.
-    const p = this.players.get(playerId);
     if (scored.status === 'ok' && scored.earlyPresses === 0) {
       const rtt = p?.sync?.minRtt ?? 200;
       const expected = red.tGreen + scored.rawMs + rtt + 1500;
-      if (Date.now() > expected + 1000) scored.flagged = true;
+      if (receivedAt > expected + 1000) scored.flagged = true;
     }
     red.reports.set(playerId, scored);
     this.emitAll('redemption:progress', { reported: red.reports.size, total: red.participants.length });

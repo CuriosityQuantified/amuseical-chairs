@@ -95,7 +95,15 @@ export function createRedemptionRun({
 }
 
 // Server-side scoring of a redemption report. Spec §5.1/§5.2.
-export function scoreRedemptionReport(report, { earlyPressPenalty = 0.1 } = {}) {
+export function scoreRedemptionReport(
+  report,
+  {
+    earlyPressPenalty = 0.1,
+    tGreen = null,
+    receivedAt = null,
+    earliestArrivalSlackMs = 0,
+  } = {},
+) {
   if (!report || report.status === 'hardTimeout' || report.status == null) {
     return { finalMs: 999999, rawMs: null, earlyPresses: report?.earlyPresses ?? 0, status: 'hardTimeout', flagged: false };
   }
@@ -110,6 +118,17 @@ export function scoreRedemptionReport(report, { earlyPressPenalty = 0.1 } = {}) 
   if (raw < 100) {
     // Below the human floor — macro or clock bug. Flag, don't crash.
     return { finalMs: 999999, rawMs: raw, earlyPresses: early, status: 'tooFast', flagged: true };
+  }
+  if (Number.isFinite(tGreen) && Number.isFinite(receivedAt)) {
+    // Impossible timing: the report arrived before the green signal, or
+    // before the claimed reaction time could have physically elapsed (with a
+    // jitter-based slack so honest clients on imperfect sync are not burned).
+    // This is a disqualification, not a warning — the pre-green forgery from
+    // the Strix pentest (2026-08-22) must not be able to outrank honest play.
+    const slack = Math.max(0, Number(earliestArrivalSlackMs) || 0);
+    if (receivedAt < tGreen || receivedAt + slack < tGreen + raw) {
+      return { finalMs: 999999, rawMs: raw, earlyPresses: early, status: 'tooFast', flagged: true };
+    }
   }
   return {
     finalMs: raw * (1 + earlyPressPenalty * early),
