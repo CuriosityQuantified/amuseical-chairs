@@ -1253,10 +1253,10 @@ export class Room {
       earlyPressPenalty: this.config.earlyPressPenalty,
       tGreen: red.tGreen,
       receivedAt,
-      // A player's clock-sync confidence bounds how much earlier than the
-      // claimed reaction the report may legitimately arrive (Strix 2026-08-22:
-      // pre-green reports must be disqualified, not just flagged).
-      earliestArrivalSlackMs: Math.max(25, Math.min(150, (p?.sync?.jitter ?? 0) + 25)),
+      // Redemption timing is scoring-critical, so acceptance must not be
+      // relaxed by client-reported sync quality. A reaction cannot reach the
+      // server before T_green + rawMs regardless of claimed jitter.
+      earliestArrivalSlackMs: 0,
     });
     // Server-side sanity: a clean (no-early-press) report should arrive
     // roughly rtt after T_green + reportedTime. Flag, don't crash.

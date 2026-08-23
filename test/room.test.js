@@ -456,6 +456,37 @@ test('a pre-green redemption report is disqualified; an honest post-green report
   }
 });
 
+test('forged sync jitter cannot make an edge-timed redemption report outrank an honest player', async () => {
+  const room = new Room(stubIo(), 'JITR', { ...FAST, enabled: onlyGames('spacemash') }, undefined, { allowClientScoredCompetitive: true });
+  try {
+    addPlayer(room, 'cheat', 'Cheater');
+    addPlayer(room, 'fair', 'Fair');
+    room.start();
+    await waitFor(() => room.phase === 'minigame', 3000, 'minigame');
+    room.handleSubmit('cheat', { count: 40, flagged: false });
+    room.handleSubmit('fair', { count: 41, flagged: false });
+    await waitFor(() => room.phase === 'scores', 3000, 'scores');
+    room.hostNext();
+    await waitFor(() => room.phase === 'redemption', 3000, 'finale');
+    await waitFor(() => room.redemption && room.redemption.tGreen, 3000, 'go');
+    const tGreen = room.redemption.tGreen;
+
+    room.recordSync('cheat', { offset: 0, minRtt: 1, jitter: 999999 });
+    await sleep(Math.max(0, tGreen - Date.now()) + 20);
+    room.handleRedemptionReport('cheat', { status: 'ok', rawMs: 100, earlyPresses: 0 });
+    const forged = room.redemption.reports.get('cheat');
+    assert.equal(forged.status, 'tooFast', 'client jitter cannot relax redemption timing checks');
+    assert.equal(forged.finalMs, 999999);
+
+    await sleep(280);
+    room.handleRedemptionReport('fair', { status: 'ok', rawMs: 300, earlyPresses: 0 });
+    await waitFor(() => room.phase === 'chairs_result', 3000, 'result');
+    assert.equal(room.chairs.eliminated[0], 'cheat', 'honest player still wins the round');
+  } finally {
+    room.destroy();
+  }
+});
+
 const ALL_BLOCKED = ['trace', 'stopclock', 'slingshot', 'balance', 'oddoneout', 'typing', 'spacemash', 'cups', 'metronome'];
 test('client-scored games are blocked from hosted competitive sessions', () => {
   const room = new Room(stubIo(), 'BLK1', {
