@@ -101,7 +101,7 @@
       "semantic": null
     },
     "server/app.js": {
-      "ast": "4088a0586091befb795813d989efbdfd",
+      "ast": "40bcda7b031597d3e499e80c8a210522",
       "semantic": null
     },
     "server/games.js": {
@@ -113,11 +113,11 @@
       "semantic": "f9bcb5a92468425b887f7d6ed3da4eb4"
     },
     "server/room.js": {
-      "ast": "bc1b31a071c7ee548217b0c146b45486",
+      "ast": "7a97c9334a1e770a6b6fb188d08b8b14",
       "semantic": null
     },
     "server/sockets.js": {
-      "ast": "faab535d51579e7b2b66e77344ba0b51",
+      "ast": "3ce9360a3ab8b98d6337f77319ae6570",
       "semantic": null
     },
     "shared/anagram.js": {
@@ -233,7 +233,7 @@
       "semantic": null
     },
     "test/harness.test.js": {
-      "ast": "c0819b941fe3e24707511389177403af",
+      "ast": "d17afe93a93ce56957860b6deffe3f51",
       "semantic": null
     },
     "test/icebreaker.test.js": {
@@ -245,7 +245,7 @@
       "semantic": null
     },
     "test/multistage.test.js": {
-      "ast": "f3f117968d942a07c4ea68486cc3dfde",
+      "ast": "3a6025765de1c9c8f62c958cde209c0c",
       "semantic": null
     },
     "test/normalize.test.js": {
@@ -277,7 +277,7 @@
       "semantic": null
     },
     "test/security.test.js": {
-      "ast": "0a31e2f787c2a417232b20e66524a77e",
+      "ast": "646ee7eaa5c31253134cfd2eae4a2394",
       "semantic": null
     },
     "test/smoke.test.js": {

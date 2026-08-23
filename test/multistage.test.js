@@ -437,8 +437,24 @@ test('one fun fact at a time: the next never arrives before the last one closes'
     assert.deepEqual(games.slice(1).map((p) => p.clientData.round), [1, 2, 3]);
     assert.ok(games.slice(1).every((p) => p.room !== undefined || true));
     assert.equal(phasePayloads(io).filter((p) => p.name === 'scores').length, 1);
-    // Every fact went to the whole room, never to one player.
+    // Every fact went to the whole room, never to one player. The answered
+    // reveal still broadcasts a phase event to the room (per-player guesses
+    // rows plus a room-wide fallback), so these all stay room-scoped — but
+    // the personalized per-socket rows are socket-scoped by design.
+    const revealEvents = io.events.filter((e) => e.event === 'phase' && e.data?.name === 'reveal');
+    assert.ok(revealEvents.length >= 1, 'the reveal emits at least one phase event');
+    const playerSockets = ['sock-p1', 'sock-p2', 'sock-p3'];
     for (const e of io.events.filter((e) => e.event === 'phase')) {
+      if (e.data?.name === 'reveal' && playerSockets.includes(e.room)) {
+        assert.equal(e.data.guesses.length, 1, 'per-player reveal rows are single');
+        assert.equal(e.data.guesses[0].playerId, e.room.replace('sock-', ''),
+          'the row belongs to the receiving player');
+        continue;
+      }
+      if (e.data?.name === 'reveal' && e.room === `host:${room.code}`) {
+        assert.ok(e.data.guesses.length >= 1, 'the host projector keeps the full reveal');
+        continue;
+      }
       assert.equal(e.room, `room:${room.code}`);
     }
   } finally {
@@ -494,13 +510,28 @@ test('the answer is not broadcast until the host presses Next', async () => {
       'the author is not on the wire — a player watching their own socket cannot cheat');
 
     room.hostNext();
+    // The answered reveal fans out per player: the room-wide payload keeps the
+    // answered flag and tally, the per-player rows carry each player's own
+    // guess. `phasePayloads` picks the room-wide broadcast.
     const answer = phasePayloads(io).filter((p) => p.name === 'reveal').pop();
     assert.equal(answer.answered, true);
     assert.equal(answer.name, 'reveal', 'the phase name is never shadowed by the payload');
     assert.equal(answer.playerId, g.secret.answer);
     assert.ok(answer.authorName, 'and now it has a name on it');
     assert.equal(answer.tally.reduce((n, t) => n + t.count, 0), 3);
-    assert.equal(answer.guesses.filter((x) => x.correct).length, 2);
+    assert.equal(answer.guesses.filter((x) => x.correct).length, 2,
+      'the room-wide answered reveal still carries the full tally for the projector');
+    // A per-player socket payload must only carry that player's own row.
+    const perPlayer = io.events.filter((e) => e.event === 'phase' && e.data?.name === 'reveal' && e.data.answered
+      && (e.room === 'sock-p1' || e.room === 'sock-p2' || e.room === 'sock-p3'));
+    assert.ok(perPlayer.length >= 3, 'each player receives their own reveal row');
+    for (const e of perPlayer) {
+      assert.equal(e.data.guesses.length, 1, 'a player sees only their own guess row');
+      assert.equal(e.data.guesses[0].playerId, e.room.replace('sock-', ''),
+        'the row belongs to the receiving player');
+      assert.equal(e.data.playerId, g.secret.answer, 'the fact author is still identified');
+      assert.ok(e.data.tally.length >= 1, 'the public aggregate tally remains available');
+    }
   } finally {
     room.destroy();
   }

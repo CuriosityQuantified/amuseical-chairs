@@ -3,7 +3,7 @@
 
 import QRCode from 'qrcode';
 import crypto from 'node:crypto';
-import { Room, makeRoomCode } from './room.js';
+import { Room, makeRoomCode, pickHostEditableConfig } from './room.js';
 
 const MAX_EVENT_BYTES = 32 * 1024;
 const JOIN_FAILURE = 'Room or reconnect credential not found.';
@@ -90,7 +90,7 @@ function guarded(socket, event, { limit, windowMs = 60_000, ack = false }, handl
   };
 }
 
-export function attachSockets(io, { allowClientScoredCompetitive = false } = {}) {
+export function attachSockets(io, { allowClientScoredCompetitive = false, allowInternalCreateConfig = false } = {}) {
   const rooms = new Map();
   // Shared across sockets for this server instance so reconnecting does not
   // reset a source's failed-code budget; isolated across test/server instances.
@@ -103,6 +103,16 @@ export function attachSockets(io, { allowClientScoredCompetitive = false } = {})
 
   io.on('connection', (socket) => {
     const room = () => rooms.get(socket.data.roomCode);
+    const detachFromRoom = (code) => {
+      if (!code) return;
+      // Leave transport rooms before the old Room broadcasts its disconnect
+      // roster, so the moved socket receives no final stale-room event during
+      // the transition itself.
+      socket.leave(`room:${code}`);
+      socket.leave(`host:${code}`);
+      const previous = rooms.get(code);
+      if (previous) previous.handleDisconnect(socket);
+    };
 
     // NTP-style time endpoint (spec §5.2). Client sends t0, we ack with t1;
     // the client records t2 on receipt and computes rtt + offset.
@@ -115,8 +125,11 @@ export function attachSockets(io, { allowClientScoredCompetitive = false } = {})
       try {
         let code;
         do { code = makeRoomCode(); } while (rooms.has(code));
-        const r = new Room(io, code, payload?.config || {}, destroyRoom, { allowClientScoredCompetitive });
+        const requestedConfig = allowInternalCreateConfig ? (payload?.config || {}) : pickHostEditableConfig(payload?.config);
+        const r = new Room(io, code, requestedConfig, destroyRoom, { allowClientScoredCompetitive });
         rooms.set(code, r);
+        const previousCode = socket.data.roomCode;
+        if (previousCode && previousCode !== code) detachFromRoom(previousCode);
         r.hostSocketId = socket.id;
         socket.join(`room:${code}`);
         socket.join(`host:${code}`);
@@ -138,6 +151,15 @@ export function attachSockets(io, { allowClientScoredCompetitive = false } = {})
     socket.on('host:rejoin', guarded(socket, 'host:rejoin', { limit: 10, ack: true }, ({ code, hostKey } = {}, cb) => {
       const r = rooms.get(String(code || '').toUpperCase());
       if (!r || r.hostKey !== hostKey) return cb?.(failedJoinResponse(failedJoins, socket));
+      const previousCode = socket.data.roomCode;
+      if (previousCode && previousCode !== r.code) {
+        detachFromRoom(previousCode);
+      } else if (previousCode === r.code && socket.data.playerId) {
+        // Same-room player -> host: remove the stale player binding before
+        // granting host authority, or direct you:score events keep targeting
+        // this now-host socket.
+        if (r.disconnectSocketPlayers(socket.id)) r.broadcastPlayers();
+      }
       const previousHost = r.hostSocketId && io.sockets.sockets.get(r.hostSocketId);
       if (previousHost && previousHost.id !== socket.id) {
         previousHost.data.isHost = false;
@@ -159,13 +181,31 @@ export function attachSockets(io, { allowClientScoredCompetitive = false } = {})
       if (typeof cb !== 'function') return;
       const r = rooms.get(String(code || '').toUpperCase());
       if (!r) return cb(failedJoinResponse(failedJoins, socket));
+      const previousCode = socket.data.roomCode;
+      // Same-room host -> player is not a valid transition: Room.join() would
+      // overwrite socket.data but leave r.hostSocketId authoritative, making
+      // one transport both player and host.
+      if (previousCode === r.code && r.hostSocketId === socket.id) {
+        return cb({ error: 'A host connection cannot join as a player.' });
+      }
       const result = r.join(socket, { name, playerId, reconnectToken });
       if (result.error && playerId) return cb(failedJoinResponse(failedJoins, socket));
       if (result.ok) {
+        if (previousCode && previousCode !== r.code) detachFromRoom(previousCode);
         r.clearTimer('empty');
         // A player is never a host: drop any host role this transport carried
         // from a previous room so host authority cannot leak across rooms.
         socket.data.isHost = false;
+        // Cross-room state leak (Strix 2026-08-23, CVSS 5.3): a socket that
+        // moves to a new room must not keep receiving the prior room's
+        // broadcasts. Leave every room this transport is in except the new
+        // room's, and clear the stale room/player markers.
+        const keep = new Set([`room:${r.code}`, `host:${r.code}`]);
+        for (const roomName of socket.rooms) {
+          if (!keep.has(roomName) && roomName !== socket.id) socket.leave(roomName);
+        }
+        if (socket.data.roomCode !== r.code) socket.data.roomCode = r.code;
+        socket.data.playerId = result.playerId;
       }
       cb(result);
     }));
@@ -179,6 +219,8 @@ export function attachSockets(io, { allowClientScoredCompetitive = false } = {})
       const r = new Room(io, code, {}, destroyRoom, { allowClientScoredCompetitive });
       r.solo = true;
       rooms.set(code, r);
+      const previousCode = socket.data.roomCode;
+      if (previousCode && previousCode !== code) detachFromRoom(previousCode);
       const joined = r.join(socket, { name });
       // The creator is the solo owner: only this player may drive the room
       // (Strix re-scan 2026-08-23: solo-room takeover).

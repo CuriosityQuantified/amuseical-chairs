@@ -267,7 +267,7 @@ class Bot {
 }
 
 test('20 bots: every game once, per-game scores, chairs finale, winner by total', async () => {
-  const { httpServer, io, rooms } = createServer({ allowClientScoredCompetitive: true });
+  const { httpServer, io, rooms } = createServer({ allowClientScoredCompetitive: true, allowInternalCreateConfig: true });
   await new Promise((r) => httpServer.listen(0, r));
   const url = `http://localhost:${httpServer.address().port}`;
 
@@ -417,7 +417,7 @@ test('20 bots: every game once, per-game scores, chairs finale, winner by total'
 });
 
 test('2-player game runs to a winner', async () => {
-  const { httpServer, io, rooms } = createServer({ allowClientScoredCompetitive: true });
+  const { httpServer, io, rooms } = createServer({ allowClientScoredCompetitive: true, allowInternalCreateConfig: true });
   await new Promise((r) => httpServer.listen(0, r));
   const url = `http://localhost:${httpServer.address().port}`;
   const host = connect(url, { transports: ['websocket'], forceNew: true });

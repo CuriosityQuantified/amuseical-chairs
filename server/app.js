@@ -36,7 +36,7 @@ function allowedSocketOrigin(req) {
   }
 }
 
-export function createServer({ allowClientScoredCompetitive = false } = {}) {
+export function createServer({ allowClientScoredCompetitive = false, allowInternalCreateConfig = false } = {}) {
   const app = express();
   app.disable('x-powered-by');
   app.use((_req, res, next) => {
@@ -64,6 +64,6 @@ export function createServer({ allowClientScoredCompetitive = false } = {}) {
     maxHttpBufferSize: 64 * 1024,
     allowRequest: (req, callback) => callback(null, allowedSocketOrigin(req)),
   });
-  const rooms = attachSockets(io, { allowClientScoredCompetitive });
+  const rooms = attachSockets(io, { allowClientScoredCompetitive, allowInternalCreateConfig });
   return { httpServer, io, rooms };
 }
