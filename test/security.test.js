@@ -16,9 +16,9 @@ function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function openSocket(options = {}) {
+function connectSocket(url, options = {}) {
   return new Promise((resolve, reject) => {
-    const socket = connect(baseUrl, {
+    const socket = connect(url, {
       path: '/socket.io',
       transports: ['polling'],
       forceNew: true,
@@ -40,6 +40,23 @@ function openSocket(options = {}) {
       reject(error);
     });
   });
+}
+
+function openSocket(options = {}) {
+  return connectSocket(baseUrl, options);
+}
+
+async function withServer(run) {
+  const { httpServer: localServer, io: localIo } = createServer();
+  await new Promise((resolve) => localServer.listen(0, '127.0.0.1', resolve));
+  const localBaseUrl = `http://127.0.0.1:${localServer.address().port}`;
+  const openLocalSocket = (options = {}) => connectSocket(localBaseUrl, options);
+  try {
+    return await run({ baseUrl: localBaseUrl, openSocket: openLocalSocket, emitAck });
+  } finally {
+    localIo.close();
+    await new Promise((resolve) => localServer.close(resolve));
+  }
 }
 
 function emitAck(socket, event, payload, timeout = 2_000) {
@@ -164,44 +181,49 @@ test('external assessment rejects targets outside its explicit scope before netw
 });
 
 test('failed room-code guesses are throttled by source address across sockets', async () => {
-  const sockets = [];
-  try {
-    let limited = null;
-    for (let i = 0; i < 35; i++) {
-      const socket = await openSocket({ extraHeaders: { 'CF-Connecting-IP': '203.0.113.10' } });
-      sockets.push(socket);
-      const attempt = await emitAck(socket, 'player:join', { code: `ZZ${String(i).padStart(2, '0')}`, name: 'probe' });
-      if (/too many|try again/i.test(attempt.value?.error || '')) {
-        limited = attempt.value;
-        break;
+  await withServer(async ({ openSocket }) => {
+    const sockets = [];
+    try {
+      let limited = null;
+      for (let i = 0; i < 35; i++) {
+        const socket = await openSocket({ extraHeaders: { 'CF-Connecting-IP': '203.0.113.10' } });
+        sockets.push(socket);
+        const attempt = await emitAck(socket, 'player:join', { code: `ZZ${String(i).padStart(2, '0')}`, name: 'probe' });
+        if (/too many|try again/i.test(attempt.value?.error || '')) {
+          limited = attempt.value;
+          break;
+        }
       }
+      assert.ok(limited, 'expected repeated failed room-code attempts from one source to be throttled');
+      assert.equal(limited.error, 'Too many failed joins — try again later.');
+    } finally {
+      for (const socket of sockets) socket.disconnect();
     }
-    assert.ok(limited, 'expected repeated failed room-code attempts from one source to be throttled');
-    assert.equal(limited.error, 'Too many failed joins — try again later.');
-  } finally {
-    for (const socket of sockets) socket.disconnect();
-  }
+  });
 });
 
 test('rotating a claimed source address does not evade the join budget', async () => {
-  const sockets = [];
-  try {
-    let limited = null;
-    for (let i = 0; i < 25; i++) {
-      const socket = await openSocket({ extraHeaders: { 'CF-Connecting-IP': `203.0.113.${10 + i}` } });
-      sockets.push(socket);
-      const attempt = await emitAck(socket, 'player:join', { code: `ZZ${String(i).padStart(2, '0')}`, name: 'probe' });
-      if (/too many|try again/i.test(attempt.value?.error || '')) {
-        limited = attempt.value;
-        break;
+  await withServer(async ({ openSocket }) => {
+    const sockets = [];
+    try {
+      let limited = null;
+      for (let i = 0; i < 35; i++) {
+        const socket = await openSocket({ extraHeaders: { 'CF-Connecting-IP': `203.0.113.${10 + i}` } });
+        sockets.push(socket);
+        const attempt = await emitAck(socket, 'player:join', { code: `ZZ${String(i).padStart(2, '0')}`, name: 'probe' });
+        if (/too many|try again/i.test(attempt.value?.error || '')) {
+          limited = attempt.value;
+          break;
+        }
+        assert.equal(attempt.value?.error, 'Room or reconnect credential not found.',
+          'every unthrottled miss stays indistinguishable from room absence');
       }
-      assert.equal(attempt.value?.error, 'Room or reconnect credential not found.',
-        'every unthrottled miss stays indistinguishable from room absence');
+      assert.ok(limited, 'rotating claimed IPs should still hit the same source-address budget');
+      assert.equal(limited.error, 'Too many failed joins — try again later.');
+    } finally {
+      for (const socket of sockets) socket.disconnect();
     }
-    assert.ok(limited, 'rotating claimed IPs still hits a per-connection budget per guess');
-  } finally {
-    for (const socket of sockets) socket.disconnect();
-  }
+  });
 });
 
 test('Socket.IO bounds oversized application payloads before room processing', async () => {

@@ -366,7 +366,7 @@ test('host cannot skip a chairs redemption round before player reports arrive', 
 });
 
 test('a pre-green redemption report is disqualified; an honest post-green report still wins', async () => {
-  const room = new Room(stubIo(), 'PREK', { ...FAST, enabled: onlyGames('spacemash') });
+  const room = new Room(stubIo(), 'PREK', { ...FAST, enabled: onlyGames('spacemash') }, undefined, { allowClientScoredCompetitive: true });
   try {
     addPlayer(room, 'cheat', 'Cheater');
     addPlayer(room, 'fair', 'Fair');
@@ -433,18 +433,19 @@ test('client-scored games are blocked from hosted competitive sessions', () => {
 });
 
 test('a crafted host config cannot re-enable client-scored games in a hosted room', () => {
-  const room = new Room(stubIo(), 'BLK2', { ...FAST, enabled: onlyGames('spacemash') });
+  const room = new Room(stubIo(), 'BLK2', { ...FAST, enabled: onlyGames('rgb') });
   try {
-    assert.equal(room.updateConfig({ enabled: { trace: true, stopclock: true } }).ok, true);
+    assert.equal(room.updateConfig({ enabled: { trace: true, stopclock: true, oddoneout: true } }).ok, true);
     assert.equal(room.config.enabled.trace, false, 'updateConfig forces the block back on');
     assert.equal(room.config.enabled.stopclock, false);
+    assert.equal(room.config.enabled.oddoneout, false);
     assert.equal(room.publicConfig().enabled.trace, false, 'the lobby sees the enforced state');
     addPlayer(room, 'p1', 'Anna');
     addPlayer(room, 'p2', 'Ben');
     assert.equal(room.start().ok, true);
-    assert.ok(!room.queue.includes('trace') && !room.queue.includes('stopclock'),
-      'blocked games never enter the competitive queue');
-    assert.ok(room.queue.includes('spacemash'));
+    assert.ok(!room.queue.includes('trace') && !room.queue.includes('stopclock')
+      && !room.queue.includes('oddoneout'), 'blocked games never enter the competitive queue');
+    assert.ok(room.queue.includes('rgb'));
   } finally {
     room.destroy();
   }
@@ -475,10 +476,58 @@ test('test-only opt-in and solo rooms still play client-scored games', () => {
   }
 });
 
+test('a new player cannot join once the session has left the lobby and the minigame', async () => {
+  const room = new Room(stubIo(), 'LATE2', { ...FAST, enabled: onlyGames('rgb') });
+  try {
+    addPlayer(room, 'p1', 'Player1');
+    addPlayer(room, 'p2', 'Player2');
+    assert.equal(room.start().ok, true);
+    await waitFor(() => room.phase === 'minigame', 3000, 'minigame');
+    room.handleSubmit('p1', { r: 0, g: 0, b: 0 });
+    room.handleSubmit('p2', { r: 255, g: 255, b: 255 });
+    await waitFor(() => room.phase === 'scores', 3000, 'scores');
+    const fresh = { id: 'sock-late2', join() {}, data: {} };
+    const res = room.join(fresh, { name: 'Stranger', playerId: undefined });
+    assert.equal(res.ok, undefined, 'new player rejected after the queue is exhausted');
+    assert.ok(res.error, 'rejection carries an error message');
+    assert.equal(room.players.size, 2, 'roster unchanged');
+    // The finale then runs with only the real participants.
+    room.hostNext();
+    await waitFor(() => room.phase === 'redemption', 3000, 'finale');
+    assert.equal(room.redemption.participants.length, 2, 'only the original players reach the finale');
+  } finally {
+    room.destroy();
+  }
+});
+
+test('a second user cannot join or drive a solo room', () => {
+  const room = new Room(stubIo(), 'SOLO2', {}, undefined, {});
+  try {
+    room.solo = true;
+    const owner = room.join({ id: 'sock-owner', join() {}, data: {} }, { name: 'Owner' });
+    assert.equal(owner.ok, true);
+    room.soloOwnerId = owner.playerId;
+    // The owner can still reconnect with their credential.
+    const rc = room.join(
+      { id: 'sock-owner2', join() {}, data: {} },
+      { name: 'x', playerId: owner.playerId, reconnectToken: owner.reconnectToken });
+    assert.equal(rc.ok, true, 'owner reconnect still works');
+    // A stranger with the code cannot join.
+    const stranger = room.join({ id: 'sock-stranger', join() {}, data: {} }, { name: 'Stranger', playerId: undefined });
+    assert.equal(stranger.ok, undefined, 'second user rejected from a solo room');
+    assert.equal(stranger.error, 'Solo rooms are private to their owner.');
+    assert.equal(room.players.size, 1, 'still just the owner');
+  } finally {
+    room.destroy();
+  }
+});
+
 test('late join: mid-session joiner scores subsequent games and 0 for missed', async () => {
-  // Two pre-existing players, two games. The latecomer joins after game 1
-  // has been scored, plays game 2, and should have 0 for game 1 and
-  // non-zero for game 2. Normalization for game 2 must be unaffected.
+  // Two pre-existing players, two games. The latecomer joins during game 1
+  // (the issue #54 feature — new players are admitted during the lobby or an
+  // active minigame only), does not submit for game 1, and should have 0 for
+  // game 1 and non-zero for game 2. Normalization for game 2 must be
+  // unaffected.
   const room = new Room(stubIo(), 'LATE', {
     ...FAST,
     enabled: onlyGames('spacemash', 'stopclock'),
@@ -496,18 +545,12 @@ test('late join: mid-session joiner scores subsequent games and 0 for missed', a
     // ---- game 1: play without the latecomer ----
     await waitFor(() => room.phase === 'minigame', 3000, 'first minigame');
     const game1Key = room.round.games[0].key;
-    submitFor(game1Key, 'p1', 0); // p1 best
-    submitFor(game1Key, 'p2', 1);
-    await waitFor(() => room.phase === 'scores', 3000, 'first scores');
 
-    const board1 = room.lastScores;
-    assert.equal(board1.find((r) => r.id === 'p1').points, 1000, 'p1 gets 1000 in game 1');
-
-    // ---- admit the latecomer mid-session ----
+    // ---- admit the latecomer mid-game (minigame phase) ----
     const fakeSocket = { id: 'sock-late', join() {}, data: {} };
     const joinResult = room.join(fakeSocket, { name: 'Late', playerId: undefined });
 
-    assert.equal(joinResult.ok, true, 'late join succeeds — not an error');
+    assert.equal(joinResult.ok, true, 'late join during an active minigame succeeds');
     const lateId = joinResult.playerId;
     assert.ok(lateId, 'joinResult includes a playerId');
     assert.ok(room.players.has(lateId), 'latecomer is in room.players');
@@ -515,6 +558,15 @@ test('late join: mid-session joiner scores subsequent games and 0 for missed', a
     // Back-fill: latecomer must be in totals with 0
     assert.ok(room.totals.has(lateId), 'latecomer back-filled into room.totals');
     assert.equal(room.totals.get(lateId), 0, 'latecomer back-fill total is 0');
+
+    submitFor(game1Key, 'p1', 0); // p1 best
+    submitFor(game1Key, 'p2', 1);
+
+    // The latecomer misses game 1 (does not submit) and is scored 0 for it.
+    await waitFor(() => room.phase === 'scores', 3000, 'first scores');
+    const board1 = room.lastScores;
+    assert.equal(board1.find((r) => r.id === 'p1').points, 1000, 'p1 gets 1000 in game 1');
+    assert.equal(board1.find((r) => r.id === lateId).points, 0, 'latecomer scores 0 for the missed game 1');
 
     // Existing player totals are preserved
     const p1TotalAfterGame1 = room.totals.get('p1');
@@ -623,7 +675,7 @@ test('host extend: moves the shared deadline once by EXTEND_MS, broadcast identi
     ...FAST,
     gameDuration: 5000,  // large enough that the deadline won't fire mid-test
     enabled: onlyGames('spacemash'),
-  });
+  }, undefined, { allowClientScoredCompetitive: true });
   try {
     addPlayer(room, 'p1', 'Player1');
     addPlayer(room, 'p2', 'Player2');
@@ -678,7 +730,7 @@ test('host extend: every player receives the same single deadline (no per-client
     ...FAST,
     gameDuration: 5000,
     enabled: onlyGames('spacemash'),
-  });
+  }, undefined, { allowClientScoredCompetitive: true });
   try {
     addPlayer(room, 'p1', 'Player1');
     addPlayer(room, 'p2', 'Player2');

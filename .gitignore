@@ -5,6 +5,9 @@ npm-debug.log*
 # Strix penetration-test run output (raw scan data, DBs, dashboards) — the
 # human-readable report is filed in the vault and the SARIF in docs/security.
 strix_runs/
+.repo-mapping-*/
+.socketio-authz-*.mjs
+temp/
 
 # graphify: graph.json, graph.html, GRAPH_REPORT.md and graph-lock.json are
 # committed on purpose — graph.json is what `graphify query` reads, so a fresh

@@ -113,11 +113,11 @@
       "semantic": "f9bcb5a92468425b887f7d6ed3da4eb4"
     },
     "server/room.js": {
-      "ast": "f7791268e1c4fbb191d559b5fd4c002f",
+      "ast": "bc1b31a071c7ee548217b0c146b45486",
       "semantic": null
     },
     "server/sockets.js": {
-      "ast": "f85a73c6d97811dc8afc14d1f4d52cfa",
+      "ast": "c2b4df9fde035f628cb34575343784ad",
       "semantic": null
     },
     "shared/anagram.js": {
@@ -269,7 +269,7 @@
       "semantic": null
     },
     "test/room.test.js": {
-      "ast": "58a10fdd9ba888710f9e2df76d6c040c",
+      "ast": "7484d8fabedf582f52f998f003c5aa8b",
       "semantic": null
     },
     "test/roster.test.js": {
@@ -277,7 +277,7 @@
       "semantic": null
     },
     "test/security.test.js": {
-      "ast": "998c160828bfc9f1ea35baef5dde2e71",
+      "ast": "5a33c8fefa3563ae000934094942875f",
       "semantic": null
     },
     "test/smoke.test.js": {

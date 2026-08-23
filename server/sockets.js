@@ -31,14 +31,11 @@ function takeRateToken(socket, name, limit, windowMs) {
 }
 
 function clientAddress(socket) {
-  // Cloudflare sits in front of the origin and sets cf-connecting-ip to the
-  // real client address on every proxied connection; Railway's edge supplies
-  // it in local/dev and non-Cloudflare deployments. Forwarding headers from
-  // untrusted peers are never trusted here — only the presence of the
-  // Cloudflare header or the TCP peer address.
-  const cloudflare = String(socket.handshake.headers['cf-connecting-ip'] || '').trim();
-  return cloudflare || socket.conn.remoteAddress
-    || socket.handshake.address || 'unknown';
+  // Failed-join throttling is keyed to the immediate TCP peer, not to
+  // user-supplied forwarding headers. If deployment-specific proxy trust is
+  // needed later, it must be added with an explicit trusted-proxy allowlist
+  // before any forwarded client address is consulted.
+  return socket.conn.remoteAddress || socket.handshake.address || 'unknown';
 }
 
 function failedJoinAllowed(failedJoins, socket) {
@@ -175,13 +172,18 @@ export function attachSockets(io, { allowClientScoredCompetitive = false } = {})
       const r = new Room(io, code, {}, destroyRoom, { allowClientScoredCompetitive });
       r.solo = true;
       rooms.set(code, r);
-      cb(r.join(socket, { name }));
+      const joined = r.join(socket, { name });
+      // The creator is the solo owner: only this player may drive the room
+      // (Strix re-scan 2026-08-23: solo-room takeover).
+      if (joined.ok) r.soloOwnerId = joined.playerId;
+      cb(joined);
     }));
 
     const soloOnly = (fn) => (...args) => {
       const r = room();
       const cb = args.find((a) => typeof a === 'function');
       if (!r || !r.solo || !socket.data.playerId) return cb?.({ error: 'Not in a solo room.' });
+      if (r.soloOwnerId && socket.data.playerId !== r.soloOwnerId) return cb?.({ error: 'Not in a solo room.' });
       fn(r, ...args);
     };
 
