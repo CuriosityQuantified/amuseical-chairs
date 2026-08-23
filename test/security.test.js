@@ -5,6 +5,8 @@ import test from 'node:test';
 import { promisify } from 'node:util';
 import { io as connect } from 'socket.io-client';
 import { createServer } from '../server/app.js';
+import { buildReveal } from '../server/games.js';
+import { Room } from '../server/room.js';
 
 const execFileAsync = promisify(execFile);
 const repoRoot = new URL('..', import.meta.url).pathname;
@@ -47,12 +49,12 @@ function openSocket(options = {}) {
 }
 
 async function withServer(run) {
-  const { httpServer: localServer, io: localIo } = createServer();
+  const { httpServer: localServer, io: localIo, rooms } = createServer();
   await new Promise((resolve) => localServer.listen(0, '127.0.0.1', resolve));
   const localBaseUrl = `http://127.0.0.1:${localServer.address().port}`;
   const openLocalSocket = (options = {}) => connectSocket(localBaseUrl, options);
   try {
-    return await run({ baseUrl: localBaseUrl, openSocket: openLocalSocket, emitAck });
+    return await run({ baseUrl: localBaseUrl, openSocket: openLocalSocket, emitAck, rooms });
   } finally {
     localIo.close();
     await new Promise((resolve) => localServer.close(resolve));
@@ -393,4 +395,175 @@ test('host authority does not leak across rooms via socket state reuse', async (
       for (const socket of sockets) socket.disconnect();
     }
   });
+});
+
+test('same-room host/player role transitions cannot preserve stale authority or targeting', async () => {
+  await withServer(async ({ openSocket, emitAck, rooms }) => {
+    const sockets = [];
+    try {
+      const originalHost = await openSocket();
+      const player = await openSocket();
+      sockets.push(originalHost, player);
+
+      const created = await emitAck(originalHost, 'host:create', { config: {} });
+      assert.equal(created.value?.ok, true);
+      const { code, hostKey } = created.value;
+
+      // Host -> player on the same transport is rejected; the real host role
+      // remains singular and authoritative.
+      const hostAsPlayer = await emitAck(originalHost, 'player:join', { code, name: 'HostPlayer' });
+      assert.equal(hostAsPlayer.value?.ok, undefined);
+      assert.equal(hostAsPlayer.value?.error, 'A host connection cannot join as a player.');
+      assert.equal(rooms.get(code).players.size, 0, 'host did not mint a player record');
+      const stillHost = await emitAck(originalHost, 'host:config', { gameDuration: 45000 });
+      assert.equal(stillHost.value?.ok, true, 'host authority remains intact after rejection');
+
+      // Player -> host with the real host credential is allowed, but the old
+      // player binding is disconnected first so direct sends cannot target it.
+      const joined = await emitAck(player, 'player:join', { code, name: 'Promoted' });
+      assert.equal(joined.value?.ok, true);
+      const promotedId = joined.value.playerId;
+      const promoted = await emitAck(player, 'host:rejoin', { code, hostKey });
+      assert.equal(promoted.value?.ok, true);
+      assert.equal(rooms.get(code).players.get(promotedId).socketId, null);
+      assert.equal(rooms.get(code).players.get(promotedId).connected, false);
+      assert.equal(rooms.get(code).hostSocketId, player.id, 'promoted socket is the sole recorded host');
+      let leaked = false;
+      player.once('you:score', () => { leaked = true; });
+      rooms.get(code).emitPlayer(promotedId, 'you:score', { points: 999 });
+      await wait(100);
+      assert.equal(leaked, false, 'former player direct-target events no longer reach the host');
+    } finally {
+      for (const socket of sockets) socket.disconnect();
+    }
+  });
+});
+
+test('moving a socket to a new room stops prior-room broadcasts', async () => {
+  // Strix 2026-08-23, CVSS 5.3: a socket that joins room B must not keep
+  // receiving room A's room:players / phase / you:score traffic.
+  await withServer(async ({ openSocket, emitAck, rooms }) => {
+    const sockets = [];
+    try {
+      const hostA = await openSocket();
+      const hostB = await openSocket();
+      const mover = await openSocket();
+      sockets.push(hostA, hostB, mover);
+
+      const roomA = await emitAck(hostA, 'host:create', { config: {} });
+      const roomB = await emitAck(hostB, 'host:create', { config: {} });
+      const codeA = roomA.value.code;
+      const codeB = roomB.value.code;
+      assert.notEqual(codeA, codeB);
+
+      // Join room A, then move the same socket to room B.
+      const joinedA = await emitAck(mover, 'player:join', { code: codeA, name: 'Mover' });
+      assert.equal(joinedA.value?.ok, true);
+      const oldPlayerId = joinedA.value.playerId;
+      const joinedB = await emitAck(mover, 'player:join', { code: codeB, name: 'Mover' });
+      assert.equal(joinedB.value?.ok, true, 'same socket joins a second room');
+      assert.equal(rooms.get(codeA).players.get(oldPlayerId).socketId, null,
+        'the old Room no longer targets the moved socket directly');
+      assert.equal(rooms.get(codeA).players.get(oldPlayerId).connected, false,
+        'the old player association is disconnected');
+
+      // Room-A broadcasts and direct player sends must no longer reach it.
+      let leaked = false;
+      const probe = () => { leaked = true; };
+      mover.on('phase', probe);
+      mover.on('room:players', probe);
+      mover.on('you:score', probe);
+      rooms.get(codeA).emitPlayer(oldPlayerId, 'you:score', { points: 999 });
+      await emitAck(hostA, 'host:start', {});
+      await wait(300);
+      mover.off('phase', probe);
+      mover.off('room:players', probe);
+      mover.off('you:score', probe);
+      assert.equal(leaked, false, 'no room-A broadcast or direct score reaches the moved socket');
+    } finally {
+      for (const socket of sockets) socket.disconnect();
+    }
+  });
+});
+
+test('icebreaker answered reveal is per-player, not a shared full guesses array', () => {
+  // Strix 2026-08-23, CVSS 4.3: the answered reveal must only carry the
+  // receiving player's own guesses[] row; reconnect snapshots use the same
+  // player-specific redaction.
+  const reveal = buildReveal('icebreaker', [
+    { stage: 1, entries: [{ playerId: 'p-alice', payload: { text: 'I play bass' } }] },
+    { stage: 2, clientData: { round: 2, totalRounds: 3, text: 'Who plays bass?', hidden: false }, secret: { answer: 'p-bob' }, entries: [
+      { playerId: 'p-alice', payload: { pick: 'p-bob' } },
+      { playerId: 'p-bob', payload: { pick: 'p-alice' } },
+    ] },
+  ]);
+  assert.equal(reveal.answer.guesses.length, 2, 'fixture has two guess rows');
+
+  const sent = [];
+  const stubIo = {
+    to(roomName) {
+      return { emit(event, data) { sent.push({ roomName, event, data }); } };
+    },
+    sockets: { sockets: new Map() },
+  };
+  const room = new Room(stubIo, 'REV', { enabled: { icebreaker: true } }, () => {});
+  try {
+    room.players.set('p-alice', { id: 'p-alice', name: 'Alice', socketId: 'sock-alice' });
+    room.players.set('p-bob', { id: 'p-bob', name: 'Bob', socketId: 'sock-bob' });
+    room.emitReveal({ ...reveal.answer, answered: true });
+
+    const alicePayload = sent.find((e) => e.roomName === 'sock-alice');
+    const bobPayload = sent.find((e) => e.roomName === 'sock-bob');
+    assert.deepEqual(alicePayload.data.guesses.map((r) => r.playerId), ['p-alice']);
+    assert.deepEqual(bobPayload.data.guesses.map((r) => r.playerId), ['p-bob']);
+    assert.equal(alicePayload.data.name, 'reveal', 'personalized payload preserves the phase name');
+
+    const hostPayload = sent.find((e) => e.roomName === 'host:REV');
+    assert.equal(hostPayload.data.guesses.length, 2, 'host keeps the full projector reveal');
+    assert.equal(sent.some((e) => e.roomName === 'room:REV'), false,
+      'answered guesses are never broadcast to the whole player room');
+
+    room.phase = 'reveal';
+    room.reveal = { answered: true, answer: { ...reveal.answer, answered: true }, teaser: reveal.teaser };
+    assert.deepEqual(room.snapshot('p-alice').reveal.guesses.map((r) => r.playerId), ['p-alice']);
+    assert.equal(room.snapshot(null).reveal.guesses.length, 2, 'host snapshot remains complete');
+  } finally {
+    room.destroy();
+  }
+});
+
+test('host:create drops internal config keys and keeps only the documented host knobs', async () => {
+  const { httpServer: localServer, io: localIo, rooms } = createServer();
+  await new Promise((resolve) => localServer.listen(0, '127.0.0.1', resolve));
+  const localBaseUrl = `http://127.0.0.1:${localServer.address().port}`;
+  const host = await connectSocket(localBaseUrl, { transports: ['websocket'] });
+  try {
+    const created = await emitAck(host, 'host:create', {
+      origin: localBaseUrl,
+      config: {
+        gameDuration: 30000,
+        enabled: { rgb: false, bisect: true, area: true },
+        gamesPerSession: 1,
+        minDelay: 500,
+        maxDelay: 500,
+      },
+    }, 8_000);
+
+    assert.equal(created.value?.ok, true);
+    assert.equal(created.value?.config?.gameDuration, 30000, 'the documented gameDuration knob still applies at create time');
+    assert.equal(created.value?.config?.enabled?.rgb, false, 'documented per-game toggles still apply at create time');
+    assert.equal(created.value?.config?.minDelay, 2000, 'internal pacing defaults are not overridable via host:create');
+    assert.equal(created.value?.config?.maxDelay, 6000, 'internal pacing defaults stay at their server value');
+
+    const room = rooms.get(created.value.code);
+    assert.ok(room, 'created room is present in the server room map');
+    assert.equal(room.config.gamesPerSession, 0, 'host:create cannot lower the K-of-N draw');
+    assert.equal(room.config.minDelay, 2000, 'server room config ignores hidden create-time minDelay');
+    assert.equal(room.config.maxDelay, 6000, 'server room config ignores hidden create-time maxDelay');
+  } finally {
+    host.disconnect();
+    for (const room of rooms.values()) room.destroy();
+    localIo.close();
+    await new Promise((resolve) => localServer.close(resolve));
+  }
 });

@@ -126,6 +126,14 @@ function sanitizeConfig(raw = {}) {
 // both have to change together.
 export const HOST_EDITABLE_CONFIG = new Set(['gameDuration', 'enabled']);
 
+export function pickHostEditableConfig(raw = {}) {
+  const patch = {};
+  for (const [key, value] of Object.entries(raw || {})) {
+    if (HOST_EDITABLE_CONFIG.has(key)) patch[key] = value;
+  }
+  return patch;
+}
+
 // One-shot mid-game deadline extension (issue #55). A live host ACTION, not a
 // lobby config key — deliberately kept OUT of HOST_EDITABLE_CONFIG so it
 // bypasses the lobby config allowlist. Fixed increment so a host cannot use it
@@ -219,6 +227,27 @@ export class Room {
     // `name` last: it is what every client switches on, and no payload field
     // may shadow it.
     this.emitAll('phase', { ...data, name, progress: this.progressInfo() });
+  }
+
+  // The answered reveal is sent per player with only that player's own
+  // `guesses[]` row, never the full array (Strix 2026-08-23, CVSS 4.3: a
+  // normal participant must not read other players' picks and scores). The
+  // host room (`host:CODE`) still gets the full view — the projector is the
+  // whole point of the reveal. The teaser has no guesses and is safe to fan
+  // out as-is.
+  emitReveal(payload) {
+    const progress = this.progressInfo();
+    if (!payload || payload.answered !== true || !Array.isArray(payload.guesses)) {
+      this.emitAll('phase', { ...payload, name: 'reveal', progress });
+      return;
+    }
+    for (const p of this.players.values()) {
+      if (!p.socketId) continue;
+      const guesses = payload.guesses.filter((row) => row.playerId === p.id);
+      this.io.to(p.socketId).emit('phase', { ...payload, guesses, name: 'reveal', progress });
+    }
+    // The host projector keeps the complete reveal (tally + all rows).
+    this.emitHost('phase', { ...payload, name: 'reveal', progress });
   }
 
   alive() { return [...this.players.values()]; }
@@ -450,7 +479,9 @@ export class Room {
       snap.scores = this.lastScores;
     }
     if (this.phase === 'reveal' && this.reveal) {
-      snap.reveal = this.revealPayload();
+      // Host snapshots (playerId=null) keep the full projector reveal; player
+      // reconnect snapshots contain only that player's own guesses[] row.
+      snap.reveal = this.revealPayload(playerId);
     }
     if (this.phase === 'tutorial' && this.tutorial) {
       snap.tutorial = { ...this.tutorial };
@@ -478,10 +509,7 @@ export class Room {
     // host tab pushing a knob that no longer exists should not fail the whole
     // patch, and a hand-crafted socket payload should not be able to reach an
     // internal default.
-    const patch = {};
-    for (const [key, value] of Object.entries(raw || {})) {
-      if (HOST_EDITABLE_CONFIG.has(key)) patch[key] = value;
-    }
+    const patch = pickHostEditableConfig(raw);
     this.config = sanitizeConfig({ ...this.config, ...patch, enabled: { ...this.config.enabled, ...(patch.enabled || {}) } });
     // A crafted host payload cannot re-enable client-scored games in a
     // competitive session — the block is enforced after every config patch.
@@ -796,14 +824,18 @@ export class Room {
       teaser: { ...head, ...this.withNames(built.teaser), answered: false },
       answer: { ...head, ...this.withNames(built.answer), answered: true },
     };
+    // Teaser first (no guesses). The answered reveal is per-player via
+    // emitReveal so nobody sees another player's guesses[] row.
     this.setPhase('reveal', this.revealPayload());
     return true;
   }
 
-  revealPayload() {
+  revealPayload(playerId = null) {
     const r = this.reveal;
     if (!r) return {};
-    return r.answered ? r.answer : r.teaser;
+    const payload = r.answered ? r.answer : r.teaser;
+    if (!r.answered || !Array.isArray(payload.guesses) || !playerId) return payload;
+    return { ...payload, guesses: payload.guesses.filter((row) => row.playerId === playerId) };
   }
 
   // Host (or the solo player) advancing the reveal: first press puts the
@@ -814,7 +846,7 @@ export class Room {
     if (!r) return { ok: true };
     if (!r.answered) {
       r.answered = true;
-      this.setPhase('reveal', this.revealPayload());
+      this.emitReveal(this.revealPayload());
       return { ok: true };
     }
     this.reveal = null;
