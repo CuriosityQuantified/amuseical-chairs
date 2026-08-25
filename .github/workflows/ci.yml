@@ -98,8 +98,8 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: npm
       - run: npm ci
-      - name: Named regression suites (Book Bash #84 + flags #83 + cups #46 + wordhunt #51 + stroop #50 + room/late-join #54 + harness + roster + host-controls #55)
-        run: node --test test/bookbash.test.js test/flags.test.js test/cups-ten-level.test.js test/cups.test.js test/harness.test.js test/roster.test.js test/wordhunt.test.js test/stroop.test.js test/room.test.js
+      - name: Named regression suites (flags #83 + cups #46 + wordhunt #51 + stroop #50 + room/late-join #54 + harness + roster + host-controls #55)
+        run: node --test test/flags.test.js test/cups-ten-level.test.js test/cups.test.js test/harness.test.js test/roster.test.js test/wordhunt.test.js test/stroop.test.js test/room.test.js
       - name: Reduced-motion regression (#52)
         run: node --test test/reduced-motion.test.js
       - name: Color-cue regression (#53)

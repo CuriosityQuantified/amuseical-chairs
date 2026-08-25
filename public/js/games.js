@@ -23,7 +23,6 @@ import { cleanEntryText } from '/shared/textclean.js';
 import { cupsLevel } from '/shared/cups.js';
 import { PALETTE } from '/shared/stroop.js';
 import { trayLevel, traySwapped } from '/shared/tray.js';
-import { bookBashRound } from '/shared/bookbash.js';
 import {
   balanceSchedule,
   balanceStep,
@@ -933,57 +932,6 @@ GameClients.tray = {
     }
     // A partial attempt still scores: whatever is flagged at the deadline.
     return { collect: () => ({ picks: [...picks] }) };
-  },
-};
-
-GameClients.bookbash = {
-  intro: 'Stand on the lower page. Choose a matching hole before each page slams down.',
-  start(root, ctx) {
-    const pages = bookBashRound(ctx.data.seed);
-    const positions = [];
-    let page = 0;
-    let selected = null;
-    let timer = null;
-    const note = h('p', { class: 'trial-note center' });
-    const book = h('div', { class: 'bookbash-book' });
-    const holes = h('div', { class: 'bookbash-holes' });
-    const status = h('p', { class: 'trial-note center' });
-    root.append(note, book, holes, status);
-    for (let i = 0; i < 9; i++) {
-      const button = h('button', { class: 'bookbash-hole', 'aria-label': `Book position ${i + 1}` }, '◇');
-      button.onclick = () => {
-        if (selected == null) select(i);
-      };
-      holes.append(button);
-    }
-    const buttons = [...holes.children];
-    function select(position) {
-      selected = position;
-      buttons.forEach((button, index) => button.classList.toggle('selected', index === position));
-    }
-    function showPage() {
-      if (page >= pages.length) {
-        ctx.submit({ positions });
-        return;
-      }
-      selected = null;
-      buttons.forEach((button) => button.classList.remove('selected', 'safe'));
-      const plan = pages[page];
-      plan.holes.forEach((position) => buttons[position].classList.add('safe'));
-      note.textContent = `Page ${page + 1} of ${pages.length}: find the ${plan.shape} hole.`;
-      status.textContent = `${plan.holes.length} hole${plan.holes.length === 1 ? '' : 's'} remain. Choose your place.`;
-      book.classList.remove('bookbash-slam');
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        positions.push(selected);
-        book.classList.add('bookbash-slam');
-        status.textContent = selected != null && plan.holes.includes(selected) ? 'You slipped through.' : 'The page hit you.';
-        page++;
-        timer = setTimeout(showPage, 320);
-      }, plan.fallMs);
-    }
-    showPage();
-    return { collect: () => ({ positions }) };
   },
 };
 

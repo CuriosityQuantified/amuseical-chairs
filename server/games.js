@@ -8,7 +8,6 @@ import { rgbToLab, ciede2000 } from '../shared/ciede2000.js';
 import { cleanEntryText, isUsableEntry, ENTRY_MAX_CHARS } from '../shared/textclean.js';
 import { CUPS_BASE_CUPS, CUPS_MAX_LEVELS, cupsLevel } from '../shared/cups.js';
 import { TRAY_SLOTS, trayLevel } from '../shared/tray.js';
-import { bookBashRound, BOOKBASH_PAGES, bookBashSurvivors } from '../shared/bookbash.js';
 import {
   BALANCE_GRAVITY,
   BALANCE_LENGTH,
@@ -227,7 +226,6 @@ export const ROSTER = [
   { key: 'metronome', name: 'Metronome Blackout', category: 'timing', type: 'error' },
   { key: 'gridflash', name: 'Grid Flash', category: 'memory', type: 'error' },
   { key: 'tray', name: 'Vanishing Tray', category: 'memory', type: 'error' },
-  { key: 'bookbash', name: 'Book Bash', category: 'motor', type: 'score' },
   { key: 'cups', name: 'Follow the Cup', category: 'attention', type: 'score' },
   { key: 'stroop', name: 'Stroop Rush', category: 'attention', type: 'score' },
   { key: 'readroom', name: 'Read the Room', category: 'social', type: 'error' },
@@ -362,14 +360,6 @@ export function buildGameData(key, ctx) {
       const seed = `tray-${Math.floor(rng() * 1e9)}`;
       const { items, changed, replacements } = trayLevel(seed);
       return { clientData: { items, seed, showMs: 5000 }, secret: { changed, replacements } };
-    }
-    case 'bookbash': {
-      const seed = `bookbash-${Math.floor(rng() * 1e9)}`;
-      const pages = bookBashRound(seed);
-      return {
-        clientData: { seed, pages, pageCount: BOOKBASH_PAGES, positions: 9 },
-        secret: { pages },
-      };
     }
     case 'cups': {
       // One seed, every level. The client derives each level's swap script from
@@ -813,14 +803,6 @@ export function computeMetric(key, payload, secret, clientData, config) {
       for (const c of picks) if (!changed.has(c)) diff++;
       return diff;
     }
-    case 'bookbash': {
-      if (!Array.isArray(payload.positions)) return null;
-      const positions = payload.positions
-        .slice(0, BOOKBASH_PAGES)
-        .map((position) => Number.isInteger(position) ? clamp(position, 0, 8) : null);
-      if (!positions.some((position) => position != null)) return null;
-      return bookBashSurvivors(secret.pages, positions);
-    }
     case 'cups': {
       // payload.picks: [{ level, cupIndex }], one entry per level in order.
       //
@@ -1121,7 +1103,6 @@ export function formatRaw(key, metric, payload) {
     case 'metronome': return `${Math.round(metric)} ms avg off`;
     case 'gridflash': return `${metric} cells off`;
     case 'tray': return `${metric} wrong`;
-    case 'bookbash': return `${metric}/${BOOKBASH_PAGES} pages survived`;
     case 'cups': return `${metric} pts`;
     case 'stroop': return `${metric} correct`;
     case 'readroom': return `${metric.toFixed(0)} pts off`;
