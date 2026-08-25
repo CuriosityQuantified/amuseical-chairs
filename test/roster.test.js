@@ -17,7 +17,6 @@ import assert from 'node:assert/strict';
 import { seededRng } from '../shared/rng.js';
 import { cupsLevel } from '../shared/cups.js';
 import { trayLevel } from '../shared/tray.js';
-import { bookBashRound } from '../shared/bookbash.js';
 import { parseValue } from '../shared/fractions.js';
 import { solveScramble } from '../shared/anagram.js';
 import { solveGrid } from '../shared/wordhunt.js';
@@ -49,7 +48,6 @@ const PAYLOADS = {
   }),
   gridflash: (cd) => ({ picks: cd.patterns.map((p) => p.slice(0, 3)) }),
   tray: (cd) => ({ picks: trayLevel(cd.seed).changed }),
-  bookbash: (cd) => ({ positions: bookBashRound(cd.seed).map((page) => page.holes[0]) }),
   cups: (cd) => ({
     picks: [1, 2, 3].map((level) => ({ level, cupIndex: cupsLevel(cd.seed, level, cd).ball })),
   }),
@@ -171,5 +169,16 @@ test('regression: span (Reverse Digit Span) has been removed and must not reappe
   assert.ok(
     !('span' in PAYLOADS),
     'span has a payload entry — remove it along with the roster entry',
+  );
+});
+
+test('regression: Book Bash has been removed and must not reappear', () => {
+  assert.ok(
+    !ROSTER_BY_KEY.has('bookbash'),
+    'Book Bash is on the roster — it was removed by user request and must not be re-added without deliberate review',
+  );
+  assert.ok(
+    !('bookbash' in PAYLOADS),
+    'Book Bash has a payload entry — remove it along with the roster entry',
   );
 });

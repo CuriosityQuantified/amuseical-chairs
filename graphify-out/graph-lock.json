@@ -5,7 +5,7 @@
       "semantic": null
     },
     ".github/workflows/ci.yml": {
-      "ast": "0e0f5a7c50f34887b3156ff31805b4aa",
+      "ast": "cf111b9aa6ccffa87c0845fa0bcea65a",
       "semantic": null
     },
     ".github/workflows/security-assessment.yml": {
@@ -869,7 +869,7 @@
       "semantic": null
     },
     "public/js/games.js": {
-      "ast": "5024564489f3447a3f16c994a7545a2c",
+      "ast": "581cda23f41943095ef4d7b34a304bf2",
       "semantic": null
     },
     "public/js/host.js": {
@@ -889,7 +889,7 @@
       "semantic": "3d9aa8d2aabb42cdc226c0dc852c93f2"
     },
     "public/js/tutorials.js": {
-      "ast": "8f5fcbe7e243a2c8c2b2fde7bea62582",
+      "ast": "6c7c9ced571c31692ce1d340d82287a1",
       "semantic": null
     },
     "scripts/check.mjs": {
@@ -913,7 +913,7 @@
       "semantic": null
     },
     "server/games.js": {
-      "ast": "c7b221449ddb222a416397e7836c8de7",
+      "ast": "c56483b5be72c29cba745a4a84330137",
       "semantic": null
     },
     "server/index.js": {
@@ -938,10 +938,6 @@
     },
     "shared/balance.js": {
       "ast": "7f10ed23efa5e11767aeb438c0218b14",
-      "semantic": null
-    },
-    "shared/bookbash.js": {
-      "ast": "7bf7ee65b309f65f91e8315ffa7bd213",
       "semantic": null
     },
     "shared/ciede2000.js": {
@@ -1012,10 +1008,6 @@
       "ast": "df1db28adc38f45b034a709885842acf",
       "semantic": null
     },
-    "test/bookbash.test.js": {
-      "ast": "822737f96ddacf34c5969a0c10fa35de",
-      "semantic": null
-    },
     "test/caption.test.js": {
       "ast": "992130741f237dc10beb1c0413630e67",
       "semantic": "992130741f237dc10beb1c0413630e67"
@@ -1057,7 +1049,7 @@
       "semantic": null
     },
     "test/harness.test.js": {
-      "ast": "afa79e753369b63f8376f09b91b0cbb5",
+      "ast": "0cea552b39ec289b7527bbea710573dd",
       "semantic": null
     },
     "test/icebreaker.test.js": {
@@ -1097,7 +1089,7 @@
       "semantic": null
     },
     "test/roster.test.js": {
-      "ast": "d9ed4ff9cd9003268f98407082959651",
+      "ast": "3a8c3097188e169f81d2f39d12ac98a7",
       "semantic": null
     },
     "test/security.test.js": {

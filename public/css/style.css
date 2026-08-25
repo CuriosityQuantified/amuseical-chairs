@@ -466,21 +466,7 @@ canvas.game {
 .pool-hide { font-size: 10px; padding: 6px 10px; flex: 0 0 auto; }
 .pool-entry.hidden-entry .pool-text { color: var(--dim); font-style: italic; }
 
-/* Book Bash: the player chooses a hole on the lower page. */
-.bookbash-book {
-  height: 74px; margin: 8px auto 14px; max-width: 520px;
-  border: 2px solid var(--line); border-radius: 8px 8px 24px 24px;
-  background: linear-gradient(90deg, var(--bg2) 48%, var(--accent2) 49%, var(--bg2) 51%);
-  transform-origin: 50% 100%;
-}
-.bookbash-book.bookbash-slam { animation: bookbash-slam 320ms ease-in; }
-@keyframes bookbash-slam { 50% { transform: rotateX(80deg); } 100% { transform: rotateX(0); } }
-.bookbash-holes { display: grid; grid-template-columns: repeat(3, minmax(54px, 1fr)); gap: 8px; max-width: 360px; margin: auto; }
-.bookbash-hole { min-height: 54px; padding: 8px; font-size: 26px; border: 2px solid var(--line); border-radius: 50%; background: var(--bg2); color: var(--muted); }
-.bookbash-hole.safe { border-color: var(--accent2); color: var(--accent2); }
-.bookbash-hole.selected { background: var(--accent2); color: #061018; }
-
-
+/* Fraction Face-Off: two thumb-sized comparison targets. */
 .fractions-side {
   flex: 1;
   margin: 8px;
