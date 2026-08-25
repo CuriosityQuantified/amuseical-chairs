@@ -478,7 +478,11 @@ test('forged sync jitter cannot make an edge-timed redemption report outrank an 
     assert.equal(forged.status, 'tooFast', 'client jitter cannot relax redemption timing checks');
     assert.equal(forged.finalMs, 999999);
 
-    await sleep(280);
+    // Wait from the authoritative green timestamp with a small margin. A
+    // relative 280 ms sleep after the forged report put this exactly on the
+    // 300 ms boundary, where timer rounding could make the honest report look
+    // 1 ms early and disqualify both players.
+    await sleep(Math.max(0, tGreen + 300 - Date.now()) + 20);
     room.handleRedemptionReport('fair', { status: 'ok', rawMs: 300, earlyPresses: 0 });
     await waitFor(() => room.phase === 'chairs_result', 3000, 'result');
     assert.equal(room.chairs.eliminated[0], 'cheat', 'honest player still wins the round');
