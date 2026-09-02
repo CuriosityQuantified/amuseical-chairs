@@ -43,6 +43,37 @@ const FAST = {
   postGreenTimeout: 800, hardTimeout: 1500, closeGraceMs: 200,
 };
 
+test('player reconnect snapshot restores an active chairs redemption before and after green', async () => {
+  const room = new Room(stubIo(), 'REJOIN', { ...FAST, enabled: onlyGames('rgb') });
+  try {
+    addPlayer(room, 'p1', 'Player1');
+    addPlayer(room, 'p2', 'Player2');
+    room.sessionStartedAt = Date.now();
+    room.chairs = { active: ['p1', 'p2'], eliminated: [], totalRounds: 1, round: 1 };
+    room.startRedemption(['p1', 'p2'], 'chairs');
+
+    const before = room.snapshot('p1');
+    assert.equal(before.phase, 'redemption');
+    assert.equal(before.redemption.tGreen, null, 'before green, snapshot carries the waiting schedule');
+    assert.deepEqual(before.redemption.participants, ['p1', 'p2']);
+    assert.equal(before.redemption.chairCount, 1);
+
+    await waitFor(() => room.redemption?.tGreen, 3000, 'green schedule');
+    const after = room.snapshot('p1');
+    assert.equal(after.redemption.tGreen, room.redemption.tGreen,
+      'after green, snapshot carries the authoritative server time');
+    assert.equal(after.redemption.minDelay, room.config.minDelay);
+    assert.equal(after.redemption.hardTimeout, room.config.hardTimeout);
+
+    const reconnect = room.join({ id: 'sock-rejoin', join() {}, data: {} }, {
+      name: 'ignored', playerId: 'p1', reconnectToken: room.players.get('p1').reconnectToken,
+    });
+    assert.equal(reconnect.ok, true);
+    assert.equal(reconnect.snapshot.redemption.tGreen, room.redemption.tGreen);
+  } finally {
+    room.destroy();
+  }
+});
 test('empty-room eviction is short before start and preserves the started-room reconnect grace', () => {
   const retentionFor = ({ phase = 'lobby', solo = false, player = false } = {}) => {
     const room = new Room(stubIo(), `E${phase[0]}${solo ? 'S' : 'H'}1`, FAST);

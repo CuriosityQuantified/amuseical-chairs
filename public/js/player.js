@@ -115,6 +115,17 @@ function applySnapshot(snap) {
     renderTutorial(snap.tutorial);
   } else if (snap.phase === 'reveal' && snap.reveal) {
     renderReveal(snap.reveal);
+  } else if (snap.phase === 'redemption' && snap.redemption) {
+    const redemption = snap.redemption;
+    if (redemption.participants?.includes(state.playerId)) {
+      prepareRedemption(redemption);
+      if (redemption.tGreen != null) startRedemptionRun(redemption);
+    } else if (redemption.round) {
+      renderWaiting(`🪑 Round ${redemption.round} of ${redemption.totalRounds} in progress…`,
+        'You’re out of chairs — watch the host screen.');
+    } else {
+      renderWaiting('Musical chairs in progress…', 'Watch the host screen.');
+    }
   } else if (snap.phase === 'scores' && snap.scores) {
     renderScores({ leaderboard: snap.scores });
   } else if (snap.phase === 'winner' && snap.finalStandings) {
@@ -616,9 +627,8 @@ function prepareRedemption(p) {
   doSync();
 }
 
-socket.on('redemption:go', (p) => {
-  if (!p.participants.includes(state.playerId)) return;
-  if (!state.redemption) return;
+function startRedemptionRun(p) {
+  if (!p.participants?.includes(state.playerId) || !state.redemption || state.redemption.run) return;
   const tz = $('tapzone');
   // Convert server T_green to local, schedule against performance.now(),
   // and time from the rendered green frame (rAF timestamp) to keydown.
@@ -674,6 +684,10 @@ socket.on('redemption:go', (p) => {
     state.redemption?.anim?.remove();
   }
   state.redemption.run = run;
+}
+
+socket.on('redemption:go', (p) => {
+  startRedemptionRun(p);
 });
 
 function clearAllButBanner() {

@@ -16,6 +16,10 @@
       "ast": "1537a1504800a15fb24708220ea31081",
       "semantic": "1537a1504800a15fb24708220ea31081"
     },
+    "HANDOFF.md": {
+      "ast": "d2b63c7ece3bd951f8bfbe7f6803b99f",
+      "semantic": null
+    },
     "README.md": {
       "ast": "eb0da4e86e34f2126c926a69768dd1b7",
       "semantic": null
@@ -881,7 +885,7 @@
       "semantic": null
     },
     "public/js/player.js": {
-      "ast": "8c476d344f06477a819b3bdb31a9f548",
+      "ast": "9278b886181ffb4ce8111b4bf54335c1",
       "semantic": null
     },
     "public/js/sync.js": {
@@ -921,7 +925,7 @@
       "semantic": "f9bcb5a92468425b887f7d6ed3da4eb4"
     },
     "server/room.js": {
-      "ast": "005f9d7a12f5182d5185c90e12ecd212",
+      "ast": "7bae18a2d7ccdf5b9e6c8402c796cad9",
       "semantic": null
     },
     "server/sockets.js": {
@@ -1089,7 +1093,7 @@
       "semantic": null
     },
     "test/room.test.js": {
-      "ast": "272137fd50ac49acb447d299c955151e",
+      "ast": "90b19fda9095e7e6d848b364c22f29b0",
       "semantic": null
     },
     "test/roster.test.js": {
@@ -1138,6 +1142,10 @@
     },
     "tests/e2e/music-skip.spec.js": {
       "ast": "c4d376a184654c13826ab3e5fa21255d",
+      "semantic": null
+    },
+    "tests/e2e/redemption-rejoin.spec.js": {
+      "ast": "203665ab40712cba3c4d251cc7fe4d46",
       "semantic": null
     }
   }

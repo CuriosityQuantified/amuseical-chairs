@@ -519,6 +519,20 @@ export class Room {
       // reconnect snapshots contain only that player's own guesses[] row.
       snap.reveal = this.revealPayload(playerId);
     }
+    if (this.phase === 'redemption' && this.redemption) {
+      // Reconnects need the same public round data as the phase event. The
+      // absolute green time stays server-authoritative; reports still pass
+      // through the normal arrival and early-press checks.
+      snap.redemption = {
+        ...(this.phasePayload || {}),
+        tGreen: this.redemption.tGreen,
+        minDelay: this.config.minDelay,
+        maxDelay: this.config.maxDelay,
+        postGreenTimeout: this.config.postGreenTimeout,
+        hardTimeout: this.config.hardTimeout,
+        serverNow: Date.now(),
+      };
+    }
     if (this.phase === 'tutorial' && this.tutorial) {
       snap.tutorial = { ...this.tutorial };
     }
