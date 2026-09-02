@@ -197,6 +197,23 @@ test('score attack: every game once, totals accumulate, chairs finale, highest t
   }
 });
 
+test('duplicate solo test requests are ignored after the first transition starts', () => {
+  const room = new Room(stubIo(), 'SOLO', { ...FAST, enabled: onlyGames('rgb') });
+  try {
+    addPlayer(room, 'p1', 'Solo');
+    const first = room.startTest('rgb');
+    const round = room.round;
+    const second = room.startTest('rgb');
+
+    assert.equal(first.ok, true);
+    assert.deepEqual(second, { ok: true, ignored: true });
+    assert.equal(room.round, round, 'a stale duplicate does not replace the active test');
+    assert.equal(room.phase, 'minigame');
+  } finally {
+    room.destroy();
+  }
+});
+
 test('repeating join on the same socket returns the existing player instead of minting a second identity', () => {
   const room = new Room(stubIo(), 'ONES', {});
   try {

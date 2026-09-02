@@ -198,6 +198,7 @@ export class Room {
     this.allowClientScoredCompetitive = !!options.allowClientScoredCompetitive;
     this.sessionStartedAt = null; // when the competitive queue began (finale gate)
     this.soloOwnerId = null;      // the single player allowed in a solo room
+    this.soloTransitionPending = false;
     this.testCounter = 0;
     this.destroyed = false;
     this.createdAt = Date.now();
@@ -636,7 +637,10 @@ export class Room {
   // (host playtesting). Uses a throwaway content pool — the real session's
   // no-repeat pool is unaffected.
   startTest(key) {
-    if (this.phase !== 'lobby') return { error: 'Games can only be tested from the lobby.' };
+    if (this.phase !== 'lobby') {
+      if (this.soloTransitionPending) return { ok: true, ignored: true };
+      return { error: 'Games can only be tested from the lobby.' };
+    }
     const meta = ROSTER_BY_KEY.get(key);
     if (!meta) return { error: `Unknown game "${key}".` };
     if (this.players.size < 1) return { error: 'Need at least 1 player joined to test.' };
@@ -646,6 +650,7 @@ export class Room {
       config: this.config,
       used: {},
     });
+    this.soloTransitionPending = true;
     this.round = {
       test: true,
       games: [this.makeStage(meta, clientData, secret)],
@@ -677,6 +682,7 @@ export class Room {
     this.reveal = null;
     this.redemption = null;
     this.chairs = null;
+    this.soloTransitionPending = false;
     this.tutorial = null;
     this.afterTutorial = null;
     this.setPhase('lobby', {});
