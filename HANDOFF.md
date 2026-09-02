@@ -52,3 +52,13 @@ The issue remains open. No acceptance criterion is complete.
 4. Commit, push, open one PR, then let the parent orchestrator verify fail-closed CI, squash-merge, delete the local and remote feature branch, and verify issue #90 is closed.
 
 No secrets or credentials are recorded here.
+
+## Fresh continuation record — 2026-09-02
+
+- Implementation + CI phase: completed in this checkout. Added redemption data to player snapshots, restored redemption UI and timing from snapshots, made `redemption:go` safe when the client has no run, and added unit plus two-player Playwright coverage. No commit, push, or PR was made during this phase.
+- Code review phase: completed as a fresh diff review against `origin/main` using `/Users/halgorithm/.hermes/skills/mattpocock/code-review/SKILL.md`. Standards findings: none. Spec findings: none.
+- Simplification phase: completed as a fresh review of the changed sections using `/Users/halgorithm/.claude/plugins/marketplaces/claude-plugins-official/plugins/code-simplifier/agents/code-simplifier.md`. No safe simplification was needed; behavior was unchanged.
+- Security phase: read-only review was attempted with the requested Claude Security files. The required Workflow tool is not available in this Hermes session, and the requested `agents/claude-security.md` file is absent. Per the security skill, no workflow scan was run. Existing security tests and `git diff --check` passed; no manual finding was identified.
+- Results: `npm test` passed (315 tests); targeted room/redemption tests passed (33 tests); targeted Playwright redemption-rejoin test passed (1 test); `npm run check` passed; `npm run graph` passed; node syntax checks passed; smoke checks returned `{"ok":true}` for `/healthz` and HTTP 200 for `/`.
+- Graph state: refreshed with exact `npm run graph`; `graphify-out/graph-lock.json` was updated and must be staged with tracked graph outputs.
+- Remaining actions: run the final gates after this handoff update, stage tracked graphify outputs, commit with the required identity, push `fix/90-redemption-rejoin`, create exactly one PR with the required title and body, and verify the PR head and CI. Do not merge.
