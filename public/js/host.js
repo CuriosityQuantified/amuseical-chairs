@@ -274,7 +274,10 @@ function stopMusic() {
 }
 
 function stopMusicVisualization() {
-  if (musicVisualization) clearTimeout(musicVisualization.timer);
+  if (musicVisualization) {
+    clearTimeout(musicVisualization.timer);
+    musicVisualization.anim.stop();
+  }
   musicVisualization = null;
 }
 
@@ -302,10 +305,15 @@ function playMusic(durationMs) {
     i++;
   }, 170);
   const session = {
-    stop() { clearInterval(iv); gain.disconnect(); },
+    timer: null,
+    stop() {
+      clearInterval(iv);
+      clearTimeout(this.timer);
+      gain.disconnect();
+    },
   };
   musicSession = session;
-  setTimeout(() => {
+  session.timer = setTimeout(() => {
     if (musicSession === session) stopMusic();
   }, durationMs);
 }
