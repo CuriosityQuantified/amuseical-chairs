@@ -1,16 +1,16 @@
 # Graph Report - amuseical-chairs  (2026-09-02)
 
 ## Corpus Check
-- 82 files · ~132,618 words
+- 84 files · ~133,470 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 702 nodes · 1575 edges · 41 communities (36 shown, 5 thin omitted)
+- 714 nodes · 1590 edges · 48 communities (43 shown, 5 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 9 edges (avg confidence: 0.58)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `742faff2`
+- Built from commit: `6247f4f0`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -45,13 +45,19 @@
 - ciede2000.js
 - security.test.js
 - reduced-motion.test.js
+- room.test.js
 - feedback.spec.js
 - strix-d869-report.md
 - room.js
 - Reduced Motion Accessibility (issue #52)
+- sockets.js
+- HANDOFF — issue #91
 - Security assessment harness
+- reveal.test.js
 - strix-bac3-report.md
 - server/games.js
+- redemption.test.js
+- normalize.js
 - scrape-flags.mjs
 
 ## God Nodes (most connected - your core abstractions)
@@ -64,7 +70,7 @@
 7. `el()` - 20 edges
 8. `formatRaw()` - 18 edges
 9. `cupsLevel()` - 17 edges
-10. `renderHostPhase()` - 15 edges
+10. `renderHostPhase()` - 16 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `score()` --calls--> `computeMetric()`  [EXTRACTED]
@@ -81,7 +87,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (41 total, 5 thin omitted)
+## Communities (48 total, 5 thin omitted)
 
 ### Community 0 - "Room"
 Cohesion: 0.10
@@ -89,11 +95,11 @@ Nodes (5): COMPLETION_MODE, clientScoredGameAllowed(), Room, sanitizeConfig(), a
 
 ### Community 1 - "caption.test.js"
 Cohesion: 0.13
-Nodes (18): aggregateCaption(), aggregateGame(), aggregateIcebreaker(), buildReveal(), buildStages(), icebreakerTally(), votesForPool(), cleanEntryText() (+10 more)
+Nodes (19): aggregateCaption(), aggregateGame(), aggregateIcebreaker(), buildReveal(), buildStages(), icebreakerTally(), num(), votesForPool() (+11 more)
 
 ### Community 3 - "host.js"
-Cohesion: 0.15
-Nodes (34): buildConfigPanel(), confetti(), content(), createRoom(), el(), enabledCount(), enterLobbyUi(), extrasBlock() (+26 more)
+Cohesion: 0.14
+Nodes (37): buildConfigPanel(), confetti(), content(), createRoom(), el(), enabledCount(), enterLobbyUi(), extrasBlock() (+29 more)
 
 ### Community 4 - "Player Client Sync UI"
 Cohesion: 0.18
@@ -108,8 +114,8 @@ Cohesion: 0.22
 Nodes (8): Architecture summary (as reviewed), Child issues created, Explicitly rejected / merged ideas (and why), Feature ideation & application review — issue #36, Methodology, Notes for implementers, Open decisions carried into the child issues, Out of scope (by design) — honored by every proposal
 
 ### Community 7 - "multistage.test.js"
-Cohesion: 0.18
-Nodes (15): NEEDS_AGGREGATION, PER_TURN_SECRET, addPlayer(), captionRoom(), FAST, guessAll(), icebreakerRoom(), onlyGames() (+7 more)
+Cohesion: 0.20
+Nodes (14): PER_TURN_SECRET, addPlayer(), captionRoom(), FAST, guessAll(), icebreakerRoom(), onlyGames(), recordingIo() (+6 more)
 
 ### Community 8 - "js/games.js"
 Cohesion: 0.24
@@ -168,8 +174,8 @@ Cohesion: 0.38
 Nodes (11): anagramFeedback(), areaFeedback(), bisectFeedback(), blank(), clamp(), dotsFeedback(), fractionsFeedback(), gridflashFeedback() (+3 more)
 
 ### Community 28 - "cups.test.js"
-Cohesion: 0.11
-Nodes (26): cupsCount(), cupsLevel(), cupsSwapMs(), pairsFor(), correct(), cupsRoom(), EXPECTED_MS, FAST (+18 more)
+Cohesion: 0.10
+Nodes (27): NEEDS_AGGREGATION, cupsCount(), cupsLevel(), cupsSwapMs(), pairsFor(), correct(), cupsRoom(), EXPECTED_MS (+19 more)
 
 ### Community 29 - "ciede2000.js"
 Cohesion: 0.50
@@ -183,6 +189,10 @@ Nodes (12): allowedSocketOrigin(), CONTENT_SECURITY_POLICY, createServer(), __di
 Cohesion: 0.31
 Nodes (6): prefersReducedMotion(), setReducedMotionOverride(), ROOT, SERVER_AND_SHARED_FILES, SIMPLE_KEYS, withFakeWindow()
 
+### Community 33 - "room.test.js"
+Cohesion: 0.22
+Nodes (4): ALL_BLOCKED, FAST, sleep(), waitFor()
+
 ### Community 34 - "feedback.spec.js"
 Cohesion: 0.48
 Nodes (4): assertFeedbackShown(), continueTurn(), nextBtn(), panel()
@@ -192,16 +202,28 @@ Cohesion: 0.20
 Nodes (9): Executive Summary, Executive Summary, Methodology, Methodology, Recommendations, Recommendations, Security Penetration Test Report, Technical Analysis (+1 more)
 
 ### Community 36 - "room.js"
-Cohesion: 0.06
-Nodes (31): ROSTER, COMPETITIVE_CLIENT_SCORING_DISABLED, DEFAULTS, HOST_EDITABLE_CONFIG, makeRoomCode(), newReconnectToken(), pickHostEditableConfig(), reconnectTokenMatches() (+23 more)
+Cohesion: 0.20
+Nodes (8): COMPETITIVE_CLIENT_SCORING_DISABLED, DEFAULTS, HOST_EDITABLE_CONFIG, makeRoomCode(), newReconnectToken(), pickHostEditableConfig(), reconnectTokenMatches(), io
 
 ### Community 37 - "Reduced Motion Accessibility (issue #52)"
 Cohesion: 0.33
 Nodes (5): Decorative animations (gated on `prefersReducedMotion()`), Detection point, Essential motion (NOT gated — motion IS the mechanic or is functional), Guarantee, Reduced Motion Accessibility (issue #52)
 
+### Community 38 - "sockets.js"
+Cohesion: 0.36
+Nodes (8): clientAddress(), failedJoinAllowed(), failedJoinResponse(), guarded(), publicOrigin(), roomCreateAllowed(), takeRateToken(), withinPayloadLimit()
+
+### Community 39 - "HANDOFF — issue #91"
+Cohesion: 0.25
+Nodes (7): HANDOFF — issue #91, Mandatory phases, Next actions, READ CONSTRAINTS, Required work, State, Working tree
+
 ### Community 40 - "Security assessment harness"
 Cohesion: 0.50
 Nodes (3): Interpretation, Run locally, Security assessment harness
+
+### Community 41 - "reveal.test.js"
+Cohesion: 0.43
+Nodes (4): ROSTER, addPlayer(), anagramRoom(), stubIo()
 
 ### Community 42 - "strix-bac3-report.md"
 Cohesion: 0.20
@@ -209,31 +231,39 @@ Nodes (9): Executive Summary, Executive Summary, Methodology, Methodology, Recom
 
 ### Community 43 - "server/games.js"
 Cohesion: 0.05
-Nodes (85): buildGameData(), CAPTION_PROMPTS, clamp(), computeMetric(), formatRaw(), ICEBREAKER_PROMPTS, METRONOME_INTERVALS, MULTI_STAGE (+77 more)
+Nodes (84): buildGameData(), CAPTION_PROMPTS, clamp(), computeMetric(), formatRaw(), ICEBREAKER_PROMPTS, METRONOME_INTERVALS, MULTI_STAGE (+76 more)
+
+### Community 44 - "redemption.test.js"
+Cohesion: 0.48
+Nodes (4): createRedemptionRun(), scoreRedemptionReport(), fakeClock(), run()
+
+### Community 45 - "normalize.js"
+Cohesion: 0.90
+Nodes (3): normalizeError(), normalizeScore(), percentile()
 
 ### Community 49 - "scrape-flags.mjs"
 Cohesion: 0.27
 Nodes (10): ASSETS, curl, fetchBytes(), isPng(), main(), MANIFEST, parseFlagTable(), ROOT (+2 more)
 
 ## Knowledge Gaps
-- **174 isolated node(s):** `graphify-mcp`, `name`, `version`, `description`, `type` (+169 more)
+- **180 isolated node(s):** `graphify-mcp`, `name`, `version`, `description`, `type` (+175 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **5 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Room` connect `Room` to `room.js`, `multistage.test.js`, `server/games.js`, `cups.test.js`, `security.test.js`?**
-  _High betweenness centrality (0.081) - this node is a cross-community bridge._
-- **Why does `attachSockets()` connect `Room` to `room.js`, `scripts`, `security.test.js`, `multistage.test.js`?**
-  _High betweenness centrality (0.062) - this node is a cross-community bridge._
+- **Why does `Room` connect `Room` to `room.test.js`, `room.js`, `sockets.js`, `multistage.test.js`, `reveal.test.js`, `server/games.js`, `cups.test.js`, `security.test.js`?**
+  _High betweenness centrality (0.078) - this node is a cross-community bridge._
+- **Why does `attachSockets()` connect `Room` to `room.js`, `scripts`, `sockets.js`, `multistage.test.js`, `reveal.test.js`, `security.test.js`?**
+  _High betweenness centrality (0.060) - this node is a cross-community bridge._
 - **Why does `qrcode` connect `scripts` to `Room`?**
-  _High betweenness centrality (0.053) - this node is a cross-community bridge._
+  _High betweenness centrality (0.051) - this node is a cross-community bridge._
 - **What connects `graphify-mcp`, `name`, `version` to the rest of the system?**
-  _174 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _180 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Room` be split into smaller, more focused modules?**
   _Cohesion score 0.09807692307692308 - nodes in this community are weakly interconnected._
 - **Should `caption.test.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._
-- **Should `scripts` be split into smaller, more focused modules?**
-  _Cohesion score 0.058823529411764705 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.12615384615384614 - nodes in this community are weakly interconnected._
+- **Should `host.js` be split into smaller, more focused modules?**
+  _Cohesion score 0.14035087719298245 - nodes in this community are weakly interconnected._

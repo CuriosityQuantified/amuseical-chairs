@@ -221,6 +221,7 @@ const content = () => $('host-content');
 let hostTut = null;
 
 function renderHostPhase(p) {
+  if (p.name !== 'music') stopMusicPhase();
   state.phase = p.name;
   // Show skip/extend only during a live timed minigame (issue #55).
   const showMidGameControls = p.name === 'minigame' && !p.completion;
@@ -264,8 +265,26 @@ function unlockAudio() {
   if (state.audio && state.audio.state === 'suspended') state.audio.resume();
 }
 
-let musicStop = null;
+let musicSession = null;
+let musicVisualization = null;
+
+function stopMusic() {
+  musicSession?.stop();
+  musicSession = null;
+}
+
+function stopMusicVisualization() {
+  if (musicVisualization) clearTimeout(musicVisualization.timer);
+  musicVisualization = null;
+}
+
+function stopMusicPhase() {
+  stopMusicVisualization();
+  stopMusic();
+}
+
 function playMusic(durationMs) {
+  stopMusic();
   if (!state.audio) return;
   const ctx = state.audio;
   const notes = [0, 4, 7, 12, 7, 4, 0, -5];
@@ -282,11 +301,17 @@ function playMusic(durationMs) {
     o.stop(ctx.currentTime + 0.14);
     i++;
   }, 170);
-  musicStop = () => { clearInterval(iv); gain.disconnect(); };
-  setTimeout(() => musicStop && musicStop(), durationMs);
+  const session = {
+    stop() { clearInterval(iv); gain.disconnect(); },
+  };
+  musicSession = session;
+  setTimeout(() => {
+    if (musicSession === session) stopMusic();
+  }, durationMs);
 }
 
 function renderMusic(p) {
+  stopMusicPhase();
   const viz = el('div', { class: 'music-viz' });
   for (let i = 0; i < 10; i++) {
     viz.append(el('div', { class: 'bar', style: `animation-delay:-${i * 0.07}s` }));
@@ -305,11 +330,15 @@ function renderMusic(p) {
   const names = state.players.map((pl) => pl.name);
   const anim = startChairs(arena, { names, chairs: Math.max(1, names.length - 1), size: 340 });
   playMusic(p.duration);
-  setTimeout(() => {
+  const session = { viz, anim, timer: null };
+  musicVisualization = session;
+  session.timer = setTimeout(() => {
+    if (musicVisualization !== session || state.phase !== 'music') return;
     viz.classList.add('stopped');
     anim.stop(); // everyone freezes when the music cuts
     const h = content().querySelector('h2');
     if (h) h.textContent = '🛑 THE MUSIC STOPPED!';
+    musicVisualization = null;
   }, Math.max(0, p.duration - 150));
 }
 
