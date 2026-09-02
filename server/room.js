@@ -176,6 +176,7 @@ export class Room {
     this.hostSocketId = null;
     this.players = new Map(); // id -> player
     this.phase = 'lobby';
+    this.phasePayload = { name: 'lobby', progress: { players: 0, game: 1, totalGames: 1 } };
     this.queue = [];          // game keys, each played exactly once
     this.queueIndex = 0;
     this.totals = new Map();  // playerId -> cumulative points
@@ -241,7 +242,8 @@ export class Room {
     this.lastActivity = Date.now();
     // `name` last: it is what every client switches on, and no payload field
     // may shadow it.
-    this.emitAll('phase', { ...data, name, progress: this.progressInfo() });
+    this.phasePayload = { ...data, name, progress: this.progressInfo() };
+    this.emitAll('phase', this.phasePayload);
   }
 
   // The answered reveal is sent per player with only that player's own
@@ -502,9 +504,10 @@ export class Room {
       winnerId: this.winnerId,
       finalStandings: this.finalStandings,
     };
+    if (!playerId) snap.phasePayload = this.phasePayload;
     if (this.phase === 'minigame' && this.round) {
       const g = this.round.games[this.round.gameIndex];
-      if (g && p && !g.submissions.has(p.id)) {
+      if (g && (!p || !g.submissions.has(p.id))) {
         snap.game = this.gamePayload(g);
       }
     }
