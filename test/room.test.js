@@ -332,8 +332,8 @@ test('the host config surface is minigame duration and the game toggles, nothing
   try {
     assert.deepEqual(
       Object.keys(room.publicConfig()).sort(),
-      ['enabled', 'gameDuration', 'maxDelay', 'minDelay', 'roster'],
-      'publicConfig publishes no value the lobby is not allowed to change');
+      ['competitiveBlocked', 'enabled', 'gameDuration', 'maxDelay', 'minDelay', 'roster', 'testRoster'],
+      'publicConfig publishes the two display rosters and block explanations');
 
     const internals = { ...room.config };
     assert.equal(room.updateConfig({
@@ -533,11 +533,11 @@ test('client-scored games are blocked from hosted competitive sessions', () => {
     addPlayer(room, 'p2', 'Ben');
     // Not advertised, and reported as disabled to the lobby.
     const cfg = room.publicConfig();
-    for (const key of ALL_BLOCKED.slice(0, 4)) {
-      assert.equal(cfg.roster.some((g) => g.key === key), false, `${key} hidden from the hosted lobby`);
+    for (const key of ALL_BLOCKED) {
+      assert.equal(cfg.competitiveBlocked.find((g) => g.key === key)?.reason,
+        'Unavailable in competitive games because scoring is not server-authoritative.');
       assert.equal(cfg.enabled[key], false, `${key} reported disabled`);
     }
-    assert.equal(cfg.enabled.cups, false, 'cups is blocked too (seed-derivable answers, Strix 2026-08-23)');
     assert.ok(cfg.roster.some((g) => g.key === 'rgb'), 'unaffected games are still advertised');
     assert.equal(cfg.enabled.rgb, true, 'unaffected games keep their configured state');
     // Blocked games never enter the competitive queue even when configured on.
@@ -558,6 +558,18 @@ test('client-scored games are blocked from hosted competitive sessions', () => {
     assert.equal(only.phase, 'lobby');
   } finally {
     only.destroy();
+  }
+});
+
+test('solo test config has one named button for every roster game', () => {
+  const room = new Room(stubIo(), 'UI92', { ...FAST });
+  try {
+    const cfg = room.publicConfig();
+    assert.equal(cfg.testRoster.length, 23, 'solo test exposes all 23 games');
+    assert.deepEqual(cfg.testRoster.map((game) => game.name), ROSTER.map((game) => game.name));
+    for (const game of cfg.testRoster) assert.ok(game.name, `${game.key} has a display name`);
+  } finally {
+    room.destroy();
   }
 });
 
@@ -584,7 +596,7 @@ test('test-only opt-in and solo rooms still play client-scored games', () => {
   // The harness/constructor opt-in (never settable from a client payload).
   const optIn = new Room(stubIo(), 'BLK3', { ...FAST, enabled: onlyGames('stopclock') }, undefined, { allowClientScoredCompetitive: true });
   try {
-    assert.ok(optIn.publicConfig().roster.some((g) => g.key === 'stopclock'), 'opt-in advertises the game');
+    assert.ok(optIn.publicConfig().testRoster.some((g) => g.key === 'stopclock'), 'opt-in advertises the game');
     addPlayer(optIn, 'p1', 'Anna');
     addPlayer(optIn, 'p2', 'Ben');
     assert.equal(optIn.start().ok, true);
@@ -597,8 +609,8 @@ test('test-only opt-in and solo rooms still play client-scored games', () => {
   try {
     solo.solo = true;
     const cfg = solo.publicConfig();
-    assert.ok(cfg.roster.some((g) => g.key === 'trace'));
-    assert.ok(cfg.roster.some((g) => g.key === 'balance'));
+    assert.ok(cfg.testRoster.some((g) => g.key === 'trace'));
+    assert.ok(cfg.testRoster.some((g) => g.key === 'balance'));
     assert.equal(cfg.enabled.trace, true, 'solo defaults keep the game on');
   } finally {
     solo.destroy();

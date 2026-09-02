@@ -355,7 +355,10 @@ export function attachSockets(io, {
     socket.on('host:next', guarded(socket, 'host:next', { limit: 240, windowMs: 10 * 60_000, ack: true }, hostOnly((r, _p, cb) => cb?.(r.hostNext()))));
     // Moderation: pull a player-authored entry off the projector mid-stage.
     socket.on('host:hide', guarded(socket, 'host:hide', { limit: 60, ack: true }, hostOnly((r, payload, cb) => cb?.(r.hideEntry(payload?.entryId)))));
-    socket.on('host:config', guarded(socket, 'host:config', { limit: 60, ack: true }, hostOnly((r, payload, cb) => cb?.(r.updateConfig(payload || {})))));
+    socket.on('host:config', guarded(socket, 'host:config', { limit: 60, ack: true }, hostOnly((r, payload, cb) => {
+      const result = r.updateConfig(payload || {});
+      cb?.(result.ok ? { ...result, config: r.publicConfig() } : result);
+    })));
     // Live host actions (issue #55) — mid-game, host-only, NOT lobby config.
     socket.on('host:skip', guarded(socket, 'host:skip', { limit: 20, ack: true }, hostOnly((r, _p, cb) => cb?.(r.skipGame()))));
     socket.on('host:extend', guarded(socket, 'host:extend', { limit: 20, ack: true }, hostOnly((r, _p, cb) => cb?.(r.extendTimer()))));

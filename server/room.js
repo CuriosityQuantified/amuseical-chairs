@@ -544,13 +544,15 @@ export class Room {
   // its value.
   publicConfig() {
     const { gameDuration, minDelay, maxDelay, enabled } = this.config;
-    const roster = ROSTER
-      .filter(({ key }) => clientScoredGameAllowed(this, key))
-      .map(({ key, name, category, stages, defaultEnabled }) =>
-        ({ key, name, category, stages: stages || 1, defaultEnabled: defaultEnabled !== false }));
+    const fullRoster = ROSTER.map(({ key, name, category, stages, defaultEnabled }) =>
+      ({ key, name, category, stages: stages || 1, defaultEnabled: defaultEnabled !== false }));
+    const roster = fullRoster.filter(({ key }) => clientScoredGameAllowed(this, key));
+    const competitiveBlocked = [...COMPETITIVE_CLIENT_SCORING_DISABLED]
+      .filter((key) => !clientScoredGameAllowed(this, key))
+      .map((key) => ({ key, reason: 'Unavailable in competitive games because scoring is not server-authoritative.' }));
     const publicEnabled = Object.fromEntries(
       Object.entries(enabled).map(([key, on]) => [key, clientScoredGameAllowed(this, key) ? on : false]));
-    return { gameDuration, minDelay, maxDelay, enabled: publicEnabled, roster };
+    return { gameDuration, minDelay, maxDelay, enabled: publicEnabled, roster, testRoster: fullRoster, competitiveBlocked };
   }
 
   updateConfig(raw) {

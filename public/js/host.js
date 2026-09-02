@@ -124,14 +124,16 @@ function buildConfigPanel() {
   $('cfg-dur').value = Math.round(c.gameDuration / 1000);
   $('cfg-dur-val').textContent = Math.round(c.gameDuration / 1000);
 
-  const meta = (key) => (c.roster || []).find((g) => g.key === key);
+  const meta = (key) => (c.testRoster || c.roster || []).find((g) => g.key === key);
   const nameOf = (key) => meta(key)?.name || key;
+  const blocked = new Map((c.competitiveBlocked || []).map((g) => [g.key, g.reason]));
   const toggles = $('game-toggles');
   toggles.replaceChildren();
   for (const [key, on] of Object.entries(c.enabled)) {
     const cb = el('input', { type: 'checkbox' });
-    cb.checked = on;
-    cb.addEventListener('change', () => pushConfig({ enabled: { [key]: cb.checked } }));
+    cb.checked = on && !blocked.has(key);
+    if (blocked.has(key)) cb.disabled = true;
+    else cb.addEventListener('change', () => pushConfig({ enabled: { [key]: cb.checked } }));
     // A multi-stage game costs more than a normal slot — worth knowing before
     // you plan the meeting around it. 'variable' means it grows with the room
     // (Icebreaker runs one guessing round per player who wrote a fact).
@@ -140,12 +142,13 @@ function buildConfigPanel() {
     const note = meta(key)?.defaultEnabled === false
       ? ' — English vocabulary; off by default for mixed-language rooms'
       : '';
-    toggles.append(el('label', {}, cb, nameOf(key) + cost, note && el('span', { class: 'muted' }, note)));
+    const blockedNote = blocked.get(key) ? ` — ${blocked.get(key)}` : '';
+    toggles.append(el('label', {}, cb, nameOf(key) + cost + blockedNote, note && el('span', { class: 'muted' }, note)));
   }
 
   const tests = $('test-buttons');
   tests.replaceChildren();
-  for (const g of c.roster || []) {
+  for (const g of c.testRoster || c.roster || []) {
     tests.append(el('button', {
       class: 'secondary',
       onclick: () => socket.emit('host:test', { key: g.key }, (res) => {
@@ -160,11 +163,17 @@ function buildConfigPanel() {
 function pushConfig(patch) {
   socket.emit('host:config', patch, (res) => {
     if (res && res.error) console.warn(res.error);
+    if (res && res.ok && res.config) {
+      state.config = res.config;
+      buildConfigPanel();
+      renderLobbySummary();
+    }
   });
 }
 
 socket.on('room:config', (c) => {
   state.config = c;
+  buildConfigPanel();
   renderLobbySummary();
 });
 

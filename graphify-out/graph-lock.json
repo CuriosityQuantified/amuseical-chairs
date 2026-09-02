@@ -16,6 +16,10 @@
       "ast": "1537a1504800a15fb24708220ea31081",
       "semantic": "1537a1504800a15fb24708220ea31081"
     },
+    "HANDOFF.md": {
+      "ast": "5d33c132a2cdca56739761e85ec8f137",
+      "semantic": null
+    },
     "README.md": {
       "ast": "eb0da4e86e34f2126c926a69768dd1b7",
       "semantic": null
@@ -873,7 +877,7 @@
       "semantic": null
     },
     "public/js/host.js": {
-      "ast": "d011b41bdbb6bf36d72a3cf5566958a2",
+      "ast": "3b4770b8fdb6603c53da940b6a797058",
       "semantic": null
     },
     "public/js/motion.js": {
@@ -921,11 +925,11 @@
       "semantic": "f9bcb5a92468425b887f7d6ed3da4eb4"
     },
     "server/room.js": {
-      "ast": "7bae18a2d7ccdf5b9e6c8402c796cad9",
+      "ast": "7c6850fc45eb1920865d4b97f8218ce8",
       "semantic": null
     },
     "server/sockets.js": {
-      "ast": "3be972cc3740360a876bdce191337806",
+      "ast": "2950d00c032bc7bd048869ae419b98f3",
       "semantic": null
     },
     "shared/anagram.js": {
@@ -1089,7 +1093,7 @@
       "semantic": null
     },
     "test/room.test.js": {
-      "ast": "90b19fda9095e7e6d848b364c22f29b0",
+      "ast": "31bd3c9cc231bfb7ccec83e71d3f0c3e",
       "semantic": null
     },
     "test/roster.test.js": {
