@@ -873,7 +873,7 @@
       "semantic": null
     },
     "public/js/host.js": {
-      "ast": "9a6369ad6a2f9399ed03169fadb5b46c",
+      "ast": "0c6e7ef6edf87582f2f8f3fc0f8ace2a",
       "semantic": null
     },
     "public/js/motion.js": {
@@ -921,7 +921,7 @@
       "semantic": "f9bcb5a92468425b887f7d6ed3da4eb4"
     },
     "server/room.js": {
-      "ast": "3d3b1efd53393561dd4d488db44408be",
+      "ast": "005f9d7a12f5182d5185c90e12ecd212",
       "semantic": null
     },
     "server/sockets.js": {
@@ -1052,6 +1052,10 @@
       "ast": "0cea552b39ec289b7527bbea710573dd",
       "semantic": null
     },
+    "test/host-rejoin.test.js": {
+      "ast": "c52758c81dae3cdcc702e98efa7c1c66",
+      "semantic": null
+    },
     "test/icebreaker.test.js": {
       "ast": "958da69ee3fd132739084c56db6257a0",
       "semantic": "958da69ee3fd132739084c56db6257a0"
@@ -1126,6 +1130,10 @@
     },
     "tests/e2e/flags-solo.spec.js": {
       "ast": "0c15e0c8abaec13dfb200d5d7f5abd4b",
+      "semantic": null
+    },
+    "tests/e2e/host-rejoin.spec.js": {
+      "ast": "1309447ed489e31c7bca0847b95aebd0",
       "semantic": null
     }
   }

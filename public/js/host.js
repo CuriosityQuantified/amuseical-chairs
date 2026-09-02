@@ -45,10 +45,10 @@ socket.on('connect', async () => {
   if (state.code && state.hostKey) {
     socket.emit('host:rejoin', { code: state.code, hostKey: state.hostKey }, (res) => {
       if (res && res.ok) {
-        // Host credentials rotate on every successful rejoin: persist the
-        // freshly returned key or the next reconnect will be rejected.
+        // Host credentials rotate on every successful rejoin.
         state.hostKey = res.hostKey || state.hostKey;
         sessionStorage.setItem('mc_host', JSON.stringify({ code: state.code, hostKey: state.hostKey }));
+        restoreHostSnapshot(res.snapshot);
       }
     });
   } else if (saved && !state.code) {
@@ -58,11 +58,25 @@ socket.on('connect', async () => {
         state.hostKey = res.hostKey || saved.hostKey;
         sessionStorage.setItem('mc_host', JSON.stringify({ code: state.code, hostKey: state.hostKey }));
         state.config = res.config;
-        enterLobbyUi(res);
+        restoreHostSnapshot(res.snapshot);
       }
     });
   }
 });
+
+function restoreHostSnapshot(snapshot) {
+  if (!snapshot) return;
+  state.code = snapshot.code || state.code;
+  state.config = snapshot.config || state.config;
+  renderPlayers(snapshot.players || []);
+  enterLobbyUi({ ...snapshot, config: state.config });
+  const phase = { ...(snapshot.phasePayload || { name: snapshot.phase, progress: snapshot.progress }) };
+  if (snapshot.game) Object.assign(phase, snapshot.game);
+  if (snapshot.tutorial) Object.assign(phase, snapshot.tutorial);
+  if (snapshot.reveal) Object.assign(phase, snapshot.reveal);
+  if (snapshot.scores) Object.assign(phase, { ...snapshot.scores });
+  renderHostPhase(phase);
+}
 
 function createRoom() {
   socket.emit('host:create', { origin: location.origin, config: {} }, (res) => {
@@ -156,7 +170,7 @@ socket.on('room:config', (c) => {
 
 // ---- lobby joins -----------------------------------------------------------
 
-socket.on('room:players', ({ players }) => {
+function renderPlayers(players) {
   state.players = players;
   $('player-count').textContent = players.length;
   const list = $('joinlist');
@@ -167,9 +181,9 @@ socket.on('room:players', ({ players }) => {
       el('span', { class: `dot ${dotCls}` }), p.name));
   }
   renderHostLiveboard();
-});
+}
 
-// Always-on leaderboard strip across the top of the running screen.
+socket.on('room:players', ({ players }) => renderPlayers(players));
 function renderHostLiveboard() {
   const lb = $('host-liveboard');
   if (!lb) return;
@@ -206,7 +220,7 @@ const content = () => $('host-content');
 
 let hostTut = null;
 
-socket.on('phase', (p) => {
+function renderHostPhase(p) {
   state.phase = p.name;
   // Show skip/extend only during a live timed minigame (issue #55).
   const showMidGameControls = p.name === 'minigame' && !p.completion;
@@ -237,7 +251,9 @@ socket.on('phase', (p) => {
     case 'redemption_test_done': renderRedemptionTestDone(p); break;
     case 'winner': renderWinner(p); break;
   }
-});
+}
+
+socket.on('phase', renderHostPhase);
 
 // ---- music (visual + audio on the host screen only) ------------------------
 
