@@ -1,16 +1,16 @@
 # Graph Report - amuseical-chairs  (2026-09-02)
 
 ## Corpus Check
-- 84 files · ~133,368 words
+- 84 files · ~133,509 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 707 nodes · 1588 edges · 55 communities (49 shown, 6 thin omitted)
+- 707 nodes · 1589 edges · 55 communities (49 shown, 6 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 9 edges (avg confidence: 0.58)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `fa9c6ccd`
+- Built from commit: `11ea0957`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -292,4 +292,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `caption.test.js` be split into smaller, more focused modules?**
   _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._
 - **Should `host.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.14035087719298245 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.1417004048582996 - nodes in this community are weakly interconnected._
