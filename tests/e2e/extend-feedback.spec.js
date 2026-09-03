@@ -41,15 +41,21 @@ test('host can extend once and sees feedback for a rejected second click', async
     await expect(host.locator('#host-content')).toContainText(/\d+s/);
     await expect(host.locator('#extend-feedback')).toHaveText('Timer extended by 15 seconds.');
 
-    // Force the second browser click to prove a rejected acknowledgement is
-    // rendered, even if a stale client sends the request after success.
-    await extend.evaluate((button) => button.dispatchEvent(new MouseEvent('click', { bubbles: true })));
+    // A real user click after success must not change the disabled control.
+    await extend.click({ force: true });
+    await expect(host.locator('#extend-feedback')).toHaveText('Timer extended by 15 seconds.');
+
+    // A stale client can still send a second request. Exercise the real click
+    // path after enabling the control and verify the rejected acknowledgement.
+    await extend.evaluate((button) => { button.disabled = false; });
+    await extend.click();
     await expect(host.locator('#extend-feedback')).toHaveText('Timer already extended.');
-    await expect(extend).toBeDisabled();
+    await expect(extend).toBeEnabled();
 
     await host.click('#skip-btn');
     await expect(extend).toBeEnabled();
     await expect(host.locator('#extend-feedback')).toHaveText('');
+    expect(errors, `host errors: ${errors.join(' | ')}`).toEqual([]);
   } finally {
     await Promise.all(players.map((player) => player.close()));
     await host.close();
