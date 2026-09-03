@@ -37,7 +37,6 @@
   "35": "strix-d869-report.md",
   "36": "redemption-rejoin.spec.js",
   "37": "Reduced Motion Accessibility (issue #52)",
-  "38": "roster.test.js",
   "39": "cups.test.js",
   "40": "Security assessment harness",
   "41": "Issue #93 Fallback Review Record",
@@ -48,14 +47,8 @@
   "46": "music-skip.spec.js",
   "47": "harness.test.js",
   "48": "solo-rapid-click.spec.js",
-  "49": "flags.test.js",
+  "49": "scrape-flags.mjs",
   "50": "rng.js",
   "51": "balance.test.js",
-  "52": "formatRaw",
-  "53": "room.test.js",
-  "54": "Handoff — issue #94",
-  "55": "reveal.test.js",
-  "56": "normalize.js",
-  "57": "host-rejoin.test.js",
   "58": "player-reload-rejoin.spec.js"
 }

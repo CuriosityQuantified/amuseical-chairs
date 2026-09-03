@@ -2099,7 +2099,7 @@
       "_origin": "ast",
       "id": "scripts_scrape_flags",
       "community": 49,
-      "community_name": "flags.test.js",
+      "community_name": "scrape-flags.mjs",
       "norm_label": "scrape-flags.mjs"
     },
     {
@@ -2110,7 +2110,7 @@
       "_origin": "ast",
       "id": "scripts_scrape_flags_root",
       "community": 49,
-      "community_name": "flags.test.js",
+      "community_name": "scrape-flags.mjs",
       "norm_label": "root"
     },
     {
@@ -2121,7 +2121,7 @@
       "_origin": "ast",
       "id": "scripts_scrape_flags_manifest",
       "community": 49,
-      "community_name": "flags.test.js",
+      "community_name": "scrape-flags.mjs",
       "norm_label": "manifest"
     },
     {
@@ -2132,7 +2132,7 @@
       "_origin": "ast",
       "id": "scripts_scrape_flags_source_snapshot",
       "community": 49,
-      "community_name": "flags.test.js",
+      "community_name": "scrape-flags.mjs",
       "norm_label": "source_snapshot"
     },
     {
@@ -2143,7 +2143,7 @@
       "_origin": "ast",
       "id": "scripts_scrape_flags_assets",
       "community": 49,
-      "community_name": "flags.test.js",
+      "community_name": "scrape-flags.mjs",
       "norm_label": "assets"
     },
     {
@@ -2154,7 +2154,7 @@
       "_origin": "ast",
       "id": "scripts_scrape_flags_parseflagtable",
       "community": 49,
-      "community_name": "flags.test.js",
+      "community_name": "scrape-flags.mjs",
       "norm_label": "parseflagtable()"
     },
     {
@@ -2165,7 +2165,7 @@
       "_origin": "ast",
       "id": "scripts_scrape_flags_validaterows",
       "community": 49,
-      "community_name": "flags.test.js",
+      "community_name": "scrape-flags.mjs",
       "norm_label": "validaterows()"
     },
     {
@@ -2176,7 +2176,7 @@
       "_origin": "ast",
       "id": "scripts_scrape_flags_ispng",
       "community": 49,
-      "community_name": "flags.test.js",
+      "community_name": "scrape-flags.mjs",
       "norm_label": "ispng()"
     },
     {
@@ -2187,7 +2187,7 @@
       "_origin": "ast",
       "id": "scripts_scrape_flags_curl",
       "community": 49,
-      "community_name": "flags.test.js",
+      "community_name": "scrape-flags.mjs",
       "norm_label": "curl"
     },
     {
@@ -2198,7 +2198,7 @@
       "_origin": "ast",
       "id": "scripts_scrape_flags_fetchbytes",
       "community": 49,
-      "community_name": "flags.test.js",
+      "community_name": "scrape-flags.mjs",
       "norm_label": "fetchbytes()"
     },
     {
@@ -2209,7 +2209,7 @@
       "_origin": "ast",
       "id": "scripts_scrape_flags_main",
       "community": 49,
-      "community_name": "flags.test.js",
+      "community_name": "scrape-flags.mjs",
       "norm_label": "main()"
     },
     {
@@ -2802,8 +2802,8 @@
       "source_location": "L218",
       "_origin": "ast",
       "id": "server_games_roster",
-      "community": 55,
-      "community_name": "reveal.test.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "roster"
     },
     {
@@ -2813,8 +2813,8 @@
       "source_location": "L244",
       "_origin": "ast",
       "id": "server_games_roster_by_key",
-      "community": 38,
-      "community_name": "roster.test.js",
+      "community": 39,
+      "community_name": "cups.test.js",
       "norm_label": "roster_by_key"
     },
     {
@@ -2824,8 +2824,8 @@
       "source_location": "L245",
       "_origin": "ast",
       "id": "server_games_needs_aggregation",
-      "community": 38,
-      "community_name": "roster.test.js",
+      "community": 39,
+      "community_name": "cups.test.js",
       "norm_label": "needs_aggregation"
     },
     {
@@ -2835,8 +2835,8 @@
       "source_location": "L251",
       "_origin": "ast",
       "id": "server_games_multi_stage",
-      "community": 38,
-      "community_name": "roster.test.js",
+      "community": 39,
+      "community_name": "cups.test.js",
       "norm_label": "multi_stage"
     },
     {
@@ -2868,8 +2868,8 @@
       "source_location": "L274",
       "_origin": "ast",
       "id": "server_games_num",
-      "community": 1,
-      "community_name": "caption.test.js",
+      "community": 43,
+      "community_name": "server/games.js",
       "norm_label": "num()"
     },
     {
@@ -2890,8 +2890,8 @@
       "source_location": "L278",
       "_origin": "ast",
       "id": "server_games_pickcontent",
-      "community": 43,
-      "community_name": "server/games.js",
+      "community": 2,
+      "community_name": "seededRng",
       "norm_label": "pickcontent()"
     },
     {
@@ -2989,8 +2989,8 @@
       "source_location": "L1086",
       "_origin": "ast",
       "id": "server_games_formatraw",
-      "community": 52,
-      "community_name": "formatRaw",
+      "community": 50,
+      "community_name": "rng.js",
       "norm_label": "formatraw()"
     },
     {
@@ -3066,8 +3066,8 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "server_room_makeroomcode",
-      "community": 0,
-      "community_name": "Room",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "makeroomcode()"
     },
     {
@@ -3110,8 +3110,8 @@
       "source_location": "L130",
       "_origin": "ast",
       "id": "server_room_pickhosteditableconfig",
-      "community": 0,
-      "community_name": "Room",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "pickhosteditableconfig()"
     },
     {
@@ -3836,8 +3836,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server_sockets",
-      "community": 0,
-      "community_name": "Room",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "sockets.js"
     },
     {
@@ -3847,8 +3847,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "server_sockets_withinpayloadlimit",
-      "community": 0,
-      "community_name": "Room",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "withinpayloadlimit()"
     },
     {
@@ -3858,8 +3858,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "server_sockets_takeratetoken",
-      "community": 0,
-      "community_name": "Room",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "takeratetoken()"
     },
     {
@@ -3869,8 +3869,8 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "server_sockets_clientaddress",
-      "community": 0,
-      "community_name": "Room",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "clientaddress()"
     },
     {
@@ -3880,8 +3880,8 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "server_sockets_failedjoinallowed",
-      "community": 0,
-      "community_name": "Room",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "failedjoinallowed()"
     },
     {
@@ -3891,8 +3891,8 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "server_sockets_failedjoinresponse",
-      "community": 0,
-      "community_name": "Room",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "failedjoinresponse()"
     },
     {
@@ -3902,8 +3902,8 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "server_sockets_roomcreateallowed",
-      "community": 0,
-      "community_name": "Room",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "roomcreateallowed()"
     },
     {
@@ -3913,8 +3913,8 @@
       "source_location": "L105",
       "_origin": "ast",
       "id": "server_sockets_publicorigin",
-      "community": 0,
-      "community_name": "Room",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "publicorigin()"
     },
     {
@@ -3924,8 +3924,8 @@
       "source_location": "L114",
       "_origin": "ast",
       "id": "server_sockets_guarded",
-      "community": 0,
-      "community_name": "Room",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "guarded()"
     },
     {
@@ -3946,8 +3946,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "shared_anagram",
-      "community": 52,
-      "community_name": "formatRaw",
+      "community": 2,
+      "community_name": "seededRng",
       "norm_label": "anagram.js"
     },
     {
@@ -3957,8 +3957,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "shared_anagram_words_by_length",
-      "community": 52,
-      "community_name": "formatRaw",
+      "community": 2,
+      "community_name": "seededRng",
       "norm_label": "words_by_length"
     },
     {
@@ -3979,8 +3979,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "shared_anagram_istrivialrotation",
-      "community": 52,
-      "community_name": "formatRaw",
+      "community": 2,
+      "community_name": "seededRng",
       "norm_label": "istrivialrotation()"
     },
     {
@@ -3990,8 +3990,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "shared_anagram_scrambleword",
-      "community": 52,
-      "community_name": "formatRaw",
+      "community": 2,
+      "community_name": "seededRng",
       "norm_label": "scrambleword()"
     },
     {
@@ -4001,8 +4001,8 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "shared_anagram_anagramrounds",
-      "community": 52,
-      "community_name": "formatRaw",
+      "community": 2,
+      "community_name": "seededRng",
       "norm_label": "anagramrounds()"
     },
     {
@@ -4067,8 +4067,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "shared_area_arearatio",
-      "community": 2,
-      "community_name": "seededRng",
+      "community": 47,
+      "community_name": "harness.test.js",
       "norm_label": "arearatio()"
     },
     {
@@ -4562,8 +4562,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "shared_normalize",
-      "community": 56,
-      "community_name": "normalize.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "normalize.js"
     },
     {
@@ -4573,8 +4573,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "shared_normalize_percentile",
-      "community": 56,
-      "community_name": "normalize.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "percentile()"
     },
     {
@@ -4584,8 +4584,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "shared_normalize_normalizeerror",
-      "community": 56,
-      "community_name": "normalize.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "normalizeerror()"
     },
     {
@@ -4595,8 +4595,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "shared_normalize_normalizescore",
-      "community": 56,
-      "community_name": "normalize.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "normalizescore()"
     },
     {
@@ -4925,8 +4925,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "test_anagram_test",
-      "community": 52,
-      "community_name": "formatRaw",
+      "community": 2,
+      "community_name": "seededRng",
       "norm_label": "anagram.test.js"
     },
     {
@@ -4936,8 +4936,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "test_anagram_test_config",
-      "community": 52,
-      "community_name": "formatRaw",
+      "community": 2,
+      "community_name": "seededRng",
       "norm_label": "config"
     },
     {
@@ -4947,8 +4947,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "test_anagram_test_round",
-      "community": 52,
-      "community_name": "formatRaw",
+      "community": 2,
+      "community_name": "seededRng",
       "norm_label": "round()"
     },
     {
@@ -4958,8 +4958,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "test_anagram_test_stubio",
-      "community": 52,
-      "community_name": "formatRaw",
+      "community": 2,
+      "community_name": "seededRng",
       "norm_label": "stubio()"
     },
     {
@@ -5013,8 +5013,8 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "test_balance_test_round",
-      "community": 51,
-      "community_name": "balance.test.js",
+      "community": 2,
+      "community_name": "seededRng",
       "norm_label": "round()"
     },
     {
@@ -5552,8 +5552,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "test_flags_test",
-      "community": 49,
-      "community_name": "flags.test.js",
+      "community": 50,
+      "community_name": "rng.js",
       "norm_label": "flags.test.js"
     },
     {
@@ -5563,8 +5563,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "test_flags_test_stubio",
-      "community": 49,
-      "community_name": "flags.test.js",
+      "community": 50,
+      "community_name": "rng.js",
       "norm_label": "stubio()"
     },
     {
@@ -5574,8 +5574,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "test_flags_test_addplayer",
-      "community": 49,
-      "community_name": "flags.test.js",
+      "community": 50,
+      "community_name": "rng.js",
       "norm_label": "addplayer()"
     },
     {
@@ -5585,8 +5585,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "test_fractions_test",
-      "community": 2,
-      "community_name": "seededRng",
+      "community": 47,
+      "community_name": "harness.test.js",
       "norm_label": "fractions.test.js"
     },
     {
@@ -5596,8 +5596,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "test_fractions_test_config",
-      "community": 2,
-      "community_name": "seededRng",
+      "community": 47,
+      "community_name": "harness.test.js",
       "norm_label": "config"
     },
     {
@@ -5607,8 +5607,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "test_fractions_test_round",
-      "community": 2,
-      "community_name": "seededRng",
+      "community": 47,
+      "community_name": "harness.test.js",
       "norm_label": "round()"
     },
     {
@@ -5618,8 +5618,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "test_fractions_test_score",
-      "community": 2,
-      "community_name": "seededRng",
+      "community": 47,
+      "community_name": "harness.test.js",
       "norm_label": "score()"
     },
     {
@@ -5739,8 +5739,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "test_host_rejoin_test",
-      "community": 57,
-      "community_name": "host-rejoin.test.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "host-rejoin.test.js"
     },
     {
@@ -5750,8 +5750,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "test_host_rejoin_test_io",
-      "community": 57,
-      "community_name": "host-rejoin.test.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "io"
     },
     {
@@ -5761,8 +5761,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "test_host_rejoin_test_addplayer",
-      "community": 57,
-      "community_name": "host-rejoin.test.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "addplayer()"
     },
     {
@@ -5849,8 +5849,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "test_metronome_test",
-      "community": 38,
-      "community_name": "roster.test.js",
+      "community": 39,
+      "community_name": "cups.test.js",
       "norm_label": "metronome.test.js"
     },
     {
@@ -5860,8 +5860,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "test_metronome_test_build",
-      "community": 38,
-      "community_name": "roster.test.js",
+      "community": 39,
+      "community_name": "cups.test.js",
       "norm_label": "build()"
     },
     {
@@ -5871,8 +5871,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "test_metronome_test_score",
-      "community": 38,
-      "community_name": "roster.test.js",
+      "community": 39,
+      "community_name": "cups.test.js",
       "norm_label": "score()"
     },
     {
@@ -5882,8 +5882,8 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "test_metronome_test_taps",
-      "community": 38,
-      "community_name": "roster.test.js",
+      "community": 39,
+      "community_name": "cups.test.js",
       "norm_label": "taps()"
     },
     {
@@ -5893,8 +5893,8 @@
       "source_location": "L196",
       "_origin": "ast",
       "id": "test_metronome_test_stubio",
-      "community": 38,
-      "community_name": "roster.test.js",
+      "community": 39,
+      "community_name": "cups.test.js",
       "norm_label": "stubio()"
     },
     {
@@ -5904,8 +5904,8 @@
       "source_location": "L197",
       "_origin": "ast",
       "id": "test_metronome_test_sleep",
-      "community": 38,
-      "community_name": "roster.test.js",
+      "community": 39,
+      "community_name": "cups.test.js",
       "norm_label": "sleep()"
     },
     {
@@ -5915,8 +5915,8 @@
       "source_location": "L199",
       "_origin": "ast",
       "id": "test_metronome_test_waitfor",
-      "community": 38,
-      "community_name": "roster.test.js",
+      "community": 39,
+      "community_name": "cups.test.js",
       "norm_label": "waitfor()"
     },
     {
@@ -5926,8 +5926,8 @@
       "source_location": "L208",
       "_origin": "ast",
       "id": "test_metronome_test_addplayer",
-      "community": 38,
-      "community_name": "roster.test.js",
+      "community": 39,
+      "community_name": "cups.test.js",
       "norm_label": "addplayer()"
     },
     {
@@ -5937,8 +5937,8 @@
       "source_location": "L215",
       "_origin": "ast",
       "id": "test_metronome_test_onlymetronome",
-      "community": 38,
-      "community_name": "roster.test.js",
+      "community": 39,
+      "community_name": "cups.test.js",
       "norm_label": "onlymetronome()"
     },
     {
@@ -5948,8 +5948,8 @@
       "source_location": "L221",
       "_origin": "ast",
       "id": "test_metronome_test_fast",
-      "community": 38,
-      "community_name": "roster.test.js",
+      "community": 39,
+      "community_name": "cups.test.js",
       "norm_label": "fast"
     },
     {
@@ -6135,8 +6135,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "test_normalize_test",
-      "community": 56,
-      "community_name": "normalize.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "normalize.test.js"
     },
     {
@@ -6256,8 +6256,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "test_reveal_test",
-      "community": 55,
-      "community_name": "reveal.test.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "reveal.test.js"
     },
     {
@@ -6267,8 +6267,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "test_reveal_test_stubio",
-      "community": 55,
-      "community_name": "reveal.test.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "stubio()"
     },
     {
@@ -6278,8 +6278,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "test_reveal_test_addplayer",
-      "community": 55,
-      "community_name": "reveal.test.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "addplayer()"
     },
     {
@@ -6289,8 +6289,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "test_reveal_test_anagramroom",
-      "community": 55,
-      "community_name": "reveal.test.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "anagramroom()"
     },
     {
@@ -6300,8 +6300,8 @@
       "source_location": "L145",
       "_origin": "ast",
       "id": "test_reveal_test_fakesocket",
-      "community": 55,
-      "community_name": "reveal.test.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "fakesocket()"
     },
     {
@@ -6311,8 +6311,8 @@
       "source_location": "L155",
       "_origin": "ast",
       "id": "test_reveal_test_fakeio",
-      "community": 55,
-      "community_name": "reveal.test.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "fakeio()"
     },
     {
@@ -6322,8 +6322,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "test_room_test",
-      "community": 53,
-      "community_name": "room.test.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "room.test.js"
     },
     {
@@ -6333,8 +6333,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "test_room_test_stubio",
-      "community": 53,
-      "community_name": "room.test.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "stubio()"
     },
     {
@@ -6344,8 +6344,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "test_room_test_sleep",
-      "community": 53,
-      "community_name": "room.test.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "sleep()"
     },
     {
@@ -6355,8 +6355,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "test_room_test_waitfor",
-      "community": 53,
-      "community_name": "room.test.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "waitfor()"
     },
     {
@@ -6366,8 +6366,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "test_room_test_addplayer",
-      "community": 53,
-      "community_name": "room.test.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "addplayer()"
     },
     {
@@ -6377,8 +6377,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "test_room_test_onlygames",
-      "community": 53,
-      "community_name": "room.test.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "onlygames()"
     },
     {
@@ -6388,8 +6388,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "test_room_test_fast",
-      "community": 53,
-      "community_name": "room.test.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "fast"
     },
     {
@@ -6399,8 +6399,8 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "test_room_test_join",
-      "community": 53,
-      "community_name": "room.test.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "join()"
     },
     {
@@ -6410,8 +6410,8 @@
       "source_location": "L542",
       "_origin": "ast",
       "id": "test_room_test_all_blocked",
-      "community": 53,
-      "community_name": "room.test.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "all_blocked"
     },
     {
@@ -6421,8 +6421,8 @@
       "source_location": "L816",
       "_origin": "ast",
       "id": "test_room_test_recordingio",
-      "community": 53,
-      "community_name": "room.test.js",
+      "community": 44,
+      "community_name": "room.js",
       "norm_label": "recordingio()"
     },
     {
@@ -6432,8 +6432,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "test_roster_test",
-      "community": 38,
-      "community_name": "roster.test.js",
+      "community": 43,
+      "community_name": "server/games.js",
       "norm_label": "roster.test.js"
     },
     {
@@ -6443,8 +6443,8 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "test_roster_test_payloads",
-      "community": 38,
-      "community_name": "roster.test.js",
+      "community": 43,
+      "community_name": "server/games.js",
       "norm_label": "payloads"
     },
     {
@@ -6454,8 +6454,8 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "test_roster_test_config",
-      "community": 38,
-      "community_name": "roster.test.js",
+      "community": 43,
+      "community_name": "server/games.js",
       "norm_label": "config"
     },
     {
@@ -6465,8 +6465,8 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "test_roster_test_rounddata",
-      "community": 38,
-      "community_name": "roster.test.js",
+      "community": 43,
+      "community_name": "server/games.js",
       "norm_label": "rounddata()"
     },
     {
@@ -6919,83 +6919,6 @@
       "community": 48,
       "community_name": "solo-rapid-click.spec.js",
       "norm_label": "solo-rapid-click.spec.js"
-    },
-    {
-      "label": "HANDOFF.md",
-      "file_type": "document",
-      "source_file": "HANDOFF.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "handoff",
-      "community": 54,
-      "community_name": "Handoff \u2014 issue #94",
-      "norm_label": "handoff.md"
-    },
-    {
-      "label": "Handoff \u2014 issue #94",
-      "file_type": "document",
-      "source_file": "HANDOFF.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "handoff_handoff_issue_94",
-      "community": 54,
-      "community_name": "Handoff \u2014 issue #94",
-      "norm_label": "handoff \u2014 issue #94"
-    },
-    {
-      "label": "Blocker",
-      "file_type": "document",
-      "source_file": "HANDOFF.md",
-      "source_location": "L11",
-      "_origin": "ast",
-      "id": "handoff_blocker",
-      "community": 54,
-      "community_name": "Handoff \u2014 issue #94",
-      "norm_label": "blocker"
-    },
-    {
-      "label": "Issue specification",
-      "file_type": "document",
-      "source_file": "HANDOFF.md",
-      "source_location": "L15",
-      "_origin": "ast",
-      "id": "handoff_issue_specification",
-      "community": 54,
-      "community_name": "Handoff \u2014 issue #94",
-      "norm_label": "issue specification"
-    },
-    {
-      "label": "Required continuation",
-      "file_type": "document",
-      "source_file": "HANDOFF.md",
-      "source_location": "L29",
-      "_origin": "ast",
-      "id": "handoff_required_continuation",
-      "community": 54,
-      "community_name": "Handoff \u2014 issue #94",
-      "norm_label": "required continuation"
-    },
-    {
-      "label": "READ CONSTRAINTS",
-      "file_type": "document",
-      "source_file": "HANDOFF.md",
-      "source_location": "L40",
-      "_origin": "ast",
-      "id": "handoff_read_constraints",
-      "community": 54,
-      "community_name": "Handoff \u2014 issue #94",
-      "norm_label": "read constraints"
-    },
-    {
-      "label": "State at handoff",
-      "file_type": "document",
-      "source_file": "HANDOFF.md",
-      "source_location": "L44",
-      "_origin": "ast",
-      "id": "handoff_state_at_handoff",
-      "community": 54,
-      "community_name": "Handoff \u2014 issue #94",
-      "norm_label": "state at handoff"
     },
     {
       "label": "color-cue-audit-issue-53.md",
@@ -25732,72 +25655,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "HANDOFF.md",
-      "source_location": "L1",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "handoff",
-      "target": "handoff_handoff_issue_94",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "HANDOFF.md",
-      "source_location": "L11",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "handoff_handoff_issue_94",
-      "target": "handoff_blocker",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "HANDOFF.md",
-      "source_location": "L15",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "handoff_handoff_issue_94",
-      "target": "handoff_issue_specification",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "HANDOFF.md",
-      "source_location": "L40",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "handoff_handoff_issue_94",
-      "target": "handoff_read_constraints",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "HANDOFF.md",
-      "source_location": "L29",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "handoff_handoff_issue_94",
-      "target": "handoff_required_continuation",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "HANDOFF.md",
-      "source_location": "L44",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "handoff_handoff_issue_94",
-      "target": "handoff_state_at_handoff",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "docs/color-cue-audit-issue-53.md",
       "source_location": "L1",
       "weight": 1.0,
@@ -26666,5 +26523,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "e39322308e9a7b8600f3f40a3928d990fb715aa5"
+  "built_at_commit": "a35e454b872bcdba3b5fc8ba73e18be1e1edca92"
 }
