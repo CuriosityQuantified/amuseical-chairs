@@ -16,6 +16,10 @@
       "ast": "1537a1504800a15fb24708220ea31081",
       "semantic": "1537a1504800a15fb24708220ea31081"
     },
+    "HANDOFF.md": {
+      "ast": "593f4904c12dc3e7cefcd8167daeb2b2",
+      "semantic": null
+    },
     "README.md": {
       "ast": "eb0da4e86e34f2126c926a69768dd1b7",
       "semantic": null
@@ -885,7 +889,7 @@
       "semantic": null
     },
     "public/js/player.js": {
-      "ast": "9074b6810efc889ee936276d8251eb3b",
+      "ast": "52c8911f2c197a3fb846f60a72a27141",
       "semantic": null
     },
     "public/js/sync.js": {
@@ -1142,6 +1146,10 @@
     },
     "tests/e2e/music-skip.spec.js": {
       "ast": "c4d376a184654c13826ab3e5fa21255d",
+      "semantic": null
+    },
+    "tests/e2e/player-reload-rejoin.spec.js": {
+      "ast": "425ab462728023c44d423bdf4125b969",
       "semantic": null
     },
     "tests/e2e/redemption-rejoin.spec.js": {

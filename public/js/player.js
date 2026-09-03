@@ -29,6 +29,7 @@ const state = {
 const urlCode = new URLSearchParams(location.search).get('code');
 if (urlCode) $('join-code').value = urlCode.toUpperCase();
 $('join-name').value = localStorage.getItem('mc_name') || '';
+let autoRejoinAttempted = false;
 
 $('join-btn').addEventListener('click', join);
 $('join-name').addEventListener('keydown', (e) => { if (e.key === 'Enter') join(); });
@@ -84,9 +85,34 @@ async function doSync() {
   socket.emit('sync:report', s);
 }
 
+function attemptStoredRejoin() {
+  if (autoRejoinAttempted || state.code || !urlCode) return;
+  const code = urlCode.trim().toUpperCase();
+  const storedPid = localStorage.getItem(`mc_pid_${code}`);
+  const storedToken = localStorage.getItem(`mc_reconnect_${code}`);
+  const name = $('join-name').value.trim();
+  if (!code || !storedPid || !storedToken || !name) return;
+
+  autoRejoinAttempted = true;
+  socket.emit('player:join', {
+    code,
+    name,
+    playerId: storedPid,
+    reconnectToken: storedToken,
+  }, (res) => {
+    if (res?.ok) return enterRoom(res, code);
+    localStorage.removeItem(`mc_pid_${code}`);
+    localStorage.removeItem(`mc_reconnect_${code}`);
+    showJoinError(res?.error || 'Saved rejoin details are no longer valid. Join again.');
+  });
+}
+
 socket.on('connect', () => {
-  // Transparent reconnect: the public player ID identifies the record; the
-  // private room-lifetime token proves this device owns it.
+  // A full page reload starts with empty in-memory state. Use the URL room
+  // code as the scope for stored credentials, then restore the server snapshot.
+  attemptStoredRejoin();
+  // Transparent reconnect after the page has already joined: the public player
+  // ID identifies the record; the private room-lifetime token proves ownership.
   if (state.code && state.playerId && state.reconnectToken) {
     socket.emit('player:join', {
       code: state.code,
