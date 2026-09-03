@@ -221,7 +221,33 @@ $('start-btn').addEventListener('click', () => {
 });
 $('next-btn').addEventListener('click', () => socket.emit('host:next', {}, () => {}));
 $('skip-btn').addEventListener('click', () => socket.emit('host:skip', {}, () => {}));
-$('extend-btn').addEventListener('click', () => socket.emit('host:extend', {}, () => {}));
+let extendRequest = 0;
+
+function resetExtendControl() {
+  extendRequest += 1;
+  $('extend-btn').disabled = false;
+  $('extend-feedback').replaceChildren();
+  $('extend-feedback').className = 'host-action-feedback';
+}
+
+function showExtendFeedback(message, kind) {
+  const feedback = $('extend-feedback');
+  feedback.textContent = message;
+  feedback.className = `host-action-feedback ${kind}`;
+}
+
+$('extend-btn').addEventListener('click', () => {
+  const request = ++extendRequest;
+  socket.emit('host:extend', {}, (res) => {
+    if (request !== extendRequest) return;
+    if (res?.ok) {
+      $('extend-btn').disabled = true;
+      showExtendFeedback('Timer extended by 15 seconds.', 'success');
+    } else {
+      showExtendFeedback(res?.error || 'Timer could not be extended.', 'error');
+    }
+  });
+});
 
 // ---- phases ----------------------------------------------------------------
 
@@ -232,6 +258,7 @@ let hostTut = null;
 function renderHostPhase(p) {
   if (p.name !== 'music') stopMusicPhase();
   state.phase = p.name;
+  resetExtendControl();
   // Show skip/extend only during a live timed minigame (issue #55).
   const showMidGameControls = p.name === 'minigame' && !p.completion;
   $('skip-btn').classList.toggle('hidden', !showMidGameControls);
