@@ -1,7 +1,7 @@
 # Graph Report - amuseical-chairs  (2026-09-02)
 
 ## Corpus Check
-- 86 files · ~133,961 words
+- 86 files · ~134,093 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b6e35802`
+- Built from commit: `33525485`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -49,7 +49,7 @@
 - strix-d869-report.md
 - Reduced Motion Accessibility (issue #52)
 - Security assessment harness
-- Issue #93 Review Record
+- Issue #93 Fallback Review Record
 - strix-bac3-report.md
 - server/games.js
 - scrape-flags.mjs
@@ -199,9 +199,9 @@ Nodes (5): Decorative animations (gated on `prefersReducedMotion()`), Detection 
 Cohesion: 0.50
 Nodes (3): Interpretation, Run locally, Security assessment harness
 
-### Community 41 - "Issue #93 Review Record"
+### Community 41 - "Issue #93 Fallback Review Record"
 Cohesion: 0.33
-Nodes (5): Code review phase, Implementation phase, Issue #93 Review Record, Security review phase, Simplification phase
+Nodes (5): 1. Implementation and CI diagnosis/fix, 2. Code review, 3. Code simplification, 4. Security review, Issue #93 Fallback Review Record
 
 ### Community 42 - "strix-bac3-report.md"
 Cohesion: 0.20

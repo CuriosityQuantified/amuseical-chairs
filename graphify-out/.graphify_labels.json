@@ -37,7 +37,7 @@
   "36": "redemption-rejoin.spec.js",
   "37": "Reduced Motion Accessibility (issue #52)",
   "40": "Security assessment harness",
-  "41": "Issue #93 Review Record",
+  "41": "Issue #93 Fallback Review Record",
   "42": "strix-bac3-report.md",
   "43": "server/games.js",
   "46": "music-skip.spec.js",
