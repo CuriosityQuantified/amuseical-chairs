@@ -28,17 +28,24 @@ Acceptance criteria:
 
 Environment: Chromium / macOS; production route `https://amuseical.com/host.html`.
 
-## Work state
+## Work state after timed Hermes continuation
 
-- Implementation: not started
-- CI changes: not started
-- Code review phase: not started
-- Code simplification phase: not started
-- Security review phase: not started
-- Local tests/checks: not run for this issue
-- Graph refresh: not run for this issue
-- Commit/push/PR: handoff commit only; no implementation PR
-- Merge: not started
+- Implementation: partial, uncommitted. Changed `public/js/host.js`, `public/host.html`, `public/css/style.css`; added `tests/e2e/extend-feedback.spec.js`.
+- CI changes: not made yet. Existing CI has named build, code-graph, unit, regressions, e2e, and audit jobs. Add the focused browser test to the correct CI gate if the existing glob does not include it.
+- Code review phase: not completed.
+- Code simplification phase: not completed.
+- Security review phase: not completed.
+- Local tests/checks: a continuation started `npm run test:e2e`, but its result was not captured before the worker timed out. Re-run and record the result.
+- Graph refresh: not run after the partial edits.
+- Commit/push/PR: handoff commit only; implementation edits are uncommitted; no PR.
+- Merge: not started.
+
+## Partial diff inventory
+
+- `public/js/host.js`: captures the host extension acknowledgement, disables the button after success, shows success/error status, and resets the control on each phase.
+- `public/host.html`: adds an accessible live status element for extension feedback.
+- `public/css/style.css`: styles success/error feedback.
+- `tests/e2e/extend-feedback.spec.js`: starts a hosted RGB round, checks the first extension, attempts a second click, and checks reset after skipping to the next stage. Verify that the forced second event represents a real user click and that the test proves the required visible behavior.
 
 ## Graph findings to verify
 
