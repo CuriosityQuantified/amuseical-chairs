@@ -13,6 +13,7 @@ import crypto from 'node:crypto';
 import { seededRng, shuffle } from '../shared/rng.js';
 import { normalizeError, normalizeScore } from '../shared/normalize.js';
 import { scoreRedemptionReport } from '../shared/redemption-core.js';
+import { CODE_ALPHABET } from '../shared/room-code.js';
 import {
   ROSTER,
   ROSTER_BY_KEY,
@@ -52,7 +53,6 @@ function clientScoredGameAllowed(room, key) {
 }
 
 // Ambiguity-free room-code alphabet: no I or O (and digits are excluded).
-const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
 
 export function makeRoomCode(rng = Math.random) {
   let code = '';

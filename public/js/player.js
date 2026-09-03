@@ -7,6 +7,7 @@ import { GameClients } from '/js/games.js';
 import { startChairs, startChairsSeated } from '/js/chairs.js';
 import { startTutorialAnim } from '/js/tutorials.js';
 import { createRedemptionRun } from '/shared/redemption-core.js';
+import { normalizeRoomCode } from '/shared/room-code.js';
 
 const socket = io();
 const $ = (id) => document.getElementById(id);
@@ -36,9 +37,9 @@ $('join-name').addEventListener('keydown', (e) => { if (e.key === 'Enter') join(
 $('solo-btn').addEventListener('click', soloStart);
 
 function join() {
-  const code = $('join-code').value.trim().toUpperCase();
+  const code = normalizeRoomCode($('join-code').value);
   const name = $('join-name').value.trim();
-  if (code.length !== 4) return showJoinError('Enter the 4-letter room code.');
+  if (!code) return showJoinError('Enter the 4-letter room code.');
   if (!name) return showJoinError('Enter your name.');
   localStorage.setItem('mc_name', name);
   const storedPid = localStorage.getItem(`mc_pid_${code}`);

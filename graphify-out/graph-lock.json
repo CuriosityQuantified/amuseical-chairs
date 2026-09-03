@@ -885,7 +885,7 @@
       "semantic": null
     },
     "public/js/player.js": {
-      "ast": "52c8911f2c197a3fb846f60a72a27141",
+      "ast": "c42f3fdf4674246e5f46d000c2e54fd8",
       "semantic": null
     },
     "public/js/sync.js": {
@@ -925,7 +925,7 @@
       "semantic": "f9bcb5a92468425b887f7d6ed3da4eb4"
     },
     "server/room.js": {
-      "ast": "31be3e68b01c829427e0efeb027ef9ba",
+      "ast": "c434f8a03b379ed197a8bb5de58a82ab",
       "semantic": null
     },
     "server/sockets.js": {
@@ -983,6 +983,10 @@
     "shared/rng.js": {
       "ast": "351b6134407218b5e0bd36421b2881fd",
       "semantic": "351b6134407218b5e0bd36421b2881fd"
+    },
+    "shared/room-code.js": {
+      "ast": "1e10ededae1fb4619d5690cfe3741d08",
+      "semantic": null
     },
     "shared/stroop.js": {
       "ast": "af7e9e225582372e32e7cd5b9539046d",
@@ -1092,6 +1096,10 @@
       "ast": "c53fe26ef56ea97374fd039941e5e418",
       "semantic": null
     },
+    "test/room-code.test.js": {
+      "ast": "0af9541db4ed178c77bba0c2aee1fe61",
+      "semantic": null
+    },
     "test/room.test.js": {
       "ast": "60eb898284ea0b41589e4048863a57d1",
       "semantic": null
@@ -1154,6 +1162,10 @@
     },
     "tests/e2e/redemption-rejoin.spec.js": {
       "ast": "203665ab40712cba3c4d251cc7fe4d46",
+      "semantic": null
+    },
+    "tests/e2e/room-code-validation.spec.js": {
+      "ast": "0586b87796ac12e625a7b1b7b7cce8df",
       "semantic": null
     },
     "tests/e2e/solo-rapid-click.spec.js": {
