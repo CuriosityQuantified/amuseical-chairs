@@ -861,7 +861,7 @@
       "semantic": null
     },
     "public/host.html": {
-      "ast": "46e0a1972e566e448444ee3595eab245",
+      "ast": "c266eeb88c83c41f7a37fd9d2322d9d1",
       "semantic": null
     },
     "public/index.html": {
@@ -877,7 +877,7 @@
       "semantic": null
     },
     "public/js/host.js": {
-      "ast": "3b4770b8fdb6603c53da940b6a797058",
+      "ast": "ca32375f8b9b77266cb07621ccf4d362",
       "semantic": null
     },
     "public/js/motion.js": {
@@ -1126,6 +1126,10 @@
     },
     "tests/e2e/cups-solo.spec.js": {
       "ast": "0c264c97acb44df87467e77efdb303d7",
+      "semantic": null
+    },
+    "tests/e2e/extend-feedback.spec.js": {
+      "ast": "494f01dd2afee3fdff7c68997a1dd0f9",
       "semantic": null
     },
     "tests/e2e/feedback.spec.js": {

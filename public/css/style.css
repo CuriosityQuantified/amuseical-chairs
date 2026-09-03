@@ -418,6 +418,10 @@ canvas.game {
 .status-banner.safe { color: var(--good); text-shadow: 0 0 18px rgba(61, 255, 158, 0.8); }
 .status-banner.risk { color: var(--bad); text-shadow: 0 0 18px rgba(255, 84, 112, 0.8); }
 
+.host-action-feedback { min-width: 180px; font-size: 13px; }
+.host-action-feedback.success { color: var(--good); }
+.host-action-feedback.error { color: var(--bad); }
+
 .music-viz { display: flex; gap: 8px; height: 160px; align-items: flex-end; justify-content: center; }
 .music-viz .bar {
   width: 26px;
