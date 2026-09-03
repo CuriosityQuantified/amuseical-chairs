@@ -140,7 +140,13 @@ function applySnapshot(snap) {
 
 // ---- solo practice menu ------------------------------------------------------
 
+function lockSoloChoices() {
+  soloSelectionPending = true;
+  document.querySelectorAll('.solo-choice').forEach((button) => { button.disabled = true; });
+}
+
 function renderSoloMenu() {
+  soloSelectionPending = false;
   clearAll();
   banner('SOLO PRACTICE', '');
   content().append(
@@ -149,17 +155,25 @@ function renderSoloMenu() {
   );
   for (const g of state.roster) {
     content().append(el('button', {
-      class: 'vote-option',
-      onclick: () => socket.emit('solo:play', { key: g.key }, (res) => {
-        if (res && res.error) alert(res.error);
-      }),
+      class: 'vote-option solo-choice',
+      onclick: () => {
+        if (soloSelectionPending) return;
+        lockSoloChoices();
+        socket.emit('solo:play', { key: g.key }, (res) => {
+          if (res && res.error) alert(res.error);
+        });
+      },
     }, `▶ ${g.name}`));
   }
   content().append(el('button', {
-    class: 'vote-option',
-    onclick: () => socket.emit('solo:redemption', {}, (res) => {
-      if (res && res.error) alert(res.error);
-    }),
+    class: 'vote-option solo-choice',
+    onclick: () => {
+      if (soloSelectionPending) return;
+      lockSoloChoices();
+      socket.emit('solo:redemption', {}, (res) => {
+        if (res && res.error) alert(res.error);
+      });
+    },
   }, '🚨 Musical chairs — reaction round'));
 }
 
@@ -177,6 +191,7 @@ const content = () => $('content');
 const gameRoot = () => $('game-root');
 
 let activeTut = null;
+let soloSelectionPending = false;
 
 function clearAll() {
   activeTut?.stop();
